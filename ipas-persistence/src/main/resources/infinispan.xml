@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<infinispan xmlns="urn:infinispan:config:9.4">
+    <cache-container>
+        <local-cache-configuration name="defaultConfiguration">
+            <memory>
+                <object size="2000"/>
+            </memory>
+        </local-cache-configuration>
+        <local-cache name="fileTypesMap"                configuration="defaultConfiguration" />
+        <local-cache name="countryMap"                  configuration="defaultConfiguration" />
+        <local-cache name="signTypesMap"                configuration="defaultConfiguration" />
+        <local-cache name="relationshipTypesMap"        configuration="defaultConfiguration" />
+        <local-cache name="processTypeMap"              configuration="defaultConfiguration" />
+        <local-cache name="lawMap"                      configuration="defaultConfiguration" />
+        <local-cache name="userGroupsMap"               configuration="defaultConfiguration" />
+        <local-cache name="rolesMap"                    configuration="defaultConfiguration" />
+        <local-cache name="divisions"                   configuration="defaultConfiguration" />
+        <local-cache name="departments"                 configuration="defaultConfiguration" />
+        <local-cache name="sections"                    configuration="defaultConfiguration" />
+        <local-cache name="simpleUser"                  configuration="defaultConfiguration" />
+        <local-cache name="configParam"                 configuration="defaultConfiguration" />
+        <local-cache name="extConfigParam"              configuration="defaultConfiguration" />
+        <local-cache name="submissionTypes"             configuration="defaultConfiguration" />
+        <local-cache name="receptionTypes"              configuration="defaultConfiguration" />
+        <local-cache name="applicationTypes"            configuration="defaultConfiguration" />
+        <local-cache name="applicationTypesOrder"       configuration="defaultConfiguration" />
+        <local-cache name="applicationSubTypes"         configuration="defaultConfiguration" />
+        <local-cache name="applicationSubTypesOrder"    configuration="defaultConfiguration" />
+        <local-cache name="userdocTypes"                configuration="defaultConfiguration" />
+        <local-cache name="statusById"                  configuration="defaultConfiguration" />
+        <local-cache name="statusMap"                   configuration="defaultConfiguration" />
+        <local-cache name="dailyLog"                    configuration="defaultConfiguration" />
+        <local-cache name="userdocReceptionRelation"    configuration="defaultConfiguration" />
+        <local-cache name="userdocTypesByListCode"      configuration="defaultConfiguration" />
+        <local-cache name="liabilityCodeNamesMap"       configuration="defaultConfiguration" />
+        <local-cache name="langProperties"              configuration="defaultConfiguration" />
+        <local-cache name="fileTypeGroup"               configuration="defaultConfiguration" />
+        <local-cache name="fileTypesByGroup"            configuration="defaultConfiguration" />
+        <local-cache name="groupTypeByFileType"         configuration="defaultConfiguration" />
+        <local-cache name="fileTypeGroupsMap"           configuration="defaultConfiguration" />
+        <local-cache name="notLinkedPayments"           configuration="defaultConfiguration">
+            <expiration lifespan="300000" /><!--expiration after 300 seconds-->
+        </local-cache>
+        <local-cache name="notLinkedPaymentsPerResponsibleUsers" configuration="defaultConfiguration">
+            <expiration lifespan="300000" /><!--expiration after 300 seconds-->
+        </local-cache>
+        <local-cache name="allNotLinkedPayments" configuration="defaultConfiguration">
+            <expiration lifespan="300000" /><!--expiration after 300 seconds-->
+        </local-cache>
+        <local-cache name="portalUsersByGroup" configuration="defaultConfiguration">
+            <expiration lifespan="-1"  /><!-- never expires -->
+        </local-cache>
+    </cache-container>
+
+
+</infinispan>

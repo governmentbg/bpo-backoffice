@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="logChange" type="bg.duosoft.ipas.core.model.logging.CLogChangesBase"*/-->
+<div th:fragment="history-info(logChange)">
+    <div th:id="object-history-info-modal" class="modal" th:with="dateFormat=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT}">
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="#{panel.title.history}"></h4>
+            </div>
+            <div>
+                <div class="row m_T30">
+                    <div class="col-6">
+                        <div th:replace="~{base/form/input :: readonly(label = #{history.changeDate}, value = ${#dates.format(logChange.changeDate,dateFormat)})}"></div>
+                    </div>
+                    <div class="col-6">
+                        <div th:replace="~{base/form/input :: readonly(label = #{history.changeUser}, value = ${logChange.changeUser.userName})}"></div>
+                    </div>
+                </div>
+            </div>
+            <div th:each="cd : ${logChange.changeDetails}">
+                <div>
+                    <div class="row m_T30">
+                        <div class="col-12">
+                            <div th:replace="~{base/form/input :: readonly(label = #{filing.number}, value = ${cd.key})}"></div>
+                        </div>
+                    </div>
+                    <div class="row m_T30" th:each="before, stat : ${cd.value.before}">
+                        <div class="col-6">
+                            <div th:replace="~{base/form/text :: readonly-unescaped(label = #{before}, text = ${@loggingMessagesMapper.generateLoggingMessageContent(before)}, columnSize='col-6')}"></div>
+                        </div>
+                        <div class="col-6" th:with="after=${cd.value.after[stat.index]}">
+                            <div th:replace="~{base/form/text :: readonly-unescaped(label = #{after}, text = ${@loggingMessagesMapper.generateLoggingMessageContent(after)}, columnSize='col-6')}"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row m_T30">
+                <div class="col-12">
+                    <div>
+                        <div class="row m_B5">
+                            <div class="input-field readonly">
+                                <label class="active" th:text="${'xml'}"></label>
+
+                            </div>
+                            <div class="input-field readonly">
+                                <label id="xml_copy_button" class="active m_L80" style="cursor:pointer" th:text="${'copy to clipboard'}"></label>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div>
+                                <span id="xml_content" th:text="${logChange.dataValue}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="row">
+                <div class="col-12">
+                    <button type="button" class="button sm-icn-cross modal-close wmin_130" th:text="#{btn.close}"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,20 @@
+--liquibase formatted sql
+
+--changeset dveizov:167.1
+UPDATE p
+SET p.RECEPTION_DATE = d.RECEPTION_DATE
+FROM IPASPROD.IP_DOC d
+         INNER JOIN IP_PATENT p
+                    ON d.DOC_NBR = p.DOC_NBR AND d.DOC_ORI = p.DOC_ORI AND d.DOC_LOG = p.DOC_LOG AND
+                       d.DOC_SER = p.DOC_SER
+WHERE d.RECEPTION_DATE <> p.RECEPTION_DATE AND d.RECEPTION_DATE < p.RECEPTION_DATE
+
+--changeset dveizov:167.2
+UPDATE d
+SET d.RECEPTION_DATE = p.RECEPTION_DATE
+FROM IPASPROD.IP_DOC d
+         INNER JOIN IP_PATENT p
+                    ON d.DOC_NBR = p.DOC_NBR AND d.DOC_ORI = p.DOC_ORI AND d.DOC_LOG = p.DOC_LOG AND
+                       d.DOC_SER = p.DOC_SER
+WHERE d.RECEPTION_DATE <> p.RECEPTION_DATE AND p.RECEPTION_DATE < d.RECEPTION_DATE
+

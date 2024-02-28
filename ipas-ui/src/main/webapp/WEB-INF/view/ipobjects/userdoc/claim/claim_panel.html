@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="claim(userdoc)"
+     th:with="extraDataUtils = ${T(bg.duosoft.ipas.util.userdoc.UserdocExtraDataUtils)},
+              panelName=${T(com.duosoft.ipas.enums.UserdocPanel).Claim.name()},
+              typesEnum=${T(bg.duosoft.ipas.enums.UserdocExtraDataTypeCode)},
+              types = ${extraDataUtils.selectTypes(userdoc, panelName)},
+              userdocExtraData=${userdoc.userdocExtraData}
+">
+    <div class="row">
+        <div th:remove="tag" th:with="type = ${typesEnum.CLAIM_CONTESTED_DECISION_NUMBER}">
+            <div th:replace="ipobjects/userdoc/extra_data/fragments.html :: dataNumber(type = ${type}, value = ${extraDataUtils.selectNumber(type, userdocExtraData)}, classes = 'col-6', allowedTypes = ${types})"></div>
+        </div>
+        <div th:remove="tag" th:with="type = ${typesEnum.CLAIM_CONTESTED_DECISION_DATE}">
+            <div th:replace="ipobjects/userdoc/extra_data/fragments.html :: dataDate(type = ${type}, value = ${extraDataUtils.selectDate(type, userdocExtraData)}, classes = 'col-6', allowedTypes = ${types})"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div th:remove="tag" th:with="type = ${typesEnum.CLAIM_MOTIVE}">
+            <div th:replace="ipobjects/userdoc/extra_data/fragments.html :: dataText(type = ${type}, value = ${extraDataUtils.selectText(type, userdocExtraData)}, classes = 'col-12', allowedTypes = ${types})"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

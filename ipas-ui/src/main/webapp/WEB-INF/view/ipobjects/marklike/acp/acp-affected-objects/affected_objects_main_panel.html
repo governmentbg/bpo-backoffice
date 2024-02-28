@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="main_panel(affectedObjects,fileTypesMap,affectedObjectOthers)">
+
+    <div id="affected-objects-table-area">
+        <div th:replace="ipobjects/marklike/acp/acp-affected-objects/affected_objects_table :: table(${affectedObjects})"></div>
+    </div>
+
+    <div id="affected-objects-search-area">
+        <div th:replace="ipobjects/marklike/acp/acp-affected-objects/affected_objects_search :: search(${fileTypesMap})"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-9">
+            <div th:replace="~{base/form/textarea :: basic(id = 'acp-details-affected-object-others', value = ${affectedObjectOthers}, label = #{acp.affected.object.others})}"></div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

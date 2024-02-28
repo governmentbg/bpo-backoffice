@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="transformation(mark)" th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT},markTransformationType=${T(bg.duosoft.ipas.enums.MarkTransformationType)}">
+    <div class="row" id="mark-transformation-subpanel" th:with="hasTransformation=${mark.relationshipExtended != null}">
+        <hr th:classappend="${!hasTransformation ? 'hidden-element':''}">
+        <div class="row">
+            <div class="row m_B10">
+                <div class="col-6" th:classappend="${!hasTransformation ? 'hidden-element':''}">
+                    <div th:replace="~{base/form/checkbox :: basic(id = 'mark-transformation-hasTransformationData', target = 'mark-transformation-details', label = #{mark.transformation}, isChecked = ${hasTransformation}, classes = 'rights-checkbox', additionalArgs='data-disables=\'divisional-app-hasDivisionalData\'')}"></div>
+                </div>
+            </div>
+            <div class="row" id="mark-transformation-details" th:style="${hasTransformation ? '': 'display:none'}">
+                <div th:with="transform=${mark.relationshipExtended}">
+                    <input id="mark-object-relationshipExtended-applicationType-original" th:value="${transform?.applicationType}" th:type="hidden" class="form-ignore"/>
+                    <input id="object-relationshipExtended-filingNumber-original" th:value="${transform?.filingNumber}" th:type="hidden" class="form-ignore"/>
+                    <input id="object-relationshipExtended-filingDate-original" th:value="${transform != null and transform.filingDate != null ? #dates.format(transform.filingDate, dateFormatDot): ''}" th:type="hidden" class="form-ignore"/>
+                    <div class="row">
+                        <div class="col-4" th:with="markClaimUtils = ${T(com.duosoft.ipas.util.MarkClaimUtils)}">
+                            <div th:replace="~{base/form/select :: map(id = 'mark-object-relationshipExtended-applicationType', label = #{transformation.type}, map = ${markClaimUtils.generateMarkClaimsSelectOptions(@messageSource)}, selected = (${transform != null} ? ${transform.applicationType} : null) )}"></div>
+                        </div>
+                        <div class="col-4">
+                            <div th:replace="~{base/form/input :: text(id = 'object-relationshipExtended-filingNumber', label = #{mark.transformation.number}, value = ${transform != null ? transform.filingNumber: ''}, classes = 'number')}"></div>
+                        </div>
+                        <div class="col-4" th:id="transformation-filingDate-wrap">
+                            <div th:replace="~{base/form/input :: datepicker(id = 'object-relationshipExtended-filingDate', label = #{mark.transformation.filingDate}, value = ${transform != null and transform.filingDate != null ? #dates.format(transform.filingDate, dateFormatDot): ''})}"></div>
+                        </div>
+                    </div>
+                    <div class="row" >
+                        <div class="col-4" th:id="transformation-registrationDate-wrap" th:style="${transform != null and transform.applicationType != null and #strings.equalsIgnoreCase(transform.applicationType,markTransformationType.INTERNATIONAL_MARK.code())? '': 'display:none'}">
+                            <div th:replace="~{base/form/input :: datepicker(id = 'object-relationshipExtended-registrationDate', label = #{mark.transformation.registrationDate}, value = ${transform != null and transform.registrationDate != null ? #dates.format(transform.registrationDate, dateFormatDot): ''})}"></div>
+                        </div>
+                        <div class="col-4" th:id="transformation-cancellationDate-wrap" th:style="${transform != null and transform.applicationType != null and #strings.equalsIgnoreCase(transform.applicationType,markTransformationType.INTERNATIONAL_MARK.code())? '': 'display:none'}">
+                            <div th:replace="~{base/form/input :: datepicker(id = 'object-relationshipExtended-cancellationDate', label = #{mark.transformation.cancellationDate}, value = ${transform != null and transform.cancellationDate != null ? #dates.format(transform.cancellationDate, dateFormatDot): ''})}"></div>
+                        </div>
+                        <div class="col-4" th:id="transformation-priorityDate-wrap" th:style="${transform != null and transform.applicationType != null and #strings.equalsIgnoreCase(transform.applicationType,markTransformationType.EUROPEAN_MARK.code())? '': 'display:none'}">
+                            <div th:replace="~{base/form/input :: datepicker(id = 'object-relationshipExtended-priorityDate', label = #{mark.transformation.priorityDate}, value = ${transform != null and transform.priorityDate != null ? #dates.format(transform.priorityDate, dateFormatDot): ''})}"></div>
+                        </div>
+                        <div class="col-4" th:id="transformation-serveMessageDate-wrap" th:style="${transform != null and transform.applicationType != null and #strings.equalsIgnoreCase(transform.applicationType,markTransformationType.EUROPEAN_MARK.code())? '': 'display:none'}">
+                            <div th:replace="~{base/form/input :: datepicker(id = 'object-relationshipExtended-serveMessageDate', label = #{mark.transformation.serveMessageDate}, value = ${transform != null and transform.serveMessageDate != null ? #dates.format(transform.serveMessageDate, dateFormatDot): ''})}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

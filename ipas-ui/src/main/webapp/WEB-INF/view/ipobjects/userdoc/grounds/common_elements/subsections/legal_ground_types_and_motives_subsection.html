@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="legal-ground-types-and-motives-subsection(panel,groundMotives,legalGroundsTypes)">
+
+    <input id="check-legal-ground-url" type="hidden" class="form-ignore" th:attr="data-url=@{/{panel}/check-legal-ground-type(panel=${panel})}">
+
+    <th:block th:each="legalGroundType,iter : ${legalGroundsTypes}">
+        <div class="row">
+            <div class="col-12 m_T5">
+                <div th:replace="~{base/form/checkbox :: basic(id = 'legal-ground-type-checkbox-'+${iter.index}, label = ${legalGroundType.title} + ' ' + ${legalGroundType.description}, isChecked = ${legalGroundType.availableType}, additionalArgs='data-legal-ground-id='+${legalGroundType.id})}"></div>
+            </div>
+        </div>
+    </th:block>
+
+    <div class="col-12 m_T5">
+        <div th:replace="~{base/form/textarea :: basic(id = 'root-ground-motives', value = ${groundMotives}, label = #{userdoc.ground.motives})}"></div>
+    </div>
+
+    <div th:if="${!#lists.isEmpty(validationErrors)}" th:id="legal-ground-sub-types">
+        <div th:replace="base/validation :: validation-message(${validationErrors},'legal-ground-sub-types')"></div>
+    </div>
+
+</div>
+</body>
+</html>

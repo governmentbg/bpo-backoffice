@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="offidoc-notifications-search-filters(offidocNotificationsSearchFilter)" th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+    <form id="offidoc-notifications-form">
+        <div class="row">
+            <div class="col-3">
+                <div th:replace="~{base/form/checkbox :: basic(id='offidoc-notifications-filter-showReadInPortal', label= #{offidoc.notifications.filter.showReadInPortal}, isChecked = ${offidocNotificationsSearchFilter.showReadInPortal}, additionalArgs='name=\'showReadInPortal\'')}"/>
+            </div>
+            <div class="col-3">
+                <div th:replace="~{base/form/checkbox :: basic(id='offidoc-notifications-filter-showReadByEmail', label= #{offidoc.notifications.filter.showReadByEmail}, isChecked = ${offidocNotificationsSearchFilter.showReadByEmail}, additionalArgs='name=\'showReadByEmail\'')}"/>
+            </div>
+            <div class="col-3">
+                <div th:replace="~{base/form/checkbox :: basic(id='offidoc-notifications-filter-showUnread', label= #{offidoc.notifications.filter.showUnread}, isChecked = ${offidocNotificationsSearchFilter.showUnread}, additionalArgs='name=\'showUnread\'')}"/>
+            </div>
+            <div class="col-3">
+                <div th:replace="~{base/form/checkbox :: basic(id='offidoc-notifications-filter-onlyMine', label= #{offidoc.notifications.filter.onlyMine}, isChecked = ${offidocNotificationsSearchFilter.onlyMine}, additionalArgs='name=\'onlyMine\'')}"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                <div th:replace="~{base/form/checkbox :: basic(id='offidoc-notifications-filter-eFiled', label= #{offidoc.notifications.filter.eFiled}, isChecked = ${offidocNotificationsSearchFilter.eFiled}, additionalArgs='name=\'eFiled\'')}"/>
+            </div>
+            <div class="col-3">
+                <div th:replace="~{base/form/checkbox :: basic(id='offidoc-notifications-filter-nonEFiled', label= #{offidoc.notifications.filter.nonEFiled}, isChecked = ${offidocNotificationsSearchFilter.nonEFiled}, additionalArgs='name=\'nonEFiled\'')}"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                <div th:replace="~{base/form/input :: datepicker(id = 'offidoc-notifications-filter-dateFinishedFrom', label = #{offidoc.notifications.filter.dateFinishedFrom}, value = ${#dates.format(offidocNotificationsSearchFilter.dateFinishedFrom,dateFormatDot)}, name='dateFinishedFrom')}"></div>
+            </div>
+            <div class="col-3">
+                <div th:replace="~{base/form/input :: datepicker(id = 'offidoc-notifications-filter-dateFinishedTo', label = #{offidoc.notifications.filter.dateFinishedTo}, value = ${#dates.format(offidocNotificationsSearchFilter.dateFinishedTo,dateFormatDot)}, name='dateFinishedTo')}"></div>
+            </div>
+            <div class="col-3">
+                <div th:replace="~{base/form/input :: datepicker(id = 'offidoc-notifications-filter-dateReadFrom', label = #{offidoc.notifications.filter.dateReadFrom}, value = ${#dates.format(offidocNotificationsSearchFilter.dateReadFrom,dateFormatDot)}, name='dateReadFrom')}"></div>
+            </div>
+            <div class="col-3">
+                <div th:replace="~{base/form/input :: datepicker(id = 'offidoc-notifications-filter-dateReadTo', label = #{offidoc.notifications.filter.dateReadTo}, value = ${#dates.format(offidocNotificationsSearchFilter.dateReadTo,dateFormatDot)}, name='dateReadTo')}"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3" th:with="fileTypeUtils = ${T(bg.duosoft.ipas.util.file.FileTypeUtils)}">
+                <div th:replace="~{base/form/select :: map(id='offidoc-notifications-filter-objectType', label = #{offidoc.notifications.filter.objectType}, map=${fileTypeUtils.getFileTypesOptionsMap(@messageSource)}, selected = ${offidocNotificationsSearchFilter.objectType}, emptySelectOption = #{all}, name='objectType')}"/>
+            </div>
+            <div class="col-3">
+                <div th:replace="~{base/form/input :: text(id='offidoc-notifications-filter-registrationNumber', label = #{offidoc.notifications.filter.registrationNumber}, value = ${offidocNotificationsSearchFilter.registrationNumber}, name='registrationNumber')}"/>
+            </div>
+            <div class="col-3">
+                <div th:replace="~{base/form/input :: text(id='offidoc-notifications-filter-noOlderThanDays', label = #{offidoc.notifications.filter.noOlderThanDays}, value = ${offidocNotificationsSearchFilter.noOlderThanDays}, regex='^\d*$', name='noOlderThanDays')}"/>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <div class="col-12">
+            <a th:replace="~{base/form/button :: material-btn(idBtn = 'search-offidoc-notifications-btn', label = #{btn.search}, dataUrl = @{/offidoc/notifications/filter}, dataValidationBlock = '#offidoc-notifications-filters-wrapper' , icon = 'search', classes = 'm_T5 w_150px right')}"></a>
+            <a th:replace="~{base/form/button :: material-btn(label = #{btn.clear}, idBtn = 'clear-offidoc-notifications-btn', dataAction='reload-page', icon = 'clear', classes = 'm_R20 m_T5 w_150px right')}"></a>
+        </div>
+    </div>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+--liquibase formatted sql
+
+--changeset dveizov:204
+UPDATE a
+SET a.SERVICE_PERSON_NBR = r.PERSON_NBR,
+    a.SERVICE_ADDR_NBR   = r.ADDR_NBR
+FROM IP_MARK a
+         INNER JOIN IP_MARK_REPRS r
+                    on a.FILE_NBR = r.FILE_NBR and a.FILE_SEQ = r.FILE_SEQ and a.FILE_TYP = r.FILE_TYP and
+                       a.FILE_SER = r.FILE_SER
+where r.REPRESENTATIVE_TYP = 'AS' AND ((a.SERVICE_PERSON_NBR <> r.PERSON_NBR) OR (a.SERVICE_PERSON_NBR = r.PERSON_NBR AND a.SERVICE_ADDR_NBR <> r.ADDR_NBR));
+
+UPDATE a
+SET a.SERVICE_PERSON_NBR = r.PERSON_NBR,
+    a.SERVICE_ADDR_NBR   = r.ADDR_NBR
+FROM IP_PATENT a
+         INNER JOIN IP_PATENT_REPRS r
+                    on a.FILE_NBR = r.FILE_NBR and a.FILE_SEQ = r.FILE_SEQ and a.FILE_TYP = r.FILE_TYP and
+                       a.FILE_SER = r.FILE_SER
+where r.REPRESENTATIVE_TYP = 'AS' AND ((a.SERVICE_PERSON_NBR <> r.PERSON_NBR) OR (a.SERVICE_PERSON_NBR = r.PERSON_NBR AND a.SERVICE_ADDR_NBR <> r.ADDR_NBR));

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="table(acpCheckReasons)">
+
+    <div class="col-12" th:if="${T(org.springframework.util.CollectionUtils).isEmpty(acpCheckReasons)}">
+        <div th:replace="base/message :: info(#{acp.check.reasons.empty.list})"></div>
+    </div>
+
+
+    <div class="row m_B20" th:if="${!T(org.springframework.util.CollectionUtils).isEmpty(acpCheckReasons)}">
+        <div class="col-12">
+            <table class="simple">
+                <thead>
+                <tr>
+                    <th th:text="#{acp.check.reason.title}"></th>
+                    <th class="hidden-element"></th>
+                </tr>
+
+                </thead>
+                <tbody>
+                <tr th:each="reason : ${acpCheckReasons}">
+                    <td th:text="${reason.acpCheckReason.description}"></td>
+                    <td class="hidden-element txtRight">
+                        <a style="border: 0" th:title="#{btn.delete}" href="javascript:void(0);"
+                           th:attr="data-action='delete-acp-check-reason',data-url=@{/acp/check-data/delete-reason},data-id=${reason.acpCheckReason.id},
+                               data-message=#{delete.check.reason.message }"
+                           class="txtLeft btn-floating ipas waves-effect waves-light action-button-top confirm">
+                            <i class="icon-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

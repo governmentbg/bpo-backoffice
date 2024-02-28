@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="main_panel(penalty)">
+
+    <div id="acp-penalty-fields-area">
+        <div th:replace="ipobjects/marklike/acp/acp-administrative-penalty/penalty_fields_panel:: fields(${penalty})"></div>
+    </div>
+</div>
+</body>
+</html>

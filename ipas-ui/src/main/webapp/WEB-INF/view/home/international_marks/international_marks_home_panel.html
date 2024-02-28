@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="panel(enotifs, total)"
+     th:with="collectionUtils = ${T(org.springframework.util.CollectionUtils)},
+              coreUtils=${T(com.duosoft.ipas.util.CoreUtils)}">
+
+    <div class="panel m_H260 br_20px z-depth-1">
+        <div class="pies">
+            <div class="pie-title">
+                <h3 th:text="#{international.marks.publications.title}"></h3>
+            </div>
+            <div class="pie-count red">
+                <svg class="icon">
+                    <use xlink:href="#icon-ring"></use>
+                </svg>
+                <span th:text="${total}"></span>
+            </div>
+        </div>
+        <div th:remove="tag" th:switch="${collectionUtils.isEmpty(enotifs)}">
+            <div th:remove="tag" th:case="false">
+                <div class="h130">
+                    <ul class="m_T0">
+                        <li class=" home-panel-list" th:each="enotif : ${enotifs}" th:with="gazno = ${enotif.gazno},
+                        pubDate = ${#dates.format(enotif.pubDate,T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}">
+                            <div th:remove="tag">
+                                <a class="b0"
+                                   th:href="@{/international-marks/list(gazno=${gazno})}"
+                                   th:text="${#strings.concat(gazno,', ',pubDate,' - ',enotif.birthCount)}" th:data-blockui="true"></a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <span class="txtRight">
+                    <a class="button bg__dark-red btn-sm" th:href="@{/enotif/list}" th:text="#{btn.view.all.small}" th:data-blockui="true"></a>
+                </span>
+            </div>
+            <div th:case="true" class="m_T10">
+                <div th:replace="base/message :: info(#{empty.list})"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

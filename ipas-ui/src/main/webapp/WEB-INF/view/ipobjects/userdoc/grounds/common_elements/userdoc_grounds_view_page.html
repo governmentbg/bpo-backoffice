@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:remove="tag" th:fragment="root-grounds(userdocRootGrounds,panel,hasMultipleRootGrouds)" th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT},
+newestEarlierRightType=${T(bg.duosoft.ipas.util.DefaultValue).USERDOC_GROUND_NEWEST_EARLIER_RIGHT_TYPE}">
+    <div class="row col-12 hidden-element m_B20" th:if="${hasMultipleRootGrouds} or ${T(org.springframework.util.CollectionUtils).isEmpty(userdocRootGrounds)}">
+        <button th:text="#{add.userdoc.root.ground.button}"
+                th:attr="data-action='open-panel-legal-grounds-modal',data-url=@{/{panel}/open-panel-legal-grounds-modal(panel=${panel})},
+                         data-panel=${panel}" th:type="button" class="button sm-icn-add m_T10">
+        </button>
+    </div>
+    <div class="col-12">
+        <div th:if="${!T(org.springframework.util.CollectionUtils).isEmpty(userdocRootGrounds)}" th:with="stringUtils=${T(org.springframework.util.StringUtils)}">
+
+            <th:block th:each="userdocGroundData,iterGround : ${userdocRootGrounds}">
+
+                <div th:classappend="${iterGround.index != userdocRootGrounds.size()-1} ? 'grounds-div'">
+
+                    <div class="row action-menu-list-fs m_T10 m_B5" style="border-bottom: 2px solid;">
+                        <div class="col-12 m_0">
+                            <label style="font-weight: bold;font-size: 16px;"  th:text="#{userdoc.ground.types}"></label>
+                        </div>
+                        <div>
+                            <i th:title="#{menu}" th:attr="data-action='toggle-menu',data-id='grounds-actions-'+${userdocGroundData.rootGroundId}" class="hidden-element zmdi zmdi-menu"></i>
+                            <div th:id="'grounds-actions-'+${userdocGroundData.rootGroundId}" class="action-menu none m_L25-i">
+                                <span>
+                                    <i class="icon-pencil"></i>
+                                    <a class="b0" th:title="#{btn.edit}" href="javascript:void(0);" th:text="#{btn.edit}"
+                                       th:attr="data-action='open-panel-legal-grounds-modal',data-url=@{/{panel}/open-panel-legal-grounds-modal(panel=${panel})},
+                                       data-panel=${panel},data-groundid=${userdocGroundData.rootGroundId}">
+                                    </a>
+                                </span>
+                                <span>
+                                    <i class="icon-trash"></i>
+                                    <a class="b0 confirm" th:title="#{btn.delete}" href="javascript:void(0);" th:text="#{btn.delete}"
+                                       th:attr="data-action='delete-root-ground',data-groundid=${userdocGroundData.rootGroundId},data-panel=${panel},
+                                       data-message=#{userdoc.ground.on.deleting.message },data-url=@{/{panel}/delete-root-ground(panel=${panel})}">
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <th:block th:each="userdocSubData,iterSub : ${userdocGroundData.userdocSubGrounds}">
+                        <div class="row col-12 m_B10">
+                            <span  th:text="${#strings.concat(iterSub.index+1,'. ',userdocSubData.legalGroundTypeTitle,' ',userdocSubData.legalGroundTypeDescription)}"></span>
+                        </div>
+                    </th:block>
+
+                    <th:block th:if="${userdocGroundData.earlierRightType!=null && userdocGroundData.earlierRightType.id!=null}">
+                        <label style="color: #9e9e9e;"  th:text="#{single.earlier.right.type.label}"></label>
+                        <div class="row col-12 readonly m_B10">
+                            <span th:text="${userdocGroundData.earlierRightType.name}"></span>
+                        </div>
+                    </th:block>
+
+                    <th:block th:if="${userdocGroundData.applicantAuthority!=null && userdocGroundData.applicantAuthority.id!=null}">
+                        <label style="color: #9e9e9e;"  th:text="#{'applicant.authority.label.'+${panel}}"></label>
+                        <div class="row col-12 readonly m_B10">
+                            <span th:text="${userdocGroundData.applicantAuthority.name}"></span>
+                        </div>
+                    </th:block>
+
+                    <th:block th:if="${userdocGroundData.motives!=null && !stringUtils.isEmpty(userdocGroundData.motives)}">
+                        <label style="color: #9e9e9e;"  th:text="#{userdoc.ground.motives}"></label>
+                        <div class="row col-12 readonly m_B10">
+                            <span th:text="${userdocGroundData.motives}"></span>
+                        </div>
+                    </th:block>
+
+                    <th:block th:if="${userdocGroundData.patentGroundData!=null && userdocGroundData.patentGroundData.partialInvalidity!=null}">
+                        <label style="color: #9e9e9e;"  th:text="#{invalidity.kind.label}"></label>
+                        <div class="row col-12 readonly m_B10">
+                            <span th:if="${userdocGroundData.patentGroundData.partialInvalidity == true}" th:text="#{partial.inavlidity.label.active}"></span>
+                            <span th:if="${userdocGroundData.patentGroundData.partialInvalidity == false}" th:text="#{partial.inavlidity.label.non.active}"></span>
+                        </div>
+                    </th:block>
+
+
+
+
+
+                    <th:block th:if="${!T(org.springframework.util.CollectionUtils).isEmpty(userdocGroundData.singleDesignGroundData)}">
+                        <div class="m_T30 m_B10 ground-subsection-div-title">
+                            <h4 style="display: inline-block" th:text="'Противопоставими дизайни'"></h4>
+                        </div>
+
+                        <div th:each="singleDesignGroundData : ${userdocGroundData.singleDesignGroundData}" th:remove="tag">
+                            <div class="row">
+                                <div class="col-12">
+                                    <span style="font-weight: bold" th:text="${T(com.duosoft.ipas.util.DesignUtils).formatSingleDesignIdentityNumber(singleDesignGroundData.singleDesign.file.fileId.createFilingNumber())}"></span>
+                                </div>
+                            </div>
+
+                            <div th:each="singleDesignDrawingParent,parentIterator : ${singleDesignGroundData.singleDesign.technicalData.drawingList}" th:if="${parentIterator.index % 2 == 0}">
+                                <div class="row">
+                                    <div th:each="singleDesignDrawing,iter2 : ${singleDesignGroundData.singleDesign.technicalData.drawingList}" th:if="${iter2.index==parentIterator.index|| (iter2.index-1)==parentIterator.index}">
+                                        <div class="col-3  m_T20-i" >
+                                            <div class="m_B20"><span th:text="#{single.design.drawing.nbr.label}+': '+${singleDesignDrawing.drawingNbr}"/></div>
+                                            <div th:replace="~{base/form/input :: readonly(label = #{drawing.view.type.label}, value = ${singleDesignDrawing.singleDesignExtended.imageViewType.viewTypeName})}"></div>
+                                            <div th:replace="~{base/form/checkbox :: basic(id ='imagePublished-'+${iter2.index}+${filingNumber},isDisabled=true, label = #{drawing.published.label}, isChecked = ${singleDesignDrawing.singleDesignExtended.imagePublished})}"></div>
+                                            <div th:replace="~{base/form/checkbox :: basic(id ='imageRefused-'+${iter2.index}+${filingNumber}, isDisabled=true,label = #{drawing.refused.label}, isChecked = ${singleDesignDrawing.singleDesignExtended.imageRefused})}"></div>
+                                    </div>
+                                        <div class="col-3">
+                                            <img class="materialboxed m_T20-i" th:src="@{'/'+${panel}+'/content?sessionIdentifier=' + ${sessionObjectIdentifier}+'&drawingn='+${singleDesignDrawing.drawingNbr}+
+                                             '&filingNumber='+${singleDesignGroundData.singleDesign.file.fileId.createFilingNumber()}+'&time='+ ${#dates.format(#dates.createNow(),'HH:mm:ss.SSS')}}" >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </th:block>
+
+
+
+
+                    <div th:if="${T(bg.duosoft.ipas.util.userdoc.UserdocGroundsUtils).hasGroundIpObject(userdocGroundData.earlierRightType)}" class="row col-12 m_T20 ground-subsection-div-title">
+                        <h4 style="display: inline-block" th:text="${(userdocGroundData.earlierRightType.id <= newestEarlierRightType)}?(#{'ground.common.text.section.title.'+${userdocGroundData.earlierRightType.id}}):#{ground.common.text.section.title}"></h4>
+                    </div>
+
+
+                    <div class="row col-12 m_B10" th:if="${userdocGroundData.markGroundData?.filingNumber!=null or userdocGroundData.markGroundData?.filingDate!=null}">
+                        <th:block th:if="${userdocGroundData.markGroundData?.filingNumber!=null}">
+                            <div class="col-4 m_0">
+                                <label style="color: #9e9e9e;"  th:text="#{ground.filing.number}"></label>
+                                <div class="m_B10">
+                                    <span th:text="${T(bg.duosoft.ipas.util.userdoc.UserdocGroundsUtils).constructMarkGroundFilingNumber(userdocGroundData)}"></span>
+                                </div>
+                            </div>
+                        </th:block>
+                        <th:block th:if="${userdocGroundData.markGroundData?.filingDate!=null}">
+                            <div class="col-4 m_0">
+                                <label style="color: #9e9e9e;"  th:text="#{ground.filing.date}"></label>
+                                <div class="m_B10">
+                                    <span th:text="${userdocGroundData != null and userdocGroundData.markGroundData?.filingDate != null ? #dates.format(userdocGroundData.markGroundData?.filingDate, dateFormatDot): ''}"></span>
+                                </div>
+                            </div>
+                        </th:block>
+
+                        <th:block th:if="${userdocGroundData.markGroundData?.markImportedInd==true}">
+                            <div class="col-4 m_0">
+                                <label style="color: #9e9e9e;"  th:text="#{ground.filing.number.link.label}"></label>
+                                <div class="m_B10">
+                                    <a class="b0 p_0"
+                                       th:text="${userdocGroundData.markGroundData?.filingNumber}"
+                                       th:href="@{/ipobject/view(filingNumber=${userdocGroundData.markGroundData?.filingNumber})}">
+                                    </a>
+                                </div>
+                            </div>
+                        </th:block>
+
+                    </div>
+
+                    <div class="row col-12 m_B10" th:if="${userdocGroundData.markGroundData?.registrationNbr!=null or userdocGroundData.markGroundData?.registrationDate!=null}">
+                        <th:block th:if="${userdocGroundData.markGroundData?.registrationNbr!=null}">
+                            <div class="col-4 m_0">
+                                <label style="color: #9e9e9e;"  th:text="#{ground.registration.nbr}"></label>
+                                <div class="m_B10">
+                                    <span th:text="${userdocGroundData.markGroundData?.registrationNbr}"></span>
+                                </div>
+                            </div>
+                        </th:block>
+                        <th:block th:if="${userdocGroundData.markGroundData?.registrationDate!=null}">
+                            <div class="col-4 m_0">
+                                <label style="color: #9e9e9e;"  th:text="#{ground.registration.date}"></label>
+                                <div class="m_B10">
+                                    <span th:text="${userdocGroundData != null and userdocGroundData.markGroundData?.registrationDate != null ? #dates.format(userdocGroundData.markGroundData?.registrationDate, dateFormatDot): ''}"></span>
+                                </div>
+                            </div>
+                        </th:block>
+                    </div>
+
+                    <div class="row col-12 m_B10" th:if="${(userdocGroundData.markGroundData?.registrationCountry!=null && userdocGroundData.markGroundData?.registrationCountry.countryCode!=null)}">
+                        <div class="col-4 m_0">
+                            <label style="color: #9e9e9e;"  th:text="#{ground.gi.type.label}"></label>
+                            <div class="m_B10">
+                                <span th:text="${userdocGroundData.markGroundData?.geographicalIndTyp.applicationSubTypeName}"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-4 m_0">
+                            <label style="color: #9e9e9e;"  th:text="#{ground.country}"></label>
+                            <div class="m_B10">
+                                <span th:text="${userdocGroundData.markGroundData?.registrationCountry.countryName}"></span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row col-12 m_B10" th:if="${(userdocGroundData.markGroundData?.markGroundType!=null && userdocGroundData.markGroundData?.markGroundType.id!=null)}">
+                        <div class="col-4 m_0">
+                            <label style="color: #9e9e9e;"  th:text="#{ground.mark.type}"></label>
+                            <div class="m_B10">
+                                <span th:text="${userdocGroundData.markGroundData?.markGroundType.name}"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-4 m_0" th:if="${userdocGroundData.markGroundData?.markSignTyp!=null}">
+                            <label style="color: #9e9e9e;"  th:text="#{ground.mark.sign.type}"></label>
+                            <div class="m_B10">
+                                <span th:text="${userdocGroundData.markGroundData?.markSignTyp.description()}"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <th:block th:if="${T(bg.duosoft.ipas.util.userdoc.UserdocGroundsUtils).hasGroundImg(userdocGroundData.earlierRightType,userdocGroundData.markGroundData?.markImportedInd)}" th:with="isEditMode = false,url = @{/{panel}/download-ground-image(panel=${panel})}">
+                        <div class="row col-4 m_B10">
+                            <img onerror="this.style.display='none';" class="ground-img" th:src="|${url}?sessionIdentifier=${sessionObjectIdentifier}&rootGroundId=${userdocGroundData.rootGroundId}&isEditMode=${isEditMode}&time=${#dates.format(#dates.createNow(), 'HH:mm:ss.SSS')}|"/>
+                        </div>
+                     </th:block>
+
+                    <th:block th:if="${userdocGroundData.markGroundData?.nameText!=null && !stringUtils.isEmpty(userdocGroundData.markGroundData?.nameText)}">
+                        <label style="color: #9e9e9e;"  th:text="#{ground.name.text}"></label>
+                        <div class="row col-12">
+                            <span th:text="${userdocGroundData.markGroundData?.nameText}"></span>
+                        </div>
+                    </th:block>
+
+
+
+                    <th:block th:if="${userdocGroundData.groundCommonText!=null && !stringUtils.isEmpty(userdocGroundData.groundCommonText)}">
+                        <div th:if="${T(bg.duosoft.ipas.util.userdoc.UserdocGroundsUtils).hasGroundMandatoryCommonText(userdocGroundData.earlierRightType)}" class="m_T20 ground-subsection-div-title">
+                            <h4 style="display: inline-block" th:text="${(userdocGroundData.earlierRightType.id <= newestEarlierRightType)}?(#{'ground.common.text.section.title.'+${userdocGroundData.earlierRightType.id}}):#{ground.common.text.section.title}"></h4>
+                        </div>
+                        <label style="color: #9e9e9e;"  th:text="${(userdocGroundData.earlierRightType.id <= newestEarlierRightType)}?(#{'ground.common.text.label.'+${userdocGroundData.earlierRightType.id}}):#{ground.common.text.label}"></label>
+                        <div class="row col-12 readonly">
+                            <span th:text="${userdocGroundData.groundCommonText}"></span>
+                        </div>
+                    </th:block>
+
+                    <th:block th:if="${userdocGroundData.markGroundData?.niceClassesInd!=null && userdocGroundData.markGroundData?.niceClassesInd==true}">
+
+                        <label style="color: #9e9e9e;"  th:text="#{goods.and.services.description.title}"></label>
+                        <div class="row col-12 readonly m_B10">
+                            <span th:text="#{goods.and.services.option.all.choosen}"></span>
+                        </div>
+
+                    </th:block>
+
+                    <th:block th:if="${!T(org.springframework.util.CollectionUtils).isEmpty(userdocGroundData.markGroundData?.userdocGroundsNiceClasses)}">
+                        <table class="simple">
+                            <thead>
+                            <th th:text="#{goods.and.services.class.title}"></th>
+                            <th th:text="#{goods.and.services.description.title}"></th>
+                            </thead>
+                            <tbody>
+                            <tr th:each="niceClass,iter : ${userdocGroundData.markGroundData?.userdocGroundsNiceClasses}">
+                                <td th:text="${niceClass.niceClassCode}">
+                                </td>
+                                <td class="tc-base-ground">
+                                    <span th:text="${niceClass.niceClassDescription}"></span>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </th:block>
+
+
+                    <div class="row m_T10"></div>
+
+                </div>
+            </th:block>
+        </div>
+    </div>
+</div>
+</body>
+</html>

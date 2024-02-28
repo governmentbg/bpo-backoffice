@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:remove="tag" th:fragment="enotif-data(enotifMarks)" th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+    <th:block th:if="${enotifMarks!=null && !T(org.springframework.util.CollectionUtils).isEmpty(enotifMarks)}">
+        <div class="row">
+            <th:block th:each="enotifMark : ${enotifMarks}" th:with="bordero = ${enotifMark.enotif.gazno},pubDate = ${#dates.format(enotifMark.enotif.pubDate,T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)} ">
+                <div th:replace="~{base/form/text :: readonly(label = #{enotif.bordero.label}, text = ${#strings.concatReplaceNulls('-',enotifMark.transcationType,'/', bordero,', ',pubDate)}, columnSize='col-4')}"></div>
+                <div th:replace="~{base/form/text :: readonly(label = #{enotif.basic.registration}, text = ${#strings.concatReplaceNulls('-', enotifMark.originalCountry,', ', enotifMark.originalLanguage,', ',enotifMark.basicRegistrationNumber)}, columnSize='col-4')}"></div>
+                <div th:replace="~{base/form/text :: readonly(label = #{enotif.designation}, text = ${enotifMark.designationType}, columnSize='col-4')}"></div>
+            </th:block>
+        </div>
+    </th:block>
+</div>
+</body>
+</html>

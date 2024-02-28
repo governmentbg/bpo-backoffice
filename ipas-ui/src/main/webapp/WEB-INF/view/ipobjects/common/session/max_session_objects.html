@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="base/template :: head(title = #{existing.object.title})"></head>
+
+<body class="dark">
+
+
+<div class="app-body">
+    <header class="app-header" th:replace="base/header"></header>
+    <!-- ****************************************************** Left Side Nav -->
+    <div class="left-sidebar">
+        <div id="psb" class="ps--active-y">
+            <nav class="sidebar-nav">
+                <ul id="detail-list" class="nav DropDownMenu checkbox-list switcher simple at-right">
+
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- ********************************************************** Main body -->
+    <main class="main">
+        <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+        <div class="inner">
+            <div class="panel">
+                <div class="col-12 center">
+                    <h3 style="display: inline-block;color: #c62222;" th:text="'Внимание'"></h3>
+                </div>
+                <div class="row">
+                    <div class="col-12 center">
+                        <p th:utext="'Достигнахте макасималния брой позволени обекти в сесията ! За да продължите моля премахнете част от отворените обекти !'"></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 center">
+                        <p th:text="'Максимален брой позволени обекти: '+${maxSessionObjects}"></p>
+                    </div>
+                </div>
+                <div th:id="max-session-object-panel">
+                    <div th:replace="ipobjects/common/session/session_object_list :: session-objects-list(${sessionObjects},${null})"></div>
+                </div>
+                <div class="m_T10">
+                    <button th:attr="data-action='reload-page'" th:type="button" onclick="reloadPage()" class="button" style="width: 200px" th:text="'Продължи'"></button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<footer class="page-footer" th:replace="base/footer"></footer>
+<div th:replace="base/template :: js-footer" th:remove="tag"></div>
+</body>
+</html>
+

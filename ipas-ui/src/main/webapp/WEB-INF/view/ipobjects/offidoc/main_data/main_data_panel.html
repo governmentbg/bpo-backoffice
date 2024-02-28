@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="offidoc" type="bg.duosoft.ipas.core.model.offidoc.COffidoc"*/-->
+<!--/*@thymesVar id="parentData" type="bg.duosoft.ipas.core.model.process.CProcessParentData"*/-->
+<div th:fragment="panel(offidoc)">
+    <div th:with="objectUtils=${T(java.util.Objects)}">
+        <div class="row">
+            <div class="col-12">
+                <div class="input-field readonly" th:with="id='object-offidoc-offidocName'">
+                    <input class="form-ignore" th:id="${id}" type="text" disabled th:value="${offidoc.offidocType.offidocName}">
+                    <label th:for="${id}" th:text="'Вид документ'"></label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <div th:switch="${objectUtils.isNull(offidoc.externalSystemId)}">
+                    <div th:case="true" class="input-field readonly" th:with="id='object-offidoc-externalSystemId'">
+                        <input class="form-ignore" th:id="${id}" type="text" disabled th:value="#{not.registered}">
+                        <label th:for="${id}" th:text="'Номер'"></label>
+                    </div>
+                    <div th:case="false" class="input-field readonly" th:with="id='object-offidoc-externalSystemId'">
+                        <input class="form-ignore" th:id="${id}" type="text" disabled th:value="${offidoc.externalSystemId}">
+                        <label th:for="${id}" th:text="'Номер'"></label>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-4" th:classappend="${objectUtils.isNull(offidoc.printDate)}?none">
+                <div class="input-field readonly" th:with="id='object-offidoc-printDate'">
+                    <input class="form-ignore" th:id="${id}" type="text" disabled th:value="${#dates.format(offidoc.printDate,T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}">
+                    <label th:for="${id}" th:text="'Дата'"></label>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="input-field readonly" th:with="id='object-offidoc-offidocId'">
+                    <input class="form-ignore" th:id="${id}" type="text" disabled th:value="${offidoc.offidocId.createFilingNumber()}">
+                    <label th:for="${id}" th:text="'Вътрешен номер'"></label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div th:replace="~{base/form/input :: link(label = 'Генериран документ', text = #{process.tree.open.in.abdocs}, dataUrl = @{/process/document/open-office-document},
+                     dataAction = 'abdocs-offidoc-redirect', dataOffidoc = ${offidoc.offidocId.createFilingNumber()}, dataProcess = |${offidoc.processId.processType}-${offidoc.processId.processNbr}| )}"></div>
+            </div>
+        </div>
+        <div th:if="${objectUtils.nonNull(offidoc.offidocParentData)}">
+            <div class="row">
+                <div class="col-12">
+                    <div class="input-field readonly" th:with="id='object-offidoc-offidocParentData'">
+                        <label class="active" th:for="${id}" th:text="'Към обект/документ'"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="row m_T5">
+                <div class="col-12">
+                    <div class="m_B10">
+                        <div>
+                            <div th:replace=" :: offidoc-parent(${offidoc.offidocParentData})"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="offidoc-parent(parentData)" th:with="objectUtils=${T(java.util.Objects)},processTypeUtils=${T(bg.duosoft.ipas.util.process.ProcessTypeUtils)},stringUtils=${T(org.springframework.util.StringUtils)}">
+    <div th:remove="tag" th:if="${objectUtils.nonNull(parentData.fileId)}">
+        <span class="inline-block">
+            <a class="b0 p_0" th:href="@{/ipobject/view(filingNumber=${parentData.fileId.createFilingNumber()})}" th:text="${parentData.fileId.createFilingNumber()}"></a>
+        </span>
+        <div th:remove="tag" th:if="${parentData.isTopProcessFile()}" th:with="title=${parentData.topProcessFileData.title}">
+            <span th:text="'('"></span>
+            <span th:if="${!stringUtils.isEmpty(title)}" th:text="${title}+' - '"></span>
+            <span th:text="${parentData.topProcessFileData.statusName}"></span>
+            <span th:text="')'"></span>
+        </div>
+    </div>
+    <div th:remove="tag" th:if="${objectUtils.nonNull(parentData.userdocId)}">
+        <span class="inline-block">
+            <a class="b0 p_0" th:href="@{/ipobject/view(userdocFilingNumber=${parentData.userdocId.createFilingNumber()})}" th:text="${parentData.userdocRegistrationNumber}"></a>
+        </span>
+        <span class="m_L5 m_R5" th:text="'към'"></span>
+        <div th:if="objectUtils.nonNull(parentData.parent)" th:replace=" :: offidoc-parent(${parentData.parent})"></div>
+    </div>
+    <div th:remove="tag" th:if="${objectUtils.nonNull(parentData.offidocId)}">
+        <span class="inline-block">
+            <a class="b0 p_0" th:href="@{/ipobject/view(offidocFilingNumber=${parentData.offidocId.createFilingNumber()})}" th:text="${parentData.offidocRegistrationNumber}"></a>
+        </span>
+        <span class="m_L5 m_R5" th:text="'към'"></span>
+        <div th:if="objectUtils.nonNull(parentData.parent)" th:replace=" :: offidoc-parent(${parentData.parent})"></div>
+    </div>
+    <div th:remove="tag" th:if="${parentData.isManualSubProcess}">
+        <span class="inline-block" th:with="processIdentifier=(${parentData.processId.processType}+'-'+${parentData.processId.processNbr})">
+            <a class="b0 p_0" th:href="@{/ipobject/view(msprocess=${processIdentifier})}" th:text="${processIdentifier}"></a>
+        </span>
+    </div>
+</div>
+</body>
+</html>

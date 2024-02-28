@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg">
+
+<head th:replace="base/template :: head(title=#{'my.userdocs.title.'+${myUserdocsFilter.userdocGroupName}})"></head>
+
+<body class="dark left-sidebar-show">
+
+<header class="app-header" th:replace="base/header"></header>
+
+<div class="app-body" th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+    <div th:replace="base/left-sidebars :: list(urls = ${T(com.duosoft.ipas.util.UrlMap).getHomeUrlsFiltered()})"></div>
+    <main class="main">
+        <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+        <div class="inner continer">
+            <div class="row">
+                <div class="col-12">
+                    <div class="panel">
+                        <div class="center">
+                            <h1 class="section-header" th:text="#{'my.userdocs.title.'+${myUserdocsFilter.userdocGroupName}}"></h1>
+                        </div>
+                        <div class="row">
+                            <div class="col-6" th:id="'my-userdocs-userdocType-filter-wrapper'" th:with="id='my-userdocs-userdocType-filter'">
+                                <div th:replace="~{base/form/select :: map(id = ${id}, label = 'Вид на документа', map = ${userdocTypeMap}, selected = ${myUserdocsFilter.userdocType}, emptySelectOption = #{all}, classes = 'search-box')}"></div>
+                            </div>
+                            <div class="col-6">
+                                <div th:replace="~{base/form/input :: text(id = 'my-userdocs-filingNumber-filter-input',value =${myUserdocsFilter.userdocFilingNumber}, label = 'Номер на документа')}"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6" th:id="'my-userdocs-status-filter-wrapper'" th:with="id='my-userdocs-status-filter'">
+                                <div th:replace="~{base/form/select :: map(id = ${id}, label = 'Статус', map = ${statusMap}, selected = ${myUserdocsFilter.statusCode},emptySelectOption = #{all}, classes = 'search-box')}"></div>
+                            </div>
+                            <div class="col-2 m_T10-i">
+                                <div th:replace="~{base/form/checkbox :: basic(id = 'my-userdocs-finished-checkbox', label = 'Приключени', isChecked = ${myUserdocsFilter.finished})}"></div>
+                            </div>
+                            <div class="col-2 m_T10-i">
+                                <div th:replace="~{base/form/checkbox :: basic(id = 'my-userdocs-in-production-checkbox', label = 'В производство', isChecked = ${myUserdocsFilter.inProduction})}"></div>
+                            </div>
+                            <div class="col-2 m_T10-i">
+                                <div th:replace="~{base/form/checkbox :: basic(id = 'my-userdocs-newly-allocated-checkbox', label = 'Само новите', isChecked = ${myUserdocsFilter.newlyAllocated})}"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div th:replace="~{base/form/input :: datepicker(id = 'my-userdocs-filingDateFrom-filter-input', label = 'Дата на подаване от',value = ${null != myUserdocsFilter.userdocFilingDateFrom ? #dates.format(myUserdocsFilter.userdocFilingDateFrom, dateFormatDot) : ''})}"></div>
+                            </div>
+                            <div class="col-6">
+                                <div th:replace="~{base/form/input :: datepicker(id = 'my-userdocs-filingDateTo-filter-input', label = 'Дата на подаване до',value = ${null != myUserdocsFilter.userdocFilingDateTo ? #dates.format(myUserdocsFilter.userdocFilingDateTo, dateFormatDot) : ''})}"></div>
+                            </div>
+                            <div class="col-6" th:id="'my-userdocs-objectFileTyp-filter-wrapper'" th:with="id='my-userdocs-objectFileTyp-filter'">
+                                <div th:replace="~{base/form/select :: map(id = ${id}, label = 'Вид на обекта', map = ${fileTypes}, selected = ${myUserdocsFilter.objectFileTyp},emptySelectOption = #{all}, classes = 'search-box')}"></div>
+                            </div>
+                            <div class="col-6">
+                                <div th:replace="~{base/form/input :: text(id = 'my-userdocs-objectFileNbr-filter-input',value =${myUserdocsFilter.objectFileNbr}, label = 'Номер на обекта')}"></div>
+                            </div>
+                            <div class="col-6">
+                                <div th:replace="~{base/form/input :: text(id = 'responsibleUser-filter', label = #{filter.responsibleUser.label},dataId = (${myUserdocsFilter.responsibleUser}), value = (${myUserdocsFilter.responsibleUserName}), url = @{/user/users-autocomplete}, classes = 'autocomplete-user')}"></div>
+                            </div>
+                        </div>
+
+                        <div class="row right-align">
+                            <div class="col-12">
+                                <a th:replace="~{base/form/button :: material-btn(label = #{btn.search}, idBtn = 'search-my-userdocs-btn', dataUrl = @{/my-grouped-userdocs/search} , icon = 'search', classes = 'm_R20 m_T5')}"></a>
+                                <a th:replace="~{base/form/button :: material-btn(label = #{btn.clear}, idBtn = 'clear-my-userdocs-btn',href=@{/my-grouped-userdocs/list(userdocGroupName=${myUserdocsFilter.userdocGroupName})}, icon = 'clear', classes = 'm_T5')}"></a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12" th:id="my-userdocs-table-wrapper" th:attr="data-url=@{/my-grouped-userdocs/update-table}">
+                                <div th:replace="home/my_grouped_userdocs/my_grouped_userdocs_table :: table(myUserdocsList=${myUserdocsList},myUserdocsCount=${myUserdocsCount},myUserdocsFilter=${myUserdocsFilter})"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<footer class="page-footer" th:replace="base/footer"></footer>
+<div th:replace="base/template :: js-footer" th:remove="tag"></div>
+</body>
+</html>

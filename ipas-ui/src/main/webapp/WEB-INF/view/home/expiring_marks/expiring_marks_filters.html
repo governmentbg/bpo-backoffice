@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="expiring-marks-search-filters" th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+    <div class="row">
+        <div class="col-6">
+            <div th:replace="~{base/form/input :: datepicker(id = 'expiring-marks-dateFrom-filter-input', label = #{expiring.marks.notifications.filter.dateFrom}, value = ${#dates.format(expirationDateFrom,dateFormatDot)})}"></div>
+        </div>
+        <div class="col-6">
+            <div th:replace="~{base/form/input :: datepicker(id = 'expiring-marks-dateTo-filter-input', label = #{expiring.marks.notifications.filter.dateTo}, value = ${#dates.format(expirationDateTo,dateFormatDot)})}"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <a th:replace="~{base/form/button :: material-btn(idBtn = 'search-expiring-marks-btn', label = #{btn.search}, dataUrl = @{/expiring-marks/notifications/search}, dataValidationBlock = '#expiring-marks-filters-wrapper' , icon = 'search', classes = 'm_T5 w_150px right')}"></a>
+            <a th:replace="~{base/form/button :: material-btn(label = #{btn.clear}, idBtn = 'clear-expiring-marks-btn', dataAction='reload-page', icon = 'clear', classes = 'm_R20 m_T5 w_150px right')}"></a>
+        </div>
+    </div>
+</div>
+
+</div>
+</body>
+</html>

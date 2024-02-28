@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="base/template :: head(title = (#{patent.breadcrumb.prefix} + ' ' + ${patent.file.fileId.createFilingNumber()}))"></head>
+
+<body class="dark left-sidebar-show" th:with="panelEnum=${T(com.duosoft.ipas.enums.PatentPanel)}">
+
+<th:block th:with="panelsList=(${{panelEnum.IdentityData.code(),
+                                  panelEnum.MainData.code(),
+                                  panelEnum.IpcData.code(),
+                                  panelEnum.CpcData.code(),
+                                  panelEnum.Persons.code(),
+                                  panelEnum.RightsData.code(),
+                                  panelEnum.Publication.code(),
+                                  panelEnum.Recordals.code(),
+                                  panelEnum.Process.code(),
+                                  panelEnum.ClaimsData.code(),
+                                  panelEnum.Payments.code(),
+                                  panelEnum.PublishedDrawingsData.code(),
+                                  panelEnum.Citations.code(),
+                                  panelEnum.History.code()} })">
+
+    <div th:replace="ipobjects/patentlike/common/viewpage/patent_view_page :: content(${panelsList},'patent')"></div>
+</th:block>
+
+</body>
+</html>

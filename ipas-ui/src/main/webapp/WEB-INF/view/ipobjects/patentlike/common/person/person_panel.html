@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="file" type="bg.duosoft.ipas.core.model.file.CFile"*/-->
+<div th:fragment="persons(file,authorships)">
+    <div th:replace="ipobjects/patentlike/common/person/authors :: authorships(${file},${authorships})"></div>
+    <div th:replace="ipobjects/patentlike/common/person/owners :: owners(${file})"></div>
+    <div th:replace="ipobjects/patentlike/common/person/agents :: agents(${file})"></div>
+    <div th:replace="ipobjects/patentlike/common/person/correspondence_address :: correspondence-address(${file})"></div>
+</div>
+
+</body>
+</html>

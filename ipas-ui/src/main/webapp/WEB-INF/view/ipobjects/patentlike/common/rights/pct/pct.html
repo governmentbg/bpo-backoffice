@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="patent-pct(pctApplicationData)" th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT},stringUtils=${T(org.springframework.util.StringUtils)}">
+    <div th:with="hasPctData=${pctApplicationData != null}" id="pct-subpanel">
+        <hr th:classappend="${!hasPctData ? 'hidden-element':''}">
+        <div class="row">
+            <div class="row">
+                <div class="col-6" th:classappend="${!hasPctData ? 'hidden-element':''}">
+                    <div class="m_B10">
+                        <div th:replace="~{base/form/checkbox :: basic(id = 'pct-hasPctData', target = 'pct-details', label = #{pct.application.details.label}, isChecked = ${hasPctData}, classes = 'rights-checkbox', additionalArgs='data-disables=\'divisional-app-hasDivisionalData,patent-parallel-data-hasParallelData,patent-transformation-hasTransformationData\'')}"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="pct-details" th:style="${hasPctData? '': 'display:none'}">
+                <input id="patent-pctApplicationData-pctApplicationId-original" th:value="${pctApplicationData?.pctApplicationId}" th:type="hidden" class="form-ignore"/>
+                <input id="patent-pctApplicationData-pctApplicationDate-original" th:value="${#dates.format(pctApplicationData?.pctApplicationDate,dateFormatDot)}" th:type="hidden" class="form-ignore"/>
+                <div class="row" >
+                    <div class="col-4">
+                        <div th:replace="~{base/form/input :: text(id = 'patent-pctApplicationData-pctApplicationId', label = #{pct.application.id}, value = ${pctApplicationData?.pctApplicationId})}"></div>
+                    </div>
+                    <div class="col-4">
+                        <div th:replace="~{base/form/input :: datepicker(id = 'patent-pctApplicationData-pctApplicationDate', label = #{pct.application.date}, value = ${#dates.format(pctApplicationData?.pctApplicationDate,dateFormatDot)})}"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <div th:replace="~{base/form/input :: text(id = 'patent-pctApplicationData-pctPublicationId', label = #{pct.publication.id}, value = ${pctApplicationData?.pctPublicationId})}"></div>
+                    </div>
+                    <div class="col-4">
+                        <div th:replace="~{base/form/input :: datepicker(id = 'patent-pctApplicationData-pctPublicationDate', label = #{pct.publication.date}, value = ${#dates.format(pctApplicationData?.pctPublicationDate,dateFormatDot)})}"></div>
+                    </div>
+                </div>
+                <div class="row hidden-element">
+                        <div class="p_10">
+                            <span class="orange"
+                                  th:text="#{rights.expiration.and.entitlement.date.replace.warning}"></span>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

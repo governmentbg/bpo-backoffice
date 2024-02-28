@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="parallel_um(patent)">
+
+    <div class="row" id="um-parallel-data-subpanel" th:with="relationshipType = ${T(bg.duosoft.ipas.enums.RelationshipType).PARALLEL_PATENT_TYPE},nationalPatentRelationshipData=${parallelUtilityModelData},hasParallelRelationship=${T(com.duosoft.ipas.util.CFileRelationshipUtils).hasParallelRelationship(patent)}, hasNationalPatentParallelData=${parallelUtilityModelData != null}">
+        <hr th:classappend="${hasParallelRelationship || hasNationalPatentParallelData ? '' : 'hidden-element'}">
+        <div class="row">
+            <div class="row">
+                <div class="col-6" th:classappend="${hasParallelRelationship || hasNationalPatentParallelData  ? '' : 'hidden-element'}">
+                    <div class="m_B10">
+                        <div th:replace="~{base/form/checkbox :: basic(id = 'patent-parallel-data-hasParallelData', target = 'um-parallel-data-details', label = #{parallel.um}, isChecked = ${hasParallelRelationship || hasNationalPatentParallelData}, classes = 'rights-checkbox', additionalArgs='data-disables=\'pct-hasPctData,patent-transformation-hasTransformationData,divisional-app-hasDivisionalData\'')}"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" th:attr="data-load-rights-body-url=@{/utility_model/load-parallel-um-body}" id="um-parallel-data-details" th:style="${hasParallelRelationship || hasNationalPatentParallelData ? '': 'display:none'}">
+                <th:block th:if="${hasParallelRelationship || hasNationalPatentParallelData}">
+                    <div th:replace="ipobjects/patentlike/common/rights/transformation_like_body :: transformation_like_body(${patent},${nationalPatentRelationshipData},${relationshipType})"></div>
+                </th:block>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="process" type="bg.duosoft.ipas.core.model.process.CProcess"*/-->
+<div th:fragment="modal(process, mainProcessUpperId, mainProcessId)" th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)}, objectsUtils=${T(java.util.Objects)}">
+
+    <div th:id="change-userdoc-position-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="'Преместване на вторично действие в друга преписка'"></h4>
+            </div>
+            <div class="m_T10">
+                <div th:replace="ipobjects/userdoc/main_data/change_position/process_tree :: main-object(${process},${mainProcessUpperId},${mainProcessId})"></div>
+            </div>
+            <div class="none m_T10" th:id="change-userdoc-position-modal-validation-msg">
+                <span style="color: #d21010" th:text="'Не е избран документ'"></span>
+            </div>
+            <div th:id="validation-errors-wrapper" class="m_T10"></div>
+        </div>
+        <div class="modal-footer row">
+            <div class="col-12">
+                <button th:attr="data-action='change-userdoc-position-submit',data-url=@{/userdoc/main-data/change-userdoc-position}" th:text="#{btn.save}" class="button sm-icn-save wmin_130"></button>
+                <button th:text="#{btn.cancel}" type="button" class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div th:remove="tag" th:fragment="errors(validationErrors)">
+    <div class="row" id="userdoc-change-allowedType">
+        <div th:replace="~{base/validation :: validation-message(${validationErrors},'userdoc-change-allowedType')}"></div>
+    </div>
+    <span class="none validation-indication"></span>
+</div>
+
+</body>
+</html>

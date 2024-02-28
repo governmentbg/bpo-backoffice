@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="file" type="bg.duosoft.ipas.core.model.file.CFile"*/-->
+<div th:remove="tag" th:fragment="single-designs(userdoc)"
+     th:with="extraDataUtils = ${T(bg.duosoft.ipas.util.userdoc.UserdocExtraDataUtils)},
+              type=${T(bg.duosoft.ipas.enums.UserdocExtraDataTypeCode).SERVICE_SCOPE},
+              userdocExtraData=${userdoc.userdocExtraData},
+              types = ${extraDataUtils.selectAllUserdocExtraDataTypes(userdoc)},
+              userdocUtils=${T(bg.duosoft.ipas.util.userdoc.UserdocUtils)}">
+
+    <div th:remove="tag" th:with="serviceScopeValue = ${extraDataUtils.selectBoolean(type, userdocExtraData)}">
+        <div th:classappend="${serviceScopeValue == null}? 'hidden-element'">
+            <div class="row">
+                <div class="col-12">
+                    <h4 style="display: inline-block" th:text="'Единични дизайни, за които е подадено искането'"></h4>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12" th:with="id='object-userdoc-extraData-'+${type}">
+                    <div th:id="${id}">
+                        <div th:replace="ipobjects/userdoc/extra_data/fragments.html :: dataFlag-radio(type = ${type}, value = ${true}, classes = 'form-ignore with-gap userdoc-single-design-radio all', allowedTypes = ${types}, label = 'Всички единични дизайни на промишления дизайн', checked = ${serviceScopeValue == true})"></div>
+                        <div th:replace="ipobjects/userdoc/extra_data/fragments.html :: dataFlag-radio(type = ${type}, value = ${false}, classes = 'form-ignore with-gap userdoc-single-design-radio part', allowedTypes = ${types}, label = 'Част от единичните дизайни на промишления дизайн', checked = ${serviceScopeValue == false})"></div>
+                        <div th:replace="base/validation :: validation-message(${validationErrors},${id})"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row userdoc-single-designs-table-wrapper" th:attr="data-url=@{/userdoc/single-design/update}">
+                <div th:replace=" :: userdoc-single-designs-table(${serviceScopeValue},${userdoc.singleDesigns},${userdocUtils.selectUserdocMainObject(userdoc.userdocParentData)})"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="userdoc-single-designs-table(isAllSingleDesignsIncluded, singleDesignsList, mainDesignFileId)">
+    <div class="col-12">
+        <div th:id="userdoc-single-design-table" class="userdoc-single-design-table">
+            <div th:if="${singleDesignsList != null}">
+                <div th:remove="tag" th:if="${isAllSingleDesignsIncluded != true}">
+                    <div th:replace="~{ipobjects/userdoc/extra_data/single_designs :: single-designs-table(${singleDesignsList}, ${mainDesignFileId})}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="row m_T10">
+            <span th:classappend="${(isAllSingleDesignsIncluded == true) || (isAllSingleDesignsIncluded == null)}? 'none'" class="delete-all-single-designs-wrapper">
+                <span class="hidden-element">
+                    <a th:replace="~{base/form/button :: material-btn(label = #{btn.delete.all.single.designs}, dataAction = 'delete-all-single-designs',dataUrl = @{/userdoc/single-design/delete-all}, icon = 'delete', classes = 'right m_L10')}"></a>
+                </span>
+            </span>
+            <span th:classappend="${(isAllSingleDesignsIncluded == true) || (isAllSingleDesignsIncluded == null)}? 'none'" class="restore-original-single-designs-wrapper">
+                <span class="hidden-element">
+                    <a th:replace="~{base/form/button :: material-btn(label = #{btn.select.original.single.design}, dataAction = 'restore-single-designs',dataUrl = @{/userdoc/single-design/restore-original}, icon = 'refresh', classes = 'right m_L10')}"></a>
+                </span>
+            </span>
+            <span th:classappend="${(isAllSingleDesignsIncluded == true) || (isAllSingleDesignsIncluded == null)}? 'none'" class="add-design-from-original-wrapper">
+                <span class="hidden-element">
+                    <a th:replace="~{base/form/button :: material-btn(label = #{btn.select.add.original.design}, dataAction = 'select-add-original-design',dataUrl = @{/userdoc/single-design/select-add-original-design}, icon = 'add', classes = 'right m_L10')}"></a>
+                </span>
+            </span>
+        </div>
+    </div>
+</div>
+
+
+<div th:fragment="single-designs-table(singleDesignsList, mainDesignFileId)" class="m_B10" th:if="${singleDesignsList != null && !T(org.springframework.util.CollectionUtils).isEmpty(singleDesignsList)}">
+    <table class="simple">
+        <thead>
+        <tr>
+            <th th:text="'Идентификатор'"></th>
+            <th th:text="'Под-тип'"></th>
+            <th th:text="'Локарно класове'"></th>
+            <th th:text="'Продуктово описание'"></th>
+            <th class="hidden-element"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="singleDesign : ${singleDesignsList}" th:with="designUtils=${T(com.duosoft.ipas.util.DesignUtils)}">
+            <td th:text="${designUtils.formatSingleDesignIdentityNumber(mainDesignFileId.fileNbr,singleDesign.fileId.createFilingNumber())}"></td>
+            <td th:text="${singleDesign.applicationSubType.applicationSubTypeName}"></td>
+            <td th:text="${singleDesign.getLocarnoClassesAsString()}"></td>
+            <td th:text="${singleDesign.productTitle}"></td>
+            <td class="inline-block hidden-element">
+                <div class="row">
+                    <div class="col-11"></div>
+                    <div class="col-1 right-align action-menu-wrapper" th:with="menuId=|single-design-menu-${singleDesign.fileId.fileNbr}|">
+                        <i th:title="#{menu}" th:attr="data-action='toggle-menu',data-id=${menuId}" class="zmdi zmdi-menu"></i>
+                        <div th:id="${menuId}" class="action-menu none m_L25-i">
+                            <span >
+                                <i class="icon-trash"></i>
+                                <a class="b0" th:title="#{btn.delete}" href="javascript:void(0);" th:text="#{btn.delete}"
+                                   th:attr="data-action='delete-userdoc-single-design',data-id=${singleDesign.fileId.createFilingNumber()},data-url=@{/userdoc/single-design/delete}">
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+
+<div th:fragment="single-design-choose-modal(map)">
+    <div style="overflow: visible" th:id="single-design-choose-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="#{choose.design.modal.header}"> </h4>
+            </div>
+            <div th:if="${map != null}">
+                <div th:replace="~{base/form/select :: map(id = 'userdoc-single-design-choice', label = #{select.single.design}, map = ${map}, isDisabled = false)}"></div>
+            </div>
+            <div th:if="${map == null}" >
+                <div th:replace="base/message :: info(#{all.designs.already.added})"></div>
+            </div>
+        </div>
+        <div class="modal-footer row">
+            <div class="col-12">
+                <button th:if="${map != null}" th:attr="data-url=@{/userdoc/single-design/save-design-choice}"
+                        class="button sm-icn-save wmin_130 save-design-choice" th:text="#{btn.add.selected.design}"> </button>
+                <button th:text="#{btn.cancel}" type="button" class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

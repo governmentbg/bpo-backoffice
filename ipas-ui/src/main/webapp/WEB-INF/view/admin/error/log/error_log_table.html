@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="errorLog" type="bg.duosoft.ipas.core.model.error.CErrorLog"*/-->
+<!--/*@thymesVar id="errorLogFilter" type="bg.duosoft.ipas.util.filter.ErrorLogFilter"*/-->
+<!--/*@thymesVar id="errorLogSorterUtils" type="bg.duosoft.ipas.util.filter.sorter.ErrorLogSorterUtils"*/-->
+<div th:fragment="table(errorLogList,errorLogCount,errorLogFilter)"
+     th:with="sorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.SorterUtils)},
+              collectionUtils=${T(org.springframework.util.CollectionUtils)},
+              errorLogSorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.ErrorLogSorterUtils)}">
+
+    <div th:remove="tag" th:switch="${collectionUtils.isEmpty(errorLogList)}">
+        <div th:remove="tag" th:case="true">
+            <div class="bg__light-blue p_10 m_B10 m_T10 center">
+                <span th:text="#{empty.list}"></span>
+            </div>
+        </div>
+        <div th:remove="tag" th:case="false">
+            <div class="row">
+                <div>
+                    <span th:text="#{total}"></span>
+                    <span th:text="${errorLogCount}"></span>
+                </div>
+            </div>
+            <div class="m_T5">
+                <table class="simple bpo">
+                    <thead>
+                    <tr>
+                        <th style="width: 50px" th:text="#{number}"></th>
+                        <th style="width: 150px"
+                            th:with="isSelected=${#strings.equalsIgnoreCase(errorLogFilter.sortColumn,errorLogSorterUtils.ABOUT)},dataSort=${errorLogSorterUtils.ABOUT}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,errorLogFilter.sortOrder)}">
+                            <div th:replace="~{base/table_sorter :: sorter('Относно',${errorLogFilter.sortOrder},${isSelected})}"></div>
+                        </th>
+                        <th
+                            th:with="isSelected=${#strings.equalsIgnoreCase(errorLogFilter.sortColumn,errorLogSorterUtils.ACTION)},dataSort=${errorLogSorterUtils.ACTION}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,errorLogFilter.sortOrder)}">
+                            <div th:replace="~{base/table_sorter :: sorter('Действие',${errorLogFilter.sortOrder},${isSelected})}"></div>
+                        </th>
+                        <th style="width: 100px"
+                            th:with="isSelected=${#strings.equalsIgnoreCase(errorLogFilter.sortColumn,errorLogSorterUtils.DATE_CREATED)},dataSort=${errorLogSorterUtils.DATE_CREATED}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,errorLogFilter.sortOrder)}">
+                            <div th:replace="~{base/table_sorter :: sorter('Дата',${errorLogFilter.sortOrder},${isSelected})}"></div>
+                        </th>
+                        <th style="width: 100px"
+                            th:with="isSelected=${#strings.equalsIgnoreCase(errorLogFilter.sortColumn,errorLogSorterUtils.DATE_RESOLVED)},dataSort=${errorLogSorterUtils.DATE_RESOLVED}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,errorLogFilter.sortOrder)}">
+                            <div th:replace="~{base/table_sorter :: sorter('Проверен',${errorLogFilter.sortOrder},${isSelected})}"></div>
+                        </th>
+                        <th style="width: 100px"
+                            th:with="isSelected=${#strings.equalsIgnoreCase(errorLogFilter.sortColumn,errorLogSorterUtils.PRIORITY)},dataSort=${errorLogSorterUtils.PRIORITY}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,errorLogFilter.sortOrder)}">
+                            <div th:replace="~{base/table_sorter :: sorter('Приоритет',${errorLogFilter.sortOrder},${isSelected})}"></div>
+                        </th>
+                        <th style="width: 50px">
+                            <span th:text="#{options.label}"></span>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="errorLog,errorLogStat : ${errorLogList}">
+                        <td>
+                            <span th:text="${errorLogStat.count + ((errorLogFilter.page - 1)*errorLogFilter.pageSize)}"></span>
+                        </td>
+                        <td th:with="aboutEnum=${T(bg.duosoft.ipas.enums.ErrorLogAbout)}">
+                            <div th:remove="tag" th:switch="${errorLog.about}">
+                                <span th:case="${aboutEnum.ABDOCS.value}" th:text="'Деловодна система'"></span>
+                                <span th:case="${aboutEnum.IPAS.value}" th:text="${aboutEnum.IPAS.value}"></span>
+                                <span th:case="*" th:text="${errorLog.about}"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <span th:text="${errorLog.action}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${#dates.format(errorLog.dateCreated,T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT)}"></span>
+                        </td>
+                        <td>
+                            <div th:switch="${errorLog.dateResolved == null}">
+                                <span th:case="true" th:text="'Не'"></span>
+                                <span th:case="false" th:text="'Да'"></span>
+                            </div>
+                        </td>
+                        <td th:with="priorityEnum=${T(bg.duosoft.ipas.enums.ErrorLogPriority)}">
+                            <div th:remove="tag" th:switch="${errorLog.priority}">
+                                <span th:case="${priorityEnum.HIGH.value}" th:text="'Висок'"></span>
+                                <span th:case="${priorityEnum.MEDIUM.value}" th:text="'Среден'"></span>
+                                <span th:case="${priorityEnum.LOW.value}" th:text="'Нисък'"></span>
+                                <span th:case="*" th:text="${errorLog.priority}"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <a href="javascript:void(0)" class="b0"
+                               th:attr="data-action='view-error-log',data-id=${errorLog.id},data-url=@{/admin/error-log/view}"
+                               th:title="#{btn.view}">
+                                <i class="icon-eye bpo-blue-color fs_20px"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div th:replace="~{base/paginator :: paginator(page=${errorLogFilter.page},pageSize=${errorLogFilter.pageSize},total=${errorLogCount},baseUrl=@{admin/error-log/update-table},
+                        tableContainerDiv='error-log-table-wrapper',additionalParams='&sortOrder='+${errorLogFilter.sortOrder}+'&sortColumn='+${errorLogFilter.sortColumn})}"></div>
+            </div>
+
+            <div th:replace="~{admin/error/log/error_log_table :: filter-params(${errorLogFilter})}"></div>
+        </div>
+    </div>
+
+</div>
+
+<div th:fragment="filter-params(errorLogFilter)">
+    <div th:id="error-log-filter-params">
+        <input th:type="hidden" th:id="error-log-page" th:value="${errorLogFilter.page}">
+        <input th:type="hidden" th:id="error-log-pageSize" th:value="${errorLogFilter.pageSize}">
+        <input th:type="hidden" th:id="error-log-sortColumn" th:value="${errorLogFilter.sortColumn}">
+        <input th:type="hidden" th:id="error-log-sortOrder" th:value="${errorLogFilter.sortOrder}">
+        <input th:type="hidden" th:id="error-log-resolved" th:value="${errorLogFilter.resolved}">
+        <input th:if="${!#strings.isEmpty(errorLogFilter.priority)}" th:type="hidden" th:id="error-log-priority" th:value="${errorLogFilter.priority}">
+        <input th:if="${!#strings.isEmpty(errorLogFilter.about)}" th:type="hidden" th:id="error-log-about" th:value="${errorLogFilter.about}">
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="file" type="bg.duosoft.ipas.core.model.file.CFile"*/-->
+<!--/*@thymesVar id="authorships" type="bg.duosoft.ipas.core.model.patent.CAuthorshipData"*/-->
+<!--/*@thymesVar id="author" type="bg.duosoft.ipas.core.model.person.CAuthor"*/-->
+<div th:fragment="authorships(file,authorships)" th:with="objectUtils=${T(java.util.Objects)},
+                                                          inventorPersonKind = ${T(com.duosoft.ipas.enums.PersonKind).Inventor.code()},
+                                                          directionEnum = ${T(bg.duosoft.ipas.enums.Direction)},
+                                                          inventorUtils = ${T(bg.duosoft.ipas.util.person.InventorUtils)}">
+    <div th:if="${objectUtils.nonNull(authorships) && !T(bg.duosoft.ipas.util.general.BasicUtils).isSpcObject(file.fileId.fileType)}" class="col-12" th:classappend="${#lists.isEmpty(authorships.authorList)}?'hidden-element'">
+        <div th:replace=" :: authors-header"></div>
+        <div th:replace=" :: authors-body"></div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="authors-header">
+    <div>
+        <div class="inline-block">
+
+            <h4 th:text="#{'person.author.title.'+${file.fileId.fileType}}"></h4>
+        </div>
+        <div class="inline-block">
+            <div th:replace="ipobjects/common/person/elements :: search-person-button(${inventorPersonKind},${true})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="authors-body">
+    <div th:if="${!#lists.isEmpty(authorships.authorList)}" th:with="servicePerson=${file.servicePerson}">
+        <div class="list-elements-wrapper" th:with="authors = ${inventorUtils.sortBySequenceNumber(authorships.authorList)}">
+            <div th:remove="tag" th:each="author : ${authors}">
+                <div class="row list-element" th:with="person=${author.person}">
+                    <div class="col-11">
+                        <span class="m_R5" th:title="#{number}">
+                            <span style="color: #059" th:text="${author.authorSeq}"></span>
+                        </span>
+                        <div th:replace="ipobjects/common/person/elements :: label-representative(${person})"></div>
+                        <div th:replace="ipobjects/common/person/elements :: person-info(${person})"></div>
+                    </div>
+                    <div th:replace=" :: authors-menu"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="authors-menu">
+    <div class="col-1 hidden-element right-align action-menu-list-fs" th:with="menuId=|author-menu-${person.personNbr}-${person.addressNbr}|">
+        <i th:title="#{menu}" th:attr="data-action='toggle-menu',data-id=${menuId}" class="zmdi zmdi-menu"></i>
+        <div th:id="${menuId}" class="action-menu none">
+            <div th:replace="ipobjects/common/person/elements :: menu-option-view-person(person = ${person})"></div>
+            <div th:if="${!(inventorUtils.getMinSequenceNumber(authors) == author.authorSeq)}">
+                <div th:replace="ipobjects/common/person/elements :: menu-option-change-position(${inventorPersonKind},${person.personNbr},${person.addressNbr},${directionEnum.UP})"></div>
+            </div>
+            <div th:if="${!(inventorUtils.getMaxSequenceNumber(authors) == author.authorSeq)}">
+                <div th:replace="ipobjects/common/person/elements :: menu-option-change-position(${inventorPersonKind},${person.personNbr},${person.addressNbr},${directionEnum.DOWN})"></div>
+            </div>
+            <div th:remove="tag" th:if="${!person.hasAgentCode()}">
+                <div th:replace="ipobjects/common/person/elements :: menu-option-edit(${inventorPersonKind},${person.personNbr},${person.addressNbr})"></div>
+            </div>
+            <div th:replace="ipobjects/common/person/elements :: menu-option-delete(${inventorPersonKind},${person.personNbr},${person.addressNbr},#{person.author.delete.confirm.message})"></div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

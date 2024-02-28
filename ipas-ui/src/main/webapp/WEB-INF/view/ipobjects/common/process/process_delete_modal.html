@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="cProcessEvent" type="bg.duosoft.ipas.core.model.process.CProcessEvent"*/-->
+<div th:fragment="delete-action(cProcessEvent,validationErrors)" th:with="objectUtils=${T(java.util.Objects)}, dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+    <div style="overflow: visible" th:id="delete-action-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <div th:replace="~{ :: header(cProcessEvent = ${cProcessEvent})}"></div>
+            </div>
+            <div th:if="${objectUtils.nonNull(recordal)}" th:remove="tag">
+                <div th:replace="base/message :: warning-attention(#{delete.action.recordal.exists.warning})"></div>
+            </div>
+            <div>
+                <div class="row">
+                    <div class="col-12">
+                        <div th:replace="~{base/form/input :: text(id = 'delete-action-deleteReason', label = 'Мотиви')}"></div>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${cProcessEvent.eventType == 'ACTION'}">
+                <div class="row m_B10 m_T10">
+                    <div class="col-12">
+                        <h5 th:text="'Промени, които ще настъпят в основния процес след изтриване на избраното действие: '"></h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <div th:replace="~{base/form/input :: readonly(label = 'Срок', value = (${objectUtils.isNull(cProcessEvent.eventAction.oldExpirationDate)} ? 'няма' : ${#dates.format(cProcessEvent.eventAction.oldExpirationDate , dateFormatDot)}))}"></div>
+                    </div>
+                    <div class="col-4">
+                        <div th:replace="~{base/form/input :: readonly(label = 'Последна промяна на статус', value = (${objectUtils.isNull(cProcessEvent.eventAction.oldStatusDate)} ? 'няма' : ${#dates.format(cProcessEvent.eventAction.oldStatusDate , dateFormatDot)}))}"></div>
+                    </div>
+                    <div class="col-4">
+                        <div th:replace="~{base/form/input :: readonly(label = 'Отговорен служител', value = (${objectUtils.isNull(cProcessEvent.eventAction.oldResponsibleUser)} ? 'няма' : ${cProcessEvent.eventAction.oldResponsibleUser.userName}))}"></div>
+                    </div>
+                </div>
+                <div class="row m_T10">
+                    <div class="col-12">
+                        <div th:replace="~{base/form/input :: readonly(label = 'Статус', value = (${objectUtils.isNull(cProcessEvent.eventAction.oldStatus)} ? 'няма' : ${cProcessEvent.eventAction.oldStatus.statusName}))}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer row">
+            <div class="col-12">
+                <button th:attr="data-action='action-modal-delete-submit',
+                data-action-id=${T(com.duosoft.ipas.util.ProcessUtils).getProcessEventIdentifier(cProcessEvent)},
+                data-validation-url=@{/process/delete-action/validate-form},
+                data-url=@{/process/delete-action}"
+                        th:text="#{btn.save}" type="button" class="button sm-icn-save wmin_130">
+                </button>
+                <button th:text="#{btn.cancel}" th:type="button" class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div th:fragment="recordal-invalidation(cProcessEvent,recordal)"
+     th:with="objectUtils=${T(java.util.Objects)},
+              dateTimeFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT},
+              dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+
+    <div style="overflow: visible" th:id="delete-action-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <div th:replace="~{ :: header(cProcessEvent = ${cProcessEvent})}"></div>
+            </div>
+            <div class="center m_T10" >
+                <div th:text="#{delete.action.invalidation.recordal.error}"></div>
+                <div>
+                    <span th:text="|#{recordal.table.invalidationUserdoc}:|"></span>
+                    <a class="b0"
+                       th:href="@{/ipobject/view(userdocFilingNumber=${recordal.invalidationDocumentId.createFilingNumber()})}"
+                       th:text="${recordal.invalidationExternalSystemId == null} ? #{not.registered} : ${recordal.invalidationExternalSystemId}">
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer row">
+            <div class="col-12">
+                <button th:text="#{btn.understand}" type="button" class="button sm-icn-save modal-close"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div th:fragment="delete-action-warning-modal(cProcessEvent,message)"
+     th:with="objectUtils=${T(java.util.Objects)},
+              dateTimeFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT},
+              dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+
+    <div style="overflow: visible" th:id="delete-action-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <div th:replace="~{ :: header(cProcessEvent = ${cProcessEvent})}"></div>
+            </div>
+            <div class="center m_T10">
+                <span class="m-red-text" th:text="${message}"></span>
+            </div>
+        </div>
+        <div class="modal-footer row">
+            <div class="col-12">
+                <button th:text="#{btn.understand}" type="button" class="button sm-icn-save modal-close"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div th:fragment="header(cProcessEvent)" th:with="objectUtils=${T(java.util.Objects)}, dateTimeFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT}">
+    <h3 th:text="'Изтриване на действие'"></h3>
+    <h4 th:text="|${cProcessEvent.eventDescription} от ${#dates.format(cProcessEvent.eventAction.captureDate, dateTimeFormatDot)}|"></h4>
+</div>
+
+
+</body>
+</html>

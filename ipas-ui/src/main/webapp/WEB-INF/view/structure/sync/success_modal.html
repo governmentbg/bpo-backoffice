@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:id="users-sync-success-modal-wrapper" th:fragment="modal(synchronizedUsers)">
+    <div th:id="users-sync-success-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h3 th:text="#{users.sync.result}"></h3>
+            </div>
+            <div class="m_T20">
+                <table class="simple">
+                    <thead>
+                    <tr>
+                        <th th:text="#{users.sync.table.screenname}"></th>
+                        <th th:text="#{users.sync.table.name}"></th>
+                        <th th:text="#{users.sync.table.email}"></th>
+                        <th style="width: 50px" th:text="#{users.sync.synchronized}"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user,userStat : ${synchronizedUsers}">
+                        <td>
+                            <span th:text="${user.login}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${user.username}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${user.email}"></span>
+                        </td>
+                        <td class="p_0 center">
+                            <div th:remove="tag"  th:switch="${user.sync}">
+                                <i th:case="true" th:title="#{users.sync.synchronized}" style="font-size: 25px" class="material-icons m-green-text">done</i>
+                                <i th:case="false" th:title="#{users.sync.not.synchronized}" style="font-size: 25px" class="material-icons m-red-text">close</i>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row modal-footer">
+            <div class="col-12">
+                <button th:text="#{btn.close}" type="button" class="button sm-icn-cross modal-close"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

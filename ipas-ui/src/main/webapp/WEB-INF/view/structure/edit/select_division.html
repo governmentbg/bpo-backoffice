@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="availableDivisions" type="java.util.List<bg.duosoft.ipas.core.model.structure.StructureNode>"*/-->
+<!--/*@thymesVar id="selectedDivision" type="java.lang.String"*/-->
+<div th:fragment="select-division(disabled, selectedDivision, availableDivisions)" th:remove="tag">
+    <div th:if="${availableDivisions != null}">
+        <div th:replace="~{base/form/select :: object(
+                            id = 'division-select',
+                            label = #{division.choose},
+                            classes = 'search-box readonly',
+                            name = 'divisions',
+                            isDisabled = ${disabled},
+                            objects = ${availableDivisions},
+                            valuePointer = 'officeStructureId.officeDivisionCode',
+                            textPointer = 'name',
+                            emptySelectOption= #{default.select.option},
+                            url=@{/structure/division/departmentsbydivision},
+                            selected = ${selectedDivision})}">
+        </div>
+    </div>
+</div>
+
+
+
+
+</body>
+</html>

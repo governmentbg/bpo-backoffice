@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="table(userdocTypesList, userdocTypesCount, userdocTypesFilter)"
+     th:with="sorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.SorterUtils)},userdocTypesSorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.UserdocTypesSorterUtils)},
+     coreUtils=${T(com.duosoft.ipas.util.CoreUtils)}">
+
+    <div th:remove="tag" th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(userdocTypesList)}">
+        <div th:remove="tag" th:case="true">
+            <div class="bg__light-blue p_10 m_B10 m_T10 center">
+                <span th:text="#{empty.list}"></span>
+            </div>
+        </div>
+        <div th:remove="tag" th:case="false">
+            <div class="row">
+                <div>
+                    <span th:text="#{total}"></span>
+                    <span th:text="${userdocTypesCount}"></span>
+                </div>
+            </div>
+            <div class="m_T5">
+                <table class="simple bpo">
+                    <thead>
+                    <tr>
+                        <th style="width: 40px" th:text="#{number}"></th>
+                        <th style="width: 300px"
+                            th:with="isSelected=${#strings.equalsIgnoreCase(userdocTypesFilter.sortColumn,userdocTypesSorterUtils.USERDOC_NAME)},dataSort=${userdocTypesSorterUtils.USERDOC_NAME}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,userdocTypesFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{reception.udoc.type},${userdocTypesFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th style="width: 150px"
+                            th:with="isSelected=${#strings.equalsIgnoreCase(userdocTypesFilter.sortColumn,userdocTypesSorterUtils.USERDOC_GROUP_NAME)},dataSort=${userdocTypesSorterUtils.USERDOC_GROUP_NAME}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,userdocTypesFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{userdoc.group},${userdocTypesFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th style="width: 150px"
+                            th:with="isSelected=${#strings.equalsIgnoreCase(userdocTypesFilter.sortColumn,userdocTypesSorterUtils.STATUS)},dataSort=${userdocTypesSorterUtils.STATUS}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,userdocTypesFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{status.label},${userdocTypesFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th style="width: 30px" th:text="#{options.label}"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="type : ${userdocTypesList}">
+                        <td>
+                            <span th:text="${typeStat.count + ((userdocTypesFilter.page - 1)*userdocTypesFilter.pageSize)}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${type.userdocName}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${type.userdocGroup?.code()}"></span>
+                        </td>
+                        <td>
+                            <div th:remove="tag" th:switch="${type.indInactive}">
+                                <span th:case="${false}" th:text="#{status.active}"></span>
+                                <span th:case="${true}" th:text="#{status.inactive}"></span>
+                            </div>
+                        </td>
+                        <td class="p_0 center">
+                            <a th:replace="~{base/form/button :: material-table-btn(title = #{btn.edit},dataAction='edit-userdoc-type',  dataUrl = @{/admin/userdoc-types/edit/{id}(id=${type.userdocType})} , icon = 'edit')}"></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div th:replace="base/paginator :: paginator(page=${userdocTypesFilter.page},pageSize=${userdocTypesFilter.pageSize},total=${userdocTypesCount},baseUrl=@{admin/userdoc-types/update-table},
+                        tableContainerDiv='userdoc-types-table-wrapper',
+                        additionalParams='&tableCount='+${userdocTypesCount}+
+                        '&sortOrder='+${userdocTypesFilter.sortOrder}+ ${userdocTypesFilter.sortColumn!=null ? '&sortColumn='+ userdocTypesFilter.sortColumn:''}+
+                        ${userdocTypesFilter.userdocName != null ? '&userdocName='+userdocTypesFilter.userdocName : '' }+ ${userdocTypesFilter.indInactive != null ? '&indInactive='+userdocTypesFilter.indInactive : '' })">
+                </div>
+            </div>
+
+            <input th:type="hidden" th:id="table-count" th:value="'?tableCount='+${userdocTypesCount}">
+            <div th:replace="~{admin/userdoc/userdoc_administration/userdoc_types_table :: filter-params(${userdocTypesFilter})}"></div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="filter-params(userdocTypesFilter)">
+    <div th:id="userdoc-types-filter-params">
+        <input th:type="hidden" th:id="userdoc-types-page" th:value="${userdocTypesFilter.page}">
+        <input th:type="hidden" th:id="userdoc-types-pageSize" th:value="${userdocTypesFilter.pageSize}">
+        <input th:type="hidden" th:id="userdoc-types-sortColumn" th:value="${userdocTypesFilter.sortColumn}">
+        <input th:type="hidden" th:id="userdoc-types-sortOrder" th:value="${userdocTypesFilter.sortOrder}">
+        <input th:type="hidden" th:id="userdoc-types-indInactive" class="form-ignore"
+               th:value="${userdocTypesFilter.indInactive}">
+        <input th:if="${!#strings.isEmpty(userdocTypesFilter.userdocName)}" th:type="hidden"
+               th:id="userdoc-types-userdocName" th:value="${userdocTypesFilter.userdocName}">
+    </div>
+</div>
+
+</body>
+</html>

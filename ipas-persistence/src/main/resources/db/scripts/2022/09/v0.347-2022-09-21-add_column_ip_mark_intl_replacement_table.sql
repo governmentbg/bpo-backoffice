@@ -1,0 +1,4 @@
+--liquibase formatted sql
+
+--changeset mnakova:347.1
+ALTER TABLE EXT_CORE.IP_MARK_INTL_REPLACEMENT ADD REGISTRATION_DUP VARCHAR(5);

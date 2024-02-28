@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:remove="tag" th:fragment="court_appeals(userdocCourtAppeals)" th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+
+    <div class="row col-12 hidden-element m_B20">
+        <button th:text="#{add.userdoc.court.appeal.button}"
+                th:attr="data-action='open-edit-court-appeal-modal',data-url=@{/userdoc-court-appeals/open-edit-court-appeals-modal}"
+                th:type="button" class="button sm-icn-add m_T10">
+        </button>
+    </div>
+    <div class="col-12">
+
+
+        <div th:if="${!T(org.springframework.util.CollectionUtils).isEmpty(userdocCourtAppeals)}" th:with="stringUtils=${T(org.springframework.util.StringUtils)}">
+
+            <th:block th:each="appeal,iterAppeals : ${userdocCourtAppeals}">
+
+                <div th:classappend="${iterAppeals.index != userdocCourtAppeals.size()-1} ? 'court-appeals-div'">
+
+                    <div class="row action-menu-list-fs m_T10 m_B5" style="border-bottom: 2px solid;">
+                        <div class="col-12 m_0">
+                            <label style="font-weight: bold;font-size: 16px;"  th:text="#{userdoc.appeal.data.label}"></label>
+                        </div>
+                        <div>
+                            <i th:title="#{menu}" th:attr="data-action='toggle-menu',data-id='appeal-actions-'+${appeal.courtAppealId}" class="hidden-element zmdi zmdi-menu"></i>
+                            <div th:id="'appeal-actions-'+${appeal.courtAppealId}" class="action-menu none m_L25-i">
+                                <span>
+                                    <i class="icon-pencil"></i>
+                                     <a  class="b0" th:title="#{btn.edit}" href="javascript:void(0);" th:text="#{btn.edit}"
+                                         th:attr="data-action='open-edit-court-appeal-modal',data-url=@{/userdoc-court-appeals/open-edit-court-appeals-modal},
+                                        data-appealid=${appeal.courtAppealId}">
+                                    </a>
+                                </span>
+                                <span>
+                                    <i class="icon-trash"></i>
+                                    <a class="b0 confirm" th:title="#{btn.delete}" href="javascript:void(0);" th:text="#{btn.delete}"
+                                       th:attr="data-action='delete-court-appeal',data-appealid=${appeal.courtAppealId},
+                                       data-message=#{userdoc.appeal.on.deleting.message},data-url=@{/userdoc-court-appeals/delete-userdoc-court-appeal}">
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <th:block th:if="${!stringUtils.isEmpty(appeal.courtCaseNbr) or appeal.courtCaseDate!=null or appeal.court!=null }">
+
+                        <div class="row col-12">
+                            <div>
+                                <div>
+                                    <label style="color: #9e9e9e;"  th:text="'Дело: '"></label>
+                                    <span th:if="${!stringUtils.isEmpty(appeal.courtCaseNbr)}" th:text="${appeal.courtCaseNbr}"></span>
+                                    <span th:if="${appeal.courtCaseDate!=null}" th:text="' / '+${appeal.courtCaseDate != null ? #dates.format(appeal.courtCaseDate, dateFormatDot): ''}"></span>
+                                    <span th:if="${appeal.court!=null}" th:text="' на '+${appeal.court.name}"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </th:block>
+
+                    <th:block th:if="${!stringUtils.isEmpty(appeal.judicialActNbr) or appeal.judicialActDate!=null or appeal.judicialActType!=null }">
+
+                        <div class="row col-12">
+                            <div>
+                                <div>
+                                    <label style="color: #9e9e9e;"  th:text="'Съдебен акт: '"></label>
+                                    <span th:if="${!stringUtils.isEmpty(appeal.judicialActNbr)}" th:text="'Определение '+${appeal.judicialActNbr}"></span>
+                                    <span th:if="${appeal.judicialActDate!=null}" th:text="' / '+${appeal.judicialActDate != null ? #dates.format(appeal.judicialActDate, dateFormatDot): ''}"></span>
+                                    <span th:text="${appeal.judicialActType.actTypeName}"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </th:block>
+
+                    <th:block th:if="${!stringUtils.isEmpty(appeal.courtLink)}">
+
+                        <div class="row col-12">
+                            <label style="color: #9e9e9e;"  th:text="#{userdoc.jidicial.court.link} + ': '"></label>
+                            <span th:text="${appeal.courtLink}"></span>
+                        </div>
+
+                    </th:block>
+                </div>
+
+            </th:block>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<div th:fragment="court-appeals-modal(courtAppeal)">
+    <div th:id="court-appeals-modal" class="modal">
+        <div class="modal-content" th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+            <div class="center">
+                <h4 th:text="${courtAppeal.courtAppealId == null} ? #{userdoc.appeal.create.new.label} : #{userdoc.appeal.edit.label}"></h4>
+            </div>
+            <input th:type="hidden" class="form-ignore" th:id="userdoc-court-appeal-id" th:value="${courtAppeal.courtAppealId}">
+            <div class="court-appeal-subsection-div-title row">
+                <div class="col-12">
+                    <h4 style="display: inline-block" th:text="#{userdoc.court.title}"></h4>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-4">
+                    <div th:replace="~{base/form/input :: text(id = 'userdoc-court-case-nbr', label = #{userdoc.court.nbr.label}, value = ${courtAppeal.courtCaseNbr})}"></div>
+                </div>
+
+                <div class="col-4">
+                    <div th:replace="~{base/form/input :: datepicker(id = 'userdoc-court-case-date', label = #{userdoc.court.date.label}, classes = 'modal-date', value = ${courtAppeal != null and courtAppeal.courtCaseDate != null ? #dates.format(courtAppeal.courtCaseDate, dateFormatDot): ''})}"></div>
+                </div>
+
+                <div class="col-4">
+                    <div th:replace="~{base/form/input :: text(id = 'userdoc-court-appeal-name', label = #{userdoc.court.label}, value = ${courtAppeal.courtName}, autocomplete='courts', url = @{/userdoc/bankruptcy/courts-autocomplete})}"></div>
+                </div>
+            </div>
+
+
+            <div class="court-appeal-subsection-div-title row m_T10">
+                <div class="col-12">
+                    <h4 style="display: inline-block" th:text="#{userdoc.jidicial.act.title}"></h4>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-4">
+                    <div th:replace="~{base/form/input :: text(id = 'userdoc-judicial-act-number', label = #{userdoc.jidicial.act.nbr}, value = ${courtAppeal.judicialActNbr})}"></div>
+                </div>
+
+                <div class="col-4">
+                    <div th:replace="~{base/form/input :: datepicker(id = 'userdoc-judicial-act-date', label = #{userdoc.jidicial.act.date},classes = 'modal-date', value = ${courtAppeal != null and courtAppeal.judicialActDate != null ? #dates.format(courtAppeal.judicialActDate, dateFormatDot): ''})}"></div>
+                </div>
+
+                <div class="col-4">
+                    <div th:replace="~{base/form/select :: object(
+                            id = 'userdoc-act-type-id', label = #{userdoc.jidicial.act.typ},
+                            name = 'courtAppeal.actTypeId',
+                            objects = ${judicialActTypes},
+                            valuePointer = 'id', textPointer = 'actTypeName',
+                            selected = ${courtAppeal.actTypeId})}">
+                    </div>
+
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div th:replace="~{base/form/input :: text(id = 'userdoc-court-link', label = #{userdoc.jidicial.court.link}, value = ${courtAppeal.courtLink})}"></div>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer row">
+            <div class="col-12">
+                <button th:attr="data-action='edit-userdoc-court-appeals', data-url=@{/userdoc-court-appeals/edit-userdoc-court-appeals},data-validation-block='#court-appeals-modal'"
+                        th:text="#{btn.save}" class="button sm-icn-save wmin_130">
+                </button>
+                <button th:text="#{btn.cancel}" th:type="button" class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

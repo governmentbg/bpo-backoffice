@@ -1,0 +1,1764 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg">
+
+<head th:replace="base/template :: head(title=${#messages.msgOrNull('search.' + prop.msgPrefix + '.title')})"></head>
+<body class="dark">
+
+<div class="app-body">
+    <header class="app-header" th:replace="base/header"></header>
+    <!-- ****************************************************** Left Side Nav -->
+    <div class="left-sidebar">
+        <div id="psb" class="ps--active-y">
+            <nav class="sidebar-nav">
+                <ul id="detail-list" class="nav DropDownMenu checkbox-list switcher simple at-right"
+                    th:attr="data-group=|${prop.msgPrefix}-search|">
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.title}, ${prop.title}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.name')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.englishTitle}, ${prop.englishTitle}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.english-title')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.responsibleUser}, ${prop.responsibleUser}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.responsible-user-id')})"></div>
+
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.applTyp}, ${prop.applTyp}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.appl-typ')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.patentSummary}, ${prop.patentSummary},  ${#messages.msgOrNull('search.' + prop.msgPrefix + '.summary')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.taxon}, ${prop.taxon},  ${#messages.msgOrNull('search.' + prop.msgPrefix + '.taxon')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.signCode}, ${prop.signCode},  ${#messages.msgOrNull('search.' + prop.msgPrefix + '.sign-code.label')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu('file-types', ${(prop.fileTypeUrls != null && !#arrays.isEmpty(prop.fileTypeUrls))},  ${#messages.msgOrNull('search.' + prop.msgPrefix + '.file-types.label')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.fileNbr}, ${prop.fileNbr}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.file-number')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.filingDate}, ${prop.filingDate}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.filing-date')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.registrationNbr}, ${prop.registrationNbr}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.registration-number')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.registrationDate}, ${prop.registrationDate}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.registration-date')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.internationalRegistrationNbr}, ${prop.internationalRegistrationNbr}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.international-registration-number')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.entitlementDate}, ${prop.entitlementDate}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.entitlement-date')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.expirationDate}, ${prop.expirationDate}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.expiration-date')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.ownerName}, ${prop.ownerName}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.owner.menu')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.servicePersonName}, ${prop.servicePersonName}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.service.person.menu')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.inventorName}, ${prop.inventorName},  ${#messages.msgOrNull('search.' + prop.msgPrefix + '.inventor.menu')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.representative}, ${prop.representative},  ${#messages.msgOrNull('search.' + prop.msgPrefix + '.representative.menu')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.statusCodes}, ${prop.statusCodes},  ${#messages.msgOrNull('search.' + prop.msgPrefix + '.status-codes')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.actionTypes}, ${prop.actionTypes},  ${#messages.msgOrNull('search.' + prop.msgPrefix + '.action-type')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.publication}, ${prop.publication},  ${#messages.msgOrNull('search.' + prop.msgPrefix + '.publication')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.cpcClasses}, ${prop.cpcClasses},  ${#messages.msgOrNull('search.' + prop.msgPrefix + '.cpc-class')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.ipcClasses}, ${prop.ipcClasses},  ${#messages.msgOrNull('search.' + prop.msgPrefix + '.ipc-class')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.niceClasses}, ${prop.niceClasses},  ${#messages.msgOrNull('search.' + prop.msgPrefix + '.nice-class')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.viennaClassCodes}, ${prop.viennaClassCodes},  ${#messages.msgOrNull('search.' + prop.msgPrefix + '.vienna-class')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.locarnoClasses}, ${prop.locarnoClasses},  ${#messages.msgOrNull('search.' + prop.msgPrefix + '.locarno-classes')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.bgPermitNumber}, ${prop.bgPermitNumber}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.bg-permit-number')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.bgPermitDate}, ${prop.bgPermitDate}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.bg-permit-date')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.euPermitNumber}, ${prop.euPermitNumber}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.eu-permit-number')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.euPermitDate}, ${prop.euPermitDate}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.eu-permit-date')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.proposedDenomination}, ${prop.proposedDenomination}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.proposed-denomination')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.proposedDenominationEng}, ${prop.proposedDenominationEng}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.proposed-denomination-eng')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.publDenomination}, ${prop.publDenomination}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.publ-denomination')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.publDenominationEng}, ${prop.publDenominationEng}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.publ-denomination-eng')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.apprDenomination}, ${prop.apprDenomination}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.appr-denomination')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.apprDenominationEng}, ${prop.apprDenominationEng}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.appr-denomination-eng')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.rejDenomination}, ${prop.rejDenomination}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.rej-denomination')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.rejDenominationEng}, ${prop.rejDenominationEng}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.rej-denomination-eng')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.features}, ${prop.features}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.features')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.stability}, ${prop.stability}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.stability')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.testing}, ${prop.testing}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.testing')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu(${prop.requestForValidation}, ${prop.requestForValidation}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.request-for-validation')})"></div>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- ********************************************************** Main body -->
+    <main class="main">
+        <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+        <div class="inner">
+            <form id="search-form" th:action="@{/{url}/search(url=${prop.msgPrefix})}" method="POST">
+                <div id="panel-container" class="panel">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="center">
+                                <h1 class="section-header"
+                                    th:text="${#messages.msgOrNull('search.' + prop.msgPrefix + '.title')}"></h1>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:if="${prop.title}" th:id="|panel-${prop.title}|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::input-field(${prop.title}, ${searchParam.title}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.name')})"></div>
+                        <div class="row">
+                            <div class="col-12">
+                                <label th:each="searchOperatorType : ${T(bg.duosoft.ipas.enums.search.SearchOperatorTextType).values()}">
+                                    <input th:name="|field-title-type-search|" type="radio" class="with-gap"
+                                           th:value="${{searchOperatorType}}"
+                                           th:checked="${searchParam.titleTypeSearch == null ? searchOperatorType == prop.titleSearchType : searchOperatorType == searchParam.titleTypeSearch }"/>
+                                    <span style="color: #9e9e9e" th:text="${{#messages.msgOrNull('search.' + searchOperatorType)}}"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:if="${prop.englishTitle}" th:id="|panel-${prop.englishTitle}|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::input-field(${prop.englishTitle}, ${searchParam.englishTitle}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.english-title')})"></div>
+                        <div class="row">
+                            <div class="col-12">
+                                <label th:each="searchOperatorType : ${T(bg.duosoft.ipas.enums.search.SearchOperatorTextType).values()}">
+                                    <input th:name="|field-english-title-type-search|" type="radio" class="with-gap"
+                                           th:value="${{searchOperatorType}}"
+                                           th:checked="${searchParam.englishTitleTypeSearch == null ? searchOperatorType == prop.englishTitleSearchType : searchOperatorType == searchParam.englishTitleTypeSearch }"/>
+                                    <span style="color: #9e9e9e" th:text="${{#messages.msgOrNull('search.' + searchOperatorType)}}"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:if="${prop.responsibleUser}" th:id="|panel-${prop.responsibleUser}|"
+                         th:styleappend="|display: none|">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="search input-field select2-field">
+                                    <select th:id="|field-${prop.responsibleUser}|" th:name="|responsible-user-id|" th:attr="data-search-url=@{/{url}/search/user(url=${prop.msgPrefix})}, data-get-url=@{/{url}/search/user-id(url=${prop.msgPrefix})}">
+                                    </select>
+                                    <label th:id="|label-${prop.responsibleUser}|" th:for="|field-responsible-user-id|"
+                                           th:text="${#messages.msgOrNull('search.' + prop.msgPrefix + '.responsible-user-id')}">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:if="${prop.applTyp}" th:id="|panel-${prop.applTyp}|" th:styleappend="|display: none|">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="input-field search">
+                                    <select th:id="|field-${prop.applTyp}|">
+                                        <option value=""
+                                                th:selected="${#strings.equals(searchParam.applTyp, null)}">
+                                        </option>
+                                        <option th:each="applType : ${applTypes}"
+                                                th:value="${applType.key}"
+                                                th:selected="${#strings.equals(applType.key,searchParam.applTyp)}"
+                                                th:text="${applType.value}">
+                                        </option>
+                                    </select>
+                                    <label th:id="|label-${prop.applTyp}|"
+                                           th:for="|field-${prop.applTyp}|"
+                                           th:text="${#messages.msgOrNull('search.' + prop.msgPrefix + '.' + prop.applTyp + '.label')}"></label>
+                                </div>
+                            </div>
+                            <div class="col-6" th:id="|panel-sub-${prop.applTyp}|">
+                                <div class="input-field search">
+                                    <select th:id="|field-sub-${prop.applTyp}|">
+                                        <option th:replace="ipobjects/common/search/fragments ::applSubType(${applSubTypes}, ${searchParam.subApplTyp})" th:remove="tag"></option>
+                                    </select>
+                                    <label th:id="|label-sub-${prop.applTyp}|"
+                                           th:for="|field-sub-${prop.applTyp}|"
+                                           th:text="${#messages.msgOrNull('search.' + prop.msgPrefix + '.' + 'sub-'+ prop.applTyp + '.label')}"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:if="${prop.patentSummary}" th:id="|panel-${prop.patentSummary}|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::input-field(${prop.patentSummary}, ${searchParam.patentSummary}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.summary')})"></div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <label th:each="searchOperatorType : ${T(bg.duosoft.ipas.enums.search.SearchOperatorTextType).values()}">
+                                    <input th:name="|field-patent-summary-type-search|" type="radio" class="with-gap"
+                                           th:value="${{searchOperatorType}}"
+                                           th:checked="${searchParam.patentSummaryTypeSearch == null ? searchOperatorType == prop.patentSummarySearchType : searchOperatorType == searchParam.patentSummaryTypeSearch }"/>
+                                    <span style="color: #9e9e9e" th:text="${{#messages.msgOrNull('search.' + searchOperatorType)}}"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:if="${prop.signCode}" th:id="|panel-${prop.signCode}|"
+                         th:styleappend="|display: none|">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="input-field search">
+                                    <select th:id="|field-${prop.signCode}|">
+                                        <option value=""
+                                                th:selected="${#strings.equals(searchParam.signCode, null)}">
+                                        </option>
+                                        <option th:each="signType : ${signTypesMap}"
+                                                th:value="${signType.key}"
+                                                th:selected="${#strings.equals(signType.key,searchParam.signCode)}"
+                                                th:text="${signType.value}">
+                                        </option>
+                                    </select>
+                                    <label th:id="|label-${prop.signCode}|" th:for="|field-${prop.signCode}|"
+                                           th:text="${#messages.msgOrNull('search.' + prop.msgPrefix + '.sign-code.label')}"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:if="${prop.fileTypeUrls != null && !#arrays.isEmpty(prop.fileTypeUrls)}" th:id="|panel-file-types|"
+                         th:styleappend="|display: none|">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="search input-field select2-field">
+                                    <select th:id="|field-selected-file-types|" name="field-selected-file-types[]"
+                                            multiple="multiple" class="select2-selection--multiple">
+                                        <option th:each="fileType : ${fileTypes}"
+                                                th:value="${fileType.key}"
+                                                th:selected="${searchParam.selectedFileTypes != null && #arrays.contains(searchParam.selectedFileTypes, fileType.key)}"
+                                                th:text="${fileType.value}">
+                                        </option>
+                                    </select>
+                                    <label id="field-selected-file-types-label"
+                                           th:text="${#messages.msgOrNull('search.' + prop.msgPrefix + '.field-file-types')}" >
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:if="${prop.fileNbr}" th:id="|panel-${prop.fileNbr}|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::range-input-field(${prop.fileNbr}, ${searchParam.fromFileNbr}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.from-file-number')}, ${searchParam.toFileNbr}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.to-file-number')})"></div>
+                    </div>
+
+                    <div th:if="${prop.filingDate}" th:id="|panel-${prop.filingDate}|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::range-date-field(${prop.filingDate}, ${searchParam.fromFilingDate}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.from-filing-date')}, ${searchParam.toFilingDate}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.to-filing-date')})"></div>
+                    </div>
+
+                    <div th:if="${prop.registrationNbr}" th:id="|panel-${prop.registrationNbr}|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::range-input-field(${prop.registrationNbr}, ${searchParam.fromRegistrationNbr}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.from-registration-number')}, ${searchParam.toRegistrationNbr}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.to-registration-number')})"></div>
+                    </div>
+
+                    <div th:if="${prop.registrationDate}" th:id="|panel-${prop.registrationDate}|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::range-date-field(${prop.registrationDate}, ${searchParam.fromRegistrationDate}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.from-registration-date')}, ${searchParam.toRegistrationDate}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.to-registration-date')})"></div>
+                    </div>
+
+                    <div th:if="${prop.internationalRegistrationNbr}" th:id="|panel-${prop.internationalRegistrationNbr}|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::range-input-field(${prop.internationalRegistrationNbr}, ${searchParam.fromInternationalRegistrationNbr}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.from-international-registration-number')}, ${searchParam.toInternationalRegistrationNbr}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.to-international-registration-number')})"></div>
+                    </div>
+
+                    <div th:if="${prop.entitlementDate}" th:id="|panel-${prop.entitlementDate}|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::range-date-field(${prop.entitlementDate}, ${searchParam.fromEntitlementDate}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.from-entitlement-date')}, ${searchParam.toEntitlementDate}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.to-entitlement-date')})"></div>
+                    </div>
+
+                    <div th:if="${prop.expirationDate}" th:id="|panel-${prop.expirationDate}|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::range-date-field(${prop.expirationDate}, ${searchParam.fromExpirationDate}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.from-expiration-date')}, ${searchParam.toExpirationDate}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.to-expiration-date')})"></div>
+                    </div>
+
+                    <div th:if="${prop.owner}" th:id="|panel-${prop.ownerName}|"
+                         th:styleappend="|display: none|">
+                        <div class="row">
+                            <div th:id="|panel-${prop.ownerName}|">
+                                <div class="col-6">
+                                    <div class="input-field search">
+                                        <input th:id="|field-${prop.ownerName}|" type="text"
+                                               th:value="${searchParam.ownerName}">
+                                        <label th:for="|field-${prop.ownerName}|"
+                                               th:text="${#messages.msgOrNull('search.' + prop.msgPrefix + '.owner')}"></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div th:id="|panel-${prop.ownerNationality}|">
+                                <div class="col-6">
+                                    <div class="search input-field select2-field">
+                                        <select th:id="|field-${prop.ownerNationality}|"
+                                                th:name="${prop.ownerNationality}" >
+                                            <option></option>
+                                            <option th:each="entry : ${nationalities}"
+                                                    th:value="${entry.key}"
+                                                    th:text="${entry.value}"
+                                                    th:selected="${#strings.equals(entry.key, searchParam.ownerNationality)}"/>
+                                        </select>
+                                        <label id="field-owner-nationality-label"
+                                               th:text="${#messages.msgOrNull('search.' + prop.msgPrefix + '.owner.nationality')}"></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <label>
+                                    <input th:name="|field-owner-name-type-search|" type="radio" class="with-gap"
+                                           th:value="${T(bg.duosoft.ipas.enums.search.PersonNameSearchType).EXACTLY}"
+                                           th:checked="${searchParam.ownerNameTypeSearch == null ? T(bg.duosoft.ipas.enums.search.PersonNameSearchType).EXACTLY == prop.ownerNameSearchType : T(bg.duosoft.ipas.enums.search.PersonNameSearchType).EXACTLY == searchParam.ownerNameTypeSearch }"/>
+                                    <span style="color: #9e9e9e" th:text="${{#messages.msgOrNull('person.name.search.type.exactly')}}"></span>
+                                </label>
+                                <label>
+                                    <input th:name="|field-owner-name-type-search|" type="radio" class="with-gap"
+                                           th:value="${T(bg.duosoft.ipas.enums.search.PersonNameSearchType).WHOLE_WORDS}"
+                                           th:checked="${searchParam.ownerNameTypeSearch == null ? T(bg.duosoft.ipas.enums.search.PersonNameSearchType).WHOLE_WORDS == prop.ownerNameSearchType : T(bg.duosoft.ipas.enums.search.PersonNameSearchType).WHOLE_WORDS == searchParam.ownerNameTypeSearch }"/>
+                                    <span style="color: #9e9e9e" th:text="${{#messages.msgOrNull('person.name.search.type.whole.words')}}"></span>
+                                </label>
+                                <label>
+                                    <input th:name="|field-owner-name-type-search|" type="radio" class="with-gap"
+                                           th:value="${T(bg.duosoft.ipas.enums.search.PersonNameSearchType).CONTAINS_WORDS}"
+                                           th:checked="${searchParam.ownerNameTypeSearch == null ? T(bg.duosoft.ipas.enums.search.PersonNameSearchType).CONTAINS_WORDS == prop.ownerNameSearchType : T(bg.duosoft.ipas.enums.search.PersonNameSearchType).CONTAINS_WORDS == searchParam.ownerNameTypeSearch }"/>
+                                    <span style="color: #9e9e9e" th:text="${{#messages.msgOrNull('person.name.search.type.contains.words')}}"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:if="${prop.servicePerson}" th:id="|panel-${prop.servicePersonName}|"
+                         th:styleappend="|display: none|">
+                        <div class="row">
+                            <div th:id="|panel-${prop.servicePersonName}|">
+                                <div class="col-6">
+                                    <div class="input-field search">
+                                        <input th:id="|field-${prop.servicePersonName}|" type="text"
+                                               th:value="${searchParam.servicePersonName}">
+                                        <label th:for="|field-${prop.servicePersonName}|"
+                                               th:text="${#messages.msgOrNull('search.' + prop.msgPrefix + '.service.person')}"></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div th:id="|panel-${prop.servicePersonNationality}|">
+                                <div class="col-6">
+                                    <div class="search input-field select2-field">
+                                        <select th:id="|field-${prop.servicePersonNationality}|"
+                                                th:name="${prop.servicePersonNationality}" >
+                                            <option></option>
+                                            <option th:each="entry : ${nationalities}"
+                                                    th:value="${entry.key}"
+                                                    th:text="${entry.value}"
+                                                    th:selected="${#strings.equals(entry.key, searchParam.servicePersonNationality)}"/>
+                                        </select>
+                                        <label id="field-service-person-nationality-label"
+                                               th:text="${#messages.msgOrNull('search.' + prop.msgPrefix + '.service.person.nationality')}"></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <label>
+                                    <input th:name="|field-service-person-name-type-search|" type="radio" class="with-gap"
+                                           th:value="${T(bg.duosoft.ipas.enums.search.PersonNameSearchType).EXACTLY}"
+                                           th:checked="${searchParam.servicePersonNameTypeSearch == null ? T(bg.duosoft.ipas.enums.search.PersonNameSearchType).EXACTLY == prop.servicePersonNameSearchType : T(bg.duosoft.ipas.enums.search.PersonNameSearchType).EXACTLY == searchParam.servicePersonNameTypeSearch }"/>
+                                    <span style="color: #9e9e9e" th:text="${{#messages.msgOrNull('person.name.search.type.exactly')}}"></span>
+                                </label>
+                                <label>
+                                    <input th:name="|field-service-person-name-type-search|" type="radio" class="with-gap"
+                                           th:value="${T(bg.duosoft.ipas.enums.search.PersonNameSearchType).WHOLE_WORDS}"
+                                           th:checked="${searchParam.servicePersonNameTypeSearch == null ? T(bg.duosoft.ipas.enums.search.PersonNameSearchType).WHOLE_WORDS == prop.servicePersonNameSearchType : T(bg.duosoft.ipas.enums.search.PersonNameSearchType).WHOLE_WORDS == searchParam.servicePersonNameTypeSearch }"/>
+                                    <span style="color: #9e9e9e" th:text="${{#messages.msgOrNull('person.name.search.type.whole.words')}}"></span>
+                                </label>
+                                <label>
+                                    <input th:name="|field-service-person-name-type-search|" type="radio" class="with-gap"
+                                           th:value="${T(bg.duosoft.ipas.enums.search.PersonNameSearchType).CONTAINS_WORDS}"
+                                           th:checked="${searchParam.servicePersonNameTypeSearch == null ? T(bg.duosoft.ipas.enums.search.PersonNameSearchType).CONTAINS_WORDS == prop.servicePersonNameSearchType : T(bg.duosoft.ipas.enums.search.PersonNameSearchType).CONTAINS_WORDS == searchParam.servicePersonNameTypeSearch }"/>
+                                    <span style="color: #9e9e9e" th:text="${{#messages.msgOrNull('person.name.search.type.contains.words')}}"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:if="${prop.inventorName}" th:id="|panel-${prop.inventorName}|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::input-field(${prop.inventorName}, ${searchParam.inventorName}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.inventor')})"></div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <label>
+                                    <input th:name="|field-inventor-name-type-search|" type="radio" class="with-gap"
+                                           th:value="${T(bg.duosoft.ipas.enums.search.PersonNameSearchType).EXACTLY}"
+                                           th:checked="${searchParam.inventorNameTypeSearch == null ? T(bg.duosoft.ipas.enums.search.PersonNameSearchType).EXACTLY == prop.inventorNameSearchType : T(bg.duosoft.ipas.enums.search.PersonNameSearchType).EXACTLY == searchParam.inventorNameTypeSearch }"/>
+                                    <span style="color: #9e9e9e" th:text="${{#messages.msgOrNull('person.name.search.type.exactly')}}"></span>
+                                </label>
+                                <label>
+                                    <input th:name="|field-inventor-name-type-search|" type="radio" class="with-gap"
+                                           th:value="${T(bg.duosoft.ipas.enums.search.PersonNameSearchType).WHOLE_WORDS}"
+                                           th:checked="${searchParam.inventorNameTypeSearch == null ? T(bg.duosoft.ipas.enums.search.PersonNameSearchType).WHOLE_WORDS == prop.inventorNameSearchType : T(bg.duosoft.ipas.enums.search.PersonNameSearchType).WHOLE_WORDS == searchParam.inventorNameTypeSearch }"/>
+                                    <span style="color: #9e9e9e" th:text="${{#messages.msgOrNull('person.name.search.type.whole.words')}}"></span>
+                                </label>
+                                <label>
+                                    <input th:name="|field-inventor-name-type-search|" type="radio" class="with-gap"
+                                           th:value="${T(bg.duosoft.ipas.enums.search.PersonNameSearchType).CONTAINS_WORDS}"
+                                           th:checked="${searchParam.inventorNameTypeSearch == null ? T(bg.duosoft.ipas.enums.search.PersonNameSearchType).CONTAINS_WORDS == prop.inventorNameSearchType : T(bg.duosoft.ipas.enums.search.PersonNameSearchType).CONTAINS_WORDS == searchParam.inventorNameTypeSearch }"/>
+                                    <span style="color: #9e9e9e" th:text="${{#messages.msgOrNull('person.name.search.type.contains.words')}}"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:if="${prop.representative}" th:id="|panel-${prop.representative}|"
+                         th:styleappend="|display: none|">
+                        <div class="row">
+                            <div class="col-6" th:id="|panel-${prop.representativeName}|">
+                                <div class="input-field search">
+                                    <input th:id="|field-${prop.representativeName}|" type="text"
+                                           th:value="${searchParam.representativeName}">
+                                    <label th:for="|field-${prop.representativeName}|"
+                                           th:text="${#messages.msgOrNull('search.' + prop.msgPrefix + '.representative')}"></label>
+                                </div>
+                            </div>
+                            <div class="col-6" th:id="|panel-${prop.agentCode}|">
+                                <div class="input-field search">
+                                    <input th:id="|field-${prop.agentCode}|" type="text"
+                                           th:value="${searchParam.agentCode}">
+                                    <label th:for="|field-${prop.agentCode}|"
+                                           th:text="${#messages.msgOrNull('search.' + prop.msgPrefix + '.agent-code')}"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <label>
+                                    <input th:name="|field-representative-name-type-search|" type="radio" class="with-gap"
+                                           th:value="${T(bg.duosoft.ipas.enums.search.PersonNameSearchType).EXACTLY}"
+                                           th:checked="${searchParam.representativeNameTypeSearch == null ? T(bg.duosoft.ipas.enums.search.PersonNameSearchType).EXACTLY == prop.representativeNameSearchType : T(bg.duosoft.ipas.enums.search.PersonNameSearchType).EXACTLY == searchParam.representativeNameTypeSearch }"/>
+                                    <span style="color: #9e9e9e" th:text="${{#messages.msgOrNull('person.name.search.type.exactly')}}"></span>
+                                </label>
+                                <label>
+                                    <input th:name="|field-representative-name-type-search|" type="radio" class="with-gap"
+                                           th:value="${T(bg.duosoft.ipas.enums.search.PersonNameSearchType).WHOLE_WORDS}"
+                                           th:checked="${searchParam.representativeNameTypeSearch == null ? T(bg.duosoft.ipas.enums.search.PersonNameSearchType).WHOLE_WORDS == prop.representativeNameSearchType : T(bg.duosoft.ipas.enums.search.PersonNameSearchType).WHOLE_WORDS == searchParam.representativeNameTypeSearch }"/>
+                                    <span style="color: #9e9e9e" th:text="${{#messages.msgOrNull('person.name.search.type.whole.words')}}"></span>
+                                </label>
+                                <label>
+                                    <input th:name="|field-representative-name-type-search|" type="radio" class="with-gap"
+                                           th:value="${T(bg.duosoft.ipas.enums.search.PersonNameSearchType).CONTAINS_WORDS}"
+                                           th:checked="${searchParam.representativeNameTypeSearch == null ? T(bg.duosoft.ipas.enums.search.PersonNameSearchType).CONTAINS_WORDS == prop.representativeNameSearchType : T(bg.duosoft.ipas.enums.search.PersonNameSearchType).CONTAINS_WORDS == searchParam.representativeNameTypeSearch }"/>
+                                    <span style="color: #9e9e9e" th:text="${{#messages.msgOrNull('person.name.search.type.contains.words')}}"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:if="${prop.statusCodes}" th:id="|panel-${prop.statusCodes}|"
+                         th:styleappend="|display: none|">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="search input-field select2-field">
+                                    <select th:id="|field-${prop.statusCodes}|" th:name="|${prop.statusCodes}[]|"
+                                            multiple="multiple">
+                                        <option th:each="entry : ${statuses}" th:value="${entry.statusId.statusCode}"
+                                                th:text="${entry.statusName}"/>
+                                    </select>
+                                    <label th:id="|label-${prop.statusCodes}|" th:for="|field-${prop.statusCodes}|"
+                                           th:text="${#messages.msgOrNull('search.' + prop.msgPrefix + '.status-codes')}"
+                                           class=""></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div th:replace="ipobjects/common/search/fragments ::range-date-field('status-date', ${searchParam.fromStatusDate}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.status-codes.from-date')}, ${searchParam.toStatusDate}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.status-codes.to-date')})"></div>
+                    </div>
+
+                    <div th:if="${prop.actionTypes}" th:id="|panel-${prop.actionTypes}|"
+                         th:styleappend="|display: none|">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="search input-field select2-field">
+                                    <select th:id="|field-${prop.actionTypes}|" th:name="|${prop.actionTypes}[]|"
+                                            multiple="multiple">
+                                    </select>
+                                    <label th:id="|label-${prop.actionTypes}|" th:for="|field-${prop.actionTypes}|"
+                                           th:text="${#messages.msgOrNull('search.' + prop.msgPrefix + '.action-type')}">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div th:replace="ipobjects/common/search/fragments ::range-date-field('action-date', ${searchParam.fromActionDate}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.action-type.from-date')}, ${searchParam.toActionDate}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.action-type.to-date')})"></div>
+
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="search input-field select2-field">
+                                    <select th:id="|field-action-capture-user-id|" th:name="|action-capture-user-id|" th:attr="data-search-url=@{/{url}/search/user(url=${prop.msgPrefix})}, data-get-url=@{/{url}/search/user-id(url=${prop.msgPrefix})}">
+                                    </select>
+                                    <label th:id="|label-action-capture-user-id|" th:for="|field-action-capture-user-id|"
+                                           th:text="${#messages.msgOrNull('search.action-capture-user-id')}">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div th:if="${prop.publication}" th:id="|panel-${prop.publication}|"
+                         th:styleappend="|display: none|">
+                        <div class="row">
+                            <div>
+                            <div class="col-4">
+                                <div th:replace="ipobjects/common/search/fragments ::publication-year(${prop.msgPrefix}, ${publicationYears}, ${searchParam.publicationYear})"></div>
+                            </div>
+                            </div>
+                            <div>
+                            <div class="col-4">
+                                <div th:replace="ipobjects/common/search/fragments ::publication-bulletin(${prop.msgPrefix}, ${publicationBulletins}, ${searchParam.publicationBulletin})"></div>
+                            </div>
+                            </div>
+                            <div class="col-4">
+                                <div th:replace="ipobjects/common/search/fragments ::publication-sect(${prop.msgPrefix}, ${publicationSects}, ${searchParam.publicationSect})"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:if="${prop.niceClasses}" th:id="|panel-${prop.niceClasses}|"
+                         th:styleappend="|display: none|">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="search input-field select2-field">
+                                    <select id="field-nice-classes" name="nice-classes[]" multiple="multiple"
+                                            class="select2-selection--multiple">
+                                    </select>
+                                    <label id="field-nice-classes-label"
+                                           th:text="${#messages.msgOrNull('search.' + prop.msgPrefix + '.nice-class')}" >
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div th:replace="ipobjects/common/search/fragments ::radio-buttons('nice-classes-type', ${searchParam.niceClassesType})"></div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div th:if="${prop.cpcClasses}" th:id="|panel-${prop.cpcClasses}|"
+                         th:styleappend="|display: none|">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="search input-field select2-field">
+                                    <select id="field-cpc-classes" name="cpc-classes[]" multiple="multiple"
+                                            class="select2-selection--multiple">
+                                    </select>
+                                    <label id="field-cpc-classes-label"
+                                           th:text="${#messages.msgOrNull('search.' + prop.msgPrefix + '.cpc-class.placeholder')}"></label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div th:replace="ipobjects/common/search/fragments ::radio-buttons('cpc-class-type', ${searchParam.cpcClassType})"></div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div th:if="${prop.ipcClasses}" th:id="|panel-${prop.ipcClasses}|"
+                         th:styleappend="|display: none|">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="search input-field select2-field">
+                                    <select id="field-ipc-classes" name="ipc-classes[]" multiple="multiple"
+                                            class="select2-selection--multiple">
+                                    </select>
+                                    <label id="field-ipc-classes-label"
+                                           th:text="${#messages.msgOrNull('search.' + prop.msgPrefix + '.ipc-class.placeholder')}"></label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div th:replace="ipobjects/common/search/fragments ::radio-buttons('ipc-class-type', ${searchParam.ipcClassType})"></div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div th:if="${prop.viennaClassCodes}" th:id="|panel-${prop.viennaClassCodes}|"
+                         th:styleappend="|display: none|">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="search input-field select2-field">
+                                    <select id="field-vienna-class-codes" name="vienna-class-codes[]"
+                                            multiple="multiple" class="select2-selection--multiple">
+                                    </select>
+                                    <label id="field-vienna-class-codes-label"
+                                           th:text="${#messages.msgOrNull('search.' + prop.msgPrefix + '.vienna-class')}" >
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div th:replace="ipobjects/common/search/fragments ::radio-buttons('vienna-class-code-type', ${searchParam.viennaClassCodeType})"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:if="${prop.locarnoClasses}" th:id="|panel-${prop.locarnoClasses}|"
+                         th:styleappend="|display: none|">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="search input-field select2-field">
+                                    <select id="field-locarno-classes" name="locarno-classes[]" multiple="multiple"
+                                            class="select2-selection--multiple">
+                                    </select>
+                                    <label id="field-locarno-classes-label"
+                                           th:text="${#messages.msgOrNull('search.' + prop.msgPrefix + '.locarno-classes.placeholder')}"></label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div th:replace="ipobjects/common/search/fragments ::radio-buttons('locarno-class-code-type', ${searchParam.locarnoClassCodeType})"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:if="${prop.bgPermitNumber}" th:id="|panel-${prop.bgPermitNumber}|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::input-field(${prop.bgPermitNumber}, ${searchParam.bgPermitNumber}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.bg-permit-number')})"></div>
+                    </div>
+
+                    <div th:if="${prop.bgPermitDate}" th:id="|panel-${prop.bgPermitDate}|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::range-date-field(${prop.bgPermitDate}, ${searchParam.fromBgPermitDate}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.from-bg-permit-date')}, ${searchParam.toBgPermitDate}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.to-bg-permit-date')})"></div>
+                    </div>
+
+                    <div th:if="${prop.euPermitNumber}" th:id="|panel-${prop.euPermitNumber}|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::input-field(${prop.euPermitNumber}, ${searchParam.euPermitNumber}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.eu-permit-number')})"></div>
+                    </div>
+
+                    <div th:if="${prop.euPermitDate}" th:id="|panel-${prop.euPermitDate}|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::range-date-field(${prop.euPermitDate}, ${searchParam.fromEuPermitDate}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.from-eu-permit-date')}, ${searchParam.toEuPermitDate}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.to-eu-permit-date')})"></div>
+                    </div>
+
+                    <div th:if="${prop.taxon}" th:id="|panel-${prop.taxon}|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::input-field(${prop.taxon}, ${searchParam.taxon}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.taxon')})"></div>
+                    </div>
+
+                    <div th:if="${prop.proposedDenomination}" th:id="|panel-${prop.proposedDenomination}|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::input-field(${prop.proposedDenomination}, ${searchParam.proposedDenomination}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.proposed-denomination')})"></div>
+                    </div>
+
+                    <div th:if="${prop.proposedDenominationEng}" th:id="|panel-${prop.proposedDenominationEng}|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::input-field(${prop.proposedDenominationEng}, ${searchParam.proposedDenominationEng}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.proposed-denomination-eng')})"></div>
+                    </div>
+
+                    <div th:if="${prop.publDenomination}" th:id="|panel-${prop.publDenomination}|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::input-field(${prop.publDenomination}, ${searchParam.publDenomination}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.publ-denomination')})"></div>
+                    </div>
+
+                    <div th:if="${prop.publDenominationEng}" th:id="|panel-${prop.publDenominationEng}|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::input-field(${prop.publDenominationEng}, ${searchParam.publDenominationEng}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.publ-denomination-eng')})"></div>
+                    </div>
+
+                    <div th:if="${prop.apprDenomination}" th:id="|panel-${prop.apprDenomination}|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::input-field(${prop.apprDenomination}, ${searchParam.apprDenomination}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.appr-denomination')})"></div>
+                    </div>
+
+                    <div th:if="${prop.apprDenominationEng}" th:id="|panel-${prop.apprDenominationEng}|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::input-field(${prop.apprDenominationEng}, ${searchParam.apprDenominationEng}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.appr-denomination-eng')})"></div>
+                    </div>
+
+                    <div th:if="${prop.rejDenomination}" th:id="|panel-${prop.rejDenomination}|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::input-field(${prop.rejDenomination}, ${searchParam.rejDenomination}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.rej-denomination')})"></div>
+                    </div>
+
+                    <div th:if="${prop.rejDenominationEng}" th:id="|panel-${prop.rejDenominationEng}|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::input-field(${prop.rejDenominationEng}, ${searchParam.rejDenominationEng}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.rej-denomination-eng')})"></div>
+                    </div>
+
+                    <div th:if="${prop.features}" th:id="|panel-${prop.features}|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::input-field(${prop.features}, ${searchParam.features}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.features')})"></div>
+                    </div>
+
+                    <div th:if="${prop.stability}" th:id="|panel-${prop.stability}|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::input-field(${prop.stability}, ${searchParam.stability}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.stability')})"></div>
+                    </div>
+
+                    <div th:if="${prop.testing}" th:id="|panel-${prop.testing}|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::input-field(${prop.testing}, ${searchParam.testing}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.testing')})"></div>
+                    </div>
+
+                    <div th:if="${prop.requestForValidation}" th:id="|panel-${prop.requestForValidation}|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::range-input-field(${prop.requestForValidation} + '-nbr', ${searchParam.fromRequestForValidationNbr}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.from-request-for-validation-number')}, ${searchParam.toRequestForValidationNbr}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.to-request-for-validation-number')})"></div>
+                        <div th:replace="ipobjects/common/search/fragments ::range-date-field(${prop.requestForValidation} + '-date', ${searchParam.fromRequestForValidationDate}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.from-request-for-validation-date')}, ${searchParam.toRequestForValidationDate}, ${#messages.msgOrNull('search.' + prop.msgPrefix + '.to-request-for-validation-date')})"></div>
+                    </div>
+
+                    <div class="row right-align">
+                        <div class="col-12">
+                            <button th:id="submit-form" th:text="#{btn.search}" type="button" class="button sm-icn-save wmin_130"></button>
+                            <button th:id="clear-form" th:text="#{btn.clear}" type="button" class="button sm-icn-cross wmin_130"></button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div id="result">
+                <div th:if="${page != null}" th:remove="tag">
+                    <div th:replace="ipobjects/common/search/list ::result"></div>
+                </div>
+            </div>
+            <div id="dropdown-panel"></div>
+        </div>
+    </main>
+</div>
+<footer class="page-footer" th:replace="base/footer"></footer>
+<script>
+
+</script>
+<script th:replace="base/template :: js-footer" th:remove="tag"></script>
+<script type="text/javascript" charset="utf-8" th:src="@{/js/custom/general/jasper-report.js}"></script>
+
+<script th:inline="javascript">
+
+    $(document).ready(function () {
+
+
+        let cookie_name = $("#detail-list").attr("data-group");
+        let sess_json = getCookieAsJson(cookie_name);
+        let sort_col_field = 'sortColumn';
+        let sort_order_field = 'sortOrder';
+
+        let has_visible_col = false;
+        $.each(sess_json, function (i, obj) {
+            if (obj === true && !has_visible_col)
+                has_visible_col = true;
+        });
+        if (!has_visible_col) {
+            sess_json["title"] = true;
+            setCookie(cookie_name, JSON.stringify(sess_json));
+        }
+
+        Panel.init($("#panel-[(${prop.publication})]"));
+
+        if ('[(${prop.signCode})]' !== '') {
+            Panel.init($("#panel-[(${prop.signCode})]"));
+        }
+
+        Panel.init($("#panel-[(${prop.applTyp})]"));
+
+        if([(${!#strings.isEmpty(searchParam.applTyp)})]) {
+            $('#label-[(${prop.applTyp})]').addClass("active");
+        }
+        if([(${!#strings.isEmpty(searchParam.subApplTyp)})]) {
+            $('#label-sub[(${prop.applTyp})]').addClass("active");
+        }
+
+        $("#field-[(${prop.applTyp})]").on('change', function () {
+            if ($("#field-[(${prop.applTyp})]").val() == ""){
+                $('#label-[(${prop.applTyp})]').removeClass("active");
+            } else {
+                $('#label-[(${prop.applTyp})]').addClass("active");
+            }
+
+            let applTyp = $('#field-[(${prop.applTyp})]').val();
+
+            $.ajax({
+                url: '[(@{/{url}/search/appl-sub-typ(url=${prop.msgPrefix})})]',
+                type: 'POST',
+                datatype: 'html',
+                data: {applTyp: applTyp},
+                success: function (data) {
+
+                    $('#field-sub-[(${prop.applTyp})]').html(data);
+                    Panel.init($("#panel-sub-[(${prop.applTyp})]"));
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log("asdasd");
+                }
+            });
+        });
+
+        $("#field-sub-[(${prop.applTyp})]").on('change', function () {
+            if ($("#field-sub-[(${prop.applTyp})]").val() == ""){
+                $('#label-sub-[(${prop.applTyp})]').removeClass("active");
+            } else {
+                $('#label-sub-[(${prop.applTyp})]').addClass("active");
+            }
+        });
+
+        // global setting
+        $.fn.select2.defaults.set("theme", "material");
+
+        // sign type
+        let fieldSignType = $('#field-[(${prop.signCode})]');
+        if (fieldSignType.val() == ""){
+            $('#label-[(${prop.signCode})]').removeClass("active");
+        } else {
+            $('#label-[(${prop.signCode})]').addClass("active");
+        }
+        $('#field-[(${prop.signCode})]').on('change', function () {
+            let fieldSignType = $('#field-[(${prop.signCode})]');
+            if (fieldSignType.val() == ""){
+                $('#label-[(${prop.signCode})]').removeClass("active");
+            } else {
+                $('#label-[(${prop.signCode})]').addClass("active");
+            }
+        });
+        if ([(${!#strings.isEmpty(searchParam.signCode)})]) {
+            $('#label-[(${prop.signCode})]').addClass("active");
+        }
+
+        // owner nationality
+        $("#field-[(${prop.ownerNationality})]").select2({
+            placeholder: "",
+            allowClear: true,
+            dropdownParent: $('#dropdown-panel')
+        });
+
+        $('#field-[(${prop.ownerNationality})]').on('select2:open', function (e) {
+            $('#field-[(${prop.ownerNationality})]-label').addClass("active");
+        });
+
+        $('#field-[(${prop.ownerNationality})]').on('select2:close', function (e) {
+            if ($(this).find(':selected').val() == "") {
+                $('#field-[(${prop.ownerNationality})]-label').removeClass("active");
+                $('#panel-owner-nationality .select2-selection__rendered').removeAttr("title");
+            }
+        });
+
+        $('#field-[(${prop.ownerNationality})]').on('change', function (e) {
+            if ($(this).find(':selected').val() == "") {
+                $('#field-[(${prop.ownerNationality})]-label').removeClass("active");
+                $('#panel-owner-nationality .select2-selection__rendered').removeAttr("title");
+            } else {
+                $('#field-[(${prop.ownerNationality})]-label').addClass("active");
+            }
+        });
+        if ([(${!#arrays.isEmpty(searchParam.ownerNationality)})]) {
+            $('#field-[(${prop.ownerNationality})]-label').addClass("active");
+        }
+
+
+        // service-person nationality
+        $("#field-[(${prop.servicePersonNationality})]").select2({
+            placeholder: "",
+            allowClear: true,
+            dropdownParent: $('#dropdown-panel')
+        });
+
+        $('#field-[(${prop.servicePersonNationality})]').on('select2:open', function (e) {
+            $('#field-[(${prop.servicePersonNationality})]-label').addClass("active");
+        });
+
+        $('#field-[(${prop.servicePersonNationality})]').on('select2:close', function (e) {
+            if ($(this).find(':selected').val() == "") {
+                $('#field-[(${prop.servicePersonNationality})]-label').removeClass("active");
+                $('#panel-service-person-nationality .select2-selection__rendered').removeAttr("title");
+            }
+        });
+
+        $('#field-[(${prop.servicePersonNationality})]').on('change', function (e) {
+            if ($(this).find(':selected').val() == "") {
+                $('#field-[(${prop.servicePersonNationality})]-label').removeClass("active");
+                $('#panel-service-person-nationality .select2-selection__rendered').removeAttr("title");
+            } else {
+                $('#field-[(${prop.servicePersonNationality})]-label').addClass("active");
+            }
+        });
+        if ([(${!#arrays.isEmpty(searchParam.servicePersonNationality)})]) {
+            $('#field-[(${prop.servicePersonNationality})]-label').addClass("active");
+        }
+
+        // status code
+        $("#field-[(${prop.statusCodes})]").select2({dropdownParent: $('#dropdown-panel')});
+        let status_code_values = [[${searchParam.statusCodes}]];
+
+        $("#field-[(${prop.statusCodes})]").val(status_code_values);
+        $('#field-[(${prop.statusCodes})]').trigger('change');
+
+        $('#field-[(${prop.statusCodes})]').on('select2:open', function (e) {
+            $('#label-[(${prop.statusCodes})]').addClass("active");
+        });
+        $('#field-[(${prop.statusCodes})]').on('select2:close', function (e) {
+            if ($(this).find(':selected').length === 0) {
+                $('#label-[(${prop.statusCodes})]').removeClass("active");
+            }
+        });
+        if ($('#field-[(${prop.statusCodes})]').find(':selected').length != 0) {
+            $('#label-[(${prop.statusCodes})]').addClass("active");
+        }
+
+        initSearchUserField('field-[(${prop.responsibleUser})]');
+        preselectUserField('field-[(${prop.responsibleUser})]', '[(${searchParam.responsibleUserId})]');
+
+        initSearchUserField('field-action-capture-user-id');
+        preselectUserField('field-action-capture-user-id', '[(${searchParam.actionCaptureUserId})]');
+
+
+        // action type
+        $('#field-[(${prop.actionTypes})]').select2({
+            dropdownParent: $('#dropdown-panel'),
+            ajax: {
+                url: '[(@{/{url}/search/action-types(url=${prop.msgPrefix})})]',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        actionName: params.term
+                    };
+                },
+                processResults: function (data, params) {
+                    // parse the results into the format expected by Select2
+                    // since we are using custom formatting functions we do not need to
+                    // alter the remote JSON data, except to indicate that infinite
+                    // scrolling can be used
+                    params.page = params.page || 1;
+
+
+                    let cJson = [];
+
+                    data.forEach(function (a) {
+                        let obj = {};
+
+                        obj['id'] = a.actionType.trim();
+                        obj['text'] = a.actionName.trim();
+
+                        cJson.push(obj);
+                    }, Object.create(null));
+
+                    return {
+                        results: cJson,
+                        pagination: {
+                            more: (params.page * 30) < data.total_count
+                        }
+                    };
+                },
+                cache: true
+            },
+            escapeMarkup: function (markup) {
+                return markup;
+            },
+            templateResult: function (repo) {
+                if (repo.loading) {
+                    return repo.text;
+                }
+                let markup = "<div class='select2-result-repository clearfix'>" +
+                    "<div style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>" + repo.text + "</div>" +
+                    "</div>";
+
+                return markup;
+            }
+        });
+
+        $('#field-[(${prop.actionTypes})]').on('select2:open', function (e) {
+            $('#label-action-types').addClass("active");
+        });
+        $('#field-[(${prop.actionTypes})]').on('select2:close', function (e) {
+            if ($(this).find(':selected').length === 0) {
+                $('#label-[(${prop.actionTypes})]').removeClass("active");
+            }
+        });
+        if ([(${!#arrays.isEmpty(searchParam.actionTypes)})]) {
+            $('#label-[(${prop.actionTypes})]').addClass("active");
+        }
+
+        // Fetch the preselected item, and add to the control
+        preselectedItemsWithAjax([[${searchParam.actionTypes}]],
+            $('#field-[(${prop.actionTypes})]'),
+            '[(@{/{url}/search/action-type(url=${prop.msgPrefix})})]',
+            "actionType",
+            function (data) {
+                return data.actionName;
+            },
+            function (data) {
+                return data.actionType;
+            });
+
+        $('#field-publication-year').on('change', function () {
+            if ($("#field-publication-year").val() == ""){
+                $('#label-publication-year').removeClass("active");
+            } else {
+                $('#label-publication-year').addClass("active");
+            }
+
+            getPublBull();
+        });
+
+        $('#field-publication-bulletin').on('change', function () {
+            if ($('#field-publication-bulletin').val() == ""){
+                $('#label-publication-bulletin').removeClass("active");
+            } else {
+                $('#label-publication-bulletin').addClass("active");
+            }
+
+            getPublSect();
+        });
+
+
+        $('#field-publication-sect').on('change', function () {
+            if ($('#field-publication-sect').val() == ""){
+                $('#label-publication-sect').removeClass("active");
+            } else {
+                $('#label-publication-sect').addClass("active");
+            }
+        });
+
+        if([(${!#arrays.isEmpty(searchParam.publicationYear)})]) {
+            $('#label-publication-year').addClass("active");
+        }
+        if([(${!#arrays.isEmpty(searchParam.publicationBulletin)})]) {
+            $('#label-publication-bulletin').addClass("active");
+        }
+        if([(${!#arrays.isEmpty(searchParam.publicationSect)})]) {
+            $('#label-publication-sect').addClass("active");
+        }
+        function getPublBull() {
+            let year = $('#field-publication-year').val();
+            let bulletin = $('#field-publication-bulletin').val();
+
+            $.ajax({
+                url: '[(@{/{url}/search/bulletin(url=${prop.msgPrefix})})]',
+                type: 'POST',
+                datatype: 'html',
+                data: {year: year},
+                success: function (data) {
+
+                    $('#block-publication-bulletin').replaceWith(data);
+
+                    $('#field-publication-bulletin').trigger('change');
+                    Panel.init($('#block-publication-bulletin'));
+
+                    setupSelectWrapper($('#block-publication-bulletin').children());
+
+                    $('#field-publication-bulletin').on('change', function () {
+
+                        if ($('#field-publication-bulletin').val() == ""){
+                            $('#label-publication-bulletin').removeClass("active");
+                        } else {
+                            $('#label-publication-bulletin').addClass("active");
+                        }
+
+                        getPublSect();
+                    });
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log("asdasd");
+                }
+            });
+        }
+
+        function getPublSect() {
+            let year = $('#field-publication-year').val();
+            let bulletin = $('#field-publication-bulletin').val();
+
+            $.ajax({
+                url: '[(@{/{url}/search/section(url=${prop.msgPrefix})})]',
+                type: 'POST',
+                datatype: 'html',
+                data: {year: year, bulletin: bulletin},
+                success: function (data) {
+
+                    $('#block-publication-sect').replaceWith(data);
+                    Panel.init($('#block-publication-sect'));
+
+                    setupSelectWrapper($('#block-publication-sect').children());
+
+                    $('#field-publication-sect').on('change', function () {
+                        if ($('#field-publication-sect').val() == ""){
+                            $('#label-publication-sect').removeClass("active");
+                        } else {
+                            $('#label-publication-sect').addClass("active");
+                        }
+                    });
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log("asdasd");
+                }
+            });
+        }
+
+        $('#field-selected-file-types').select2();
+
+
+        $('#field-selected-file-types').on('select2:open', function (e) {
+            $("#field-selected-file-types-label").css("color", "#0D47A1");
+            $('#field-selected-file-types-label').addClass("active");
+        });
+
+        $('#field-selected-file-types').on('select2:close', function (e) {
+            $("#field-selected-file-types-label").css("color", "");
+            if ($(this).find(':selected').length === 0) {
+                $('#field-selected-file-types-label').removeClass("active");
+            }
+        });
+
+        if ([(${!#arrays.isEmpty(searchParam.selectedFileTypes)})]) {
+            $('#field-selected-file-types-label').addClass("active");
+        }
+
+        // VIENNA CLASSES
+        $('#field-vienna-class-codes').select2({
+            dropdownParent: $('#dropdown-panel'),
+            ajax: {
+                url: '[(@{/{url}/search/vienna-classes(url=${prop.msgPrefix})})]',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        'vienna-code': params.term
+                    };
+                },
+                processResults: function (data, params) {
+                    // parse the results into the format expected by Select2
+                    // since we are using custom formatting functions we do not need to
+                    // alter the remote JSON data, except to indicate that infinite
+                    // scrolling can be used
+                    params.page = params.page || 1;
+
+
+                    let cJson = [];
+
+                    data.forEach(function (a) {
+                        let obj = {};
+
+                        obj['id'] = a.viennaClass.trim();
+                        obj['text'] = getViennaText(a);
+
+                        cJson.push(obj);
+                    }, Object.create(null));
+
+                    return {
+                        results: cJson,
+                        pagination: {
+                            more: (params.page * 30) < data.total_count
+                        }
+                    };
+                },
+                cache: true
+            },
+            escapeMarkup: function (markup) {
+                return markup;
+            },
+            templateResult: function (repo) {
+                if (repo.loading) {
+                    return repo.text;
+                }
+                let markup = "<div class='select2-result-repository clearfix'>" +
+                    "<div style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>" + repo.text + "</div>" +
+                    "</div>";
+
+                return markup;
+            }
+        });
+
+        $('#field-vienna-class-codes').on('select2:open', function (e) {
+            $("#field-vienna-class-codes-label").css("color", "#0D47A1");
+            $('#field-vienna-class-codes-label').addClass("active");
+        });
+
+        $('#field-vienna-class-codes').on('select2:close', function (e) {
+            $("#field-vienna-class-codes-label").css("color", "");
+            if ($(this).find(':selected').length === 0) {
+                $('#field-vienna-class-codes-label').removeClass("active");
+            }
+        });
+
+        preselectedItemsWithAjax([[${searchParam.viennaClassCodes}]],
+            $('#field-vienna-class-codes'),
+            '[(@{/{url}/search/vienna-classes(url=${prop.msgPrefix})})]',
+            "vienna-code",
+            function (data) {
+                return getViennaText(data);
+            },
+            function (data) {
+                return data.viennaClass;
+            });
+
+        if ([(${!#arrays.isEmpty(searchParam.viennaClassCodes)})]) {
+            $('#field-vienna-class-codes-label').addClass("active");
+        }
+
+        // NICE CLASSES
+        function getJson() {
+            let ipc = [];
+            for (i = 1; i <= 45; i++) {
+                ipc.push({'id': i, 'text': i});
+            }
+            return ipc;
+        }
+
+        let data = getJson();
+
+        $('#field-nice-classes').select2({
+            dropdownParent: $('#dropdown-panel'),
+            data: data,
+            closeOnSelect: false
+        });
+        $('#field-nice-classes').val([(${searchParam.niceClasses})]);
+        $('#field-nice-classes').trigger('change');
+
+        $('#field-nice-classes').on('select2:open', function (e) {
+            $("#field-nice-classes-label").css("color", "#0D47A1");
+            $('#field-nice-classes-label').addClass("active");
+        });
+
+        $('#field-nice-classes').on('select2:close', function (e) {
+            $("#field-nice-classes-label").css("color", "");
+            if ($(this).find(':selected').length === 0) {
+                $('#field-nice-classes-label').removeClass("active");
+            }
+        });
+        if ($('#field-nice-classes').find(':selected').length != 0) {
+            $('#field-nice-classes-label').addClass("active");
+        }
+
+        // IPC CLASSES
+        $('#field-ipc-classes').select2({
+            dropdownParent: $('#dropdown-panel'),
+            ajax: {
+                url: '[(@{/{url}/search/ipc(url=${prop.msgPrefix})})]',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        ipcNumber: params.term,
+                        withLikeCriteria:true
+                    };
+                },
+                processResults: function (data, params) {
+                    // parse the results into the format expected by Select2
+                    // since we are using custom formatting functions we do not need to
+                    // alter the remote JSON data, except to indicate that infinite
+                    // scrolling can be used
+                    params.page = params.page || 1;
+
+
+                    let cJson = [];
+
+                    data.forEach(function (a) {
+                        let obj = {};
+
+                        obj['id'] = a.ipcSection + a.ipcClass + a.ipcSubclass + a.ipcGroup + a.ipcSubgroup + ' - '+a.ipcEdition ;
+                        obj['text'] = a.ipcName.trim();
+                        obj['withLatestVersion'] = a.withLatestVersion;
+
+                        cJson.push(obj);
+                    }, Object.create(null));
+
+                    cJson.sort(function (a, b) {
+                        if (a.id < b.id) {
+                            return -1;
+                        }
+                        if (a.id > b.id) {
+                            return 1;
+                        }
+                        return 0;
+                    });
+
+                    if (cJson.length > 1) {
+                        cJson = [{id: params.term.toUpperCase() + "*", text: "&nbsp;", withLatestVersion: true}].concat(cJson);
+                    }
+
+                    return {
+                        results: cJson,
+                        pagination: {
+                            more: (params.page * 30) < data.total_count
+                        }
+                    };
+                },
+                cache: true
+            },
+            escapeMarkup: function (markup) {
+                return markup;
+            }, // let our custom formatter work
+            minimumInputLength: 1,
+            templateResult: formatRepo,
+            templateSelection: formatRepoSelection
+        });
+        $('#field-ipc-classes').on('select2:open', function (e) {
+            $("#field-ipc-classes-label").css("color", "#0D47A1");
+            $('#field-ipc-classes-label').addClass("active");
+        });
+
+        $('#field-ipc-classes').on('select2:close', function (e) {
+            $("#field-ipc-classes-label").css("color", "");
+            if ($(this).find(':selected').length === 0) {
+                $('#field-ipc-classes-label').removeClass("active");
+            }
+        });
+        if ($('#field-ipc-classes').find(':selected').length != 0) {
+            $('#field-ipc-classes-label').addClass("active");
+        }
+
+        if ([(${!#arrays.isEmpty(searchParam.ipcClasses)})]) {
+            $('#field-ipc-classes-label').addClass("active");
+        }
+
+        function formatRepo(repo) {
+            if (repo.loading) {
+                return repo.text;
+            }
+
+            let markup;
+
+            if (repo.withLatestVersion) {
+                markup = "<div class='select2-result-repository clearfix'>" +
+                    "<div  style='float: left; width: 200px; min-height: 25px;'>" + repo.id + "</div>" +
+                    "<div style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>" + repo.text + "</div>" +
+                    "</div>";
+            } else {
+                markup = "<div style='color: red' class='select2-result-repository clearfix'>" +
+                    "<div  style='float: left; width: 200px; min-height: 25px;'>" + repo.id + "</div>" +
+                    "<div style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>" + repo.text + "</div>" +
+                    "</div>";
+            }
+            return markup;
+        }
+
+        function formatRepoSelection(repo) {
+            return repo.id || repo.text;
+        }
+
+        preselectedItemsWithAjax([[${searchParam.ipcClasses}]],
+            $('#field-ipc-classes'),
+            '[(@{/{url}/search/ipc(url=${prop.msgPrefix})})]',
+            "ipcNumber",
+            function (data) {
+                if(data.commonSearchTitle){
+                    return data.commonSearchTitle;
+                }
+                return data.ipcSection + data.ipcClass + data.ipcSubclass + data.ipcGroup + data.ipcSubgroup + ' - '+data.ipcEdition;
+            },
+            function (data) {
+                if(data.commonSearchTitle){
+                    return data.commonSearchTitle;
+                }
+                return data.ipcSection + data.ipcClass + data.ipcSubclass + data.ipcGroup + data.ipcSubgroup + ' - '+data.ipcEdition;
+            });
+
+
+        // CPC CLASSES
+        $('#field-cpc-classes').select2({
+            dropdownParent: $('#dropdown-panel'),
+            ajax: {
+                url: '[(@{/{url}/search/cpc(url=${prop.msgPrefix})})]',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        cpcNumber: params.term,
+                        withLikeCriteria:true
+                    };
+                },
+                processResults: function (data, params) {
+                    // parse the results into the format expected by Select2
+                    // since we are using custom formatting functions we do not need to
+                    // alter the remote JSON data, except to indicate that infinite
+                    // scrolling can be used
+                    params.page = params.page || 1;
+
+
+                    let cJson = [];
+
+                    data.forEach(function (a) {
+                        let obj = {};
+
+                        obj['id'] = a.cpcSection + a.cpcClass + a.cpcSubclass + a.cpcGroup + a.cpcSubgroup + ' - '+a.cpcEdition ;
+                        obj['text'] = a.cpcName.trim();
+                        obj['withLatestVersion'] = a.withLatestVersion;
+
+                        cJson.push(obj);
+                    }, Object.create(null));
+
+                    cJson.sort(function (a, b) {
+                        if (a.id < b.id) {
+                            return -1;
+                        }
+                        if (a.id > b.id) {
+                            return 1;
+                        }
+                        return 0;
+                    });
+
+                    if (cJson.length > 1) {
+                        cJson = [{id: params.term.toUpperCase() + "*", text: "&nbsp;", withLatestVersion: true}].concat(cJson);
+                    }
+
+                    return {
+                        results: cJson,
+                        pagination: {
+                            more: (params.page * 30) < data.total_count
+                        }
+                    };
+                },
+                cache: true
+            },
+            escapeMarkup: function (markup) {
+                return markup;
+            }, // let our custom formatter work
+            minimumInputLength: 1,
+            templateResult: cpcFormatRepo,
+            templateSelection: cpcFormatRepoSelection
+        });
+        $('#field-cpc-classes').on('select2:open', function (e) {
+            $("#field-cpc-classes-label").css("color", "#0D47A1");
+            $('#field-cpc-classes-label').addClass("active");
+        });
+
+        $('#field-cpc-classes').on('select2:close', function (e) {
+            $("#field-cpc-classes-label").css("color", "");
+            if ($(this).find(':selected').length === 0) {
+                $('#field-cpc-classes-label').removeClass("active");
+            }
+        });
+        if ($('#field-cpc-classes').find(':selected').length != 0) {
+            $('#field-cpc-classes-label').addClass("active");
+        }
+
+        if ([(${!#arrays.isEmpty(searchParam.cpcClasses)})]) {
+            $('#field-cpc-classes-label').addClass("active");
+        }
+
+        function cpcFormatRepo(repo) {
+            if (repo.loading) {
+                return repo.text;
+            }
+
+            let markup;
+
+            if (repo.withLatestVersion) {
+                markup = "<div class='select2-result-repository clearfix'>" +
+                    "<div  style='float: left; width: 200px; min-height: 25px;'>" + repo.id + "</div>" +
+                    "<div style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>" + repo.text + "</div>" +
+                    "</div>";
+            } else {
+                markup = "<div style='color: red' class='select2-result-repository clearfix'>" +
+                    "<div  style='float: left; width: 200px; min-height: 25px;'>" + repo.id + "</div>" +
+                    "<div style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>" + repo.text + "</div>" +
+                    "</div>";
+            }
+            return markup;
+        }
+
+        function cpcFormatRepoSelection(repo) {
+            return repo.id || repo.text;
+        }
+
+        preselectedItemsWithAjax([[${searchParam.cpcClasses}]],
+            $('#field-cpc-classes'),
+            '[(@{/{url}/search/cpc(url=${prop.msgPrefix})})]',
+            "cpcNumber",
+            function (data) {
+                if(data.commonSearchTitle){
+                    return data.commonSearchTitle;
+                }
+                return data.cpcSection + data.cpcClass + data.cpcSubclass + data.cpcGroup + data.cpcSubgroup + ' - '+data.cpcEdition;
+            },
+            function (data) {
+                if(data.commonSearchTitle){
+                    return data.commonSearchTitle;
+                }
+                return data.cpcSection + data.cpcClass + data.cpcSubclass + data.cpcGroup + data.cpcSubgroup + ' - '+data.cpcEdition;
+            });
+
+        // LOCARNO CLASSES
+        $('#field-locarno-classes').select2({
+            dropdownParent: $('#dropdown-panel'),
+            ajax: {
+                url: '[(@{/{url}/search/locarno(url=${prop.msgPrefix})})]',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        locarnoClass: params.term
+                    };
+                },
+                processResults: function (data, params) {
+                    // parse the results into the format expected by Select2
+                    // since we are using custom formatting functions we do not need to
+                    // alter the remote JSON data, except to indicate that infinite
+                    // scrolling can be used
+                    params.page = params.page || 1;
+
+
+                    let cJson = [];
+
+                    data.forEach(function (a) {
+                        let obj = {};
+
+                        obj['id'] = a.locarnoClassCode;
+                        obj['text'] = a.locarnoName.trim();
+
+                        cJson.push(obj);
+                    }, Object.create(null));
+
+                    cJson.sort(function (a, b) {
+                        if (a.id < b.id) {
+                            return -1;
+                        }
+                        if (a.id > b.id) {
+                            return 1;
+                        }
+                        return 0;
+                    });
+
+                    if (cJson.length > 1) {
+                        cJson = [{id: params.term.toUpperCase() + "*", text: "&nbsp;"}].concat(cJson);
+                    }
+
+                    return {
+                        results: cJson,
+                        pagination: {
+                            more: (params.page * 30) < data.total_count
+                        }
+                    };
+                },
+                cache: true
+            },
+            escapeMarkup: function (markup) {
+                return markup;
+            }, // let our custom formatter work
+            minimumInputLength: 1,
+            templateResult: formatRepoLocarno,
+            templateSelection: formatRepoSelectionLocarno
+        });
+        $('#field-locarno-classes').on('select2:open', function (e) {
+            $("#field-locarno-classes-label").css("color", "#0D47A1");
+            $('#field-locarno-classes-label').addClass("active");
+        });
+
+        $('#field-locarno-classes').on('select2:close', function (e) {
+            $("#field-locarno-classes-label").css("color", "");
+            if ($(this).find(':selected').length === 0) {
+                $('#field-locarno-classes-label').removeClass("active");
+            }
+        });
+        if ($('#field-locarno-classes').find(':selected').length != 0) {
+            $('#field-locarno-classes-label').addClass("active");
+        }
+
+        if ([(${!#arrays.isEmpty(searchParam.locarnoClasses)})]) {
+            $('#field-locarno-classes-label').addClass("active");
+        }
+
+        function formatRepoLocarno(repo) {
+            if (repo.loading) {
+                return repo.text;
+            }
+
+            let markup = "<div class='select2-result-repository clearfix'>" +
+                "<div  style='float: left; width: 100px; min-height: 25px;'>" + repo.id + "</div>" +
+                "<div style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>" + repo.text + "</div>" +
+                "</div>";
+            return markup;
+        }
+
+        function formatRepoSelectionLocarno(repo) {
+            return repo.id || repo.text;
+        }
+
+        preselectedItemsWithAjax([[${searchParam.locarnoClasses}]],
+            $('#field-locarno-classes'),
+            '[(@{/{url}/search/locarno(url=${prop.msgPrefix})})]',
+            "locarnoClass",
+            function (data) {
+                return data.locarnoClassCode;
+            },
+            function (data) {
+                return data.locarnoClassCode;
+            });
+
+        ///////////////////////////////////////
+
+        let panelContainer = $('#panel-container');
+        if (panelContainer.length > 0) {
+            initPanelContainer("panel-container");
+        }
+
+        // Initialization datepickers
+        let dateFileds = $("input[data-type='datepicker']");
+
+        for (i = 0; (elem = dateFileds[i]) != null; i++) {
+            let label = $(elem).siblings('label');
+            $(elem).datepicker({
+                beforeShow: function (textbox, instance) {
+                    if ($(textbox).hasClass("modal-date")) {
+                        setTimeout(function () {
+                            let newTop = $(textbox).offset().top - $(window).scrollTop() + $(textbox).height() + 2;
+                            instance.dpDiv.css({
+                                top: newTop + 'px',
+                            });
+                        }, 20);
+                    }
+                },
+                onSelect: function () {
+                    if (label.length > 0) {
+                        $(label[0]).addClass('active');
+                    }
+                }
+            });
+        }
+
+        // Initialization '.select-wrapper' with select
+        $(".select-wrapper").each(function () {
+            setupSelectWrapper($(this))
+        });
+
+        function setupSelectWrapper(wrapper) {
+            let select_field = wrapper.children("select");
+            let input_field = wrapper.children("input");
+
+            select_field.change(function () {
+                if ($(this).children('option:selected').val() === '') {
+                    input_field.css('color', '#9e9e9e');
+                } else {
+                    input_field.css('color', '');
+                }
+            });
+            if (select_field.children('option:selected').val() === '') {
+                input_field.css('color', '#9e9e9e');
+            }
+        }
+
+    });
+
+    function inputRangeJS(fieldNameSufix) {
+        let fieldNameFrom = "#field-from-" + fieldNameSufix;
+        let fieldNameTo = "#field-to-" + fieldNameSufix;
+        let labelNameTo = "#label-to-" + fieldNameSufix;
+        $(fieldNameFrom)
+            .focusout(function() {
+                let fieldValue = this.value;
+                $(fieldNameTo).val(fieldValue);
+                $(labelNameTo).addClass("active");
+            })
+    }
+
+    if([(${!#strings.isEmpty(prop.fileNbr)})]) {
+        inputRangeJS("[(${prop.fileNbr})]");
+    }
+    if([(${!#strings.isEmpty(prop.registrationNbr)})]) {
+        inputRangeJS("[(${prop.registrationNbr})]");
+    }
+    if([(${!#strings.isEmpty(prop.internationalRegistrationNbr)})]) {
+        inputRangeJS("[(${prop.internationalRegistrationNbr})]");
+    }
+
+    $("button#submit-form[type=button]").on("click", function () {
+        let pageSize;
+
+        if (getSearchUrlParameter(location.search, 'pageSize')) {
+            pageSize = getSearchUrlParameter(location.search, 'pageSize')
+        } else if ($(".search-paginator").find("option:selected").val()) {
+            pageSize = $(".search-paginator").find("option:selected").val()
+        } else {
+            pageSize = 10;
+        }
+
+        sendForm(0, pageSize);
+    });
+
+    $("button#clear-form[type=button]").on("click", function () {
+        document.location.href = '[(@{/{url}/search(url=${prop.msgPrefix})})]/clear';
+    });
+
+    $("#search-form").on("submit", function (e) {
+        e.preventDefault();
+        sendForm(0, 10);
+    });
+
+    document.addEventListener('keydown', event => {
+        let keycode = event.key;
+        if (keycode == 'Enter') {
+            $("#search-form").trigger("submit");
+        }
+    });
+
+
+    function sendForm(page, pageSize) {
+        let cJson = {};
+
+        let textInputs = $("#panel-container").find('input[id]');
+        textInputs.each(function (index, element) {
+            if ($(element).parent().is(":visible")) {
+                let id = $(element).attr("id");
+                let key = id.substr((id.indexOf('-') + 1)).replace(/([-_]\w)/g, function (x) {
+                    return x.replace(/[-_]/g, '').toUpperCase();
+                });
+                cJson[key] = $(element).val().trim();
+            }
+        });
+
+
+        textInputs = $("#panel-container").find('select[id]');
+        textInputs.each(function (index, element) {
+            if ($(element).parent().is(":visible")) {
+                let id = $(element).attr("id");
+                let key = id.substr((id.indexOf('-') + 1)).replace(/([-_]\w)/g, function (x) {
+                    return x.replace(/[-_]/g, '').toUpperCase();
+                });
+                cJson[key] = $(element).val();
+            }
+        });
+
+        textInputs = $("#panel-container").find('input[type="radio"]:checked');
+        textInputs.each(function (index, element) {
+            if ($(element).parent().is(":visible")) {
+                let id = $(element).attr("name");
+                let key = id.substr((id.indexOf('-') + 1)).replace(/([-_]\w)/g, function (x) {
+                    return x.replace(/[-_]/g, '').toUpperCase();
+                });
+                cJson[key] = $(element).val();
+            }
+        });
+
+        cJson['page'] = page;
+        cJson['pageSize'] = pageSize;
+
+        sorting(cJson);
+
+        req(cJson);
+    }
+
+    function sorting(cJson) {
+
+        let asc_col = $('#result-header > div > div.sorting_asc');
+        let desc_col = $('#result-header > div > div.sorting_desc');
+        let sort_col = 'title';
+        let sort_order = 'asc';
+        if (asc_col.length || desc_col.length) {
+            sort_order = asc_col.length ? 'asc' : 'desc';
+            sort_col = asc_col.length ? asc_col.parent().attr('data-col') : desc_col.parent().attr('data-col');
+        }
+
+        cJson['sortColumn'] = sort_col;
+        cJson['sortOrder'] = sort_order;
+    }
+
+    function sortReq(cJson) {
+        mainReq(cJson, '[(@{/{url}/search/sort(url=${prop.msgPrefix})})]');
+    }
+
+    function req(cJson) {
+        mainReq(cJson, '[(@{/{url}/search(url=${prop.msgPrefix})})]');
+    }
+
+    function mainReq(cJson, cUrl) {
+
+        UIBlocker.block();
+        $.ajax({
+            url: cUrl,
+            type: 'post',
+            datatype: 'html',
+            data: {data: JSON.stringify(cJson)}
+        })
+            .done(function (cData) {
+                UIBlocker.unblock();
+
+                $('#result').html(cData);
+            })
+            .fail(function (xhr, ajaxOptions, thrownError) {
+                //console.log(thrownError);
+                document.location.reload();
+            })
+            .always(function () {
+                UIBlocker.unblock();
+            });
+    }
+
+
+    function getViennaText(data) {
+        return data.viennaClass + " - " + data.viennaDescription;
+    }
+</script>
+</body>
+</html>

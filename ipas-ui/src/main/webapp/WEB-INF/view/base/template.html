@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head th:fragment="head(title)">
+        <title th:text="${title}"></title>
+
+        <meta name="viewport" content="width=1025, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="_csrf" content="${_csrf.token}"/>
+        <meta name="_csrf_header" content="${_csrf.headerName}"/>
+
+        <!-- CSS styles -->
+        <link rel="stylesheet" th:href="@{/css/normalize.css}">
+        <link rel="stylesheet" th:href="@{/css/jquery-ui.css}">
+        <link rel="stylesheet" th:href="@{/css/perfect-scrollbar.css}">
+        <link rel="stylesheet" th:href="@{/css/block-ui.css}">
+        <link rel="stylesheet" th:href="@{/css/colors.css}">
+        <link rel="stylesheet" th:href="@{/css/grid.css}">
+        <link rel="stylesheet" th:href="@{/css/buttons.css}">
+        <link rel="stylesheet" th:href="@{/css/materialize.css}" >
+        <link rel="stylesheet" th:href="@{/css/tables.css}">
+        <link rel="stylesheet" th:href="@{/css/styles_BPO_2018.css}">
+        <link rel="stylesheet" th:href="@{/css/ui-elements.css}">
+        <link rel="stylesheet" th:href="@{/css/progressbar.css}">
+        <link rel="stylesheet" th:href="@{/css/screen-fixes.css}">
+        <link rel="stylesheet" th:href="@{/css/material-design-iconic-font.css}">
+        <link rel="stylesheet" th:href="@{/css/material-icons.css}">
+        <link rel="stylesheet" th:href="@{/css/simple-line-icons.css}">
+        <link rel="stylesheet" th:href="@{/css/forms.css}">
+        <link rel="stylesheet" th:href="@{/webjars/select2/4.0.5/css/select2.min.css}" type="text/css" />
+        <link rel="stylesheet" th:href="@{/css/select2-materialize.css}" type="text/css" />
+        <link rel="stylesheet" th:href="@{/css/fixes.css}">
+        <link rel="stylesheet" th:href="@{/css/ribbon.css}" type="text/css"
+              th:if="${#arrays.contains(@environment.getActiveProfiles(),'test') or #arrays.contains(@environment.getActiveProfiles(),'dev') or #arrays.contains(@environment.getActiveProfiles(),'office')}"/>
+
+        <script type="text/javascript" charset="utf-8" th:src="@{/js/lib/jquery-3.3.1.min.js}"></script>
+        <script type="text/javascript" charset="utf-8" th:src="@{/js/lib/jquery-ui.js}"></script>
+    </head>
+
+    <body>
+        <div th:fragment="js-footer" th:remove="tag">
+            <div th:replace="base/messages.html"></div>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/general/datefunctions.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/general/cookie.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/lib/perfect-scrollbar.min.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/lib/materialize.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/lib/jquery.blockUI.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/lib/jquery.bind-first-0.2.3.min.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/webjars/select2/4.0.5/js/select2.full.min.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/webjars/select2/4.0.5/js/i18n/bg.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/webjars/jquery-file-upload/9.8.1/js/jquery.fileupload.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/data/panels.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/general/validation.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/general/form.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/general/formUtils.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/general/commonAjaxCalls.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/general/init.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/general/session.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/general/left-sidebar.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/general/confirmation.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/general/scroll-breadcrumbs.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/general/paginator.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/general/block-ui.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/general/base_modals.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/general/breadcrumb.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/scanner/ab-docs-utils-native-es6-adapted.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/print/rasterizeHTML.allinone.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/mark.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/rights.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/patent.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/plant.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/design.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/spc.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/claims.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/citations.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/drawings.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/efiling_data.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/ipc.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/cpc.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/acp_affected_objects.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/acp_check.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/acp_administrative_penalty.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/acp_violation_places.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/acp_taken_items.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/locarno_classes.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/patent_attachments.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/person.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/agent_power_of_attorney.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/person_search.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/person_admin.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/process.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/msprocess.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/userdoc.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/reports.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/userdoc_grounds.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/userdoc_court_appeals.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/userdoc_grounds_nice_classes.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/userdoc_grounds_mark_group.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/userdoc_grounds_design.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/userdoc_reviewer_squad.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/offidoc.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/home_panels.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/reception.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/payments.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/object-history.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/structure/edit.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/structure/list.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/structure/group.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/structure/users_sync.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/error_log.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/nice_class.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/missing_epo_patents.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/userdoc_reg_number_change_log.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/automatic_actions_log.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/userdoc_types_admin.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/offidoc_type_admin.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/missing_userdocs.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/nice_class_admin.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/expiring_marks.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/patent_certificates.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/admin_page.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/search.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/international_nice_class.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/missing_international_marks.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/redirect.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/offidoc_notifications.js}"></script>
+            <script type="text/javascript" charset="utf-8" th:src="@{/js/custom/international_mark_replacement.js}"></script>
+        </div>
+
+        <div th:fragment="env" th:remove="tag">
+            <div test="" class="ribbon" th:if="${#arrays.contains(@environment.getActiveProfiles(),'dev')}">
+                <a test="" href="">dev</a>
+            </div>
+            <div test="" class="ribbon" th:if="${#arrays.contains(@environment.getActiveProfiles(),'office')}">
+                <a test="" href="">Тестова среда</a>
+            </div>
+            <div test="" class="ribbon" th:if="${#arrays.contains(@environment.getActiveProfiles(),'test')}">
+                <a test="" href="">Тестова среда</a>
+            </div>
+        </div>
+    </body>
+</html>

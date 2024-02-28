@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="base/template :: head(title = (#{msprocess.breadcrumb.prefix} + ' ' + |${manualSubProcess.processId.processType}-${manualSubProcess.processId.processNbr}|))"></head>
+
+<!--/*@thymesVar id="panelEnum" type="com.duosoft.ipas.enums.ManualSubProcessPanel"*/-->
+<body class="dark left-sidebar-show">
+
+<div th:with="securityUtils=${T(bg.duosoft.ipas.util.security.SecurityUtils)},
+                                                            panelEnum=${T(com.duosoft.ipas.enums.ManualSubProcessPanel)},
+                                                            collectionUtils=${T(org.springframework.util.CollectionUtils)},
+                                                            securityRoles=${T( bg.duosoft.ipas.enums.security.SecurityRole)},
+                                                            editEnabled=${securityUtils.isManualSubProcessEditEnabled(manualSubProcess)}"
+>
+
+    <div class="app-body">
+        <header class="app-header" th:replace="base/header"></header>
+
+        <div th:replace="ipobjects/common/process/msprocess/viewpage/left_sidebar :: sidebar"></div>
+
+        <main class="main">
+            <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+            <div class="inner" th:with="objectUtils=${T(java.util.Objects)}, stringUtils=${T(org.springframework.util.StringUtils)}">
+                <div class="row">
+                    <div th:replace="base/toast/message :: error(message = ${errorMessage},unescaped = true)"></div>
+                    <div th:replace="base/toast/message :: success(message = ${successMessage},unescaped = true)"></div>
+                    <div th:replace="base/toast/message :: validation-errors(validationErrors = ${validationErrors})"></div>
+                </div>
+                <div th:id="panel-container-msprocess" class="row panel-container-padding">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.ManualSubProcessMainData)}">
+                        <div th:replace="ipobjects/common/process/msprocess/viewpage/panels :: main-data"></div>
+                    </div>
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.ManualSubProcessProcess)}">
+                        <div th:replace="ipobjects/common/process/msprocess/viewpage/panels :: process-data"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="submitPanel" class="panel submit-panel">
+                <div class="row">
+                    <button th:attr="data-action='save-msprocess', data-container='panel-container-msprocess', data-url=@{/msprocess/save}"
+                            th:text="#{btn.save}" class="button submit-panel-btn sm-icn-save m_T5 pulse green">
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div th:replace=":: modals" th:remove="tag"></div>
+    <div th:replace=":: hidden-fields" th:remove="tag"></div>
+    <footer class="page-footer" th:replace="base/footer"></footer>
+    <div th:replace="base/template :: js-footer" th:remove="tag"></div>
+</div>
+
+<div th:remove="tag" th:fragment="modals">
+    <div th:if="${!#lists.isEmpty(validationErrors)}" th:replace="base/modal/validation_errors::errors(${validationErrors})" th:remove="tag"></div>
+</div>
+
+<div th:remove="tag" th:fragment="hidden-fields">
+    <input th:if="${!#lists.isEmpty(validationErrors)}" type="hidden" th:id="msprocess-validation-errors" th:attr="data-size=${#lists.size(validationErrors)}">
+    <div th:if="${null != scrollToPanel}" class="none">
+        <input th:id="scroll-to-panel" th:type="hidden" class="form-ignore" th:value="${scrollToPanel}">
+    </div>
+    <input type="hidden" th:id="msprocess-processType" th:value="${manualSubProcess.processId.processType}">
+    <input type="hidden" th:id="msprocess-processNumber" th:value="${manualSubProcess.processId.processNbr}">
+</div>
+
+</body>
+</html>

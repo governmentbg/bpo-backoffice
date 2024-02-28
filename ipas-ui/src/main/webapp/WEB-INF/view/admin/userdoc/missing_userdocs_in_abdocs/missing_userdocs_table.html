@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="table(result, startDate)" th:with="dateUtils = ${T(bg.duosoft.ipas.util.date.DateUtils)}, objectsUtils = ${T(java.util.Objects)}">
+    <div th:remove="tag" th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(result)}">
+        <div th:remove="tag" th:case="true">
+            <div th:replace="base/message :: info(#{no.records.found})"></div>
+        </div>
+        <div th:remove="tag" th:case="false">
+            <div class="row">
+                <div>
+                    <span th:text="#{progressbar.started.at}"></span>
+                    <span th:text="${#dates.format(startDate,T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT)}"></span>
+                </div>
+            </div>
+            <div class="m_T5">
+                <table class="simple bpo">
+                    <thead>
+                    <tr>
+                        <th th:text="#{number}"></th>
+                        <th th:text="#{userdoc.filing.number}"></th>
+                        <th th:text="#{userdoc.registration.number}"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="insertedUserdoc,insertedUserdocStat : ${result}">
+                        <td>
+                            <span th:text="${insertedUserdocStat.count}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${insertedUserdoc.key}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${insertedUserdoc.value}"></span>
+                        </td>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div th:if="${inProgress eq true}" th:id="update-inserted-userdocs-table"></div>
+</div>
+</body>
+</html>

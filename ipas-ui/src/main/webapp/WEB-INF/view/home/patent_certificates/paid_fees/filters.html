@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="filters" th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+
+    <div class="row m_T10">
+        <div class="col-6">
+            <div th:replace="~{base/form/input :: text(id = 'patentCertificate-paidFees-abdocsDoc', label = #{patent.paid.fees.cert.filter.abdocsDoc}, value = (${abdocsDoc}))}"></div>
+        </div>
+        <div class="col-6">
+            <div th:replace="~{base/form/input :: text(id = 'patentCertificate-paidFees-payer-filter-input', label = #{patent.paid.fees.cert.filter.payer}, value = (${payer}))}"></div>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-6">
+            <div th:replace="~{base/form/input :: datepicker(id = 'patentCertificate-paidFees-dateFrom-filter-input', label = #{patent.paid.fees.cert.filter.dateFrom}, value = ${#dates.format(paymentDateFrom,dateFormatDot)})}"></div>
+        </div>
+        <div class="col-6">
+            <div th:replace="~{base/form/input :: datepicker(id = 'patentCertificate-paidFees-dateTo-filter-input', label = #{patent.paid.fees.cert.filter.dateTo}, value = ${#dates.format(paymentDateTo,dateFormatDot)})}"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <a th:replace="~{base/form/button :: material-btn(idBtn = 'search-patentCertificate-paidFees-btn', label = #{btn.search}, dataUrl = @{/patent-certificates/paid-fees/search}, dataValidationBlock = '#patentCertificate-paidFees-filters-wrapper' , icon = 'search', classes = 'm_T5 w_150px right')}"></a>
+            <a th:replace="~{base/form/button :: material-btn(label = #{btn.clear}, idBtn = 'clear-patentCertificate-paidFees-btn', dataAction='reload-page', icon = 'clear', classes = 'm_R20 m_T5 w_150px right')}"></a>
+        </div>
+    </div>
+</div>
+
+</div>
+</body>
+</html>

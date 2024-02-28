@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="panel(offidoc,sessionObjectIdentifier)">
+    <div style="padding-left: 10px" th:with="objectUtils=${T(java.util.Objects)}" class="published-decision-wrapper">
+
+        <a th:if="${offidoc.publishedDecision!=null}"
+           th:text="${offidoc.publishedDecision.attachmentName}"
+           th:href="@{'/offidoc/published-decision/download?sessionIdentifier=' + ${sessionObjectIdentifier}+
+           '&time='+ ${#dates.format(#dates.createNow(),'HH:mm:ss.SSS')}}" download class="pdf-svg"></a>
+
+        <div th:if="${offidoc.publishedDecision==null}" class="b0 inline-block m_T10">
+            <span th:text="#{published.decision.missing}"></span>
+        </div>
+
+        <div th:replace="~{base/form/input :: file(
+                                  id = 'decision-for-publishing-upload',
+                                  accept = '.pdf',
+                                  name = 'uploadDecisionForPublishing',
+                                  classes = 'input_file',
+                                  style = 'display:none;',
+                                  url = @{/offidoc/published-decision/upload})}">
+        </div>
+
+        <div class="row hidden-element m_T20">
+            <a th:replace="~{base/form/button :: material-btn(label = #{btn.add.decision},dataAction = 'add-decision-for-publishing', dataUrl = '', icon = 'add')}"></a>
+            <th:block th:if="${offidoc?.publishedDecision?.decisionDate == null}">
+                <a th:replace="~{base/form/button :: material-btn(label = #{btn.delete.decision},dataAction = 'delete-decision-for-publishing',
+             dataUrl = @{'/offidoc/published-decision/delete'}, icon = 'delete',classes = 'm_L10')}"></a>
+            </th:block>
+        </div>
+
+        <div th:if="${!#lists.isEmpty(validationErrors)}" th:id="published-decision-errors">
+            <div th:replace="base/validation :: validation-message(${validationErrors},'published-decision-errors')"></div>
+        </div>
+
+        <div class="hidden-element b0 inline-block m_T10">
+            <span th:text="#{published.decision.warning.message}"></span>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

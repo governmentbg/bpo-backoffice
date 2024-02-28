@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="priorities(file)">
+    <div th:with="hasPriorities=${file.priorityData != null and file.priorityData.hasParisPriorityData}">
+        <hr th:classappend="${!hasPriorities ? 'hidden-element':''}">
+        <div class="row">
+            <div class="row m_B10">
+                <div class="col-6" th:classappend="${!hasPriorities ? 'hidden-element':''}">
+                    <div th:replace="~{base/form/checkbox :: basic(id = 'object-priority-hasPriority', target = 'priority-details', label = #{priority.conventional}, isChecked = ${hasPriorities}, classes = 'rights-checkbox')}"></div>
+                </div>
+            </div>
+            <div id="priority-details" th:style="${hasPriorities ? '': 'display:none'}">
+                <div class="row">
+                    <div id="priority-table">
+                        <div th:if="${hasPriorities}">
+                            <div th:replace="ipobjects/common/priority/priority_table :: priorities-table(${file.priorityData.parisPriorityList},${file.fileId})"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 m_0">
+                        <a th:text="#{btn.add}" href="javascript:void(0);"
+                           th:attr="data-action='priority-form',
+                           data-url=@{/{url}/open-priority-modal(url=${T(com.duosoft.ipas.util.CoreUtils).getUrlPrefixByFileType(file.fileId.fileType)})}"
+                           class="button sm-icn-add hidden-element m_T10"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

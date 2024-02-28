@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="rights(patent, divisionalData)" th:with="relationshipUtilsCheckAccess=${T(com.duosoft.ipas.util.CFileRelationshipUtils)}">
+
+    <th:block th:if="${relationshipUtilsCheckAccess.hasDivisionalApplicationPanelAccess(patent.file.fileId.fileType)}">
+            <div th:replace="ipobjects/common/divisionalapplication/divisional_application :: divisional-application(${divisionalData},${patent.file.fileId})"></div>
+    </th:block>
+
+    <th:block th:if="${relationshipUtilsCheckAccess.hasExhibitionPanelAccess(patent.file.fileId.fileType)}">
+        <div th:replace="ipobjects/common/exhibition/exhibition :: exhibition(${patent.file})"></div>
+    </th:block>
+
+    <th:block th:if="${relationshipUtilsCheckAccess.hasPrioritiesPanelAccess(patent.file.fileId.fileType)}" >
+        <div th:replace="ipobjects/common/priority/priorities :: priorities(${patent.file})"></div>
+    </th:block>
+
+    <th:block th:if="${relationshipUtilsCheckAccess.hasPctPanelAccess(patent.file.fileId.fileType)}">
+        <div th:replace="ipobjects/patentlike/common/rights/pct/pct :: patent-pct(${patent.pctApplicationData})"></div>
+    </th:block>
+
+    <th:block th:if="${relationshipUtilsCheckAccess.hasTransformationPanelAccess(patent.file.fileId.fileType)}">
+        <div th:replace="ipobjects/patentlike/common/rights/transformation/transformation :: transformation(${patent})"></div>
+    </th:block>
+
+    <th:block th:if="${relationshipUtilsCheckAccess.hasParallelUmPanelAccess(patent.file.fileId.fileType)}">
+        <div th:replace="ipobjects/patentlike/common/rights/parallel_um/parallel_um :: parallel_um(${patent})"></div>
+    </th:block>
+
+    <div style="display: none" id="rights-remove-claim-data" th:attr="data-message=#{general.message.data.deletion.confirm}"></div>
+</div>
+</body>
+</html>

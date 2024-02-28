@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="main_design_details(patent,singleDesigns,sessionObjectIdentifier)" th:with="panelPrefix = 'design',
+                  securityUtils=${T(bg.duosoft.ipas.util.security.SecurityUtils)},
+                  editEnabled=${securityUtils.isIntellectualPropertyObjectEditEnabled('patent', patent.file,@processServiceImpl,@userServiceImpl)},
+                  patentPanelEnum=${T(com.duosoft.ipas.enums.PatentPanel)},
+                  panelName=${patentPanelEnum.DesignDrawingsData.code()}">
+
+    <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.single.designs},
+                                                                            panel=${panelName},
+                                                                            actionURL=@{/design/detail/edit-single-designs},
+                                                                            initURL=@{/{panelPrefix}/init-panel-session-objects(panelPrefix=${panelPrefix})},editEnabled=${editEnabled})">
+    </div>
+    <div th:id="|panel-body-${panelName}|">
+        <div th:replace="ipobjects/patentlike/design/single_designs_panel :: single_designs(${patent},${singleDesigns},${sessionObjectIdentifier})"></div>
+    </div>
+
+</div>
+
+<div th:fragment="single-designs-loader">
+    <div th:replace=":: single-designs-panel-header"></div>
+    <div th:replace="base/loader :: local-loader"></div>
+</div>
+
+<div th:fragment="single-designs-panel-header">
+    <div class="col-12">
+        <h3 class="inline-block" th:text="#{panel.title.single.designs}"></h3>
+    </div>
+</div>
+</body>
+</html>

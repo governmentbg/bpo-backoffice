@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="receptionForm" type="com.duosoft.ipas.webmodel.ReceptionForm"*/-->
+<!--/*@thymesVar id="userdocReceptionRelation" type="bg.duosoft.ipas.core.model.reception.CUserdocReceptionRelation"*/-->
+<!--/*@thymesVar id="relatedUserdocObjectDetails" type="com.duosoft.ipas.webmodel.RelatedUserdocObjectDetails"*/-->
+<div th:fragment="object(receptionForm,userdocReceptionRelations,relatedUserdocObjectDetails)"
+     th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)}, objectsUtils=${T(java.util.Objects)},receptionTypeEnum=${T(bg.duosoft.ipas.enums.ReceptionType)}">
+
+    <div th:remove="tag" th:switch="${objectsUtils.nonNull(receptionForm.userdoc.objectNumber)}">
+        <div th:case="true">
+            <div class="row">
+                <div class="col-12">
+                    <div class="inline-block" style="width: 97%" th:with="label = #{'reception.udoc.parent.'+${receptionForm.userdoc.fileTypeGroup}}">
+                        <div th:remove="tag" th:switch="${relatedUserdocObjectDetails.userdoc}">
+                            <div th:case="true" th:with="text = (|${relatedUserdocObjectDetails.filingNumber}, ${relatedUserdocObjectDetails.externalSystemId}, ${relatedUserdocObjectDetails.userdocName}|)">
+                                <div th:replace="~{base/form/input :: text(id = 'reception-userdocRelatedObjectNumber', isDisabled = true, label = ${label}, value = ${text}, title = ${text})}"></div>
+                            </div>
+                            <div th:case="*" th:with="text = (${relatedUserdocObjectDetails.title == null} ? ${receptionForm.userdoc.objectNumber} : (|${receptionForm.userdoc.objectNumber} - ${relatedUserdocObjectDetails.title}|) ) ">
+                                <div th:replace="~{base/form/input :: text(id = 'reception-userdocRelatedObjectNumber', isDisabled = true, label = ${label}, value = ${text}, title = ${text})}"></div>
+                            </div>
+                        </div>
+                        <div th:replace="~{base/form/input :: hidden(id = 'reception-userdocRelatedObjectNumber', value = ${receptionForm.userdoc.objectNumber}, name = 'userdoc.objectNumber')}"></div>
+                    </div>
+                    <div class="inline-block">
+                        <a class="btn-floating ipas small waves-effect action-button-bot waves-light" th:title="#{btn.remove}"
+                           th:attr="data-action='delete-userdoc-related-object',data-url=@{/reception/create/delete-related-userdoc-object}">
+                            <i class="material-icons">close</i>
+                        </a>
+                    </div>
+                    <div th:replace="base/validation :: validation-message(${validationErrors},'reception-receptionUserdocObjectNumber')"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div th:replace="~{base/form/select :: object(
+                            id = 'select-receptionUserdocType', label = #{reception.udoc.type},
+                            name = 'userdoc.userdocType', emptySelectOption = #{default.select.option},
+                            classes = 'search-box', objects = ${userdocReceptionRelations},
+                            valuePointer = 'userdocType', textPointer = 'userdocName',
+                            selected = ${receptionForm.userdoc.userdocType})}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:case="false">
+            <div class="row">
+                <div class="col-12">
+                    <div>
+                        <div class="inline-block">
+                            <div>
+                                <h4 class="inline-block" th:text="#{'reception.udoc.parent.'+${receptionForm.userdoc.fileTypeGroup}}"></h4>
+                            </div>
+                        </div>
+                        <div class="inline-block">
+                            <a class="btn-floating ipas small waves-effect action-button-bot waves-light hidden-element" th:title="#{btn.add}"
+                               th:attr="data-action='open-userdoc-related-object-modal',data-url=@{/reception/create/open-userdoc-related-object-modal},data-type=${receptionForm.userdoc.fileTypeGroup}">
+                                <i class="material-icons">add</i>
+                            </a>
+                        </div>
+                        <div></div>
+                    </div>
+                    <div th:replace="base/message :: info(#{object.not.selected})"></div>
+                    <div th:replace="base/validation :: validation-message(${validationErrors},'reception-receptionUserdocObjectNumber')"></div>
+                </div>
+            </div>
+            <div th:id="search-userdoc-related-object-modal-wrapper"></div>
+            <div th:id="userdoc-related-object-process-modal-wrapper"></div>
+        </div>
+    </div>
+
+</div>
+
+
+</body>
+</html>

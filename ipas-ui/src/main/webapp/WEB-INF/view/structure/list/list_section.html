@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="section" type="com.duosoft.ipas.webmodel.structure.SectionWebModel"*/-->
+
+<div class="row" th:fragment="list-section(section)" th:remove="tag" th:with="sect=${section.section},index=${section.section.officeStructureId.code}, sectUrl=${section.section.officeStructureId.officeDivisionCode} + '/' + ${section.section.officeStructureId.officeDepartmentCode} + '/' + ${section.section.officeStructureId.officeSectionCode}">
+
+    <li th:attr="data-li=${index},data-section=${sect.officeStructureId.officeSectionCode},data-section-department=${sect.officeStructureId.officeDepartmentCode},data-section-division=${sect.officeStructureId.officeDivisionCode},data-url=@{/structure/list/section-node},data-load=${section.loaded}" class="has-children">
+
+        <div th:replace="structure/list/list_structure_template :: formFields(isActive=${sect.active},name=${sect.name},editHref=@{/structure/section/edit/{sectUrl}(sectUrl=${sectUrl})},viewHref=@{/structure/section/view/{sectUrl}(sectUrl=${sectUrl})},deleteHref=@{/structure/section/delete/{sectUrl}(sectUrl=${sectUrl})},activateHref=@{/structure/section/activate/{sectUrl}(sectUrl=${sectUrl})},id=${sect.officeStructureId.officeSectionCode},nav=${index})">
+        </div>
+
+        <ul th:id="'LinkedList' + ${index}" class="Linked-List" th:if="${section.loaded}">
+            <li class="has-children"><div th:replace="structure/list/list_employees :: list-employees(employees=${section.employees},index=${index} + '-1')"></div></li>
+        </ul>
+    </li>
+</div>
+
+
+</body>
+</html>

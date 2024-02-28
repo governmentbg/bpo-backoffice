@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:remove="tag" th:fragment="basic(id, label)">
+    <div class="input-field" th:classappend="${isDisabled} ? 'readonly'">
+        <textarea th:class="materialize-textarea"
+                  th:id="${id}"
+                  th:title="${title != null} ? ${title} : ${label}"
+                  th:text="${value != null} ? ${value}"
+                  th:classappend="${classes != null} ? ${classes}"
+                  th:disabled="${(isDisabled == null)} ? false : ${isDisabled}"
+                  th:attrappend="name=${name != null} ? ${name}">
+        </textarea>
+        <label th:if="${(unescaped == null) || (unescaped != true)}" th:for="${id}" th:text="${label}"></label>
+        <label th:if="${(unescaped != null) && (unescaped == true)}" th:for="${id}" th:utext="${label}"></label>
+        <div th:replace="base/validation :: validation-message(${validationErrors},${id})"></div>
+    </div>
+</div>
+</body>
+</html>

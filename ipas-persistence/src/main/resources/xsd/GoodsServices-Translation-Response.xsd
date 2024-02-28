@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://oami.europa.eu/trademark/goods-services/term-translation"
+           targetNamespace="http://oami.europa.eu/trademark/goods-services/term-translation"
+           version="1.0" elementFormDefault="qualified" attributeFormDefault="unqualified">
+    <!-- ********************************************************************** -->
+    <!-- * * -->
+    <!-- * GoodsServices Translation Response Version 0.4 Dated 2012-08-29 * -->
+    <!-- * * -->
+    <!-- ********************************************************************** -->
+    <xs:annotation>
+        <xs:documentation>
+            GoodsServices Translation Response Version 0.4 Dated
+            2012-08-29
+        </xs:documentation>
+    </xs:annotation>
+    <!-- ********************************************************************** -->
+    <!-- ********************************************************************** -->
+    <!-- * TRANSACTION/MESSAGE TYPES LIBRARY ********************************** -->
+    <!-- ********************************************************************** -->
+    <!-- ********************************************************************** -->
+    <!-- ====================================================================== -->
+    <!-- Root Messages -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- Top Level Transaction for all Types of Message -->
+    <!-- ====================================================================== -->
+    <xs:element name="Transaction" type="TransactionType" />
+    <!-- ====================================================================== -->
+    <!-- Type Name : TransactionType -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- GoodsServices Translation Request Version 0.3 Dated 2011-04-19 -->
+    <!-- ====================================================================== -->
+    <xs:complexType name="TransactionType">
+        <xs:sequence>
+            <xs:element name="TransactionBody" type="TransactionBodyType" />
+        </xs:sequence>
+    </xs:complexType>
+    <!-- ====================================================================== -->
+    <!-- Filename : TransactionBodyType.xsd -->
+    <!-- Last Update : Wed aug 29 -->
+    <!-- ====================================================================== -->
+    <xs:complexType name="TransactionBodyType">
+        <xs:sequence>
+            <xs:element name="TransactionContentDetails" type="TransactionContentDetailsType" />
+        </xs:sequence>
+    </xs:complexType>
+    <!-- ====================================================================== -->
+    <!-- Filename : TransactionContentDetailsType.xsd -->
+    <!-- Last Update : Wed aug 29 -->
+    <!-- ====================================================================== -->
+    <xs:complexType name="TransactionContentDetailsType">
+        <xs:annotation>
+            <xs:documentation>
+                TransactionIdentifier: Unique identifier of the
+                transaction.
+                TransactionCode: Kind of transaction with unique value:
+                EuroClassTerm.TransactionData: Data contents of the transaction.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="TransactionIdentifier" type="xs:token" />
+            <xs:element name="TransactionCode" type="xs:string" fixed="EuroClassTerm" />
+            <xs:element name="TransactionData" type="TransactionDataType"
+                        minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+    <!-- ====================================================================== -->
+    <!-- Type Name : TransactionDataType -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- GoodsServices Translation Response Version 0.3 Dated 2011-04-19 -->
+    <!-- ====================================================================== -->
+    <xs:complexType name="TransactionDataType">
+        <xs:sequence>
+            <xs:element name="TermTranslation" type="TermTranslationType" />
+        </xs:sequence>
+    </xs:complexType>
+    <!-- ********************************************************************** -->
+    <!-- ********************************************************************** -->
+    <!-- * BUSINESS TYPES LIBRARY ********************************************* -->
+    <!-- ********************************************************************** -->
+    <!-- ********************************************************************** -->
+    <!-- ====================================================================== -->
+    <!-- Type Name : TermTranslationType -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- GoodsServices Translation Response Version 0.3 Dated 2011-04-19 -->
+    <!-- ====================================================================== -->
+    <xs:complexType name="TermTranslationType">
+        <xs:sequence>
+            <xs:element name="TermTranslationRequest" type="TermTranslationRequestType" />
+            <xs:element name="TermTranslationResponseDetails" type="TermTranslationResponseDetailsType" />
+        </xs:sequence>
+    </xs:complexType>
+    <!-- ====================================================================== -->
+    <!-- Type Name : TermTranslationRequestType -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- GoodsServices Translation Response Version 0.3 Dated 2011-04-19 -->
+    <!-- ====================================================================== -->
+    <xs:complexType name="TermTranslationRequestType">
+        <xs:sequence>
+            <xs:element name="ClassificationTermText" type="TextType" />
+            <xs:element name="TargetLanguageCode" type="EM_ApplicationLanguageCodeType" />
+            <xs:element name="ClassNumber" type="NiceClassNumberType"
+                        minOccurs="0" />
+            <xs:element name="SearchOnSublevel" type="xs:boolean"
+                        minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+    <!-- ====================================================================== -->
+    <!-- Typename : TermTranslationResponseDetailsType -->
+    <!-- Last Update : Wed aug 29 -->
+    <!-- ====================================================================== -->
+    <xs:complexType name="TermTranslationResponseDetailsType">
+        <xs:sequence>
+            <xs:element name="TranslatedTerm" type="TranslatedTermType"
+                        maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType><!-- ====================================================================== -->
+    <!-- Type Name : TranslatedTermType -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- GoodsServices Translation Response Version 0.3 Dated 2011-04-19 -->
+    <!-- ====================================================================== -->
+    <xs:complexType name="TranslatedTermType">
+        <xs:sequence>
+            <xs:element name="MatchingTerm" type="TextType" />
+            <xs:element name="MatchingTermPositionInInputTermList"
+                        type="SubStringPositionType" />
+            <xs:element name="MatchedTerms" type="MatchedTermsType"
+                        minOccurs="0" />
+            <xs:element name="TranslationAssessment" type="TranslationAssessmentType" />
+            <xs:element name="TranslationResult" type="TranslationResultType" />
+        </xs:sequence>
+    </xs:complexType>
+    <!-- ====================================================================== -->
+    <!-- Type name : MatchedTermsType -->
+    <!-- ====================================================================== -->
+    <xs:complexType name="MatchedTermsType">
+        <xs:sequence>
+            <xs:element name="MatchedTerm" type="MatchedTermType"
+                        maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+    <!-- ====================================================================== -->
+    <!-- Type Name : MatchedTermType -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- GoodsServices Translation Response Version 0.3 Dated 2011-04-19 -->
+    <!-- ====================================================================== -->
+    <xs:complexType name="MatchedTermType">
+        <xs:sequence>
+            <xs:element name="IsPartial" type="xs:boolean" minOccurs="0" />
+            <xs:element name="MatchedClassNumber" type="NiceClassNumberType" />
+            <xs:element name="MatchedTermText" type="TextType" />
+            <xs:element name="MatchedTermPositionInInputTermList"
+                        type="SubStringPositionType" minOccurs="0" />
+            <xs:element name="MatchedTermPositionInInputTerm" type="SubStringPositionType"
+                        minOccurs="0" />
+            <xs:element name="TargetTerm" type="xs:string" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+    <!-- ====================================================================== -->
+    <!-- Filename : ResultKindType.xsd -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- GoodsServices Translation Response Version 0.3 Dated 2011-04-19 -->
+    <!-- ====================================================================== -->
+    <xs:simpleType name="TranslationAssessmentType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="Source and target found" />
+            <xs:enumeration
+                    value="Source and target found, in the same class and in different class" />
+            <xs:enumeration value="Source and target found, using different class" />
+            <xs:enumeration
+                    value="Source and target found on sublevel, in the same class and in different class" />
+            <xs:enumeration value="Source and target found on sublevel" />
+            <xs:enumeration
+                    value="Source and target found on sublevel, using different class" />
+            <xs:enumeration value="Source found, target not found" />
+            <xs:enumeration
+                    value="Source found, target not found, using different class" />
+            <xs:enumeration value="Source not found" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TranslationResultType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="OK"></xs:enumeration>
+            <xs:enumeration value="Hint"></xs:enumeration>
+            <xs:enumeration value="Not OK"></xs:enumeration>
+            <xs:enumeration value="None"></xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ClassificationTermSourceType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="Rejection database" />
+            <xs:enumeration value="Reference database" />
+            <xs:enumeration value="Legacy database" />
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- ====================================================================== -->
+    <!-- Type Name : EM_ApplicationLanguageCodeType -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- GoodsServices Translation Response Version 0.3 Dated 2011-04-19 -->
+    <!-- ====================================================================== -->
+    <xs:simpleType name="EM_ApplicationLanguageCodeType">
+        <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="bg" />
+            <xs:enumeration value="cs" />
+            <xs:enumeration value="da" />
+            <xs:enumeration value="de" />
+            <xs:enumeration value="el" />
+            <xs:enumeration value="en" />
+            <xs:enumeration value="es" />
+            <xs:enumeration value="et" />
+            <xs:enumeration value="fi" />
+            <xs:enumeration value="fr" />
+            <xs:enumeration value="ga" />
+            <xs:enumeration value="it" />
+            <xs:enumeration value="lt" />
+            <xs:enumeration value="lv" />
+            <xs:enumeration value="hr" />
+            <xs:enumeration value="hu" />
+            <xs:enumeration value="mt" />
+            <xs:enumeration value="nl" />
+            <xs:enumeration value="pl" />
+            <xs:enumeration value="pt" />
+            <xs:enumeration value="ro" />
+            <xs:enumeration value="sk" />
+            <xs:enumeration value="sl" />
+            <xs:enumeration value="sv" />
+            <xs:enumeration value="tr" />
+            <xs:enumeration value="zh" />
+            <xs:enumeration value="ru" />
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- ====================================================================== -->
+    <!-- Type Name : TransactionCodeType -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- GoodsServices Translation Response Version 0.3 Dated 2011-04-19 -->
+    <!-- ====================================================================== -->
+    <xs:simpleType name="TransactionCodeType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="Goods and Services Translation Response" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="TextType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="languageCode" type="xs:language"
+                              use="optional" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:simpleType name="NiceClassNumberType">
+        <xs:restriction base="xs:nonNegativeInteger">
+            <xs:maxInclusive value="45" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="SubStringPositionType">
+        <xs:simpleContent>
+            <xs:extension base="xs:nonNegativeInteger">
+                <xs:attribute name="length" type="xs:nonNegativeInteger" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+</xs:schema>

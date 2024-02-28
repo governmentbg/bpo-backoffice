@@ -1,0 +1,47 @@
+--liquibase formatted sql
+
+--changeset dveizov:50.1
+alter table EXT_CORE.IP_USERDOC_PERSON
+    add IND_MAIN character varying(1) default NULL
+;
+
+--changeset dveizov:50.2
+
+-- USERDOC OLD OWNERS
+INSERT INTO EXT_CORE.IP_USERDOC_PERSON (ROW_VERSION, DOC_ORI, DOC_LOG, DOC_SER, DOC_NBR, PERSON_NBR, ADDR_NBR, ROLE, NOTES, IND_MAIN)
+SELECT 1 as ROW_NUMBER,
+       u.DOC_ORI,
+       u.DOC_LOG,
+       u.DOC_SER,
+       u.DOC_NBR,
+       u.PERSON_NBR as PERSON_NBR,
+       u.ADDR_NBR as ADDR_NBR,
+       'OLD_OWNER' as ROLE,
+       null as NOTES,
+       IND_SERVICE as IND_MAIN
+FROM IPASPROD.IP_USERDOC_OLD_OWNERS u
+         JOIN IPASPROD.IP_PERSON_ADDRESSES pa
+              on pa.PERSON_NBR = u.PERSON_NBR AND pa.ADDR_NBR = u.ADDR_NBR
+where u.PERSON_NBR is not null
+  AND u.ADDR_NBR is not null
+
+
+-- USERDOC NEW OWNERS
+INSERT INTO EXT_CORE.IP_USERDOC_PERSON (ROW_VERSION, DOC_ORI, DOC_LOG, DOC_SER, DOC_NBR, PERSON_NBR, ADDR_NBR, ROLE, NOTES, IND_MAIN)
+SELECT 1 as ROW_NUMBER,
+       u.DOC_ORI,
+       u.DOC_LOG,
+       u.DOC_SER,
+       u.DOC_NBR,
+       u.PERSON_NBR as PERSON_NBR,
+       u.ADDR_NBR as ADDR_NBR,
+       'NEW_OWNER' as ROLE,
+       null as NOTES,
+       IND_SERVICE as IND_MAIN
+FROM IPASPROD.IP_USERDOC_NEW_OWNERS u
+         JOIN IPASPROD.IP_PERSON_ADDRESSES pa
+              on pa.PERSON_NBR = u.PERSON_NBR AND pa.ADDR_NBR = u.ADDR_NBR
+where u.PERSON_NBR is not null
+  AND u.ADDR_NBR is not null
+
+

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="patent-ground-data(patentGroundData)" th:with="objectUtils=${T(java.util.Objects)}">
+
+    <div class="row">
+        <div class="col-12">
+            <div th:replace="~{base/form/radio :: basic(name = 'patentGroundData-partialInvalidity', label = #{partial.inavlidity.label.active}, value = true, checked = ${objectUtils.nonNull(patentGroundData) && patentGroundData.partialInvalidity == true})}"></div>
+        </div>
+        <div class="col-12">
+            <div th:replace="~{base/form/radio :: basic(name = 'patentGroundData-partialInvalidity', label = #{partial.inavlidity.label.non.active}, value = false, checked = ${objectUtils.isNull(patentGroundData) ||  patentGroundData.partialInvalidity == false})}"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

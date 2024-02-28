@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="panel(notLinkedPaymentsList, notLinkedPaymentsCount)"
+     th:with="collectionUtils = ${T(org.springframework.util.CollectionUtils)},
+              coreUtils=${T(com.duosoft.ipas.util.CoreUtils)}">
+
+    <div class="panel m_H260 br_20px z-depth-1">
+        <div class="pies">
+            <div class="pie-title"><h3 th:text="#{not.linked.payments.panel.title}"></h3></div>
+            <div class="pie-count violet">
+                <svg class="icon">
+                    <use xlink:href="#icon-ring"></use>
+                </svg>
+                <span th:text="${notLinkedPaymentsCount}"></span>
+            </div>
+        </div>
+        <div th:remove="tag" th:switch="${collectionUtils.isEmpty(notLinkedPaymentsList)}">
+            <div th:remove="tag" th:case="false">
+                <div class="h130">
+                    <ul class="m_T0">
+                        <li class="home-panel-list" th:each="nlp : ${notLinkedPaymentsList}" th:with="datePayment=${#dates.format(nlp.datePayment,T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)},
+                                                                                                         amountOutstanding=${#numbers.formatDecimal(nlp.amountOutstanding, 0, 'NONE', 2, 'POINT')}">
+                            <div th:remove="tag"
+                                 th:with="name=${nlp.fileId.createFilingNumber()  + (nlp.hasUserdocs() ? ' (' + nlp.getUserdocNumbersAsString() + ') ' : '') + ', ' + datePayment +' - ' + amountOutstanding + ', ' + nlp.payerName} ">
+                                <a class="b0" th:classappend="${#strings.length(name) > 200} ? 'tooltip'"
+                                   th:attr="title=${#strings.length(name) > 200} ? ${name} : ''"
+                                   th:href="@{/ipobject/view(filingNumber=${nlp.fileId.createFilingNumber()})}"
+                                   th:text="${name}" th:data-blockui="true"></a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <span class="txtRight">
+                    <a class="button bg__dark-violet btn-sm" th:href="@{/not-linked-payments/list}" th:text="#{btn.view.all.small}" th:data-blockui="true"></a>
+                </span>
+            </div>
+            <div th:case="true" class="m_T10">
+                <div class="h130">
+                    <div th:replace="base/message :: info(#{empty.list})"></div>
+                </div>
+                <div class="txtRight">
+                    <a class="button bg__dark-violet btn-sm" th:href="@{/not-linked-payments/list}" th:text="#{btn.view.all.small}" th:data-blockui="true"></a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

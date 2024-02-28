@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="offidoc-notifications-table(offidocNotifications, offidocNotificationsCount, offidocNotificationsSearchFilter)"
+     th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT},sorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.SorterUtils)},searchParam=${T(bg.duosoft.ipas.core.model.search.OffidocNotificationSearchParam)}">
+    <div th:remove="tag" th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(offidocNotifications)}">
+        <div th:remove="tag" th:case="true">
+            <div class="p_T20_B20">
+                <div class="bg__light-blue p_10 m_B10 m_T10 center">
+                    <span th:text="#{empty.list}"></span>
+                </div>
+            </div>
+        </div>
+        <div th:remove="tag" th:case="false">
+            <div class="row">
+                <div class="col-12">
+                    <span th:text="'Общ брой: '"></span>
+                    <span id="offidocNotificationsTotal" th:text="${offidocNotificationsCount}"></span>
+                </div>
+            </div>
+            <div class="row m_T5">
+                <div class="col-12">
+                    <table class="simple bpo small-size-body">
+                        <div>
+                            <thead>
+                            <tr>
+                                <th style="width: 150px" th:text="#{offidoc.notifications.registrationNumber}"></th>
+                                <th style="width: 300px" th:text="#{offidoc.notifications.offidocTypeName}"></th>
+                                <th style="width: 100px" th:with="isSelected=${#strings.equalsIgnoreCase(offidocNotificationsSearchFilter.sortColumn,searchParam.NOTIFICATION_FINISHED_DATE)},dataSort=${searchParam.NOTIFICATION_FINISHED_DATE}"
+                                    th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,offidocNotificationsSearchFilter.sortOrder)}">
+                                    <div th:replace="base/table_sorter :: sorter(#{offidoc.notifications.dateFinished},${offidocNotificationsSearchFilter.sortOrder},${isSelected})"></div>
+                                </th>
+                                <th style="width: 100px" th:with="isSelected=${#strings.equalsIgnoreCase(offidocNotificationsSearchFilter.sortColumn,searchParam.EMAIL_NOTIFICATION_READ_DATE)},dataSort=${searchParam.EMAIL_NOTIFICATION_READ_DATE}"
+                                    th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,offidocNotificationsSearchFilter.sortOrder)}">
+                                    <div th:replace="base/table_sorter :: sorter(#{offidoc.notifications.dateReadEmail},${offidocNotificationsSearchFilter.sortOrder},${isSelected})"></div>
+                                </th>
+                                <th style="width: 100px" th:with="isSelected=${#strings.equalsIgnoreCase(offidocNotificationsSearchFilter.sortColumn,searchParam.PORTAL_NOTIFICATION_READ_DATE)},dataSort=${searchParam.PORTAL_NOTIFICATION_READ_DATE}"
+                                    th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,offidocNotificationsSearchFilter.sortOrder)}">
+                                    <div th:replace="base/table_sorter :: sorter(#{offidoc.notifications.dateReadPortal},${offidocNotificationsSearchFilter.sortOrder},${isSelected})"></div>
+                                </th>
+                                <th style="width: 100px" th:with="isSelected=${#strings.equalsIgnoreCase(offidocNotificationsSearchFilter.sortColumn,searchParam.DAYS)},dataSort=${searchParam.DAYS}"
+                                    th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,offidocNotificationsSearchFilter.sortOrder)}">
+                                    <div th:replace="base/table_sorter :: sorter(#{offidoc.notifications.days},${offidocNotificationsSearchFilter.sortOrder},${isSelected})"></div>
+                                </th>
+                            </tr>
+                            </thead>
+                        </div>
+                        <div>
+                            <tbody>
+                            <tr th:each="notify : ${offidocNotifications}">
+                                <td style="width: 150px">
+                                    <a th:href="@{/offidoc/detail/{ori}/{ser}/{nbr}(ori=${notify.offidocOri}, ser=${notify.offidocSer}, nbr=${notify.offidocNbr})}" target="_blank">
+                                        <span th:text="${notify.registrationNumber}" th:if="${!#strings.isEmpty(notify.registrationNumber)}"></span>
+                                        <span th:text="#{offidoc.notifications.unregistered}" th:if="${#strings.isEmpty(notify.registrationNumber)}"></span>
+                                    </a>
+                                </td>
+                                <td style="width: 300px" th:text="${notify.offidocTypeName}"></td>
+                                <td style="width: 100px">
+                                    <span th:if="${notify.dateFinished != null}" th:text="${#dates.format(notify.dateFinished, dateFormatDot)}"></span>
+                                </td>
+                                <td style="width: 100px">
+                                    <span th:if="${notify.dateReadEmail != null}" th:text="${#dates.format(notify.dateReadEmail, dateFormatDot)}"></span>
+                                </td>
+                                <td style="width: 100px">
+                                    <span th:if="${notify.dateReadPortal != null}" th:text="${#dates.format(notify.dateReadPortal, dateFormatDot)}"></span>
+                                </td>
+                                <td style="width: 100px" th:text="${notify.days}"></td>
+                            </tr>
+                            </tbody>
+                        </div>
+                    </table>
+                </div>
+                <div class="home-panel-paginator">
+                    <div th:replace="base/paginator :: paginator(page=${offidocNotificationsSearchFilter.page},pageSize=${offidocNotificationsSearchFilter.pageSize},total=${offidocNotificationsCount},baseUrl=@{offidoc/notifications/filter},
+                        tableContainerDiv='offidoc-notifications-table-wrapper',
+                        additionalParams= '&isFiltering=false&tableTotal='+${offidocNotificationsCount}+
+                        '&sortOrder='+${offidocNotificationsSearchFilter.sortOrder}+'&sortColumn='+${offidocNotificationsSearchFilter.sortColumn})">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

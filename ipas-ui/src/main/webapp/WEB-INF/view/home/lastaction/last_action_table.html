@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="lastAction" type="bg.duosoft.ipas.persistence.model.nonentity.IPObjectSimpleResult"*/-->
+<div th:fragment="table(lastActionList,lastActionCount,lastActionFilter)" th:with="sorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.SorterUtils)},lastActionSorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.LastActionSortedUtils)},securityUtils=${T(bg.duosoft.ipas.util.security.SecurityUtils)}, securityRoles=${T( bg.duosoft.ipas.enums.security.SecurityRole)}">
+
+    <div th:remove="tag" th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(lastActionList)}">
+        <div th:remove="tag" th:case="true">
+            <div class="p_T20_B20">
+                <div class="bg__light-blue p_10 m_B10 m_T10 center">
+                    <span th:text="'Списъкът е празен !'"></span>
+                </div>
+            </div>
+        </div>
+        <div th:remove="tag" th:case="false">
+            <div class="row">
+                <div>
+                    <span th:text="'Общ брой: '"></span>
+                    <span th:text="${lastActionCount}"></span>
+                </div>
+            </div>
+            <div class="m_T5">
+                <table class="simple bpo">
+                    <thead>
+                    <tr>
+                        <th  th:text="'Номер'"></th>
+                        <th  th:text="'Обект'"></th>
+                        <th  th:text="'Номер на документа'"></th>
+                        <th  th:text="'Вид на документа'"></th>
+                        <th th:text="'Действие'"></th>
+                        <th  th:text="'Дата и час на действие'"></th>
+                        <th th:if="${securityUtils.hasRights(securityRoles.IpObjectsSearchForeignObjectsData)}" th:with="isSelected=${#strings.equalsIgnoreCase(lastActionFilter.sortColumn,lastActionSorterUtils.USER_NAME)},dataSort=${lastActionSorterUtils.USER_NAME}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,lastActionFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{tableHeader.responsibleUser.label},${lastActionFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th th:text="'Изпълнител'"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="lastAction,lastActionStat : ${lastActionList}">
+                        <td>
+                            <span th:text="${lastActionStat.count + ((lastActionFilter.page - 1)*lastActionFilter.pageSize)}"></span>
+                        </td>
+                        <td>
+                            <a th:text="${lastAction.filingNumber}"
+                               th:href="@{/ipobject/view(filingNumber=${lastAction.filingNumber})}"></a>
+                        </td>
+                        <td>
+                            <span th:text="${lastAction.documentNumber}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${lastAction.documentType}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${lastAction.actionName}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${#dates.format(lastAction.actionDate,T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT)}"></span>
+                        </td>
+                        <td th:if="${securityUtils.hasRights(securityRoles.IpObjectsSearchForeignObjectsData)}">
+                            <span th:text="${lastAction.responsibleUserName}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${lastAction.captureUserName}"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="home-panel-paginator">
+                    <div th:replace="base/paginator :: paginator(page=${lastActionFilter.page},pageSize=${lastActionFilter.pageSize},total=${lastActionCount},baseUrl=@{last-action/update-table},
+                        tableContainerDiv='last-action-table-wrapper',
+                        additionalParams='&tableCount='+${lastActionCount}+${lastActionFilter.fileType != null ? '&fileType='+lastActionFilter.fileType : '' }+
+                        ${lastActionFilter.userdocType != null ? '&userdocType='+lastActionFilter.userdocType : '' }+
+                        ${lastActionFilter.userdocFilingNumber != null ? '&userdocFilingNumber='+lastActionFilter.userdocFilingNumber : '' }+
+                        ${lastActionFilter.objectFileNbr != null ? '&objectFileNbr='+lastActionFilter.objectFileNbr : '' }+
+                        ${lastActionFilter.actionDateFrom != null ? '&actionDateFrom='+lastActionFilter.actionDateFrom : '' }+
+                        ${lastActionFilter.sortOrder != null ? '&sortOrder='+lastActionFilter.sortOrder : '' }+
+                        ${lastActionFilter.sortColumn != null ? '&sortColumn='+lastActionFilter.sortColumn : '' }+
+                        ${lastActionFilter.actionDateTo != null ? '&actionDateTo='+lastActionFilter.actionDateTo : '' }+
+                        '&actionTypeKind='+${lastActionFilter.actionTypeKind}+
+                         ${lastActionFilter.captureUser != null ? '&captureUser='+lastActionFilter.captureUser : '' }+
+                        ${lastActionFilter.responsibleUser != null ? '&responsibleUser='+lastActionFilter.responsibleUser : '' })"></div>
+                    </div>
+                </div>
+            <div>
+                <input th:type="hidden" class="form-ignore" th:id="last-action-page"
+                       th:value="${lastActionFilter.page}">
+                <input th:type="hidden" class="form-ignore" th:id="last-action-pageSize"
+                       th:value="${lastActionFilter.pageSize}">
+                <input th:type="hidden" class="form-ignore" th:id="table-count" th:value="'?tableCount='+${lastActionCount}">
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

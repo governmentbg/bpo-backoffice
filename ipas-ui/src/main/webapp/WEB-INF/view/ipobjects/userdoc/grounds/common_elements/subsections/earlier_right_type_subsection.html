@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="earlier-right-type-subsection(rootGround,panel,rootGroundId,earlierRightTypes)">
+        <input id="hidden-field-panel" type="hidden" class="form-ignore" th:value="${panel}">
+        <input id="hidden-field-rootGroundId" type="hidden" class="form-ignore" th:value="${rootGroundId}">
+        <input id="hidden-field-on-change-type-url" type="hidden" class="form-ignore" th:attr="data-url=@{/{panel}/change-earlier-type(panel=${panel})}">
+
+        <div class="col-12" th:styleappend="${rootGround.earlierRightType==null} ? 'padding-bottom: 180px !important;'">
+            <div th:replace="~{base/form/select :: object(
+                            id = 'select-earlier-right-type', label = #{earlier.right.type.label},
+                            name = 'rootGround.earlierRightType', emptySelectOption = #{default.select.option},
+                            objects = ${earlierRightTypes},
+                            valuePointer = 'id', textPointer = 'name',
+                            selected = ${rootGround.earlierRightType})}">
+            </div>
+        </div>
+</div>
+
+</body>
+</html>

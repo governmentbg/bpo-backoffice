@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg">
+<head th:replace="base/template :: head(title=#{offidoc.notifications.title})"></head>
+<body class="dark left-sidebar-show">
+<header class="app-header" th:replace="base/header"></header>
+
+<div class="app-body">
+    <div th:replace="base/left-sidebars :: list(urls = ${T(com.duosoft.ipas.util.UrlMap).getAdminServiceUrlsFiltered()})"></div>
+
+    <main class="main">
+        <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+        <div class="inner continer">
+            <div class="row">
+                <div class="col-12">
+                    <div class="panel">
+                        <div class="center">
+                            <h1 class="section-header" th:text="#{offidoc.notifications.title}"></h1>
+                        </div>
+                        <div th:id="offidoc-notifications-filters-wrapper">
+                            <div th:replace="~{home/offidoc_notifications/offidoc_notifications_filters :: offidoc-notifications-search-filters(offidocNotificationsSearchFilter=${offidocNotificationsSearchFilter})}"></div>
+                        </div>
+                        <div th:id="offidoc-notifications-table-wrapper" th:attr="data-url=@{/offidoc/notifications/filter}">
+                            <div th:replace="~{home/offidoc_notifications/offidoc_notifications_table :: offidoc-notifications-table(offidocNotifications=${offidocNotifications}, offidocNotificationsCount=${offidocNotificationsCount}, offidocNotificationsSearchFilter=${offidocNotificationsSearchFilter})}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<footer class="page-footer" th:replace="base/footer"></footer>
+<div th:replace="base/template :: js-footer" th:remove="tag"></div>
+</body>
+</html>

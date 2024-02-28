@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="userdoc" type="bg.duosoft.ipas.core.model.userdoc.CUserdoc"*/-->
+<div th:fragment="license(userdoc)"
+     th:with="extraDataUtils = ${T(bg.duosoft.ipas.util.userdoc.UserdocExtraDataUtils)},
+              panelName=${T(bg.duosoft.ipas.enums.RecordalType).Licenses.name()},
+              typesEnum=${T(bg.duosoft.ipas.enums.UserdocExtraDataTypeCode)},
+              types = ${extraDataUtils.selectTypes(userdoc, panelName)},
+              userdocExtraData=${userdoc.userdocExtraData},
+              userdocUtils=${T(bg.duosoft.ipas.util.userdoc.UserdocUtils)},
+              parentData=${userdoc.userdocParentData}">
+
+    <div class="row">
+        <div th:remove="tag" th:with="type = ${typesEnum.EFFECTIVE_DATE}">
+            <div th:replace="ipobjects/userdoc/extra_data/fragments.html :: dataDate(type = ${type}, value = ${extraDataUtils.selectDate(type, userdocExtraData)}, classes = 'col-4', allowedTypes = ${types})"></div>
+        </div>
+        <div th:remove="tag" th:with="type = ${typesEnum.INVALIDATION_DATE}">
+            <div th:replace="ipobjects/userdoc/extra_data/fragments.html :: dataDate(type = ${type}, value = ${extraDataUtils.selectDate(type, userdocExtraData)}, classes = 'col-4', allowedTypes = ${types})"></div>
+        </div>
+        <div th:if="${(userdoc.fileRecordal != null) && (userdoc.fileRecordal.invalidationDate != null) && (userdoc.fileRecordal.invalidationDocumentId.docNbr != null)}" class="col-4" th:with="recordal=${userdoc.fileRecordal}">
+            <div th:replace="~{base/form/input :: link-href(label = #{invalidated.userdoc}, text = ${recordal.invalidationExternalSystemId == null} ? #{not.registered} : ${recordal.invalidationExternalSystemId}, href = @{/ipobject/view(userdocFilingNumber=${recordal.invalidationDocumentId.createFilingNumber()})})}"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div th:remove="tag" th:with="type = ${typesEnum.LICENSE_CONTRACT_NUMBER_AND_DATE}">
+            <div th:replace="ipobjects/userdoc/extra_data/fragments.html :: dataText(type = ${type}, value = ${extraDataUtils.selectText(type, userdocExtraData)}, classes = 'col-12', allowedTypes = ${types})"></div>
+        </div>
+    </div>
+    <div class="row m_B10">
+        <div th:remove="tag" th:with="type = ${typesEnum.DESCRIPTION}">
+            <div th:replace="ipobjects/userdoc/extra_data/fragments.html :: dataText-textarea(type = ${type}, value = ${extraDataUtils.selectText(type, userdocExtraData)}, wrapperClasses = 'col-12', allowedTypes = ${types}, textareaClasses = '')"></div>
+        </div>
+    </div>
+    <div class="row m_B10">
+        <hr class="m_T0">
+        <div th:remove="tag" th:with="dataType = ${extraDataUtils.selectType(types, typesEnum.LICENSE_TYPE)}" >
+            <div th:remove="tag" th:if="${dataType != null && dataType.isBoolean}" >
+                <div class="col-12 " th:with="name='object-userdoc-extraData-'+${dataType.code},typeValue = ${extraDataUtils.selectBoolean(dataType.code, userdocExtraData)}">
+                    <div th:replace="~{base/form/label :: active(title = ${dataType.title}, wrapperClasses = 'm_B15')}"></div>
+                    <div th:replace="~{base/form/radio :: input-field(name = ${name}, label = ${dataType.booleanTextFalse}, value = false, wrapperClasses = 'm_0', checked = ${typeValue == false})}"></div>
+                    <div th:replace="~{base/form/radio :: input-field(name = ${name}, label = ${dataType.booleanTextTrue}, value = true, wrapperClasses = 'm_0', checked = ${typeValue == true})}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row m_B10" th:if="${(userdocUtils.isUserdocMainObjectPatent(parentData)) || (userdocUtils.isUserdocMainObjectPlant(parentData))}">
+        <hr class="m_T0">
+        <div th:remove="tag" th:with="dataType = ${extraDataUtils.selectType(types, typesEnum.LICENSE_IS_COMPULSORY)}" >
+            <div th:remove="tag" th:if="${dataType != null && dataType.isBoolean}" >
+                <div class="col-12 " th:with="name='object-userdoc-extraData-'+${dataType.code},typeValue = ${extraDataUtils.selectBoolean(dataType.code, userdocExtraData)}">
+                    <div th:replace="~{base/form/label :: active(title = ${dataType.title}, wrapperClasses = 'm_B15')}"></div>
+                    <div th:replace="~{base/form/radio :: input-field(name = ${name}, label = ${dataType.booleanTextTrue}, value = true, wrapperClasses = 'm_0', checked = ${typeValue == true})}"></div>
+                    <div th:replace="~{base/form/radio :: input-field(name = ${name}, label = ${dataType.booleanTextFalse}, value = false, wrapperClasses = 'm_0', checked = ${typeValue == false})}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row m_B10">
+        <hr class="m_T0">
+        <div th:remove="tag" th:with="dataType = ${extraDataUtils.selectType(types, typesEnum.LICENSE_TERRITORIAL_SCOPE)}" >
+            <div th:remove="tag" th:if="${dataType != null && dataType.isBoolean}" >
+                <div class="col-12 " th:with="typeValue = ${extraDataUtils.selectBoolean(dataType.code, userdocExtraData)}">
+                    <div th:replace="~{base/form/label :: active(title = ${dataType.title}, wrapperClasses = 'm_B15')}"></div>
+                    <div th:replace="ipobjects/userdoc/extra_data/fragments.html :: dataFlag-radio(type = ${dataType.code}, value = ${true}, classes = 'form-ignore with-gap license-territory-radio', allowedTypes = ${types}, label = ${dataType.booleanTextTrue}, checked = ${typeValue == true})"></div>
+                    <div th:replace="ipobjects/userdoc/extra_data/fragments.html :: dataFlag-radio(type = ${dataType.code}, value = ${false}, classes = 'form-ignore with-gap license-territory-radio', allowedTypes = ${types}, label = ${dataType.booleanTextFalse}, checked = ${typeValue == false})"></div>
+                    <div th:id="license-territory-inputs-wrapper" th:classappend="${typeValue != false}? none">
+                        <div th:remove="tag" th:with="type = ${typesEnum.LICENSE_TERRITORIAL_RESTRICTION}">
+                            <div th:replace="ipobjects/userdoc/extra_data/fragments.html :: dataText-textarea(type = ${type}, value = ${extraDataUtils.selectText(type, userdocExtraData)}, wrapperClasses = 'm_T20', allowedTypes = ${types}, textareaClasses = 'territory-input m_B0-i')"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row m_B10">
+        <hr class="m_T0">
+        <div th:remove="tag" th:with="dataType = ${extraDataUtils.selectType(types, typesEnum.LICENSE_SUBLICENSE)}" >
+            <div th:remove="tag" th:if="${dataType != null && dataType.isBoolean}" >
+                <div class="col-12" th:with="typeValue = ${extraDataUtils.selectBoolean(dataType.code, userdocExtraData)}">
+                    <div th:replace="~{base/form/label :: active(title = ${dataType.title}, wrapperClasses = 'm_B15')}"></div>
+                    <div th:replace="ipobjects/userdoc/extra_data/fragments.html :: dataFlag-radio(type = ${dataType.code}, value = ${true}, classes = 'form-ignore with-gap license-sublicense-radio', allowedTypes = ${types}, label = ${dataType.booleanTextTrue}, checked = ${typeValue == true})"></div>
+                    <div th:replace="ipobjects/userdoc/extra_data/fragments.html :: dataFlag-radio(type = ${dataType.code}, value = ${false}, classes = 'form-ignore with-gap license-sublicense-radio', allowedTypes = ${types}, label = ${dataType.booleanTextFalse}, checked = ${typeValue == false})"></div>
+                    <div th:id="license-sublicense-inputs-wrapper" th:classappend="${typeValue != true}? none">
+                        <div th:remove="tag" th:with="type = ${typesEnum.LICENSE_SUBLICENSE_IDENTIFIER}">
+                            <div th:replace="ipobjects/userdoc/extra_data/fragments.html :: dataText(type = ${type}, value = ${extraDataUtils.selectText(type, userdocExtraData)}, classes = 'm_T20', allowedTypes = ${types})"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row m_B10">
+        <hr class="m_T0">
+        <div th:remove="tag" th:with="dataType = ${extraDataUtils.selectType(types, typesEnum.LICENSE_SUBLICENSE_GRANT_RIGHT)}" >
+            <div th:remove="tag" th:if="${dataType != null && dataType.isBoolean}" >
+                <div class="col-12" th:with="typeValue = ${extraDataUtils.selectBoolean(dataType.code, userdocExtraData)}">
+                    <div th:replace="~{base/form/label :: active(title = ${dataType.title}, wrapperClasses = 'm_B15')}"></div>
+                    <div th:replace="ipobjects/userdoc/extra_data/fragments.html :: dataFlag-radio(type = ${dataType.code}, value = ${true}, classes = 'form-ignore with-gap', allowedTypes = ${types}, label = ${dataType.booleanTextTrue}, checked = ${typeValue == true})"></div>
+                    <div th:replace="ipobjects/userdoc/extra_data/fragments.html :: dataFlag-radio(type = ${dataType.code}, value = ${false}, classes = 'form-ignore with-gap', allowedTypes = ${types}, label = ${dataType.booleanTextFalse}, checked = ${typeValue == false})"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row m_B10">
+        <hr class="m_T0">
+        <div th:remove="tag" th:with="dataType = ${extraDataUtils.selectType(types, typesEnum.LICENSE_EXPIRATION_DATE_TYPE)}" >
+            <div th:remove="tag" th:if="${dataType != null && dataType.isBoolean}" >
+                <div class="col-12" th:with="typeValue = ${extraDataUtils.selectBoolean(dataType.code, userdocExtraData)}">
+                    <div th:replace="~{base/form/label :: active(title = ${dataType.title}, wrapperClasses = 'm_B15')}"></div>
+                    <div th:replace="ipobjects/userdoc/extra_data/fragments.html :: dataFlag-radio(type = ${dataType.code}, value = ${true}, classes = 'form-ignore with-gap license-expiration-date-radio', allowedTypes = ${types}, label = ${dataType.booleanTextTrue}, checked = ${typeValue == true})"></div>
+                    <div th:replace="ipobjects/userdoc/extra_data/fragments.html :: dataFlag-radio(type = ${dataType.code}, value = ${false}, classes = 'form-ignore with-gap license-expiration-date-radio', allowedTypes = ${types}, label = ${dataType.booleanTextFalse}, checked = ${typeValue == false})"></div>
+                    <div th:id="license-expiration-date-inputs-wrapper" th:classappend="${typeValue != true}? none">
+                        <div class="row">
+                            <div th:remove="tag" th:with="type = ${typesEnum.LICENSE_EXPIRATION_DATE}">
+                                <div th:replace="ipobjects/userdoc/extra_data/fragments.html :: dataDate(type = ${type}, value = ${extraDataUtils.selectDate(type, userdocExtraData)}, classes = 'col-4 m_T10-i m_L0-i', allowedTypes = ${types})"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${userdocUtils.isUserdocMainObjectMark(parentData)}">
+        <hr class="m_T0">
+        <div th:replace="~{ipobjects/userdoc/extra_data/nice_classes :: nice-classes(${userdoc})}"></div>
+    </div>
+    <div th:if="${userdocUtils.isUserdocMainObjectDesign(parentData)}">
+        <hr class="m_T0">
+        <div th:replace="~{ipobjects/userdoc/extra_data/single_designs :: single-designs(${userdoc})}"></div>
+    </div>
+</div>
+
+</body>
+</html>

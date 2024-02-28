@@ -1,0 +1,5 @@
+UPDATE IP_DOC
+set EXTERNAL_SYSTEM_ID = CONCAT(DOC_ORI, '/', DOC_LOG, '/', cast(DOC_SER as VARCHAR), '/', cast(DOC_SEQ_NBR as VARCHAR))
+where DOC_SER >= 2016;
+
+

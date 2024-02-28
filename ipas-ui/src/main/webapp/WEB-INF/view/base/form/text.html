@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:remove="tag" th:fragment="readonly(label, text)">
+    <div th:classappend="(${#strings.isEmpty(text)}?none)">
+         <div th:classappend="${columnSize != null} ? ${columnSize}">
+            <div class="row m_B5">
+                <div th:replace="~{base/form/label :: active(title = ${label})}"></div>
+            </div>
+            <div class="row">
+                <div th:classappend="${classes != null} ? ${classes}">
+                    <span th:text="${text}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="readonly-unescaped(label, text)">
+    <div th:classappend="(${#strings.isEmpty(text)}?none)">
+        <div th:classappend="${columnSize != null} ? ${columnSize}">
+            <div class="row m_B5">
+                <div th:replace="~{base/form/label :: active(title = ${label})}"></div>
+            </div>
+            <div class="row">
+                <div th:classappend="${classes != null} ? ${classes}">
+                    <span th:utext="${text}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="readonly-date(label, text)">
+    <div th:classappend="(${#strings.isEmpty(text)}?none)">
+         <div th:classappend="${columnSize != null} ? ${columnSize}">
+            <div class="row m_B5">
+                <div th:replace="~{base/form/label :: active(title = ${label})}"></div>
+            </div>
+            <div class="row">
+                <span th:text="${#dates.format(text,T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

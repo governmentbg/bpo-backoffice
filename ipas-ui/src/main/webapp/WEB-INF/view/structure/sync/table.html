@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="table(users,count,usersFilter)"
+     th:with="sorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.SorterUtils)},userSorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.UsersSyncSorterUtils)}">
+
+    <div th:remove="tag" th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(users)}">
+        <div th:remove="tag" th:case="true">
+            <div class="center m_T20">
+                <span th:text="#{users.sync.all.users.are.sync.msg}"></span>
+            </div>
+        </div>
+        <div th:remove="tag" th:case="false">
+            <div class="row">
+                <div>
+                    <span th:text="#{total}"></span>
+                    <span th:text="${count}"></span>
+                </div>
+            </div>
+            <div class="m_T5">
+                <table class="simple bpo">
+                    <thead>
+                    <tr>
+                        <th style="width: 50px" th:text="#{number}"></th>
+                        <th th:with="isSelected=${#strings.equalsIgnoreCase(usersFilter.sortColumn,userSorterUtils.SCREEN_NAME)},dataSort=${userSorterUtils.SCREEN_NAME}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,usersFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{users.sync.table.screenname},${usersFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th th:with="isSelected=${#strings.equalsIgnoreCase(usersFilter.sortColumn,userSorterUtils.FULL_NAME)},dataSort=${userSorterUtils.FULL_NAME}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,usersFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{users.sync.table.name},${usersFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th th:with="isSelected=${#strings.equalsIgnoreCase(usersFilter.sortColumn,userSorterUtils.EMAIL)},dataSort=${userSorterUtils.EMAIL}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,usersFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{users.sync.table.email},${usersFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th th:with="isSelected=${#strings.equalsIgnoreCase(usersFilter.sortColumn,userSorterUtils.SYNC_STATUS)},dataSort=${userSorterUtils.SYNC_STATUS}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,usersFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{users.sync.table.status},${usersFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th style="width: 50px" th:text="#{users.sync.table.options}"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user,userStat : ${users}">
+                        <td>
+                            <span th:text="${userStat.count}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${user.screenName}"></span>
+                        </td>
+                        <td th:with="portalUserUtils=${T(bg.duosoft.ipas.integration.portal.utils.PortalUserUtils)}">
+                            <span th:text="${portalUserUtils.createFullName(user)}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${user.emailAddress}"></span>
+                        </td>
+                        <td>
+                            <i class="material-icons m_R5" th:classappend="${#strings.equals('NOT_SYNCHRONIZED_NEW',user.syncStatus)} ? 'm-green-text' : 'm-orange-text text-darken-4'">
+                                brightness_1
+                            </i>
+                            <span th:text="#{'ipas.user.sync.status.'+ ${user.syncStatus}}"></span>
+                        </td>
+                        <td class="p_0 center">
+                            <a th:replace="~{base/form/button :: material-table-btn(title = #{btn.sync}, dataAction = 'sync-user',dataUser = ${user.screenName},dataUrl = @{/users/sync/sync-user}, icon = 'sync', classes = 'm_L10 confirm')}"></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="m_T20">
+                <a th:replace="~{base/form/button :: material-btn(label = #{btn.sync.all.users}, dataAction = 'sync-all-users',dataUrl = @{/users/sync/sync-all-users}, icon = 'sync', classes = 'confirm')}"></a>
+            </div>
+            <div>
+                <input th:type="hidden" class="form-ignore" th:id="users-sync-order" th:value="${usersFilter.sortOrder}">
+                <input th:type="hidden" class="form-ignore" th:id="users-sync-sort" th:value="${usersFilter.sortColumn}">
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

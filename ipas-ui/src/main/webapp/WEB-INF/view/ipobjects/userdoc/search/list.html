@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg">
+
+<body >
+    <div th:fragment="result" th:remove="tag">
+        <div class="panel">
+            <div class="row">
+                <div>
+                    <span th:text="|#{list.result.count(${page.totalElements+''})}|"></span>
+                </div>
+            </div>
+            <div th:if="${!#lists.isEmpty(page.content)}" class="m_T5">
+                <ul class="Linked-List" th:if="${!#lists.isEmpty(page.content)}">
+                    <li style="padding-left: 0">
+                        <div id="result-header" class="row bld sortable">
+                            <div class="col-2" data-col="docNumber">
+                                <div th:text="#{search.userdoc.result.doc-number}" th:remove="tag"></div>
+                                <div th:class="|${(searchParam.sortColumn == 'docNumber')?('sorting_' + #strings.toLowerCase(searchParam.sortOrder)):'sorting'}|" ></div>
+                            </div>
+                            <div class="col-1" data-col="docFilingDate">
+                                <div th:text="#{search.userdoc.result.filing-date}" th:remove="tag"></div>
+                                <div th:class="|${(searchParam.sortColumn == 'docFilingDate')?('sorting_' + #strings.toLowerCase(searchParam.sortOrder)):'sorting'}|" ></div>
+                            </div>
+                            <div class="col-2" data-col="docType">
+                                <div th:text="#{search.userdoc.result.doc-type}" th:remove="tag"></div>
+                                <div th:class="|${(searchParam.sortColumn == 'docType')?('sorting_' + #strings.toLowerCase(searchParam.sortOrder)):'sorting'}|" ></div>
+                            </div>
+                            <div class="col-3">
+                                <div th:text="#{search.userdoc.result.person}" th:remove="tag"></div>
+                            </div>
+                            <div class="col-2" data-col="pk">
+                                <div th:text="#{search.userdoc.result.object-type}" th:remove="tag"></div>
+                                <div th:class="|${(searchParam.sortColumn == 'pk')?('sorting_' + #strings.toLowerCase(searchParam.sortOrder)):'sorting'}|" ></div>
+                            </div>
+                            <div class="col-1" data-col="statusSort">
+                                <span th:text="#{search.result.status}"></span>
+                                <div th:class="|${(searchParam.sortColumn == 'statusSort')?('sorting_' + #strings.toLowerCase(searchParam.sortOrder)):'sorting'}|" ></div>
+                            </div>
+                            <div class="col-1">
+                                <div th:text="''"></div>
+                            </div>
+                        </div>
+                    </li>
+                    <li th:each="result :${page.content}" style="padding-left: 0">
+                        <div class="row">
+                            <div class="col-2" th:text="${result.docNumber}">
+                            </div>
+                            <div class="col-1" th:text="|${#dates.format(result.filingDate, 'dd.MM.yyyy')}|">
+                            </div>
+                            <div class="col-2" >
+                                <a class="b0" th:href="@{/userdoc/detail/{docOri}/{docLog}/{docSer}/{docNbr}(docOri=${result.documentId.docOrigin}, docLog=${result.documentId.docLog}, docSer=${result.documentId.docSeries}, docNbr=${result.documentId.docNbr})}" th:text="${result.docType}"></a>
+                            </div>
+                            <div class="col-3">
+                                <div th:each="applicant : ${result.applicants}">
+                                    <span th:text="${applicant}"></span>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <span th:if="${result.fileId != null}"
+                                        th:text="|${result.fileId.fileSeq}/${result.fileId.fileType}/${result.fileId.fileSeries}/${#numbers.formatDecimal(result.fileId.fileNbr, prop.leadingZero, 0)}|"></span><br />
+                                <span th:if="${!#strings.isEmpty(result.fileTitle) || !#strings.isEmpty(result.fileRegistrationNumber)}" th:text="|${result.fileRegistrationNumber ?: ''}${!#strings.isEmpty(result.fileTitle) && !#strings.isEmpty(result.fileRegistrationNumber) ? ', ' : ''}${result.fileTitle ?: ''}|"></span>
+                            </div>
+                            <div class="col-1">
+                                <div th:text="|${result.status}|" >
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                    <a class="abdocs-href ui-no-block" href="javascript:void(0);" th:attr="data-url=@{/process/document/open-user-document}, data-action = 'abdocs-userdoc-redirect',data-process=|${result.processId.processType}-${result.processId.processNbr}|,data-document = |${result.documentId.docOrigin}/${result.documentId.docLog}/${result.documentId.docSeries}/${result.documentId.docNbr}|">
+                                        <img width="25" height="25"  th:src="@{/img/abdocs.png}" th:title="#{process.tree.open.in.abdocs}"/>
+                                    </a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <div th:replace="ipobjects/common/search/fragments ::paginator(
+                        page=${page.number},
+                        pageSize=${page.size},
+                        total=${page.totalElements},
+                        tableContainerDiv='panel')" ></div>
+                <script th:inline="javascript">
+
+
+                    $.each($('#result-header').children('div'), function (i, header) {
+                        let header_col = $(header).attr('data-col');
+
+                        if(header_col) {
+                            $(header).click(function (e) {
+
+                                if(!$(this).is('[class*="sorting"]')) {
+                                    let div = $(this).find('div');
+                                    let sort = div.hasClass('sorting_asc')?'sorting_desc':'sorting_asc';
+                                    $('#result-header > div > div').removeClass('sorting_asc sorting_desc').addClass('sorting');
+                                    div.removeClass('sorting').addClass(sort);
+
+                                    e.preventDefault();
+                                    let pageSize = $(".search-paginator").find("option:selected").val()?$(".search-paginator").find("option:selected").val():10;
+
+                                    let cJson = {};
+
+                                    sorting(cJson);
+
+                                    sortReq(cJson);
+                                }
+                            })
+                        }
+                    });
+
+                    $(document).ready(function () {
+                        $('.materialboxes').each(function(){
+                            $(this).materialbox();
+                        });
+                    });
+                </script>
+            </div>
+
+            <div th:if="${#lists.isEmpty(page.content)}">
+                <span th:text="#{search.result.not_found}"></span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

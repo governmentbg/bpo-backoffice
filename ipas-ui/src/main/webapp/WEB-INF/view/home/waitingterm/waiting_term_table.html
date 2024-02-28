@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="waitingTerm" type="bg.duosoft.ipas.persistence.model.nonentity.IPObjectSimpleResult"*/-->
+<!--/*@thymesVar id="waitingTermFilter" type="bg.duosoft.ipas.util.filter.WaitingTermFilter"*/-->
+<!--/*@thymesVar id="waitingTermSorterUtils" type="bg.duosoft.ipas.util.filter.sorter.WaitingTermSorterUtils"*/-->
+<div th:fragment="table(waitingTermList,waitingTermCount,waitingTermFilter,waitingTermsParentUrl)"
+     th:with="sorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.SorterUtils)},waitingTermSorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.WaitingTermSorterUtils)},securityUtils=${T(bg.duosoft.ipas.util.security.SecurityUtils)}, securityRoles=${T( bg.duosoft.ipas.enums.security.SecurityRole)}">
+
+    <div th:remove="tag" th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(waitingTermList)}">
+        <div th:remove="tag" th:case="true">
+            <div class="bg__light-blue p_10 m_B10 m_T10 center">
+                <span th:text="'Списъкът е празен !'"></span>
+            </div>
+        </div>
+        <div th:remove="tag" th:case="false">
+            <div class="row">
+                <div>
+                    <span th:text="'Общ брой: '"></span>
+                    <span th:text="${waitingTermCount}"></span>
+                </div>
+            </div>
+            <div class="m_T5">
+                <table class="simple bpo">
+                    <thead>
+                    <tr>
+                        <th style="width: 50px" th:text="'Номер'"></th>
+                        <th style="width: 150px" th:with="isSelected=${#strings.equalsIgnoreCase(waitingTermFilter.sortColumn,waitingTermSorterUtils.FILING_NUMBER)},dataSort=${waitingTermSorterUtils.FILING_NUMBER}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,waitingTermFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Идентификатор',${waitingTermFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th th:with="isSelected=${#strings.equalsIgnoreCase(waitingTermFilter.sortColumn,waitingTermSorterUtils.STATUS)},dataSort=${waitingTermSorterUtils.STATUS}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,waitingTermFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Статус',${waitingTermFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th style="width: 150px" th:with="isSelected=${#strings.equalsIgnoreCase(waitingTermFilter.sortColumn,waitingTermSorterUtils.EXPIRATION_DATE)},dataSort=${waitingTermSorterUtils.EXPIRATION_DATE}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,waitingTermFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Дата на изтичане',${waitingTermFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th th:if="${securityUtils.hasRights(securityRoles.IpObjectsSearchForeignObjectsData)}" th:with="isSelected=${#strings.equalsIgnoreCase(waitingTermFilter.sortColumn,waitingTermSorterUtils.USER_NAME)},dataSort=${waitingTermSorterUtils.USER_NAME}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,waitingTermFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{tableHeader.responsibleUser.label},${waitingTermFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="waitingTerm,waitingTermStat : ${waitingTermList}">
+                        <td>
+                            <span th:text="${waitingTermStat.count + ((waitingTermFilter.page - 1)*waitingTermFilter.pageSize)}"></span>
+                        </td>
+                        <td>
+                            <a th:text="${waitingTerm.filingNumber}" th:href="@{/ipobject/view(filingNumber=${waitingTerm.filingNumber})}"></a>
+                        </td>
+                        <td>
+                            <span th:text="${waitingTerm.statusName}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${#dates.format(waitingTerm.expirationDate,T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}"></span>
+                        </td>
+                        <td th:if="${securityUtils.hasRights(securityRoles.IpObjectsSearchForeignObjectsData)}">
+                            <span th:text="${waitingTerm.responsibleUserName}"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="home-panel-paginator" th:with="paginatorBaseUrl=${waitingTermsParentUrl =='waiting-term-zmr'} ? @{waiting-term-zmr/update-table} : @{waiting-term/update-table}">
+                    <div th:replace="base/paginator :: paginator(page=${waitingTermFilter.page},pageSize=${waitingTermFilter.pageSize},total=${waitingTermCount},baseUrl=@{${paginatorBaseUrl}},
+                        tableContainerDiv='waiting-term-table-wrapper',
+                        additionalParams='&tableCount='+${waitingTermCount}+'&sortOrder='+${waitingTermFilter.sortOrder}+
+                                         '&sortColumn='+${waitingTermFilter.sortColumn}+
+                                         ${waitingTermFilter.fileType != null ? '&fileType='+waitingTermFilter.fileType : '' }+
+                                          ${waitingTermFilter.statusCode != null ? '&statusCode='+waitingTermFilter.statusCode : '' }+
+                                         ${waitingTermFilter.responsibleUser != null ? '&responsibleUser='+waitingTermFilter.responsibleUser : '' })">
+                    </div>
+                </div>
+            </div>
+            <div>
+                <input th:type="hidden" class="form-ignore" th:id="waiting-term-page" th:value="${waitingTermFilter.page}">
+                <input th:type="hidden" class="form-ignore" th:id="table-count" th:value="'?tableCount='+${waitingTermCount}">
+                <input th:type="hidden" class="form-ignore" th:id="waiting-term-pageSize" th:value="${waitingTermFilter.pageSize}">
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

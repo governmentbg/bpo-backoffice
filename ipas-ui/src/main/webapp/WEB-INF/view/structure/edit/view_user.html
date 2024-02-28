@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg"
+      th:with="title=${#messages.msg('user.title.view')}">
+<head th:replace="base/template :: head(title=${title})"></head>
+<body class="dark">
+
+<header class="app-header" th:replace="base/header"></header>
+
+<div class="app-body">
+
+    <!-- ********************************************************** Main body -->
+    <main class="main">
+        <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+        <div class="inner" id="editUserDiv">
+            <div id="user-panel" class="panel">
+                <div class="center">
+                    <h2 class="inline-block" th:text="${title}"></h2>
+                </div>
+
+
+                <div id="content">
+                    <div class="row m_T20">
+                        <div class="col-4">
+                            <div th:replace="~{base/form/input :: readonly(label = #{active}, value = ${user?.indInactive != null && !user?.indInactive  ? #messages.msg('yes'): #messages.msg('no')})}"></div>
+                        </div>
+                        <div class="col-4">
+                            <div th:replace="~{base/form/input :: readonly(label = #{user.admin.label}, value = ${user.indAdministrator != null && user.indAdministrator ? #messages.msg('yes'): #messages.msg('no')})}"></div>
+                        </div>
+                        <div class="col-4">
+                            <div th:replace="~{base/form/input :: readonly(label = #{user.examiner.label}, value = ${user.indExaminer != null && user.indExaminer ? #messages.msg('yes'): #messages.msg('no')})}"></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-4">
+                            <div th:replace="~{base/form/input :: readonly(label = #{user.username}, value = ${user?.login})}"></div>
+                        </div>
+                        <div class="col-4">
+                            <div th:replace="~{base/form/input :: readonly(label = #{name.label}, value = ${user?.userName})}"></div>
+                        </div>
+                        <div class="col-4" th:if="${user?.fullName != null}">
+                            <div th:replace="~{base/form/input :: readonly(label = #{user.full.name}, value = ${user?.fullName})}"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4" th:if="${user?.initials != null}">
+                            <div th:replace="~{base/form/input :: readonly(label = #{user.initials}, value = ${user?.initials})}"></div>
+                        </div>
+                        <div class="col-4" th:if="${user?.email != null}">
+                            <div th:replace="~{base/form/input :: readonly(label = #{user.email}, value = ${user?.email})}"></div>
+                        </div>
+                        <div class="col-4" th:if="${user?.telephone != null}">
+                            <div th:replace="~{base/form/input :: readonly(label = #{user.phone}, value = ${user?.telephone})}"></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div th:replace="~{base/form/input :: readonly(label = #{user.external.label}, value = ${user.indExternal != null && user.indExternal ? #messages.msg('yes'): #messages.msg('no')})}"></div>
+                        </div>
+                    </div>
+                    <div class="row m_B20" th:if="${user.officeDivisionCode != null}">
+                        <div class="col-12">
+                            <div th:replace="~{base/form/label :: active(title = #{division.label})}"></div>
+                            <span th:each="division: ${availableDivisions}" th:remove="tag">
+                                <span th:if="${division.officeStructureId.officeDivisionCode.equals(user.officeDivisionCode)}"
+                                      th:text="${division.name}"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row m_B20" th:if="${user.officeDepartmentCode != null}">
+                        <div class="col-12">
+                            <div th:replace="~{base/form/label :: active(title = #{department.label})}"></div>
+                            <span th:each="department: ${availableDepartments}" th:remove="tag">
+                                <span th:if="${department.officeStructureId.officeDepartmentCode.equals(user.officeDepartmentCode)}"
+                                      th:text="${department.name}"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row m_B20" th:if="${user.officeSectionCode != null}">
+                        <div class="col-12">
+                            <div th:replace="~{base/form/label :: active(title = #{section.label})}"></div>
+                            <span th:each="section: ${availableSections}" th:remove="tag">
+                                <span th:if="${section.officeStructureId.officeSectionCode.equals(user.officeSectionCode)}"
+                                      th:text="${section.name}"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <h4 class="center" th:text="#{user.groups.label}"></h4>
+                            <table class="simple">
+                                <thead>
+                                <tr>
+                                    <th th:text="'Наименование'"></th>
+                                </tr>
+                                </thead>
+                                <tbody th:if="${user.groupIds.size() != 0}">
+                                <div th:each="dropdownValue: ${groupsMap}"
+                                     th:if="${user.groupIds.contains(dropdownValue.key)}" th:remove="tag">
+                                    <tr>
+                                        <td th:text="${dropdownValue.value}"></td>
+                                    </tr>
+                                </div>
+                                </tbody>
+                                <tbody th:if="${user.groupIds.size() == 0}">
+                                <tr>
+                                    <td th:text="#{no.data}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+                <br>
+            </div>
+        </div>
+    </main>
+
+</div>
+
+<!-- JQuery files -->
+<footer class="page-footer" th:replace="base/footer"></footer>
+<div th:replace="base/template :: js-footer" th:remove="tag"></div>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="national-design-import-subsection(rootGround,panel)">
+
+    <div class="m_T30 m_B10 ground-subsection-div-title">
+        <h4 style="display: inline-block" th:text="'Противопоставими дизайни'"></h4>
+    </div>
+
+    <div id="userdoc-ground-single-designs-div">
+        <div th:replace="ipobjects/userdoc/grounds/common_elements/subsections/single_designs_subsection :: single-designs-subsection(${rootGround.singleDesigns})"></div>
+    </div>
+
+
+    <input id="hidden-ground-design" type="hidden">
+
+
+    <div class="row ">
+        <div class="col-9">
+            <div class="input-field">
+                <input th:id="'userdoc-ground-design-autocomplete'" type="text"
+                       class="autocomplete form-ignore"
+                       th:attr="data-url=@{/{panel}/autocomplete-ground-design(panel=${panel})}">
+                <label th:id="'userdoc-ground-design-autocomplete-label'" th:for="'userdoc-ground-design-autocomplete'" th:text="#{ground.national.design}"></label>
+            </div>
+        </div>
+        <div>
+            <button id="userdoc-grounds-add-design"  th:text="'Добави намерените дизайни'" th:type="button"
+                    th:attr="data-action='userdoc-ground-add-single-designs',data-url=@{/{panel}/add-single-designs(panel=${panel})}"
+                    class="button sm-icn-add m_T10">
+            </button>
+        </div>
+    </div>
+        <div class="m_T5 m_L15">
+                    <span class="orange"
+                          th:text="'Изберете дизайн от списъка !'"></span>
+        </div>
+
+
+</div>
+</body>
+</html>

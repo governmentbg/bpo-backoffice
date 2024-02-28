@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="claims(mark, divisionalData)" th:with="relationshipUtilsCheckAccess=${T(com.duosoft.ipas.util.CFileRelationshipUtils)}">
+    <th:block th:if="${relationshipUtilsCheckAccess.hasDivisionalApplicationPanelAccess(mark.file.fileId.fileType)}">
+         <div th:replace="ipobjects/common/divisionalapplication/divisional_application :: divisional-application(${divisionalData},${mark.file.fileId})"></div>
+    </th:block>
+    <div th:replace="ipobjects/common/exhibition/exhibition :: exhibition(${mark.file})"></div>
+    <div th:replace="ipobjects/common/priority/priorities :: priorities(${mark.file})"></div>
+    <th:block th:if="${relationshipUtilsCheckAccess.hasTransformationPanelAccess(mark.file.fileId.fileType)}">
+        <div th:replace="ipobjects/marklike/common/claims/transformation/transformation :: transformation(${mark})"></div>
+    </th:block>
+    <div style="display: none" id="rights-remove-claim-data" th:attr="data-message=#{general.message.data.deletion.confirm}"></div>
+</div>
+</body>
+</html>

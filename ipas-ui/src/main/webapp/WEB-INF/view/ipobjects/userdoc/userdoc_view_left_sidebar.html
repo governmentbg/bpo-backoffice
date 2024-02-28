@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="panelEnum" type="com.duosoft.ipas.enums.UserdocPanel"*/-->
+<!--/*@thymesVar id="securityRoles" type="bg.duosoft.ipas.enums.security.SecurityRole"*/-->
+<div class="left-sidebar" th:fragment="sidebar(panelsList,panelPrefix)" th:with="userdocUtils=${T(bg.duosoft.ipas.util.userdoc.UserdocUtils)}">
+
+    <div id="psb" class="ps--active-y">
+        <nav class="sidebar-nav">
+            <ul id="detail-list" class="nav DropDownMenu checkbox-list switcher simple at-right" th:attr="data-group=|${panelPrefix}-detail|">
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.UserdocMainData.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocMainData)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.UserdocMainData.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.userdoc.main.data}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.UserdocPatentData.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocPatentData)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.UserdocPatentData.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.userdoc.patent.data}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.UserdocTypeData.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocTypeData)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.UserdocTypeData.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.userdoc.type}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Change_correspondence_address.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocChangeCorrespondenceAddress)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.Change_correspondence_address.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.userdoc.change.ca}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Change.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocChange)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.Change.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.userdoc.change}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Opposition.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocOpposition)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.Opposition.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.userdoc.opposition}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Change_representative.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocChangeRepresentative)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.Change_representative.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.userdoc.change.representative}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Bankruptcy.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocBankruptcy)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.Bankruptcy.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.userdoc.bankruptcy}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Transfer.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocTransfer)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.Transfer.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.userdoc.transfer}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Pledge.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocPledge)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.Pledge.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.userdoc.pledge}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Entry_changes.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocEntryChanges)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.Entry_changes.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.userdoc.entry.changes}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Licenses.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocLicense)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.Licenses.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.userdoc.license}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Renewal.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocRenewal)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.Renewal.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.userdoc.renewal}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.CourtAppeals.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocCourtAppeals)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.CourtAppeals.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.userdoc.court.appeals}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Objection.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocObjection)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.Objection.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.userdoc.objection}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.SpcAnnulmentRequest.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocSpcAnnulmentRequest)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.SpcAnnulmentRequest.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.userdoc.spc.annulment}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.PatentAnnulmentRequest.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocPatentAnnulmentRequest)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.PatentAnnulmentRequest.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.userdoc.patent.annulment}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.UtilityModelAnnulmentRequest.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocUtilityModelAnnulmentRequest)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.UtilityModelAnnulmentRequest.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.userdoc.um.annulment}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.DesignAnnulmentRequest.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocDesignAnnulmentRequest)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.DesignAnnulmentRequest.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.userdoc.design.annulment}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Revocation.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocRevocation)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.Revocation.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.userdoc.revocation}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Invalidity.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocInvalidity)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.Invalidity.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.userdoc.invalidity}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.ReviewerSquad.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocReviewerSquad)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.ReviewerSquad.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.userdoc.reviewer.squad}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Withdrawal.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocWithdrawal)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.Withdrawal.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.userdoc.withdrawal}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.GenericRecordal.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocGenericRecordal)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.GenericRecordal.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.userdoc.recordalData}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Security_measure.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocSecurityMeasure)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.Security_measure.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.userdoc.security.measure}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.InternationalRegistration.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocInternationalRegistration)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.InternationalRegistration.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.international.registration}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.ServiceScope.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocServiceScope)}">
+                        <div th:remove="tag" th:if="${userdocUtils.isUserdocMainObjectMarkOrDesign(userdoc.userdocParentData)}">
+                            <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.ServiceScope.code()}" class="draggable">
+                                <span class="sb-ckb-cEvent" th:text="#{panel.title.userdoc.serviceScope}"></span>
+                                <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                                <label class="empty" th:for="${panelName}"></label>
+                            </li>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.InternationalNiceClassesRestrictions.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocInternationalNiceClasses)}">
+                        <div th:remove="tag" th:if="${userdocUtils.isUserdocMainObjectInternationalMark(userdoc.userdocParentData)}">
+                              <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.InternationalNiceClassesRestrictions.code()}" class="draggable">
+                                  <span class="sb-ckb-cEvent" th:text="#{panel.title.international.nice.classes.restrictions}"></span>
+                                  <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                                  <label class="empty" th:for="${panelName}"></label>
+                              </li>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Approved.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocApproved)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.Approved.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.userdoc.approved}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Claim.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocClaim)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.Claim.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.userdoc.claim}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Persons.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocPersons)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.Persons.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.person}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Process.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocProcess)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.Process.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.process}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Payments.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocPayments)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.Payments.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.payments}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+
+
+                <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.History.code())}">
+                    <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.IpObjectsHistory)}">
+                        <li th:attr="data-group=${panelName}, data-checked=true" th:with="panelName=${panelEnum.History.code()}" class="draggable">
+                            <span class="sb-ckb-cEvent" th:text="#{panel.title.history}"></span>
+                            <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off"/>
+                            <label class="empty" th:for="${panelName}"></label>
+                        </li>
+                    </div>
+                </div>
+            </ul>
+        </nav>
+    </div>
+
+</div>
+
+</body>
+</html>

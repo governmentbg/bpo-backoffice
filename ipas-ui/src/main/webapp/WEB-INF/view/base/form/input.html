@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:remove="tag" th:fragment="text(id, label)">
+    <div class="input-field" th:classappend="${isDisabled} ? 'readonly'">
+        <input th:id="${id}"
+               th:type="text"
+               th:title="${title != null} ? ${title} : ${label}"
+               th:value="${value != null} ? ${value}"
+               th:classappend="${classes != null} ? ${classes}"
+               th:disabled="${(isDisabled == null)} ? false : ${isDisabled}"
+               th:attrappend="name=${name != null} ? ${name},
+                              placeholder=${placeholder != null} ? ${placeholder},
+                              data-regex=${regex != null} ? ${regex},
+                              data-autocomplete=${autocomplete != null} ? ${autocomplete},
+                              data-url=${url != null} ? ${url},
+                              data-type=${dataType != null} ? ${dataType},
+                              data-id=${dataId != null} ? ${dataId},
+                              data-flag=${dataFlag != null} ? ${dataFlag},
+                              data-order=${dataOrder != null} ? ${dataOrder},
+                              data-start=${dataStart != null} ? ${dataStart},
+                              data-end=${dataEnd != null} ? ${dataEnd}"
+        >
+        <label th:for="${id}" th:text="${label}"></label>
+        <div th:replace="base/validation :: validation-message(${validationErrors},${id})"></div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="datepicker(id, label)">
+    <div class="input-field" th:classappend="${isDisabled} ? 'readonly'">
+        <input data-type="datepicker"
+               th:id="${id}"
+               th:type="text"
+               th:title="${title != null} ? ${title} : ${label}"
+               th:value="${value != null} ? ${value}"
+               th:class="date"
+               th:classappend="${classes != null} ? ${classes}"
+               th:disabled="${(isDisabled == null)} ? false : ${isDisabled}"
+               th:attrappend="name=${name != null} ? ${name},
+               data-min-date=${dataMinDate != null} ? ${dataMinDate},
+               data-max-date=${dataMaxDate != null} ? ${dataMaxDate}"
+        >
+        <label th:for="${id}" th:text="${label}"></label>
+        <div th:replace="base/validation :: validation-message(${validationErrors},${id})"></div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="validation-wrapper(id, label, validationWrapperId)">
+    <div class="input-field">
+        <input th:id="${id}"
+               th:type="text"
+               th:title="${title != null} ? ${title} : ${label}"
+               th:value="${value != null} ? ${value}"
+               th:classappend="${classes != null} ? ${classes}"
+               th:disabled="${(isDisabled == null)} ? false : ${isDisabled}"
+               th:attrappend="data-regex=${regex != null} ? ${regex},
+                              data-url=${url != null} ? ${url},
+                              data-type=${dataType != null} ? ${dataType},
+                              data-id=${dataId != null} ? ${dataId}"
+        >
+        <label th:for="${id}" th:text="${label}"></label>
+        <div th:id="${validationWrapperId}">
+            <div th:replace="base/validation :: validation-message(${validationErrors},${id})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="readonly(label, value)">
+    <div class="input-field readonly" th:classappend ="${divClasses != null} ? ${divClasses}">
+        <input th:class="form-ignore"
+               th:type="text"
+               th:id="${id != null} ? ${id}"
+               th:disabled="true"
+               th:styleappend="${style != null} ? ${style}"
+               th:classappend="${classes != null} ? ${classes}"
+               th:title="${title != null} ? ${title} : ${label}"
+               th:value="${value}"
+               th:attrappend="placeholder=${placeholder != null} ? ${placeholder}">
+        <label class="active" th:text="${label}"></label>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="hidden(id, value)">
+    <input th:id="${id}"
+           th:type="'hidden'"
+           th:value="${value != null} ? ${value}"
+           th:classappend="${classes != null} ? ${classes}"
+           th:disabled="${(isDisabled == null)} ? false : ${isDisabled}"
+           th:attrappend="name=${name != null} ? ${name}">
+</div>
+
+<div th:remove="tag" th:fragment="file(id)">
+    <input th:id="${id}"
+           th:type="file"
+           th:styleappend="${style != null} ? ${style}"
+           th:classappend="${classes != null} ? ${classes}"
+           th:disabled="${(isDisabled == null)} ? false : ${isDisabled}"
+           th:attrappend="name=${name != null} ? ${name},
+                          accept=${accept != null} ? ${accept},
+                          data-url=${url != null} ? ${url},
+                          data-url-upload=${urlUpload != null} ? ${urlUpload}
+
+">
+</div>
+
+
+<div th:remove="tag" th:fragment="multiple-file(id)">
+    <input th:id="${id}" multiple
+           th:type="file"
+           th:styleappend="${style != null} ? ${style}"
+           th:classappend="${classes != null} ? ${classes}"
+           th:disabled="${(isDisabled == null)} ? false : ${isDisabled}"
+           th:attrappend="name=${name != null} ? ${name},
+                          accept=${accept != null} ? ${accept},
+                          data-url=${url != null} ? ${url},
+                          data-url-upload=${urlUpload != null} ? ${urlUpload},
+                          data-filing-number=${filingNumber != null} ? ${filingNumber}
+
+">
+</div>
+
+
+<div th:remove="tag" th:fragment="link(label, text, dataUrl)">
+    <div class="input-field readonly">
+        <div th:replace="~{base/form/label :: active(title = ${label})}"></div>
+        <div class="m_B10">
+            <span class="inline-block m_T5">
+                <a class="b0 p_0" href="javascript:void(0)" th:text="${text}"
+                   th:attrappend="data-action=${dataAction != null} ? ${dataAction},
+                          data-url=${dataUrl != null} ? ${dataUrl},
+                          data-number=${dataNumber != null} ? ${dataNumber},
+                          data-process=${dataProcess != null} ? ${dataProcess},
+                          data-offidoc=${dataOffidoc != null} ? ${dataOffidoc},
+                          data-document=${dataDocument != null} ? ${dataDocument}
+">
+                </a>
+            </span>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="link-href(label, text, href)">
+    <div class="input-field readonly">
+        <div th:replace="~{base/form/label :: active(title = ${label})}"></div>
+        <div class="m_B10">
+            <span class="inline-block m_T5">
+                <a class="b0 p_0" th:href="${href}" th:text="${text}"> </a>
+            </span>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

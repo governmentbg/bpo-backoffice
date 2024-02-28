@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="base/template :: head(title = (#{gi.breadcrumb.prefix} + ' ' + ${mark.file.fileId.createFilingNumber()}))"></head>
+
+<!--/*@thymesVar id="panelEnum" type="com.duosoft.ipas.enums.MarkPanel"*/-->
+<body class="dark left-sidebar-show" th:with="panelEnum=${T(com.duosoft.ipas.enums.MarkPanel)}">
+
+<th:block th:with="panelsList=(${{panelEnum.IdentityData.code(),
+                                 panelEnum.MainData.code(),
+                                 panelEnum.NiceClasses.code(),
+                                 panelEnum.Persons.code(),
+                                 panelEnum.Recordals.code(),
+                                 panelEnum.Publication.code(),
+                                 panelEnum.Process.code(),
+                                 panelEnum.Payments.code(),
+                                 panelEnum.History.code()}
+                                 })">
+
+    <div th:replace="ipobjects/marklike/common/viewpage/mark_view_page :: content(${panelsList},'geographical_indications')"></div>
+</th:block>
+
+</body>
+</html>

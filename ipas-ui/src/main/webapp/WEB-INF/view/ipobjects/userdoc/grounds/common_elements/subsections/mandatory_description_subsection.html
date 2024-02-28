@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="mandatory-description-earlier-right-type-subsection(rootGround)">
+
+    <div class="m_T30 m_B10 ground-subsection-div-title">
+        <h4 style="display: inline-block" th:text="#{'ground.common.text.section.title.'+${rootGround.earlierRightType}}"></h4>
+    </div>
+    <div class="col-12 m_T5">
+        <div th:replace="~{base/form/textarea :: basic(id = 'root-ground-common-text', value = ${rootGround.groundCommonText}, label = #{'ground.common.text.label.'+${rootGround.earlierRightType}})}"></div>
+    </div>
+</div>
+
+</body>
+</html>

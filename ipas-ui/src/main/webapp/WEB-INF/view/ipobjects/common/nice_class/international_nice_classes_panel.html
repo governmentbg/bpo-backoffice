@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="internationalNiceClasses" type="java.util.List<bg.duosoft.ipas.core.model.mark.CInternationalNiceClass>"*/-->
+<div th:fragment="international-nice-classes(internationalNiceClasses, niceListType)">
+  <div th:with="tagCodes = ${T(bg.duosoft.ipas.enums.InternationalTagCode)},
+                collectionUtils = ${T(org.springframework.util.CollectionUtils)},
+                internationalMarkUtils=${T(bg.duosoft.ipas.util.mark.InternationalMarkUtils)}">
+
+        <div th:remove="tag" th:switch="${!T(org.springframework.util.CollectionUtils).isEmpty(internationalNiceClasses)}">
+            <div th:case="true">
+                <div class="col-12">
+                    <div th:id="|international-nice-classes-table-${tagCodes.INTL_TAG_HEADER}|" class="nice-classes-table"
+                    th:with="headerNiceClasses = ${internationalMarkUtils.filterNiceClassesByTagCode(internationalNiceClasses, tagCodes.INTL_TAG_HEADER)}">
+                         <div  th:if="${!collectionUtils.isEmpty(headerNiceClasses)}">
+                              <div th:replace="~{base/form/input :: readonly(label = #{international.nice.tag.code.header}, value = ${headerNiceClasses.get(0).tagDescription})}"></div>
+                         </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div th:id="|international-nice-classes-table-${tagCodes.INTL_TAG_FOOTER}|" class="nice-classes-table"
+                    th:with="footerNiceClasses = ${internationalMarkUtils.filterNiceClassesByTagCode(internationalNiceClasses, tagCodes.INTL_TAG_FOOTER)}">
+                          <div  th:if="${!collectionUtils.isEmpty(footerNiceClasses)}">
+                              <div th:replace="~{base/form/input :: readonly(label = #{international.nice.tag.code.footer}, value = ${footerNiceClasses.get(0).tagDescription})}"></div>
+                          </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                     <div th:id="|international-nice-classes-table-${tagCodes.INTL_TAG_LIMTO}|" class="nice-classes-table"
+                     th:with="limtoNiceClasses = ${internationalMarkUtils.filterNiceClassesByTagCode(internationalNiceClasses, tagCodes.INTL_TAG_LIMTO)}">
+                           <div  th:if="${!collectionUtils.isEmpty(limtoNiceClasses)}">
+                                <div class="col-12">
+                                      <h4 class="inline-block" th:text="#{international.nice.tag.code.limto}"></h4>
+                                </div>
+                                <div th:replace="ipobjects/common/nice_class/international_nice_classes_table :: international-nice-classes-table(niceClassList=${limtoNiceClasses}, niceListType=${niceListType})"></div>
+                           </div>
+                     </div>
+                </div>
+                <div class="col-12">
+                <div th:id="|international-nice-classes-table-${tagCodes.INTL_TAG_REMVD}|" class="nice-classes-table"
+                th:with="remvdNiceClasses = ${internationalMarkUtils.filterNiceClassesByTagCode(internationalNiceClasses, tagCodes.INTL_TAG_REMVD)}">
+                           <div  th:if="${!collectionUtils.isEmpty(remvdNiceClasses)}">
+                               <div class="col-12">
+                                    <h4 class="inline-block" th:text="#{international.nice.tag.code.remvd}"></h4>
+                               </div>
+                               <div th:replace="ipobjects/common/nice_class/international_nice_classes_table :: international-nice-classes-table(niceClassList=${remvdNiceClasses}, niceListType=${niceListType})"></div>
+                           </div>
+                </div>
+                </div>
+            </div>
+            <div th:case="*">
+                <div class="row m_T10">
+                     <div class="col-12">
+                        <div th:replace="base/message :: info(#{interternational.nice.classes.missing})"></div>
+                     </div>
+                 </div>
+            </div>
+       </div>
+
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="publication" type="bg.duosoft.ipas.persistence.model.nonentity.PublicationInfoResult"*/-->
+<div th:fragment="publication(publications)">
+    <div th:remove="tag" th:switch="${hasError}">
+        <div th:remove="tag" th:case="true">
+            <div class="row m_B10">
+                <div th:replace=":: simple-publications-panel-header"></div>
+            </div>
+            <div th:replace="base/message :: error('Възникна грешка при опит за извличане на инфорамция за публикации !')"></div>
+        </div>
+        <div th:remove="tag" th:case="*">
+            <div th:remove="tag" th:switch="${!T(org.springframework.util.CollectionUtils).isEmpty(publications)}">
+                <div th:case="true">
+                    <div th:replace=":: simple-publications-panel-header"></div>
+                    <div th:replace=":: publications-body(publications=${publications})"></div>
+                </div>
+                <div th:case="*">
+                    <div class="row">
+                        <div th:replace=":: simple-publications-panel-header"></div>
+                    </div>
+                    <div class="row m_T10">
+                        <div class="col-12">
+                            <div th:replace="base/message :: info('Няма намерени публикации !')"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="publications-body(publications)">
+    <div class="row">
+        <div class="col-12">
+            <table class="simple">
+                <thead>
+                <tr>
+                    <th th:text="'Дата на публикуване'"></th>
+                    <th th:text="'Бюлетин'"></th>
+                    <th th:text="'Раздел'"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="publication : ${publications}">
+                    <td th:text="${#dates.format(publication.publicationDate, T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}">...</td>
+                    <td th:text="${publication.journalCode}"></td>
+                    <td th:text="${publication.definition}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="publications-loader">
+    <div th:replace=":: simple-publications-panel-header"></div>
+    <div th:replace="base/loader :: local-loader"></div>
+</div>
+
+<div th:fragment="simple-publications-panel-header">
+    <div class="col-12">
+        <h3 class="inline-block" th:text="#{panel.title.publication}"></h3>
+    </div>
+</div>
+
+</body>
+</html>

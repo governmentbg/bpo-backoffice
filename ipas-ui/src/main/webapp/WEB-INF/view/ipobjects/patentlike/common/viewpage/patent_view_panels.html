@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="patent" type="bg.duosoft.ipas.core.model.patent.CPatent"*/-->
+<div th:remove="tag" th:fragment="identity-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${T(com.duosoft.ipas.enums.PatentPanel).IdentityData.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.identity},panel=${panelName},actionURL=@{/identity/edit-panel-identity},initURL=null,editEnabled=${editEnabled && hasDetailDataAccessFlag})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/common/identity/identity_panel :: identity-data(${patent.file},${applicationTypesMap},${applicationSubTypes},${lawMap},${relationshipTypeMap},${receptionRequest},${patent.relationshipExtended},${patent.patentEFilingData},null,${patent?.patentDetails?.notInForceDate})"></div>
+        </div>
+    </div>
+</div>
+
+
+<div th:remove="tag" th:fragment="spc-object-identity-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${T(com.duosoft.ipas.enums.PatentPanel).SpcIdentityData.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.identity},panel=${panelName},actionURL=@{/spc/identity/edit-panel-identity},initURL=null,editEnabled=${editEnabled && hasDetailDataAccessFlag})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/patentlike/spc/spc_identity_panel :: spc-identity(${patent.file},${applicationTypesMap},${applicationSubTypes},${lawMap},${patent.patentEFilingData},${patent?.patentDetails?.notInForceDate})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="main-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${patentPanelEnum.MainData.code()}" >
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{'detail.data.'+${panelPrefix}},
+                                                                            panel=${panelName},
+                                                                            actionURL=@{/patent-like/detail/edit-panel-detail},
+                                                                            initURL=@{/patent-like/detail/init-panel-main-data},editEnabled=${editEnabled})">
+        </div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/patentlike/common/details/patent_details_panel :: patent-details(${patent},${sessionObjectIdentifier},${hasSecretDataRights})"></div>
+        </div>
+    </div>
+</div>
+
+
+<div th:remove="tag" th:fragment="spc-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${patentPanelEnum.SpcMainData.code()}" >
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.spc},
+                                                                            panel=${panelName},
+                                                                            actionURL=@{/spc/detail/edit-panel-detail},
+                                                                            initURL=@{/{panelPrefix}/init-panel-session-objects(panelPrefix=${panelPrefix})},editEnabled=${editEnabled})">
+        </div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/patentlike/spc/spc_details_panel :: spc-details(${patent})"></div>
+        </div>
+    </div>
+</div>
+
+
+<div th:remove="tag" th:fragment="plant-main-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${patentPanelEnum.PlantMainData.code()}" >
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.plant},
+                                                                            panel=${panelName},
+                                                                            actionURL=@{/plants_and_breeds/detail/edit-panel-detail},
+                                                                            initURL=@{/{panelPrefix}/init-panel-session-objects(panelPrefix=${panelPrefix})},editEnabled=${editEnabled})">
+        </div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/patentlike/plant/plant_details_panel :: plant-details(${patent},${sessionObjectIdentifier},${hasSecretDataRights})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="drawings-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${patentPanelEnum.PublishedDrawingsData.code()}" >
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{'published.drawings.data.patent_like.'+${patent.file.fileId.fileType}},
+                                                                            panel=${panelName},
+                                                                            actionURL=@{/patent-like/drawing/edit-published-drawings},
+                                                                            initURL=@{/{panelPrefix}/init-panel-session-objects(panelPrefix=${panelPrefix})},editEnabled=${editEnabled})">
+        </div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/patentlike/common/drawings/drawings_panel :: drawings(${patent.technicalData.drawingList},${sessionObjectIdentifier})"></div>
+        </div>
+    </div>
+</div>
+
+
+<div th:remove="tag" th:fragment="design-drawings-data" th:with="panelName=${patentPanelEnum.DesignDrawingsData.code()}">
+    <div th:if="${T(org.springframework.util.CollectionUtils).isEmpty(singleDesigns)}" th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName},data-url=@{/design/detail/load-main-design-panel}">
+        <div th:replace="ipobjects/patentlike/design/main_design_panel :: single-designs-loader"></div>
+    </div>
+    <div th:if="${!T(org.springframework.util.CollectionUtils).isEmpty(singleDesigns)}" th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}">
+        <div th:replace="ipobjects/patentlike/design/main_design_panel :: main_design_details(${patent},${singleDesigns},${sessionObjectIdentifier})"></div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="citations-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${patentPanelEnum.CitationsData.code()}" >
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{'panel.title.patent.citations'},
+                                                                            panel=${panelName},
+                                                                            actionURL=@{/patent-like/citations/edit-panel},
+                                                                            initURL=@{/{panelPrefix}/init-panel-session-objects(panelPrefix=${panelPrefix})},editEnabled=${editEnabled})">
+        </div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/patentlike/common/citations/citations_panel :: patent-citations(${patent.technicalData.citationList})"></div>
+        </div>
+    </div>
+</div>
+
+
+<div th:remove="tag" th:fragment="claims-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${patentPanelEnum.ClaimsData.code()}" >
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{'published.claims.data.patent_like'},
+                                                                            panel=${panelName},
+                                                                            actionURL=@{/patent-like/claim/edit-claims},
+                                                                            initURL=@{/{panelPrefix}/init-panel-session-objects(panelPrefix=${panelPrefix})},editEnabled=${editEnabled})">
+        </div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/patentlike/common/claims/claims :: patent-claims(${patent.technicalData.claimList})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="cpc-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${patentPanelEnum.CpcData.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.cpc.classes},
+                                                                            panel=${panelName},
+                                                                            actionURL=@{/patent-like/cpc/edit-panel-cpc},
+                                                                            initURL=@{/{panelPrefix}/init-panel-session-objects(panelPrefix=${panelPrefix})},editEnabled=${editEnabled})">
+        </div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/patentlike/common/cpc/cpc_panel :: patent-cpc(${patent.technicalData.cpcClassList})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="ipc-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${patentPanelEnum.IpcData.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.ipc.classes},
+                                                                            panel=${panelName},
+                                                                            actionURL=@{/patent-like/ipc/edit-panel-ipc},
+                                                                            initURL=@{/{panelPrefix}/init-panel-session-objects(panelPrefix=${panelPrefix})},editEnabled=${editEnabled})">
+        </div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/patentlike/common/ipc/ipc_panel :: patent-ipc(${patent.technicalData.ipcClassList})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="person-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${patentPanelEnum.Persons.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.person},
+                                                                            panel=${panelName},
+                                                                            actionURL=@{/person/update-person-data},
+                                                                            initURL=@{/{panelPrefix}/init-panel-session-objects(panelPrefix=${panelPrefix})},editEnabled=${editEnabled})">
+        </div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/patentlike/common/person/person_panel :: persons(${patent.file},${patent.authorshipData})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="patent-rights-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${patentPanelEnum.RightsData.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.claims},
+                                                                            panel=${panelName},
+                                                                            actionURL=@{/{panelPrefix}/edit-panel-rights(panelPrefix=${panelPrefix})},
+                                                                            initURL=@{/{panelPrefix}/init-panel-session-objects(panelPrefix=${panelPrefix})},editEnabled=${editEnabled})">
+        </div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/patentlike/common/rights/rights_panel :: rights(${patent},${divisionalData})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="publication-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName},data-url=@{/publications/load-panel}" th:with="panelName=${patentPanelEnum.Publication.code()}">
+        <div th:replace="ipobjects/common/publication/publication_panel :: publications-loader"></div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="recordals-data">
+    <div th:remove="tag" th:if="${!#lists.isEmpty(patent.file.fileRecordals)}">
+        <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${T(com.duosoft.ipas.enums.PatentPanel).Recordals.code()}">
+            <div class="row m_B10">
+                <div class="col-10">
+                    <h3 class="inline-block" th:text="#{panel.title.recordals}"></h3>
+                </div>
+            </div>
+            <div th:id="|panel-body-${panelName}|">
+                <div th:replace="ipobjects/common/recordal/recordals_panel :: recordals(${patent.file.fileRecordals})"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="process-data" th:with="panelName=${T(com.duosoft.ipas.enums.PatentPanel).Process.code()}">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName},data-url=@{/process/load-panel},data-process=|${patent.file.processId.processType}-${patent.file.processId.processNbr}|">
+        <div th:replace="ipobjects/common/process/process_panel :: loader"></div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="payments-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName},data-url=@{/payments/load-panel}" th:with="panelName=${patentPanelEnum.Payments.code()}">
+        <div th:replace="ipobjects/common/payments/payments_panel :: payments-loader"></div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="history-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName},data-url=@{/file-history/load-panel}" th:with="panelName=${T(com.duosoft.ipas.enums.PatentPanel).History.code()}">
+        <div th:replace="ipobjects/common/history/history_panel :: history-loader"></div>
+    </div>
+</div>
+
+
+</body>
+</html>

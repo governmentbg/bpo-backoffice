@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="receptionForm" type="com.duosoft.ipas.webmodel.ReceptionForm"*/-->
+<div th:fragment="search" th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)}, objectsUtils=${T(java.util.Objects)}">
+    <div th:id="search-eupatent-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="#{reception.search.eu.patent}"></h4>
+            </div>
+            <div class="m_T10">
+                <div class="row m_B10">
+                    <div class="col-12">
+                        <div th:replace="~{base/form/radio :: basic(name = 'search-eupatent-radio', label = #{object.filingNumber}, value = ${T(bg.duosoft.ipas.enums.ApplicationSearchType).FILE_NUMBER.code()}, classes = 'm_R10')}"></div>
+                        <div th:replace="~{base/form/radio :: basic(name = 'search-eupatent-radio', label = #{object.registrationNumber}, value = ${T(bg.duosoft.ipas.enums.ApplicationSearchType).REGISTRATION_NUMBER.code()}, checked = true)}"></div>
+                    </div>
+                </div>
+                <div class="row m_T5">
+                    <div class="col-12">
+                        <div th:replace="~{base/form/input :: text(id = 'reception-euPatentSearchInput', label = #{object.filingNumber}, classes = 'default-focus')}"></div>
+                    </div>
+                </div>
+                <div class="row right-align m_T10">
+                    <div class="col-12">
+                        <a th:replace="~{base/form/button :: material-btn(label = #{btn.search}, dataAction = 'submit-eupatent-search', dataUrl = @{/reception/create/eupatent/search}, icon = 'search', classes = 'm_R20')}"></a>
+                        <a th:replace="~{base/form/button :: material-btn(label = #{btn.clear}, dataAction = 'clear-eupatent-search', icon = 'clear')}"></a>
+                    </div>
+                </div>
+                <div class="row m_T10" th:id="eupatent-search-result-wrapper"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!--/*@thymesVar id="ebdPatent" type="bg.duosoft.ipas.core.model.ebddownload.CEbdPatent"*/-->
+<div th:fragment="result(ebdPatent)"
+     th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)},
+     objectsUtils=${T(java.util.Objects)}" class="m_T10">
+
+    <div th:remove="tag" th:switch="${objectsUtils.isNull(ebdPatent)}">
+        <div th:case="true">
+            <div th:replace="base/message :: warning(#{no.records.found})"></div>
+        </div>
+        <div th:case="*">
+            <table class="simple">
+                <thead>
+                <tr>
+                    <th th:text="#{search.result.filingNumber}"></th>
+                    <th th:text="#{search.result.filingDate}"></th>
+                    <th th:if="${objectsUtils.nonNull(ebdPatent.registrationNumber)}" th:text="#{search.result.registrationNumber}"></th>
+                    <th th:if="${objectsUtils.nonNull(ebdPatent.registrationDate)}" th:text="#{search.result.registrationDate}"></th>
+                    <th th:text="#{search.result.description}"></th>
+                    <th th:if="${objectsUtils.nonNull(ebdPatent.ownerNames)}" th:text="#{search.result.owners}"></th>
+                    <th th:text="#{search.result.status}"></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <span th:text="${ebdPatent.filingNumber}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${#dates.format(ebdPatent.filingDate,T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}"></span>
+                    </td>
+                    <td th:if="${objectsUtils.nonNull(ebdPatent.registrationNumber)}">
+                        <span th:text="${ebdPatent.registrationNumber}"></span>
+                    </td>
+                    <td th:if="${objectsUtils.nonNull(ebdPatent.registrationDate)}">
+                        <span th:text="${#dates.format(ebdPatent.registrationDate,T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${ebdPatent.title}"></span>
+                    </td>
+                    <td th:if="${objectsUtils.nonNull(ebdPatent.ownerNames)}">
+                        <span th:text="${ebdPatent.ownerNames}"></span>
+                    </td>
+                    <td>
+                        <div th:remove="tag" th:switch="${objectsUtils.isNull(ebdPatent.backofficeFileNbr)}">
+                            <span th:case="true" th:text="${ebdPatent.status}"></span>
+                            <span th:case="false" th:text="${ebdPatent.ipasStatus}"></span>
+                        </div>
+                    </td>
+                    <td style="vertical-align: middle">
+                        <a class="button m-blue darken-3 white-text btn-sm result-btn m_0"
+                           th:text="#{btn.select.small}"
+                           th:attr="data-action='add-reception-eupatent',
+                                    data-number=${ebdPatent.filingNumber},
+                                    data-url=@{/reception/create/eupatent/add}">
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="vienna(viennaClassList, attachmentIndex, attachmentType)">
+    <div class="row m_B20" th:if="${!T(org.springframework.util.CollectionUtils).isEmpty(viennaClassList)}">
+        <div class="col-12">
+            <table class="simple">
+                <thead>
+                <tr>
+                    <th style="width: 10%" th:text="'Клас'"></th>
+                    <th style="width: 85%" th:text="'Описание'"></th>
+                    <th class="hidden-element"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="viennaClass : ${viennaClassList}">
+                    <td th:text="${T(com.duosoft.ipas.util.CoreUtils).formatViennaClass(viennaClass)}"></td>
+                    <td th:text="${viennaClass.viennaDescription}"></td>
+                    <td class="hidden-element center">
+                        <a class="btn-floating ipas small waves-effect waves-light" th:title="'Изтрий'"
+                           th:attr="data-action='delete-vienna-class',
+                                    data-category=${viennaClass.viennaCategory},
+                                    data-division=${viennaClass.viennaDivision},
+                                    data-section=${viennaClass.viennaSection},
+                                    data-index=${attachmentIndex},
+                                    data-type=${attachmentType},
+                                    data-url=@{/mark/delete-vienna-class},
+                                    data-message='Сигурни ли сте, че искате да изтриете този клас ?'">
+                            <i class="material-icons">close</i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg">
+
+<head th:replace="base/template :: head(title=#{international.marks.title})"></head>
+
+<body class="dark left-sidebar-show">
+
+<header class="app-header" th:replace="base/header"></header>
+
+<div class="app-body" th:with="securityUtils=${T(bg.duosoft.ipas.util.security.SecurityUtils)}, securityRoles=${T( bg.duosoft.ipas.enums.security.SecurityRole)}">
+    <div th:replace="base/left-sidebars :: list(urls = ${T(com.duosoft.ipas.util.UrlMap).getHomeUrlsFiltered()})"></div>
+
+    <main class="main">
+        <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+        <div class="inner continer">
+            <div class="home-panel-messages-div">
+                <div th:replace="base/toast/message :: error(message = ${errorMessage},unescaped = true)"></div>
+                <div th:replace="base/toast/message :: success(message = ${successMessage},unescaped = true)"></div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="panel">
+                        <div class="center">
+                            <h1 class="section-header" th:text="|#{international.marks.for.bordero(${marksFilter.gazno},${#dates.format(enotifPubDate,T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)})}|"></h1>
+                        </div>
+
+                        <div class="row m_B20">
+                            <div class="col-5">
+                                <div th:replace="~{base/form/input :: text(id = 'responsibleUser-filter', label = #{filter.responsibleUser.label}, url = @{/user/users-autocomplete}, classes = 'autocomplete-user')}"></div>
+                            </div>
+                            <div class="col-1 m_T10">
+                                <a th:title="#{process.panel.btn.responsibleUser.edit}" class="btn-floating ipas waves-effect waves-light action-button-top"
+                                   th:attr="data-action='generic-responsible-user-change',redirect-url='/international-marks/list?gazno='+${marksFilter.gazno},data-url=@{/generic-responsible-user-change/change}">
+                                    <i class="material-icons">arrow_forward</i>
+                                </a>
+                            </div>
+<!--                            <div class="col-3 m_T10-i">-->
+<!--                                <div th:replace="~{base/form/checkbox :: basic(id = 'imark-without-divided-checkbox', label = 'Без разделените', isChecked = ${marksFilter.withoutDivided}, url = @{/international-marks/search})}"></div>-->
+<!--                            </div>-->
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12" th:id="international-marks-table-wrapper" th:attr="data-url=@{/international-marks/update-table}">
+                                <div th:replace="home/international_marks/international_marks_table :: table(marksList=${marksList},marksCount=${marksCount},marksFilter=${marksFilter})"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<footer class="page-footer" th:replace="base/footer"></footer>
+<div th:replace="base/template :: js-footer" th:remove="tag"></div>
+</body>
+</html>

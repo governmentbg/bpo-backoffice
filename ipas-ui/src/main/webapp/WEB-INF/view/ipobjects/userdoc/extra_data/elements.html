@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="file" type="bg.duosoft.ipas.core.model.file.CFile"*/-->
+<div th:remove="tag" th:fragment="dataDate(field, value, classes, label)">
+    <div th:class="${classes}" th:classappend="(${#strings.isEmpty(value)}?none)">
+        <div class="input-field" th:with="id='object-'+${panelPointer}+'-document-extraData-'+${field}">
+            <input th:id="${id}" type="text" data-type="datepicker"
+                   th:value="${#dates.format(value,T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}">
+            <label th:for="${id}" th:text="${label}"></label>
+            <div th:replace="base/validation :: validation-message(${validationErrors},${id})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="dataText(field, value, classes, label)">
+    <div th:class="${classes}" th:classappend="(${#strings.isEmpty(value)}?none)">
+        <div class="input-field" th:with="id='object-'+${panelPointer}+'-document-extraData-'+${field}">
+            <input th:id="${id}" type="text" th:value="${value}">
+            <label th:for="${id}" th:text="${label}"></label>
+            <div th:replace="base/validation :: validation-message(${validationErrors},${id})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="dataText-textarea(field, value, wrapperClasses, label, textareaClasses)">
+    <div th:class="${wrapperClasses}" th:classappend="(${#strings.isEmpty(value)}?none)">
+        <div class="input-field" th:with="id='object-'+${panelPointer}+'-document-extraData-'+${field}">
+            <textarea th:id="${id}" class="materialize-textarea" th:text="${value}" th:classappend="${true}? ${textareaClasses}"></textarea>
+            <label th:for="${id}" th:text="${label}"></label>
+            <div th:replace="base/validation :: validation-message(${validationErrors},${id})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="dataText-autocomplete(field, value, classes, label, autocomplete, url,visibleOnEmpty)">
+    <div th:class="${classes}" th:classappend="(${#strings.isEmpty(value) && visibleOnEmpty==false}?none)">
+        <div class="input-field" th:with="id='object-'+${panelPointer}+'-document-extraData-'+${field}">
+            <input th:attrappend="data-autocomplete=${autocomplete != null}?${autocomplete},data-url=${url != null}?${url}" th:id="${id}" type="text" th:value="${value}">
+            <label th:for="${id}" th:text="${label}"></label>
+            <div th:replace="base/validation :: validation-message(${validationErrors},${id})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="dataNbr(field, value, classes, label)">
+    <div th:class="${classes}" th:classappend="(${#strings.isEmpty(value)}?none)">
+        <div class="input-field" th:with="id='object-'+${panelPointer}+'-document-extraData-'+${field}">
+            <input th:id="${id}" type="text" th:value="${value}" class="number">
+            <label th:for="${id}" th:text="${label}"></label>
+            <div th:replace="base/validation :: validation-message(${validationErrors},${id})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="dataNbr-autocomplete(field, value, classes, label, autocomplete, url)">
+    <div th:class="${classes}" th:classappend="(${#strings.isEmpty(value)}?none)">
+        <div class="input-field" th:with="id='object-'+${panelPointer}+'-document-extraData-'+${field}">
+            <input th:attrappend="data-autocomplete=${autocomplete != null}?${autocomplete},data-url=${url != null}?${url}" th:id="${id}" type="text" th:value="${value}">
+            <label th:for="${id}" th:text="${label}"></label>
+            <div th:replace="base/validation :: validation-message(${validationErrors},${id})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="dataFlag(field, value, classes, label)">
+    <div th:class="${classes}">
+        <div class="input-field" th:with="id='object-'+${panelPointer}+'-document-extraData-'+${field}">
+            <div>
+                <label>
+                    <input th:id="${id}" th:type="checkbox" th:checked="${value}" />
+                    <span th:text="${label}"></span>
+                </label>
+                <div class="m_T5">
+                    <div class="m_T5" th:replace="base/validation :: validation-message(${validationErrors},${id})"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="dataFlag-radio(field, value, classes, label, checked)">
+    <div class="input-field m_0" th:with="id='object-document-extraData-'+${field}">
+        <div>
+            <label class="m_R10" th:with="name='object-document-extraData-'+${field}">
+                <input th:class="${classes}" th:name="${name}" th:value="${value}" th:type="radio"
+                       th:checked="${checked}"/>
+                <span th:text="${label}"></span>
+            </label>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="approvedData-radio(field, value, classes, label, checked)">
+    <div class="input-field m_0" th:with="id='object-approvedData-'+${field}">
+        <div>
+            <label class="m_R10" th:with="name='object-approvedData-'+${field}">
+                <input th:class="${classes}" th:name="${name}" th:value="${value}" th:type="radio"
+                       th:checked="${checked}"/>
+                <span th:text="${label}"></span>
+            </label>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

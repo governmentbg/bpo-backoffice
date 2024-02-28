@@ -1,0 +1,15 @@
+create table EXT_CORE.CF_OFFIDOC_TYPE_TEMPLATE
+(
+    OFFIDOC_TYP varchar(8)   not null
+        constraint CF_OFFIDOC_TYPE_TEMPLATE_CF_OFFIDOC_TYPE_fk
+            references IPASPROD.CF_OFFIDOC_TYPE,
+    NAME_WFILE  varchar(100) not null,
+    constraint CF_OFFIDOC_TYPE_TEMPLATE_pk
+        primary key nonclustered (OFFIDOC_TYP, NAME_WFILE)
+);
+
+INSERT INTO EXT_CORE.CF_OFFIDOC_TYPE_TEMPLATE (OFFIDOC_TYP, NAME_WFILE)
+SELECT t.OFFIDOC_TYP, t.NAME_WFILE
+FROM IPASPROD.CF_OFFIDOC_TYPE t;
+
+

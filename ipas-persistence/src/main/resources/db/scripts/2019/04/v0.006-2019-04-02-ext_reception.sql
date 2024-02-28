@@ -1,0 +1,65 @@
+--liquibase formatted sql
+--changeset ggeorgiev:6.1
+CREATE SCHEMA EXT_RECEPTION;
+
+--changeset ggeorgiev:6.2
+create table EXT_RECEPTION.CF_SUBMISSION_TYPE
+(
+	ID numeric(8) not null
+		constraint PK_CF_SUBMISSION_TYPE
+			primary key,
+	NAME varchar(255)
+);
+INSERT INTO EXT_RECEPTION.CF_SUBMISSION_TYPE (ID, NAME) VALUES (0, 'Електронно');
+INSERT INTO EXT_RECEPTION.CF_SUBMISSION_TYPE (ID, NAME) VALUES (1, 'На гише');
+INSERT INTO EXT_RECEPTION.CF_SUBMISSION_TYPE (ID, NAME) VALUES (3, 'По пощата');
+INSERT INTO EXT_RECEPTION.CF_SUBMISSION_TYPE (ID, NAME) VALUES (4, 'По факс');
+INSERT INTO EXT_RECEPTION.CF_SUBMISSION_TYPE (ID, NAME) VALUES (5, 'По e-mail');
+
+create table EXT_RECEPTION.CF_CORRESPONDENT_TYPE
+(
+	ID numeric(8) not null
+		constraint PK_CF_CORRESPONDENT_TYPE
+			primary key,
+	NAME varchar(255),
+  NAME_EN varchar(255)
+);
+
+INSERT INTO EXT_RECEPTION.CF_CORRESPONDENT_TYPE (ID, NAME,NAME_EN) VALUES (2,'Заявител', 'Applicant');
+INSERT INTO EXT_RECEPTION.CF_CORRESPONDENT_TYPE (ID, NAME,NAME_EN) VALUES (3,'Представител', 'Representative');
+
+create table EXT_RECEPTION.RECEPTION_REQUEST
+(
+	ID numeric(8) identity
+		constraint PK_RECEPTION_REQUEST
+			primary key,
+	FILE_SEQ varchar(2) not null,
+	FILE_TYP varchar(1) not null,
+	FILE_SER numeric(4) not null,
+	FILE_NBR numeric(10) not null,
+	EXTERNAL_ID numeric(8),
+	ORIGINAL_EXPECTED bit default 0,
+	SUBMISSION_TYPE numeric(8)
+		constraint RECEPTION_REQUEST_SUBMISSION_TYPE
+			references EXT_RECEPTION.CF_SUBMISSION_TYPE,
+	FILING_DATE datetime,
+	NAME varchar(500),
+	STATUS int default NULL
+);
+create index RECEPTION_FILE_INDEX
+	on EXT_RECEPTION.RECEPTION_REQUEST (FILE_NBR, FILE_SEQ, FILE_TYP, FILE_SER);
+
+create table EXT_RECEPTION.CORRESPONDENT
+(
+	RECEPTION_REQUEST_ID numeric(8) not null
+		constraint FK_CORRESPONDENT_REQUEST
+			references EXT_RECEPTION.RECEPTION_REQUEST,
+	PERSON_NBR numeric(18) not null,
+	ADDRESS_NBR numeric(18) not null,
+	TYPE numeric(8)
+		constraint FK_CORRESPONDENT_TYPE
+			references EXT_RECEPTION.CF_CORRESPONDENT_TYPE,
+	constraint CORRESPONDENT_RECEPTION_REQUEST_ID_PERSON_NBR_ADDRESS_NBR_pk
+		primary key (RECEPTION_REQUEST_ID, PERSON_NBR, ADDRESS_NBR)
+);
+

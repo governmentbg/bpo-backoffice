@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div class="row" th:fragment="panel-url-header(title,url,editEnabled)">
+    <div class="col-10">
+        <h3 class="panel-title" style="display: inline-block" th:text="${title}"></h3>
+    </div>
+    <div class="col-2 txtRight" th:if="${editEnabled}">
+        <a class="small sm-icn-edit m_T20 m_B10" th:target="_blank" th:href="${url}" th:title="'Редакция'"></a>
+    </div>
+</div>
+</body>
+</html>

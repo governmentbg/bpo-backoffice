@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="patent-details(patent,sessionObjectIdentifier,hasSecretDataRights)">
+    <div>
+        <div class="row">
+            <div class="col-12">
+                <div th:replace="~{base/form/textarea :: basic(id = 'patent-technicalData-title', value = ${patent.technicalData.title}, unescaped = true, label = #{bg.name.label})}"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div th:replace="~{base/form/textarea :: basic(id = 'patent-technicalData-englishTitle', value = ${patent.technicalData.englishTitle}, unescaped = true, label = #{en.name.label})}"></div>
+            </div>
+        </div>
+        <th:block th:if="${hasSecretDataRights}">
+            <div class="row">
+                <div class="col-12">
+                    <div th:replace="~{base/form/textarea :: basic(id = 'patent-technicalData-mainAbstract', value = ${patent.technicalData.mainAbstract}, unescaped = true, label = #{abstract.bg.name.label})}"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div th:replace="~{base/form/textarea :: basic(id = 'patent-technicalData-englishAbstract', value = ${patent.technicalData.englishAbstract}, unescaped = true, label = #{abstract.en.name.label})}"></div>
+                </div>
+            </div>
+        </th:block>
+
+
+        <div class="row">
+            <div>
+                <div class="col-6">
+                    <div th:replace="~{base/form/input :: text(id = 'patentDetails-drawingsCnt', label = #{drawings.count.label}, value = ${T(java.util.Objects).isNull(patent.patentDetails) ? '' : patent.patentDetails.drawings}, classes = 'number' )}"></div>
+                </div>
+            </div>
+            <div>
+                <div class="col-6">
+                    <div th:replace="~{base/form/input :: text(id = 'patentDetails-drawingPubl', label = #{drawing.for.publishing.label}, value = ${T(java.util.Objects).isNull(patent.patentDetails) ? '' : patent.patentDetails.drawingPublications}, classes = 'number' )}"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div>
+                <div class="col-6">
+                    <div th:replace="~{base/form/input :: text(id = 'patentDetails-claimsCnt', label = #{total.claims.number.label}, value = ${T(java.util.Objects).isNull(patent.patentDetails) ? '' : patent.patentDetails.claims}, classes = 'number' )}"></div>
+                </div>
+            </div>
+            <div>
+                <div class="col-6">
+                    <div th:replace="~{base/form/input :: text(id = 'patentDetails-inventionsGroupCnt', label = #{number.independent.claims.label}, value = ${T(java.util.Objects).isNull(patent.patentDetails) ? '' : patent.patentDetails.inventionsGroup}, classes = 'number' )}"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div>
+                <div class="col-6">
+                    <div th:replace="~{base/form/input :: text(id = 'patentDetails-descriptionPagesCnt', label = #{description.pages.number.label}, value = ${T(java.util.Objects).isNull(patent.patentDetails) ? '' : patent.patentDetails.descriptionPages}, classes = 'number' )}"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <th:block th:if="${hasSecretDataRights}">
+
+            <div th:id="patent-attachments-wrapper">
+                <div th:replace="ipobjects/patentlike/common/details/patent_attachments :: patent-attachments(${patent?.patentDetails?.patentAttachments},${sessionObjectIdentifier})"></div>
+            </div>
+
+            <div class="hidden-element">
+                <div class="col-6 m_T20-i">
+                    <div th:replace="~{base/form/select :: object(id = 'patent-attachmentType', label = 'Вид документ', objects = ${attachmentTypes},
+                     valuePointer = 'id', textPointer = 'name',classes = 'form-ignore')}"></div>
+                </div>
+                <div class="col-6 m_T20-i">
+                    <button th:text="'Добави документ'"
+                            th:attr="data-action='add-patent-attachment'" th:type="button"
+                            class="button sm-icn-add m_T10">
+                    </button>
+                </div>
+            </div>
+
+        </th:block>
+    </div>
+</div>
+
+</body>
+</html>

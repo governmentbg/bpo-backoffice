@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="lastAction" type="bg.duosoft.ipas.persistence.model.nonentity.IPObjectSimpleResult"*/-->
+<div th:fragment="table(expiringMarks)"
+     th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+
+    <div th:remove="tag" th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(expiringMarks)}">
+        <div th:remove="tag" th:case="true">
+            <div class="p_T20_B20">
+                <div class="bg__light-blue p_10 m_B10 m_T10 center">
+                    <span th:text="#{empty.list}"></span>
+                </div>
+            </div>
+        </div>
+        <div th:remove="tag" th:case="false">
+            <div class="row">
+                <div class="col-12">
+                    <span th:text="'Общ брой: '"></span>
+                    <span th:text="${#lists.size(expiringMarks)}"></span>
+                </div>
+            </div>
+            <div class="row m_T5">
+                <div class="col-12">
+                    <table class="simple bpo scroll-body small-size-body">
+                        <div>
+                            <thead>
+                            <tr>
+                                <th style="width: 50px">
+                                    <div th:replace="~{base/form/checkbox :: basic(id ='expiring-marks-checbox-all', label = '', isChecked = false, classes='bpo-table-header-checkbox')}"></div>
+                                </th>
+                                <th style="width: 50px" th:text="#{number}"></th>
+                                <th style="width: 150px" th:text="'Заявителски номер'"></th>
+                                <th style="width: 100px" th:text="'Изтича на'"></th>
+                                <th th:text="'Наименование'"></th>
+                            </tr>
+                            </thead>
+                        </div>
+                        <div>
+                            <tbody>
+                            <tr th:each="mark,markStat : ${expiringMarks}">
+                                <td style="width: 50px">
+                                    <div th:replace="~{base/form/checkbox :: basic(id = ${mark.fileId.createFilingNumber()}, label = '', isChecked = false, classes='expiring-marks-checbox')}"></div>
+                                </td>
+                                <td style="width: 50px">
+                                    <span th:text="${markStat.count}"></span>
+                                </td>
+                                <td style="width: 150px">
+                                    <a th:text="${mark.fileId.createFilingNumber()}"
+                                       th:href="@{/ipobject/view(filingNumber=${mark.fileId.createFilingNumber()})}"></a>
+                                </td>
+                                <td style="width: 100px">
+                                    <span th:text="${#dates.format(mark.expirationDate, dateFormatDot)}"></span>
+                                </td>
+                                <td>
+                                    <span th:text="${mark.title}"></span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </div>
+                    </table>
+                </div>
+            </div>
+            <div class="row m_T10">
+                <div class="col-12">
+                    <a th:replace="~{base/form/button :: material-btn(idBtn = 'start-expiring-marks-notifications-process', label = 'Генерирай уведомления', dataUrl = @{/expiring-marks/notifications/start-progressbar} , icon = 'check', classes = 'm_T5 w_150px right')}"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

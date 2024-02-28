@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="attachments" type="java.util.List<com.duosoft.ipas.webmodel.ReceptionDocflowAttachment>"*/-->
+<!--/*@thymesVar id="hasAttachmentsFrame" type="java.lang.Boolean"*/-->
+<div th:fragment="attachments(attachments, hasAttachmentsFrame)"
+     th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)},
+     stringUtils=${T(org.springframework.util.StringUtils)},
+     objectsUtils=${T(java.util.Objects)}"
+     th:if="${hasAttachmentsFrame}">
+    <div class="inline-block">
+        <h4 th:text="#{attachments}"></h4>
+    </div>
+    <div class="inline-block">
+        <a class="btn-floating ipas small waves-effect waves-light action-button-bot reload-reception-attachments confirm"
+           th:title="#{reload}"
+           th:attr="data-message=#{general.message.continue.confirm}, data-url=@{/reception/create/reload-attachments}">
+            <i class="material-icons">refresh</i>
+        </a>
+    </div>
+    <ul class="m_T0">
+        <div th:remove="tag" th:switch="${!collectionUtils.isEmpty(attachments)}">
+            <div th:remove="tag" th:case="true">
+                <div th:remove="tag" th:each="att : ${attachments}">
+                    <li class="row" th:if="${att.transferAttachment == true}">
+                        <div class="position-relative">
+                            <i style="font-size: 40px" class="material-icons">insert_drive_file</i>
+                            <span class="position-absolute m_T10">
+                                <a class="b0"
+                                   th:href="@{/file/abdocs-file(uuid=${att.uuid},fileName=${att.fileName},databaseId=${att.databaseId})}"
+                                   th:text="${stringUtils.isEmpty(att.description) ? att.fileName : att.description}"
+                                   th:target="_blank">
+                                </a>
+                                <a class="btn-floating ipas small waves-effect action-button-bot waves-light remove-reception-attachment confirm" th:title="#{btn.remove}"
+                                   th:attr="data-message=#{general.message.continue.confirm}, data-url=@{/reception/create/remove-attachment}, data-attseqid=${att.attSeqId}">
+                                    <i class="material-icons">close</i>
+                                </a>
+                            </span>
+                        </div>
+                    </li>
+                </div>
+
+            </div>
+            <li th:case="false">
+                <p th:text="#{reception.no.attachments}"></p>
+            </li>
+        </div>
+
+
+    </ul>
+
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="employees" type="java.util.List<bg.duosoft.ipas.core.model.person.CUser>"*/-->
+<div class="row" th:fragment="list-employees(employees, index)" th:remove="tag">
+    <div class="row">
+        <div class="col-10">
+            <div class="div-field">
+                <div class="div-field">
+                    <span th:text="#{users.label}"></span>
+                    <span class="sign bg__dark-blue" th:text="${employees == null ? 0 : employees.size()}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ul th:id="'LinkedList' + ${index}" class="Linked-List">
+        <li th:each="employee,iterStat:${employees}" th:attr="data-li=${employeeIndex}" th:with="employeeIndex='u-' + ${employee.getUserId()}">
+            <!--th:text="${employee.getUserName()}"> -->
+
+            <div th:replace="structure/list/list_structure_template :: formFields(isActive=${!employee.getIndInactive()},name=${employee.getUserName()}, editHref=@{/structure/user/edit/{userId}(userId=${employee.userId})},viewHref=@{/structure/user/view/{userId}(userId=${employee.userId})},deleteHref=@{/structure/user/delete/{userId}(userId=${employee.userId})},activateHref=@{/structure/user/activate/{userId}(userId=${employee.userId})},id=${employee.getUserId()},nav=${employeeIndex})">
+            </div>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

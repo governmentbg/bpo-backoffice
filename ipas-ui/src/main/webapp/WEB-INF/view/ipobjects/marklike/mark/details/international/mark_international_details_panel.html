@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="mark" type="bg.duosoft.ipas.core.model.mark.CMark"*/-->
+<div th:fragment="mark-international-details(mark,internationalRegistrations,internationalReplacementMarkDetails, sessionObjectIdentifier)"
+     th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+
+    <hr style="border-top: 4px solid;"/>
+
+    <div th:replace="ipobjects/marklike/mark/details/international/sections/international_registration_section :: international_registration_section(${mark},${internationalRegistrations},${sessionObjectIdentifier})"></div>
+
+    <hr style="border-top: 4px solid;"/>
+
+    <div th:replace="ipobjects/marklike/mark/details/international/sections/international_replacement_section :: international_replacement_section(${mark},${internationalReplacementMarkDetails}, ${sessionObjectIdentifier})"></div>
+</div>
+
+</body>
+</html>

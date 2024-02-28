@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:remove="tag" th:fragment="basic(id, label, isChecked)" th:with="additionalArgs=${additionalArgs==null} ? ${'_empty=${null}'} : ${additionalArgs}">
+    <div class="input-field" th:classappend="${isDisabled} ? 'readonly'">
+        <div>
+            <div>
+                <label>
+                    <input th:id="${id}"
+                           th:type="checkbox"
+                           th:checked="${isChecked}"
+                           th:disabled="${(isDisabled == null)} ? false : ${isDisabled}"
+                           th:class="filled-in"
+                           th:classappend="${classes != null} ? ${classes}"
+                           th:attr="__${additionalArgs}__"
+                           th:attrappend="data-url=${url != null} ? ${url},data-target=${target != null} ? ${target}"/>
+
+                    <span th:text="${label}"></span>
+                </label>
+                <div th:replace="base/validation :: validation-message(${validationErrors},${id})"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="simple(id, label, value)">
+    <label>
+        <input class="filled-in"
+               th:id="${id}"
+               th:value="${value}"
+               th:attrappend="name=${name != null} ? ${name}, data-type=${dataType != null} ? ${dataType}"
+               th:type="checkbox"
+               th:disabled="${(isDisabled == null)} ? false : ${isDisabled}"
+               th:checked="${checkedExpression != null} ? ${__${checkedExpression}__} : (${checked != null } ? ${checked} : false)"/>
+        <span th:text="${label}"></span>
+    </label>
+    <div th:replace="base/validation :: validation-message(${validationErrors},${id})"></div>
+</div>
+
+</body>
+</html>

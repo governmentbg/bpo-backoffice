@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="availableSections" type="java.util.List<bg.duosoft.ipas.core.model.structure.StructureNode>"*/-->
+<!--/*@thymesVar id="selectedSection" type="java.lang.String"*/-->
+<div th:fragment="select-section(disabled, selectedSection, availableSections)" th:remove="tag">
+    <div th:if="${availableSections != null}" th:remove="tag">
+        <div th:replace="~{base/form/select :: object(
+                            id = 'section-select',
+                            label = #{section.choose},
+                            classes = 'search-box required',
+                            name = 'departments',
+                            isDisabled = ${disabled},
+                            objects = ${availableSections},
+                            valuePointer = 'officeStructureId.officeSectionCode',
+                            textPointer = 'name',
+                            emptySelectOption= #{default.select.option},
+                            selected = ${selectedSection})}">
+        </div>
+    </div>
+</div>
+
+
+
+
+</body>
+</html>

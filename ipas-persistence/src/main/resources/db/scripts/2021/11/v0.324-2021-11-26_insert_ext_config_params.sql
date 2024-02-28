@@ -1,0 +1,4 @@
+--liquibase formatted sql
+
+--changeset mmihova:324.1
+INSERT INTO IPASPROD.EXT_CONFIG_PARAM (CONFIG_CODE, VALUE) VALUES ('ZMR_ACCEPTED_ACTION_TYPE', '3522');

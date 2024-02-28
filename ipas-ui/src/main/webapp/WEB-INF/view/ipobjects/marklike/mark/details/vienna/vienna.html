@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="section(attachment, attachmentIndex, attachmentType)"
+     th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)},markSignTypeUtils=${T(bg.duosoft.ipas.util.mark.MarkSignTypeUtils)}"
+     th:remove="tag">
+    <div th:with="attachmentIdentifier = ${attachmentType + attachmentIndex}">
+        <div class="row m_T10" th:classappend="${collectionUtils.isEmpty(attachment.viennaClassList)} ? 'hidden-element'">
+            <div class="col-12">
+                <h4 class="inline-block" th:text="'Образни елементи'"></h4>
+            </div>
+        </div>
+        <div th:id="'vienna-wrapper-'+${attachmentIdentifier}">
+            <div th:replace="~{ipobjects/marklike/common/vienna/vienna_table :: vienna(viennaClassList = ${attachment.viennaClassList}, attachmentIndex = ${attachmentIndex}, attachmentType = ${attachmentType})}"></div>
+        </div>
+        <div class="row hidden-element">
+            <div class="col-10" style="width: 85%">
+                <div th:replace="~{base/form/input :: validation-wrapper(id = 'vienna-fast-adding-'+${attachmentIdentifier}, label = 'Бързо добавяне на образни елементи', classes= 'tooltip form-ignore', validationWrapperId = 'vienna-fast-adding-errors-'+${attachmentIdentifier}, title = 'Въведете образни елементи разделени с точка и запетая във формат XX.XX.XX ! Пример: 13.01.01;26.01.04;26.01.16;...')}"></div>
+            </div>
+            <div>
+                <button th:attr="data-url=@{/mark/vienna-fast-adding},data-action='vienna-fast-adding',data-index=${attachmentIndex},data-type=${attachmentType}" th:type="button" class="button sm-icn-add hidden-element m_T10" th:text="'Добави'"></button>
+            </div>
+        </div>
+        <div class="m_T10">
+            <button th:text="'Избери елемент от списък'"
+                    th:attr="data-action='vienna-modal',data-index=${attachmentIndex},data-type=${attachmentType},data-url=@{/mark/open-vienna-modal}" th:type="button"
+                    class="button sm-icn-add hidden-element m_T5">
+            </button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

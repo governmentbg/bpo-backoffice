@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="list(urls)" th:remove="tag" th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)}">
+    <div class="left-sidebar">
+        <div id="psb" class="ps--active-y">
+            <nav class="sidebar-nav">
+                <ul class="nav DropDownMenu">
+                    <div th:remove="tag" th:if="${!collectionUtils.isEmpty(urls)}">
+                        <li th:each="url : ${urls}">
+                            <a th:href="${url.urlPropertyConfiguration} ? ${@environment.getProperty(url.url)} : @{${url.url}}" th:title="${#messages.msgOrNull(url.text)}" th:text="${#messages.msgOrNull(url.shortText)}"></a>
+                        </li>
+                    </div>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+</body>
+</html>

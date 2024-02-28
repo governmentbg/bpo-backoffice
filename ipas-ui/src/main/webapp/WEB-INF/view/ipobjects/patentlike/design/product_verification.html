@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="product_verification(singleDesign,index,error)">
+    <div class="row m_T20 m_B10 view-visible-only" th:if="${singleDesign != null and singleDesign.productTerm != null}"
+         th:with="filingNumber = ${singleDesign.file.fileId.createFilingNumber()}">
+        <div class="col-12">
+        <table class="simple">
+            <thead>
+                <tr>
+                    <th th:text="#{single.design.name.label}">Product</th>
+                    <th th:text="#{single.design.locarno.classes.label}">Classes</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <span th:class="|tc-base tc-${singleDesign.productTerm.termStatus}">
+                            <span th:text="${singleDesign.productTerm.termText}"></span>
+                            <a style="border:0" href="javascript:void(0);" th:title="${singleDesign.productTerm.matchedTermsString}"
+                               th:if="${singleDesign.productTerm.termStatus == 'editable'}">
+                                <i class="icon-magnifier"></i>
+                            </a>
+                        </span>
+                    </td>
+                    <td th:text="${singleDesign.productTerm.productClassesText}"></td>
+                    <td class="inline-block">
+                        <div class="row">
+                            <div class="col-11"></div>
+                            <div class="col-1 right-align action-menu-wrapper" th:with="menuId=|design-product-menu-${index}|">
+                                <i th:title="'Меню'" th:attr="data-action='toggle-menu',data-id=${menuId}" class="zmdi zmdi-menu"></i>
+                                <div th:id="${menuId}" class="action-menu none m_L25-i">
+                                <span>
+                                    <i class="material-icons">done_all</i>
+                                     <a  th:title="#{design.verify.single.product}" th:text="#{design.verify.single.product}"
+                                         th:attr="data-index=${index}, data-action='verify-single-product',
+                                            data-url=@{/design/ds-class/verify-single-product(filingNumber=${filingNumber},index=${index})}"
+                                         href="javascript:void(0);"
+                                         class="b0">
+                                    </a>
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+        <div th:id="|product-verify-loader-${index}|" class="col-12" style="display: none">
+            <div class="progress">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row verification-error" th:if="${error != null}">
+        <span class="red" th:text="${#messages.msg(error)}">Error</span>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="single_designs(patent,singleDesigns,sessionObjectIdentifier)">
+    <div class="row has-view-visible-only">
+        <div class="col-12">
+            <a th:replace="~{base/form/button :: material-btn(label = #{design.verify.all.products}, dataAction = 'verify-all-products', icon = 'done_all', classes = 'right m_L10  view-visible-only')}"></a>
+        </div>
+    </div>
+    <div>
+        <div class="row">
+            <div class="col-12">
+                <div th:replace="~{base/form/textarea :: basic(id = 'designMainTitle', value = ${patent.technicalData.title}, unescaped = true, label =#{design.name.label})}"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div th:replace="~{base/form/textarea :: basic(id = 'designMainTitleEn', value = ${patent.technicalData.englishTitle}, unescaped = true, label =#{design.name.en.label})}"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-10">
+                <h3 class="panel-title" style="display: inline-block" th:text="#{single.designs.label}"></h3>
+                <a class="btn-floating ipas small waves-effect action-button-bot waves-light hidden-element confirm" th:title="#{btn.add}"
+                   th:attr="data-message=#{new.single.design.confirmation.message}, data-action='create-single-design',data-url=@{/design/detail/create-single-design}">
+                    <i class="material-icons">add</i>
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <ul class="Single-Designs-List has-view-visible-only" id="single-designs">
+                    <th:block th:each="singleDesign,iter: ${singleDesigns}">
+                        <div th:replace="ipobjects/patentlike/design/single_design :: single_design(${singleDesign},${sessionObjectIdentifier},${iter.index},${patent.file.registrationData.registrationId.registrationNbr},${patent.file.fileId.fileNbr})"></div>
+                    </th:block>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

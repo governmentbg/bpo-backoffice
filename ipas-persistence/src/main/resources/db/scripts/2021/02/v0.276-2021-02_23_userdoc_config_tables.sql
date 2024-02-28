@@ -1,0 +1,19 @@
+--liquibase formatted sql
+
+--changeset mmurlev:276.1
+CREATE TABLE EXT_CORE.CF_USERDOC_TYPE_CONFIG (
+    USERDOC_TYP varchar(7)    not null,
+    REGISTER_TO_PROCESS       varchar(50),
+    INHERIT_RESPONSIBLE_USER  varchar(50),
+    ABDOCS_USER_TARGETING_ON_REGISTRATION  varchar(15),
+    ABDOCS_USER_TARGETING_ON_RESPONSIBLE_USER_CHANGE  varchar(1),
+    primary key (USERDOC_TYP),
+);
+
+--changeset mmurlev:276.2
+CREATE TABLE EXT_CORE.CF_USERDOC_TYPE_DEPARTMENT (
+    USERDOC_TYP varchar(7)    not null,
+    OFFICE_DIVISION_CODE varchar(3),
+    OFFICE_DEPARTMENT_CODE varchar(3),
+    primary key (USERDOC_TYP,OFFICE_DIVISION_CODE,OFFICE_DEPARTMENT_CODE),
+);

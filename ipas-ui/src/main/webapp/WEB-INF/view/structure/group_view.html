@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg" th:with="title=${#messages.msg('group.view.title')}">
+<head th:replace="base/template :: head(title=${title})"></head>
+<body class="dark">
+
+<header class="app-header" th:replace="base/header"></header>
+
+<div class="app-body">
+    <div class="left-sidebar">
+        <div id="psb" class="ps--active-y">
+        </div><!-- #psb -->
+    </div><!-- .left-sidebar -->
+
+    <!-- ********************************************************** Main body -->
+    <main class="main">
+        <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+        <div class="inner" id="editGroupDiv">
+            <div id="group-panel" class="panel">
+                <div class="center">
+                    <h2 class="inline-block" th:text="${title}"></h2>
+                </div>
+
+                <div id="content">
+                    <br />
+
+                    <div class="row">
+                        <div class="col-12">
+                            <span th:text="#{group.name}"></span>:
+                            <span id="groupName" th:text="${group?.groupName}"/>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-12">
+                            <span th:text="#{group.description}"></span>:
+                            <span th:text="${group?.description}" />
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <table class="simple">
+                                <thead>
+                                <tr>
+                                    <td th:text="#{group.roles}"></td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <div th:each="dropdownValue: ${rolesMap}" th:remove="tag">
+                                        <tr th:if="${group.roleNames.contains(dropdownValue.key)}">
+                                            <td th:text="${dropdownValue.value}"></td>
+                                        </tr>
+                                    </div>
+                                    <tr th:if="${group?.roleNames == null || group?.roleNames?.size() == 0}">
+                                        <td th:text="#{no.data}"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <br /><br />
+                    <div class="row">
+                        <div class="col-12">
+                            <table class="simple">
+                                <thead>
+                                <tr>
+                                    <td th:text="#{users.label}"></td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="user, stat: ${groupUsers}">
+                                        <td th:text="${user.userName}"></td>
+                                    </tr>
+                                    <tr th:if="${groupUsers == null || groupUsers?.size() == 0}">
+                                        <td th:text="#{no.data}"></td>
+                                    </tr>
+                                </tbody>
+
+
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <br>
+
+
+
+                <div id="submitBtns">
+                    <div class="row">
+                        <div class="col s1">
+                            <a class="button sm-icn-edit" th:text="#{btn.edit}" th:href="@{/structure/group/edit/{id}(id=${group.groupId})}"></a>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </main>
+
+</div>
+
+</body>
+</html>

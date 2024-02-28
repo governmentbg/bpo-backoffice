@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="mark" type="bg.duosoft.ipas.core.model.mark.CMark"*/-->
+<div th:fragment="international_replacement_section(mark,internationalReplacementMarkDetails,sessionObjectIdentifier)"
+     th:with="config=${T(com.duosoft.ipas.util.factory.NiceConfigFactory).get(T(com.duosoft.ipas.webmodel.NiceListType).OBJECT_INTL_REPLACEMENT_LIST, mark.file.fileId.fileType, null)}">
+
+    <div class="row">
+        <div class="col-12 international-registration-section">
+            <h4 th:text="#{international.replacement.section}"></h4>
+        </div>
+    </div>
+
+    <div class="row m_B20">
+        <div class="col-4">
+            <div th:replace="~{base/form/input :: text(id = 'imark-replacement-autocomplete-registrationNumber',
+            dataId=${#strings.concatReplaceNulls('',mark.markInternationalReplacement?.registrationNumber, mark.markInternationalReplacement?.registrationDup)},
+            value=${#strings.concatReplaceNulls('',mark.markInternationalReplacement?.registrationNumber, mark.markInternationalReplacement?.registrationDup)},
+            label = #{international.replacement.reg.number},
+            url = @{/mark/autocomplete-replacement-regNumber},
+            classes = 'autocomplete form-ignore')}"></div>
+        </div>
+        <div class="col-8" th:id="imark-replacement-mark-details-section" th:style="${internationalReplacementMarkDetails == null ? 'display:none;':''}">
+            <div class="row">
+                <div class="col-6">
+                    <div th:replace="~{base/form/input :: readonly(id='international-replacement-filingNumber', label = #{international.mark}, value = ${internationalReplacementMarkDetails?.filingNumber})}"></div>
+                </div>
+                <div class="col-6" th:id="international-replacement-markName-div" th:style="${#strings.isEmpty(internationalReplacementMarkDetails?.markName) ? 'display:none;':''}">
+                    <div th:replace="~{base/form/input :: readonly(id='international-replacement-markName',label = #{international.mark.name}, value = ${internationalReplacementMarkDetails?.markName})}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div th:id="imark-replacement-nice-classes-section" th:style="${#strings.isEmpty(mark.markInternationalReplacement?.registrationNumber) ? 'display:none;':''}" >
+        <div th:classappend="${mark?.markInternationalReplacement?.isAllServices == null}? 'hidden-element'">
+            <div class="row">
+                <div class="col-12">
+                    <h4 style="display: inline-block" th:text="#{international.replacement.nice.classes}"></h4>
+                </div>
+                <div class="col-12" th:with="id='intl-replacement-isAllServicesFlag'">
+                    <div class="m_B10" th:id="${id}">
+                        <div th:replace="~{base/form/radio :: input-field(name = 'isAllServices', label = #{goods.and.services.national.mark.option.all.title}, value = true, inputClasses='form-ignore mark-additional-nice-class-radio all', checked = ${mark?.markInternationalReplacement?.isAllServices == true})}"></div>
+                        <div th:replace="~{base/form/radio :: input-field(name = 'isAllServices', label = #{goods.and.services.national.mark.option.partially.title}, value = false, inputClasses='form-ignore mark-additional-nice-class-radio part', checked = ${mark?.markInternationalReplacement?.isAllServices == false})}"></div>
+                        <div th:replace="base/validation :: validation-message(${validationErrors},${id})"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mark-additional-nice-classes-table-wrapper requested-nice"
+                 th:attr="data-url=@{/nice-class/{niceListType}/update-mark-recordal-nice-classes(niceListType=${config.niceListType})}">
+                <div th:replace="ipobjects/marklike/mark/details/international/sections/nice_classes/international_replacement_nice_classes :: mark_replacement_nice_classes(${mark?.markInternationalReplacement?.isAllServices}, ${mark?.markInternationalReplacement?.replacementNiceClasses}, ${config})"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12" th:if="${!#lists.isEmpty(validationErrors)}"
+         th:id="mark-markInternationalReplacement">
+        <div th:replace="base/validation :: validation-message(${validationErrors},'mark-markInternationalReplacement')"></div>
+    </div>
+</div>
+
+</body>
+</html>

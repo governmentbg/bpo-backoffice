@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="process" type="bg.duosoft.ipas.core.model.process.CProcess"*/-->
+<!--/*@thymesVar id="isFullyLoad" type="java.lang.Boolean"*/-->
+<!--/*@thymesVar id="isViewMode" type="java.lang.Boolean"*/-->
+<!--/*@thymesVar id="eventUserdoc" type="bg.duosoft.ipas.core.model.process.CUserdocProcessEvent"*/-->
+<!--/*@thymesVar id="eventAction" type="bg.duosoft.ipas.core.model.process.CActionProcessEvent"*/-->
+<!--/*@thymesVar id="processEvent" type="bg.duosoft.ipas.core.model.process.CProcessEvent"*/-->
+<div th:fragment="tree(process,isFullyLoad,isVisible,isViewMode)"
+     th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)},dateTimeFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT},objectUtil=${T(java.util.Objects)}">
+    <div th:if="${!collectionUtils.isEmpty(process.processEventList)}" th:remove="tag">
+        <ul class="Linked-List" th:attr="data-action='process-tree',data-url=@{/process/tree/load-process-tree},data-process=|${process.processId.processType}-${process.processId.processNbr}|,data-visible=${isVisible}">
+            <div th:remove="tag" th:each="processEvent : ${process.processEventList}">
+                <div th:replace="ipobjects/common/process/process_tree :: node(${processEvent},${isFullyLoad},${isViewMode})"></div>
+            </div>
+        </ul>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="node(processEvent,isFullyLoad,isViewMode)" th:with="
+    collectionUtils=${T(org.springframework.util.CollectionUtils)},
+    dateTimeFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT},
+    objectUtil=${T(java.util.Objects)},
+    dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+
+    <div th:remove="tag"
+         th:with="isNote=${processEvent.eventType == 'NOTE'},
+                  isAction=${processEvent.eventType == 'ACTION'},
+                  isUserdoc=${processEvent.eventType == 'USERDOC'},
+                  isManual=${processEvent.eventType == 'MANUAL'},
+                  processIdentifier=${T(com.duosoft.ipas.util.ProcessUtils).getProcessEventIdentifier(processEvent)}">
+
+        <li class="has-children" th:attrappend="aria-hidden=${!isFullyLoad}?'true'"
+            th:attr="data-load=${isFullyLoad},
+                     data-type=${processEvent.eventType},
+                     data-process=${processIdentifier}"
+        >
+
+            <div th:remove="tag" th:if="${isNote || isAction}" th:with="eventAction=${processEvent.eventAction}">
+                <div class="row">
+                    <div class="col-1">
+                        <i th:if="${isNote}" class="dth-sm-info"></i>
+                        <i th:if="${isAction}" class="dth-sm-proc-base" th:title="#{process.tree.status.change}"></i>
+                        <i th:if="${objectUtil.nonNull(eventAction.generatedOffidoc)}" class="dth-sm-doc-out"
+                           th:title="#{process.tree.document.out}"></i>
+                        <i th:if="${objectUtil.nonNull(eventAction.journal)}" class="dth-sm-doc-publ"
+                           th:title="#{process.tree.journal}"></i>
+                    </div>
+                    <div class="col-3">
+                        <div th:title="#{process.tree.action.date.time}"
+                             th:text="${#dates.format(processEvent.eventDate, dateTimeFormatDot)}"></div>
+                    </div>
+                    <div class="col-7">
+                        <div th:title="#{process.tree.action}" th:text="${processEvent.eventDescription}"></div>
+                    </div>
+                    <div class="col-1 txtRight" th:if="${hasPermissionToViewRightProcessMenu}">
+                        <div th:replace="ipobjects/common/process/process_tree_element :: action-menu(${isViewMode},${processIdentifier},${eventAction})"></div>
+                    </div>
+                </div>
+                <div th:replace="ipobjects/common/process/process_tree_element :: action-journal(${eventAction})"></div>
+                <div th:remove="tag" th:if="${isFullyLoad}">
+                    <div th:replace="ipobjects/common/process/process_tree_element :: action-body(${isFullyLoad},${isViewMode},${isAction},${eventAction})"></div>
+                </div>
+            </div>
+
+            <div th:remove="tag" th:if="${isUserdoc}" th:with="eventUserdoc=${processEvent.eventUserdoc}">
+                <div class="row">
+                    <div class="col-1">
+                        <i class="dth-sm-doc-in " th:title="#{process.tree.document.in}"></i>
+                    </div>
+                    <div class="col-3" th:with="number=(${#strings.isEmpty(eventUserdoc.externalSystemId)} ? #{not.registered} : ${eventUserdoc.externalSystemId})">
+                        <span th:title="#{process.tree.filing.number}" th:text="|${number} / ${#dates.format(eventUserdoc.filingDate, dateFormatDot)}|"></span>
+                    </div>
+                    <div class="col-7">
+                        <div th:title="#{process.tree.document.type}">
+                            <a class="b0 p_0" th:text="${processEvent.eventDescription}"
+                               th:href="@{/ipobject/view(userdocFilingNumber=${eventUserdoc.documentId.createFilingNumber()})}"></a>
+                        </div>
+                        <div th:replace="ipobjects/common/process/process_tree_element :: userdoc-expiration-date(${eventUserdoc})"></div>
+                    </div>
+                    <div class="col-1 txtRight" th:if="${hasPermissionToViewRightProcessMenu}">
+                        <div th:replace="ipobjects/common/process/process_tree_element :: userdoc-menu(${isViewMode},${processIdentifier},${eventUserdoc})"></div>
+                    </div>
+                </div>
+                <div th:remove="tag" th:if="${isFullyLoad}">
+                    <div th:replace="ipobjects/common/process/process_tree_element :: userdoc-body(${isFullyLoad},${isViewMode},${processEvent},${eventUserdoc})"></div>
+                </div>
+            </div>
+
+            <div th:remove="tag" th:if="${isManual}">
+                <div class="row">
+                    <div class="col-1">
+                        <i class="dth-sm-doc-gen" th:title="#{process.tree.manual.process}"></i>
+                    </div>
+                    <div class="col-3">
+                        <div th:title="#{process.tree.date}" th:text="${#dates.format(processEvent.eventDate, dateTimeFormatDot)}"></div>
+                    </div>
+                    <div class="col-7">
+                        <div th:title="${processEvent.eventDescription}">
+                            <a class="b0 p_0" th:text="${processEvent.eventDescription}"
+                               th:href="@{/ipobject/view(msprocess=${processIdentifier})}"></a>
+                        </div>
+                    </div>
+                    <div class="col-1 txtRight" th:if="${hasPermissionToViewRightProcessMenu}">
+                        <div th:replace="ipobjects/common/process/process_tree_element :: manual-menu(${isViewMode},${processIdentifier},${processEvent})"></div>
+                    </div>
+                </div>
+                <div th:remove="tag" th:if="${isFullyLoad}">
+                    <div th:replace="ipobjects/common/process/process_tree_element :: manual-body(${isFullyLoad},${isViewMode},${processEvent})"></div>
+                </div>
+            </div>
+        </li>
+
+    </div>
+</div>
+
+
+</body>
+</html>

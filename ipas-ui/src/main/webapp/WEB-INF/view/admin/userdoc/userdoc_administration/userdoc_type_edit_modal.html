@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="modal(cReceptionRelation)"
+     th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)},
+     objectsUtils=${T(java.util.Objects)}">
+
+    <div th:id="reception-relation-edit-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="${mainTypesMap.get(cReceptionRelation.mainType)}"></h4>
+            </div>
+            <div class="m_T20">
+                <div class="row">
+                    <div style=" color: #9e9e9e">
+                        <label th:text="#{userdoc.reception.relation.is.visible}"></label>
+                    </div>
+                    <div class="col-12">
+                        <div th:replace="~{base/form/radio :: basic(name = 'relation-isVisible-radio', label = #{yes}, value = true, checked = ${cReceptionRelation.isVisible})}"></div>
+                        <div th:replace="~{base/form/radio :: basic(name = 'relation-isVisible-radio', label = #{no}, value = false, checked = ${!cReceptionRelation.isVisible})}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer row">
+            <div class="col-12">
+                <button th:attr="data-action='edit-reception-relation', data-url=@{/admin/userdoc-types/edit-reception-relation},data-main-type=${cReceptionRelation.mainType}, data-userdoc-type=${cReceptionRelation.userdocType}"
+                        th:text="#{btn.save}" type="button" class="button sm-icn-save modal-close wmin_130"></button>
+                <button th:text="#{btn.cancel}" type="button" class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

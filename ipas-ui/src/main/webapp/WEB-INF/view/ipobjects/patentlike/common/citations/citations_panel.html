@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="patent-citations(citationsList)" class="m_B10">
+    <div class="row m_B10">
+        <div class="col-12">
+            <a th:replace="~{base/form/button :: material-btn(label = #{btn.add}, dataAction = 'open-citation-modal', dataUrl = @{/patent-like/citations/open-modal}, icon='add', classes = 'right hidden-element')}"></a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12" th:if="${T(java.util.Objects).nonNull(citationsList) && #lists.isEmpty(citationsList)}">
+            <div th:replace="base/message :: info(#{patent.citations.not.found})"></div>
+        </div>
+
+        <div class="col-12" th:if="${!T(org.springframework.util.CollectionUtils).isEmpty(citationsList)}">
+            <table class="simple">
+                <thead>
+                <tr>
+                    <th style="width: 150px" th:text="#{patent.citation.refNumber}">Пореден номер</th>
+                    <th th:text="#{patent.citation.description}">Цитиран документ</th>
+                    <th th:text="#{patent.citation.claims}">Претенции</th>
+                    <th style="width: 50px"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="citation : ${citationsList}">
+                    <td class="td-citation-refNumber" style="vertical-align: top;" th:text="${citation.refNumber}"></td>
+                    <td class="td-citation-refDescription" th:text="${citation.refDescription}"></td>
+                    <td class="td-citation-refDescription" th:text="${citation.refClaims}"></td>
+                    <td>
+                        <div class="row hidden-element">
+                            <div class="col-11"></div>
+                            <div class="col-1 right-align action-menu-wrapper"
+                                 th:with="menuId=|citation-menu-${citation.refNumber}|">
+                                <i th:title="'Меню'" th:attr="data-action='toggle-menu',data-id=${menuId}"
+                                   class="zmdi zmdi-menu"></i>
+                                <div th:id="${menuId}" class="action-menu none m_L25-i">
+                              <span class="hidden-element">
+                                    <i class="icon-trash"></i>
+                                    <a class="b0" th:title="#{btn.edit}" href="javascript:void(0);"
+                                       th:text="#{btn.edit}"
+                                       th:attr="data-action='open-citation-modal',data-ref-number=${citation.refNumber},data-url=@{/patent-like/citations/open-modal}">
+                                    </a>
+                            </span>
+                                    <span class="hidden-element">
+                                    <i class="icon-trash"></i>
+                                    <a class="b0" th:title="#{btn.delete}" href="javascript:void(0);"
+                                       th:text="#{btn.delete}"
+                                       th:attr="data-action='delete-patent-citation',data-ref-number=${citation.refNumber},data-url=@{/patent-like/citations/delete-citation}">
+                                    </a>
+                            </span>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

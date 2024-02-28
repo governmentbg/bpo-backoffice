@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="process" type="bg.duosoft.ipas.core.model.process.CProcess"*/-->
+<div th:fragment="modal(fileTypesMap)"
+     th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)}, objectsUtils=${T(java.util.Objects)}">
+    <div style="overflow: visible" th:id="userdoc-position-search-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="#{change.userdoc.position.search.modal.title}"></h4>
+            </div>
+            <div class="m_T10">
+                <div class="row m_B10">
+                    <div class="col-12" th:with="applicationSearchTypeEnum = ${T(bg.duosoft.ipas.enums.ApplicationSearchType)}">
+                        <div th:replace="~{base/form/radio :: basic(name = 'change-userdoc-radio', label = #{object.filingNumber}, value = ${applicationSearchTypeEnum.FILE_NUMBER.code()}, checked = true, classes = 'm_R10')}"></div>
+                        <div th:replace="~{base/form/radio :: basic(name = 'change-userdoc-radio', label = #{object.registrationNumber}, value = ${applicationSearchTypeEnum.REGISTRATION_NUMBER.code()})}"></div>
+                    </div>
+                </div>
+                <div class="row m_T5">
+                    <div class="col-6">
+                        <div th:replace="~{base/form/input :: text(id = 'userdoc-changePositionSearch', label = #{object.filingNumber})}"></div>
+                    </div>
+                    <div class="col-6">
+                        <div th:replace="~{base/form/select :: map(id = 'change-userdoc-search-fileType', label = #{object.type}, map = ${fileTypesMap}, selected = ${T(bg.duosoft.ipas.enums.FileType).MARK.code()}, classes = 'search-box')}"></div>
+                    </div>
+                </div>
+                <div class="row right-align m_T10">
+                    <div class="col-12">
+                        <a th:replace="~{base/form/button :: material-btn(label = #{btn.choose.from.current.doc}, dataAction = 'open-change-position-modal', dataUrl = @{/userdoc/main-data/open-change-position-modal}, icon = 'reply', classes = 'm_R10 left')}"></a>
+                        <a th:replace="~{base/form/button :: material-btn(label = #{btn.search}, dataAction = 'submit-change-userdoc-position-search', dataUrl = @{/userdoc/main-data/search-objects}, icon = 'search', classes = 'm_R20')}"></a>
+                        <a th:replace="~{base/form/button :: material-btn(label = #{btn.clear}, dataAction = 'clear-change-userdoc-position-search',dataUrl = @{/userdoc/main-data/search-objects}, icon = 'clear')}"></a>
+                    </div>
+                </div>
+                <div class="row m_T10" th:id="objects-result-wrapper"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--/*@thymesVar id="result" type="bg.duosoft.ipas.core.model.IpasApplicationSearchResult"*/-->
+<div th:fragment="search-result(resultList)" th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)}, objectsUtils=${T(java.util.Objects)}" class="m_T10 col-12">
+    <div th:if="${showEpoPatentsButton != null && showEpoPatentsButton eq true}">
+        <div th:replace="~{base/message :: info-link(text = #{missing.epo.patent.link.msg}, linkHref = @{/admin/missing-epo-patents}, linkText = 'тук')}"></div>
+    </div>
+
+    <div th:remove="tag" th:switch="${collectionUtils.isEmpty(resultList)}">
+        <div th:case="true">
+            <div th:replace="~{base/message :: warning(#{no.records.found})}"></div>
+        </div>
+        <div th:case="*">
+            <table class="simple">
+                <thead>
+                <tr>
+                    <th th:text="#{search.result.number}"></th>
+                    <th th:text="#{search.result.date}"></th>
+                    <th th:text="#{search.result.registrationNumber}"></th>
+                    <th th:text="#{search.result.description}"></th>
+                    <th th:text="#{search.result.status}"></th>
+                    <th th:text="#{search.result.owners}"></th>
+                    <th th:text="#{search.result.representatives}"></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="result : ${resultList}">
+                    <td>
+                        <span th:text="${T(com.duosoft.ipas.util.CoreUtils).createFilingNumber(result.fileId,false)}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${#dates.format(result.filingDate,T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${T(com.duosoft.ipas.util.CoreUtils).createFullRegistrationNumber(result.registrationData?.registrationId?.registrationNbr,result.registrationData?.registrationId?.registrationDup,result.fileId?.fileType)}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${result.description}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${result.status}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${T(com.duosoft.ipas.util.PersonUtils).concatenatePersonNames(result.owners)}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${T(com.duosoft.ipas.util.PersonUtils).concatenatePersonNames(result.getRepresentativePersons())}"></span>
+                    </td>
+                    <td style="vertical-align: middle">
+                        <a class="btn-floating ipas small waves-effect waves-light"
+                           th:title="#{btn.select}"
+                           th:attr="data-action='open-change-position-modal',
+                                    data-url=@{/userdoc/main-data/open-change-position-modal},
+                                    data-process=|${result.processId.processType}-${result.processId.processNbr}|"
+                        >
+                            <i class="material-icons">add</i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg">
+
+<body >
+    <div th:fragment="result" th:remove="tag" th:with="securityUtils=${T(bg.duosoft.ipas.util.security.SecurityUtils)},
+                                                       securityRoles=${T( bg.duosoft.ipas.enums.security.SecurityRole)},
+                                                       hasPublicUrl=${T(bg.duosoft.ipas.util.file.FilePublicUrlUtils).hasAllPublicRegisterObject(prop.fileTypes)}">
+        <div class="panel">
+            <!-- TODO url and columns -->
+            <div class="row">
+                <div>
+                    <span th:text="|#{list.result.count(${page.totalElements+''})}|"></span>
+                    <span class="export xlsx">xlsx</span>
+                    <span class="export csv">csv</span>
+                    <script>
+                        $(document).ready(function () {
+                            var baseUrl = "[(@{/{url}/search(url=${prop.msgPrefix})})]";
+                            $('span.export.xlsx').on('click', function () {
+                                runJasperReport(baseUrl,"xlsx");
+                            });
+                            $('span.export.csv').on('click', function () {
+                                runJasperReport(baseUrl,"csv");
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+            <div th:if="${!#lists.isEmpty(page.content)}" class="m_T5">
+                <ul class="Linked-List" th:if="${!#lists.isEmpty(page.content)}">
+                    <li style="padding-left: 0">
+                        <div id="result-header" class="row bld sortable">
+                            <div class="col-1" th:if="${prop.requestForValidation != null}">
+                                <div th:text="#{search.result.request-for-validation}" th:remove="tag"></div>
+                            </div>
+                            <div class="col-2" data-col="pk">
+                                <span th:text="#{search.result.number}"></span>
+                                <div th:class="|${(searchParam.sortColumn == 'pk')?('sorting_' + #strings.toLowerCase(searchParam.sortOrder)):'sorting'}|" ></div>
+                            </div>
+                            <div class="col-1" data-col="filingDate">
+                                <span th:text="#{search.result.filingDate}"></span>
+                                <div th:class="|${(searchParam.sortColumn == 'filingDate')?('sorting_' + #strings.toLowerCase(searchParam.sortOrder)):'sorting'}|" ></div>
+                            </div>
+                            <div class="col-1" data-col="registrationNbr">
+                                <span th:text="#{search.result.registrationNbr}"></span>
+                                <div th:class="|${(searchParam.sortColumn == 'registrationNbr')?('sorting_' + #strings.toLowerCase(searchParam.sortOrder)):'sorting'}|" ></div>
+                            </div>
+                            <div th:class="|col-${(prop.requestForValidation != null || prop.msgPrefix == 'mark')?2:3}|" data-col="mainOwner">
+                                <span th:text="#{search.result.mainOwner}"></span>
+                                <div th:class="|${(searchParam.sortColumn == 'mainOwner')?('sorting_' + #strings.toLowerCase(searchParam.sortOrder)):'sorting'}|" ></div>
+                            </div>
+                            <div th:class="|col-2|"  data-col="title">
+                                <span th:text="#{search.result.title}"></span>
+                                <div th:class="|${(searchParam.sortColumn == 'title')?('sorting_' + #strings.toLowerCase(searchParam.sortOrder)):'sorting'}|" ></div>
+                            </div>
+                            <div th:class="col-1" th:if="${prop.niceClasses != null}">
+                                <span th:text="#{search.result.mark.nice.classes}"></span>
+                            </div>
+                            <div th:if="${prop.msgPrefix == 'mark'}" th:class="|col-1|" style="width: 8%; margin-left: 0; margin-right: 0;">
+                                <span th:text="#{search.result.img}"></span>
+                            </div>
+
+                            <div th:class="|col-${(prop.niceClasses != null)?1:2}|" data-col="statusSort">
+                                <span th:text="#{search.result.status}"></span>
+                                <div th:class="|${(searchParam.sortColumn == 'statusSort')?('sorting_' + #strings.toLowerCase(searchParam.sortOrder)):'sorting'}|" ></div>
+                            </div>
+                            <div class="col-1">
+                                <div th:text="''"></div>
+                            </div>
+                        </div>
+                    </li>
+                    <li th:each="result, iter :${page.content}"  th:with="url=${#lists.isEmpty(prop.fileTypeUrls)?prop.detailPageUrl:prop.fileTypeUrls.get(prop.fileTypes.lastIndexOf(result.pk.fileType))}" style="padding-left: 0">
+                        <div class="row">
+                            <div class="col-1" th:if="${prop.requestForValidation}">
+                                <div th:each="el : ${result.requestForValidationNbr}" th:text="${el}"></div>
+                            </div>
+                            <div class="col-2">
+                                <a class="b0" th:href="@{/{url}/detail/{fileSeq}/{fileType}/{fileSer}/{fileNbr}(url=${url} ,fileSeq=${result.pk.fileSeq},fileType=${result.pk.fileType},fileSer=${result.pk.fileSeries},fileNbr=${result.pk.fileNbr})}" th:text="|${result.pk.fileSeq}/${result.pk.fileType}/${result.pk.fileSeries}/${#numbers.formatDecimal(result.pk.fileNbr, prop.leadingZero, 0)}|"
+                                    data-blockui="true"></a>
+                            </div>
+                            <div class="col-1" th:text="|${#dates.format(result.filingDate, 'dd.MM.yyyy')}|">
+                            </div>
+                            <div class="col-1" th:text="${result.createFullRegistrationNumber()}">
+                            </div>
+                            <div th:class="|col-${(prop.requestForValidation != null || prop.msgPrefix == 'mark')?2:3}|" >
+                                <div th:text="|${result.mainOwner}|"></div>
+                            </div>
+                            <div th:class="|col-2|" >
+                                <div th:text="|${result.title}|" ></div>
+                            </div>
+
+                            <div th:class="|col-1|" th:if="${prop.niceClasses != null}">
+                                <span th:each="el : ${result.niceClassCodes}" th:text="|${el} |"></span>
+                            </div>
+
+                            <div th:if="${prop.msgPrefix == 'mark'}" th:class="|col-1|" style="width: 8%; margin-left: 0; margin-right: 0;">
+                                <img th:if="|${result.hasImg}|" class="materialboxes "
+                                     th:src="@{/{url}/search/img/{fileSeq}/{fileType}/{fileSer}/{fileNbr}(url=${url} ,fileSeq=${result.pk.fileSeq},fileType=${result.pk.fileType},fileSer=${result.pk.fileSeries},fileNbr=${result.pk.fileNbr})}"
+                                     style="max-width: 100px; max-height: 60px;cursor: zoom-in;" >
+                            </div>
+
+                            <div th:class="|col-${(prop.niceClasses != null)?1:2}|">
+                                <div th:text="|${result?.status?.statusName}|"></div>
+                            </div>
+                            <div class="col-1 right-align action-menu-wrapper" th:with="menuId=|search-menu-${iter.index}|">
+                                <i th:title="'Меню'" th:attr="data-action='toggle-menu',data-id=${menuId}" class="zmdi zmdi-menu"></i>
+                                <div th:id="${menuId}" class="action-menu none m_L25-i">
+                                    <span>
+                                        <i class="icon-link"></i>
+                                        <a class="b0" href="javascript:void(0);"
+                                           th:text="#{btn.abdocs.system}"
+                                           th:attr="data-url=@{/process/document/open-object-document}, data-action = 'abdocs-object-redirect',data-number = |${result.pk.fileSeq}/${result.pk.fileType}/${result.pk.fileSeries}/${result.pk.fileNbr}|">
+                                        </a>
+                                    </span>
+                                    <span th:if="${hasPublicUrl}">
+                                        <i class="icon-link"></i>
+                                        <a class="b0" href="javascript:void(0);"
+                                           th:text="#{btn.public.register}"
+                                           th:attr="data-url=@{/public-register/open-public-register}, data-action = 'public-register-object-redirect',data-number = |${result.pk.fileSeq}/${result.pk.fileType}/${result.pk.fileSeries}/${result.pk.fileNbr}|">
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <div th:replace="ipobjects/common/search/fragments ::paginator(
+                        page=${page.number},
+                        pageSize=${page.size},
+                        total=${page.totalElements},
+                        tableContainerDiv='panel')" ></div>
+                <script th:inline="javascript">
+
+
+                    $.each($('#result-header').children('div'), function (i, header) {
+                        let header_col = $(header).attr('data-col');
+
+                        if(header_col) {
+                            $(header).click(function (e) {
+
+                                if(!$(this).is('[class*="sorting"]')) {
+                                    let div = $(this).find('div');
+                                    let sort = div.hasClass('sorting_asc')?'sorting_desc':'sorting_asc';
+                                    $('#result-header > div > div').removeClass('sorting_asc sorting_desc').addClass('sorting');
+                                    div.removeClass('sorting').addClass(sort);
+
+                                    e.preventDefault();
+                                    let pageSize = $(".search-paginator").find("option:selected").val()?$(".search-paginator").find("option:selected").val():10;
+
+                                    let cJson = {};
+
+                                    sorting(cJson);
+
+                                    sortReq(cJson);
+                                }
+                            })
+                        }
+                    });
+
+                    $(document).ready(function () {
+                        $('.materialboxes').each(function(){
+                            $(this).materialbox();
+                        });
+                    });
+                </script>
+            </div>
+
+            <div th:if="${#lists.isEmpty(page.content)}">
+                <span th:text="#{search.result.not_found}"></span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

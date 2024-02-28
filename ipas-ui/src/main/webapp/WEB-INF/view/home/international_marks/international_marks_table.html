@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="table(marksList,marksCount,marksFilter)"
+     th:with="sorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.SorterUtils)},marksSortedUtils=${T(bg.duosoft.ipas.util.filter.sorter.InternationalMarkSorterUtils)},securityUtils=${T(bg.duosoft.ipas.util.security.SecurityUtils)}, securityRoles=${T( bg.duosoft.ipas.enums.security.SecurityRole)}">
+
+    <div th:remove="tag" th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(marksList)}">
+        <div th:remove="tag" th:case="true">
+            <div class="bg__light-blue p_10 m_B10 m_T10 center">
+                <span th:text="'Списъкът е празен !'"></span>
+            </div>
+        </div>
+        <div th:remove="tag" th:case="false">
+            <div class="row">
+                <div>
+                    <span th:text="'Общ брой: '"></span>
+                    <span th:text="${marksCount}"></span>
+                </div>
+            </div>
+            <div class="m_T5">
+                <table class="simple bpo">
+                    <thead>
+                    <tr>
+                        <th style="width: 50px">
+                            <div th:replace="~{base/form/checkbox :: basic(id ='proc-change-ruser-checbox-all', label = '', isChecked = false,classes='bpo-table-header-checkbox')}"></div>
+                        </th>
+                        <th style="width: 50px" th:text="'Номер'"></th>
+                        <th style="width: 150px" th:with="isSelected=${#strings.equalsIgnoreCase(marksFilter.sortColumn,marksSortedUtils.REGISTRATION_NUMBER)},dataSort=${marksSortedUtils.REGISTRATION_NUMBER}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,marksFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{object.registrationNumber},${marksFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th style="width: 150px" th:with="isSelected=${#strings.equalsIgnoreCase(marksFilter.sortColumn,marksSortedUtils.FILING_NUMBER)},dataSort=${marksSortedUtils.FILING_NUMBER}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,marksFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Входящ номер',${marksFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th style="width: 200px" th:with="isSelected=${#strings.equalsIgnoreCase(marksFilter.sortColumn,marksSortedUtils.TITLE)},dataSort=${marksSortedUtils.TITLE}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,marksFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Име',${marksFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th style="width: 150px">
+                            <span th:text="'Стоки и услуги'"></span>
+                        </th>
+                        <th style="width: 100px" th:with="isSelected=${#strings.equalsIgnoreCase(marksFilter.sortColumn,marksSortedUtils.TRANSCATION_TYPE)},dataSort=${marksSortedUtils.TRANSCATION_TYPE}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,marksFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Вид на трансакцията',${marksFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th style="width: 150px" th:with="isSelected=${#strings.equalsIgnoreCase(marksFilter.sortColumn,marksSortedUtils.RECEPTION_DATE)},dataSort=${marksSortedUtils.RECEPTION_DATE}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,marksFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Въвеждане в системата',${marksFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th style="width: 150px" th:with="isSelected=${#strings.equalsIgnoreCase(marksFilter.sortColumn,marksSortedUtils.STATUS)},dataSort=${marksSortedUtils.STATUS}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,marksFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Статус',${marksFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th style="width: 150px" th:with="isSelected=${#strings.equalsIgnoreCase(marksFilter.sortColumn,marksSortedUtils.RESPONSIBLE_USER)},dataSort=${marksSortedUtils.RESPONSIBLE_USER}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,marksFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{filter.responsibleUser.label},${marksFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="mark,markStat : ${marksList}">
+                        <td>
+                            <div th:replace="~{base/form/checkbox :: basic(id =${mark.procId}, label = '', isChecked = false,classes='proc-change-ruser-checbox')}"></div>
+                        </td>
+                        <td>
+                            <span th:text="${markStat.count + ((marksFilter.page - 1)*marksFilter.pageSize)}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${mark.registrationNumber}"></span>
+                        </td>
+                        <td>
+                            <a th:text="${mark.filingNumber}" th:href="@{/ipobject/view(filingNumber=${mark.filingNumber})}"></a>
+                        </td>
+                        <td>
+                            <span th:text="${mark.title}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${mark.allNiceClasses}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${mark.transactionType}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${#dates.format(mark.receptionDate,T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT)}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${mark.statusName}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${mark.responsibleUserName}"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="home-panel-paginator">
+                    <div th:replace="base/paginator :: paginator(page=${marksFilter.page},pageSize=${marksFilter.pageSize},total=${marksCount},baseUrl=@{international-marks/update-table},
+                        tableContainerDiv='international-marks-table-wrapper',
+                        additionalParams='&tableCount='+${marksCount}+'&sortOrder='+${marksFilter.sortOrder}+
+                        '&gazno='+${marksFilter.gazno}+'&withoutDivided='+${marksFilter.withoutDivided}+
+                                         '&sortColumn='+${marksFilter.sortColumn})">
+                    </div>
+                </div>
+            </div>
+            <div>
+                <input th:type="hidden" class="form-ignore" th:id="international-marks-term-page" th:value="${marksFilter.page}">
+                <input th:type="hidden" class="form-ignore" th:id="table-count" th:value="'?tableCount='+${marksCount}">
+                <input th:type="hidden" class="form-ignore" th:id="international-marks-pageSize" th:value="${marksFilter.pageSize}">
+            </div>
+        </div>
+        <input th:type="hidden" class="form-ignore" th:id="international-marks-gazno" th:value="${marksFilter.gazno}">
+    </div>
+
+</div>
+</body>
+</html>

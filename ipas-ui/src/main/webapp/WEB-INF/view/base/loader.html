@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="errors" type="java.util.List<bg.duosoft.ipas.validator.config.ValidationError>"*/-->
+<div th:fragment="global-loader" th:remove="tag">
+    <div th:id="block-ui-div" class="con-loading" style="display:none;">
+        <div class="loading-default">
+            <div style="border-left: 4px solid var(--color-bpo);" class="linea1"></div>
+            <div style="border-left: 4px solid var(--color-bpo);" class="linea2"></div>
+            <div style="border-left: 4px solid var(--color-bpo);" class="linea3"></div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="local-loader" th:remove="tag">
+    <div class="con-loading-local">
+        <div class="loading-default">
+            <div style="border-left: 4px solid var(--color-bpo);" class="linea1"></div>
+            <div style="border-left: 4px solid var(--color-bpo);" class="linea2"></div>
+            <div style="border-left: 4px solid var(--color-bpo);" class="linea3"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

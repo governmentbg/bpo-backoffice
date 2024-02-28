@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="vienna-modal(attachmentIndex, attachmentType)">
+    <div style="overflow: visible" th:id="vienna-modal" class="modal" th:attr="data-division=@{/mark/vienna-division},data-section=@{/mark/vienna-section}">
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="'Добавяне на образни елементи'"></h4>
+            </div>
+            <div>
+                <div class="row m_T20">
+                    <div class="col-12" th:id="vienna-category-content">
+                        <div class="input-field" th:fragment="vienna-category(categories)">
+                            <select th:id="vienna-category">
+                                <option value="" th:text="'Моля изберете'" selected></option>
+                                <option th:each="category : ${categories}"
+                                        th:value="${category.viennaCategory}"
+                                        th:text="|${category.viennaCategory+' - '+category.viennaDescription}|">
+                                </option>
+                            </select>
+                            <label th:for="vienna-category" th:text="'Категория'"></label>
+                            <div th:id="vienna-category-validation" class="m_B10 none">
+                                <span style="color: #d21010" th:text="#{required.field}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row m_T20">
+                    <div class="col-12 none" th:id="vienna-division-content">
+                        <div class="input-field" th:fragment="vienna-division(divisions)">
+                            <select th:id="vienna-division">
+                                <option value="" th:text="'Моля изберете'" selected></option>
+                                <option th:each="division : ${divisions}"
+                                        th:value="${division.viennaDivision}"
+                                        th:text="|${division.viennaCategory+'.'+division.viennaDivision+' - '+division.viennaDescription}|">
+                                </option>
+                            </select>
+                            <label th:for="vienna-division" th:text="'Дивизия'"></label>
+                            <div th:id="vienna-division-validation" class="m_B10 none">
+                                <span style="color: #d21010" th:text="#{required.field}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row m_T20">
+                    <div class="col-12 none" th:id="vienna-section-content">
+                        <div class="input-field" th:fragment="vienna-section(sections)">
+                            <select th:id="vienna-section">
+                                <option value="" th:text="'Моля изберете'" selected></option>
+                                <option th:each="section : ${sections}"
+                                        th:value="${section.viennaSection}"
+                                        th:text="|${section.viennaCategory+'.'+section.viennaDivision+'.'+section.viennaSection+' - '+section.viennaDescription}|">
+                                </option>
+                            </select>
+                            <label th:for="vienna-section" th:text="'Секция'"></label>
+                            <div th:id="vienna-section-validation" class="m_B10 none">
+                                <span style="color: #d21010" th:text="#{required.field}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="col-12">
+                <button th:attr="data-action='save-vienna-class',data-url=@{/mark/save-vienna-class},data-index=${attachmentIndex},data-type=${attachmentType}" th:text="#{btn.save}" type="button" class="button sm-icn-save wmin_130"></button>
+                <button th:text="#{btn.cancel}" type="button" class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

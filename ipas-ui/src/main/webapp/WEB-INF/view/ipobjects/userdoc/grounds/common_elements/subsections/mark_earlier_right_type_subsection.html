@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="mark-earlier-right-type-subsection(rootGround,panel,sessionObjectIdentifier)">
+
+    <div class="m_T30 m_B10 ground-subsection-div-title">
+        <h4 style="display: inline-block" th:text="#{ground.mark.section.title}"></h4>
+    </div>
+
+    <div class="row m_B20 m_T20">
+        <div class="col-4 m_L0-i">
+            <input id="hidden-field-on-change-mark-gorund-type-url" type="hidden" class="form-ignore" th:attr="data-url=@{/userdoc-mark-ground/change-mark-ground-type}">
+            <div th:replace="~{base/form/select :: object(
+                            id = 'select-mark-ground-type', label = #{ground.mark.type},
+                            name = 'rootGround.markGroundType', emptySelectOption = #{default.select.option},
+                            objects = ${markGroundTypes},
+                            valuePointer = 'id', textPointer = 'name',
+                            selected = ${rootGround.markGroundData?.markGroundType})}">
+            </div>
+        </div>
+        <div id="ground-mark-imported-div" class="col-4 m_T10-i">
+            <div th:replace="~{base/form/checkbox :: basic(id = 'ground-mark-imported',url=@{/userdoc-mark-ground/import-national-mark-check-action},isDisabled=${!T(bg.duosoft.ipas.util.userdoc.UserdocGroundsUtils).isNationalMarkSubSectionVisible(rootGround.markGroundData?.markGroundType)}, label = #{ground.mark.import.checkbox.label}, isChecked = ${rootGround.markGroundData?.markImportedInd})}"></div>
+        </div>
+    </div>
+
+    <div id="mark-earlier-right-type-subsection-on-type-change-div">
+        <div th:if="${T(bg.duosoft.ipas.util.userdoc.UserdocGroundsUtils).isNationalMarkSubSectionVisible(rootGround.markGroundData?.markGroundType)}" id="national-mark-earlier-right-type-subsection-div">
+            <div th:replace="~{ :: national-mark-earlier-right-type-subsection(${rootGround},${panel},${sessionObjectIdentifier})}"></div>
+        </div>
+        <div th:if="${T(bg.duosoft.ipas.util.userdoc.UserdocGroundsUtils).isNonNationalMarkSubSectionVisible(rootGround.markGroundData?.markGroundType)}" id="not-national-mark-earlier-right-type-subsection-div">
+            <div th:replace="~{ :: not-national-mark-earlier-right-type-subsection(${rootGround},${panel},${sessionObjectIdentifier})}"></div>
+        </div>
+    </div>
+
+</div>
+
+<div th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT},isImportedMark = ${rootGround.markGroundData?.markImportedInd}" th:fragment="common-mark-elements(rootGround,panel,sessionObjectIdentifier)">
+
+    <div th:id="'ground-name-data-div'" th:if="${!isImportedMark}">
+        <div th:replace="~{ :: not-national-mark-earlier-right-type-image-subsection(${rootGround},${panel},${sessionObjectIdentifier})}"></div>
+    </div>
+    <input id="hidden-ground-national-mark" type="hidden"  th:value="${rootGround.markGroundData?.filingNumber}">
+    <div class="row m_T5">
+        <div class="col-4 m_L0-i" th:if="${!isImportedMark}">
+            <div th:replace="~{base/form/input :: text(id = 'root-ground-filing-nbr-on-mark-earlier-type', label = #{ground.filing.number}, value = ${rootGround.markGroundData?.filingNumber}, classes = 'number')}"></div>
+        </div>
+        <div class="col-4 m_L0-i" th:if="${isImportedMark}">
+            <div class="input-field">
+                <input th:id="'userdoc-ground-national-mark-autocomplete'" type="text"
+                       th:value="${rootGround.markGroundData?.filingNumber}"
+                       class="autocomplete form-ignore"
+                       th:attr="data-url=@{/{panel}/autocomplete-ground-national-mark(panel=${panel})}">
+                <label th:id="'userdoc-ground-national-mark-autocomplete-label'" th:for="'userdoc-ground-national-mark-autocomplete'" th:text="#{ground.filing.number}"></label>
+                <div th:replace="base/validation :: validation-message(${validationErrors}, 'userdoc-ground-national-mark')"></div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div th:replace="~{base/form/input :: datepicker(id = 'root-ground-filing-date-on-mark-earlier-type', label = #{ground.filing.date}, value = ${rootGround != null and  rootGround.markGroundData?.filingDate != null ? #dates.format(rootGround.markGroundData?.filingDate, dateFormatDot): ''},isDisabled=${isImportedMark})}"></div>
+        </div>
+    </div>
+
+    <div class="row m_T5">
+        <div class="col-4 m_L0-i">
+            <div th:replace="~{base/form/input :: text(id = 'root-ground-registration-nbr-on-mark-earlier-type', label = #{ground.registration.nbr}, value = ${rootGround.markGroundData?.registrationNbr},isDisabled=${isImportedMark})}"></div>
+        </div>
+        <div class="col-4">
+            <div th:replace="~{base/form/input :: datepicker(id = 'root-ground-registration-date-on-mark-earlier-type', label = #{ground.registration.date}, value = ${rootGround != null and rootGround.markGroundData?.registrationDate != null ? #dates.format(rootGround.markGroundData?.registrationDate, dateFormatDot): ''},isDisabled=${isImportedMark})}"></div>
+        </div>
+        <div class="col-4">
+            <div th:replace="~{base/form/select :: map(id = 'userdoc-ground-markSignType', label = #{ground.mark.sign.type},emptySelectOption ='', map = ${signTypesMap}, selected = ${rootGround.markGroundData?.markSignTyp},isDisabled=${isImportedMark})}"></div>
+        </div>
+    </div>
+
+    <div class="col-12 m_T5">
+        <div th:replace="~{base/form/textarea :: basic(id = 'root-ground-name-text-on-mark-earlier-type', value = ${rootGround.markGroundData?.nameText}, label = #{ground.name.text},isDisabled=${isImportedMark})}"></div>
+    </div>
+
+    <div class="col-12 m_T5">
+        <div th:replace="~{base/form/textarea :: basic(id = 'root-ground-common-text-on-mark-earlier-type', value = ${rootGround.groundCommonText}, label = #{ground.description})}"></div>
+    </div>
+
+    <div th:replace="~{ipobjects/userdoc/grounds/common_elements/subsections/ground_nice_classes_subsection :: ground-nice-classes(${rootGround})}"></div>
+
+</div>
+
+<div th:fragment="national-mark-earlier-right-type-subsection(rootGround,panel,sessionObjectIdentifier)">
+    <div th:replace="~{ :: common-mark-elements(${rootGround},${panel},${sessionObjectIdentifier})}"></div>
+</div>
+
+
+<div th:fragment="not-national-mark-earlier-right-type-subsection(rootGround,panel,sessionObjectIdentifier)">
+    <div th:replace="~{ :: common-mark-elements(${rootGround},${panel},${sessionObjectIdentifier})}"></div>
+</div>
+
+
+<div th:fragment="not-national-mark-earlier-right-type-image-subsection(rootGround,panel,sessionObjectIdentifier)">
+
+    <div class="col-12">
+        <div>
+            <div class="inline-block">
+                <div th:replace="~{base/form/input :: file(
+                                  id = 'ground-image-upload',
+                                  accept = '.jpg, .jpeg, .png',
+                                  name = 'uploadGroundImage',
+                                  classes = 'input_file',
+                                  style = 'display:none;',
+                                  url = @{/{panel}/upload-ground-image(panel=${panel})})}">
+                </div>
+                <a th:id="ground-image-href" class="btn-floating ipas small waves-effect action-button-bot waves-light hidden-element" th:title="#{btn.add}"
+                   th:attr="data-panel = ${panel},data-action='ground-image-href'">
+                    <i class="material-icons">add</i>
+                </a>
+                <div  class="hidden-element b0 inline-block">
+                    <span th:text="#{ground.file.type.message}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-3" th:with="isEditMode = true,url = @{/{panel}/download-ground-image(panel=${panel})}">
+        <div id="userdoc-ground-img-div" class="m_B20">
+            <img onerror="this.style.display='none';" class="ground-img" id="userdoc-ground-img" th:src="|${url}?sessionIdentifier=${sessionObjectIdentifier}&isEditMode=${isEditMode}&time=${#dates.format(#dates.createNow(), 'HH:mm:ss.SSS')}|"/>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

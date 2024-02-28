@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="modal(owners, newOwnerPersonNumber)">
+    <div style="overflow: visible" th:id="connect-new-owner-modal" class="modal" th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)}">
+        <div class="modal-content" >
+            <div class="center">
+                <div>
+                    <h4 th:text="'Свързване на нов притежател/заявител с лице от основния обект'"></h4>
+                </div>
+            </div>
+            <div>
+                <div th:if="${collectionUtils.isEmpty(owners)}">
+                    <div th:replace="base/message :: info('В основния обект, към който е вързано вторичното действие липсват подходящи лица за свързване !')"></div>
+                </div>
+                <div th:if="${!collectionUtils.isEmpty(owners)}">
+                    <ul class="Linked-List m_T20">
+                        <li class="row" th:each="owner : ${owners}">
+                            <div class="col-11">
+                                <div th:replace="ipobjects/common/person/elements :: person-info(${owner})"></div>
+                            </div>
+                            <div class="col-1">
+                                <div th:replace="~{base/form/radio :: basic(name = 'connect-new-owner-radio', label = '', value = ${owner.personNbr}, checked = ${null != connectedPersonNumber && owner.personNbr == connectedPersonNumber})}"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div th:replace="base/validation :: validation-message(${validationErrors},'userdoc-newOwner-connection-errors')"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="col-12">
+                <button th:attr="data-action='connect-new-owner', data-url=@{/userdoc/person/connect-new-owner}, data-newowner=${newOwnerPersonNumber}" th:text="#{btn.save}" type="button" class="button sm-icn-save wmin_130"></button>
+                <button th:text="#{btn.cancel}" type="button" class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="offidoc" type="bg.duosoft.ipas.core.model.offidoc.COffidoc"*/-->
+<!--/*@thymesVar id="parentData" type="bg.duosoft.ipas.core.model.process.CProcessParentData"*/-->
+<!--/*@thymesVar id="document" type="bg.duosoft.abdocs.model.Document"*/-->
+<!--/*@thymesVar id="generatedFile" type="bg.duosoft.abdocs.model.DocFile"*/-->
+<div th:fragment="panel(offidoc)">
+    <div th:with="objectUtils=${T(java.util.Objects)}">
+        <div class="row">
+            <div class="col-12">
+                <div th:replace=":: templates-table(${offidoc},${document != null})"></div>
+                <div th:replace=":: static-templates-table(${offidoc},${document != null})"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="templates-table(offidoc, isDocumentExist)" th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)},offidocUtils=${T(bg.duosoft.ipas.util.offidoc.OffidocUtils)}">
+    <div th:remove="tag" th:switch="${collectionUtils.isEmpty(offidoc.offidocType.templates)}">
+        <div th:case="true"></div>
+        <div th:case="false">
+            <h4>Основни</h4>
+            <table class="simple" th:with="templates=${offidoc.offidocType.templates}">
+                <thead>
+                <tr>
+                    <th th:text="'Наименование'"></th>
+                    <th th:text="'Файл'" style="width: 75px"></th>
+                    <th th:if="${isDocumentExist}" class="hidden-element" style="width: 25px;"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <div th:replace=" :: table-body(true)"></div>
+                <div th:replace=" :: table-body(false)"></div>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="table-body(isDefaultTemplate)" th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)},offidocUtils=${T(bg.duosoft.ipas.util.offidoc.OffidocUtils)}">
+<div th:remove="tag" th:each="template : ${templates}" th:with="offidocFileName =${offidocUtils.selectOffidocFileName(offidoc,template)}, hasGeneratedFile=${offidocUtils.hasGeneratedFileForFileName(offidocFileName,document)},generatedFile=${offidocUtils.selectGeneratedFileForFileName(offidocFileName,document)}">
+    <tr th:if="${(isDefaultTemplate && #strings.equalsIgnoreCase(template.nameWFile,offidoc.offidocType.defaultTemplate)) || (!isDefaultTemplate && !#strings.equalsIgnoreCase(template.nameWFile,offidoc.offidocType.defaultTemplate))}">
+        <td>
+            <span class="m_R5" th:title="'Шаблон по подразбиране'" th:if="${#strings.equalsIgnoreCase(template.nameWFile,offidoc.offidocType.defaultTemplate)}" >
+                <i class="material-icons bpo-blue-color">send</i>
+            </span>
+            <span th:text="${template.nameWFile}"></span>
+        </td>
+        <td>
+            <div th:remove="tag" th:if="${hasGeneratedFile}" >
+                <a class="b0" th:href="@{/file/abdocs-file(uuid=${generatedFile.key},fileName=${generatedFile.name},databaseId=${generatedFile.dbId})}" th:text="'Свали'"></a>
+            </div>
+            <span th:if="${!hasGeneratedFile}" th:text="'Няма'"></span>
+        </td>
+        <td th:if="${isDocumentExist}" class="hidden-element center">
+            <div th:remove="tag" th:switch="${hasGeneratedFile}">
+                <div th:remove="tag" th:case="true">
+                    <a class="btn-floating ipas waves-effect waves-light confirm" th:title="'Прегенерирай файл'"
+                       th:attr="data-action='generate-offidoc-file',
+                                    data-url=@{/offidoc/generate-file},
+                                    data-template=${template.nameWFile},
+                                    data-message='Сигурни ли сте, че искате да прегенерирате файл с този шаблон ?'">
+                        <i class="material-icons">loop</i>
+                    </a>
+                </div>
+                <div th:remove="tag" th:case="false">
+                    <a class="btn-floating ipas waves-effect waves-light confirm" th:title="'Генерирай нов файл'"
+                       th:attr="data-action='generate-offidoc-file',
+                                    data-url=@{/offidoc/generate-file},
+                                    data-template=${template.nameWFile},
+                                    data-message='Сигурни ли сте, че искате да генерирате файл с този шаблон ?'">
+                        <i class="material-icons">add</i>
+                    </a>
+                </div>
+            </div>
+        </td>
+    </tr>
+</div>
+</div>
+
+
+<div th:fragment="static-templates-table(offidoc, isDocumentExist)" th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)},offidocUtils=${T(bg.duosoft.ipas.util.offidoc.OffidocUtils)}">
+    <div th:remove="tag" th:switch="${collectionUtils.isEmpty(offidoc.offidocType.staticTemplates)}">
+        <div th:case="true"></div>
+        <div th:case="false">
+            <h4 class="m_T20">Статични</h4>
+            <table class="simple" th:with="staticTemplates=${offidoc.offidocType.staticTemplates}">
+                <thead>
+                <tr>
+                    <th th:text="'Наименование'"></th>
+                    <th th:text="'Файл'" style="width: 75px"></th>
+                    <th th:if="${isDocumentExist}" class="hidden-element" style="width: 25px;"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <div th:remove="tag" th:each="staticTemplate : ${staticTemplates}"
+                     th:with="staticTemplateName =${staticTemplate.staticFileName},
+                              hasGeneratedFile=${offidocUtils.hasGeneratedFileForFileName(staticTemplateName,document)},
+                              generatedFile=${offidocUtils.selectGeneratedFileForFileName(staticTemplateName,document)}">
+                    <tr>
+                        <td>
+                            <span th:text="${staticTemplateName}"></span>
+                        </td>
+                        <td>
+                            <div th:remove="tag" th:if="${hasGeneratedFile}" >
+                                <a class="b0" th:href="@{/file/abdocs-file(uuid=${generatedFile.key},fileName=${generatedFile.name},databaseId=${generatedFile.dbId})}" th:text="'Свали'"></a>
+                            </div>
+                            <span th:if="${!hasGeneratedFile}" th:text="'Няма'"></span>
+                        </td>
+                        <td th:if="${isDocumentExist}" class="hidden-element center">
+                            <div th:remove="tag" th:switch="${hasGeneratedFile}">
+                                <div th:remove="tag" th:case="true">
+                                    <a class="btn-floating ipas waves-effect waves-light confirm" th:title="'Прегенерирай файл'"
+                                       th:attr="data-action='generate-offidoc-file',
+                                    data-url=@{/offidoc/generate-file/static},
+                                    data-template=${staticTemplateName},
+                                    data-message='Сигурни ли сте, че искате да прегенерирате този файл ?'">
+                                        <i class="material-icons">loop</i>
+                                    </a>
+                                </div>
+                                <div th:remove="tag" th:case="false">
+                                    <a class="btn-floating ipas waves-effect waves-light confirm" th:title="'Прикачи файл'"
+                                       th:attr="data-action='generate-offidoc-file',
+                                    data-url=@{/offidoc/generate-file/static},
+                                    data-template=${staticTemplateName},
+                                    data-message='Сигурни ли сте, че искате да генерирате файл с този шаблон ?'">
+                                        <i class="material-icons">add</i>
+                                    </a>
+                                </div>
+                            </div>
+
+
+                        </td>
+                    </tr>
+                </div>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

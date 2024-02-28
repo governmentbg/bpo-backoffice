@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg" th:with="title=${isNew ? #messages.msg('group.create.title') : #messages.msg('group.edit.title')}">
+<head th:replace="base/template :: head(title=${title})"></head>
+<body class="dark">
+
+<header class="app-header" th:replace="base/header"></header>
+
+<div class="app-body">
+    <div class="left-sidebar">
+        <div id="psb" class="ps--active-y">
+        </div><!-- #psb -->
+    </div><!-- .left-sidebar -->
+
+    <!-- ********************************************************** Main body -->
+    <main class="main">
+        <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+        <div class="inner" id="editGroupDiv">
+            <div id="group-panel" class="panel">
+                <div class="center">
+                    <h2 class="inline-block" th:text="${title}"></h2>
+                </div>
+                <form action="#" th:action="@{/structure/group/save}" method="post" id="groupForm">
+
+                    <div id="content">
+                        <div th:replace="base/message :: success(${successMessage})"></div>
+                        <div th:replace="base/message :: error(${errorMessage})"></div>
+                        <div th:replace="base/message :: general-validation-errors(${validationErrors})"></div>
+                        <br />
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div th:class="input-field">
+                                    <input type="text" class="required" id="groupName" th:value="${group?.groupName}" th:name="groupName"/>
+                                    <label for="groupName" th:text="#{group.name}"></label>
+                                    <div th:replace="base/validation :: validation-message(${validationErrors},'groupName')"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-12">
+                                <div th:class="input-field">
+                                    <input type="text" class="required" id="description" th:value="${group?.description}" name="description"/>
+                                    <label for="description" th:text="#{group.description}"></label>
+                                    <div th:replace="base/validation :: validation-message(${validationErrors},'description')"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div id="groups-select-div" class="input-field">
+                                    <select class="search-box" style="width: 100%" name="roleNames" id="roles-select" multiple="multiple">
+                                        <option th:value="${null}" th:text="''">
+                                        <option th:each="dropdownValue: ${rolesMap}"
+                                                th:value="${dropdownValue.key}"
+                                                th:text="${dropdownValue.value}"
+                                                th:selected="${group?.roleNames != null && group.roleNames.contains(dropdownValue.key)}"
+                                        ></option>
+                                    </select>
+                                    <label for="roles-select" th:text="#{group.roles}"></label>
+                                    <div th:replace="base/validation :: validation-message(${validationErrors},'roleNames')"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" th:if="${!isNew}">
+                            <div class="col-12">
+                                <table class="simple">
+                                    <thead>
+                                    <tr>
+                                        <td th:text="#{users.label}"></td>
+                                        <td th:text="#{options.label}"></td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="user, stat: ${groupUsers}">
+                                        <td th:text="${user.userName}"></td>
+                                        <td>
+                                            <input type="hidden" th:id="'user-' + ${user.userId}" th:value="${user.userId}">
+                                            <a th:attr="data-url=@{/structure/group/userdelete}, data-user=${user.userId}, data-message=#{group.user.delete.confirm}, data-action='delete-group-user'" style="border: 0" th:title="#{btn.delete}" href="javascript:void(0);"
+                                               class="z-depth-1-half button bg__dark-red btn-sm confirm  hidden-element">
+                                                <i class="red icon-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row" th:if="${!isNew}">
+                            <div class="col-11">
+                                <div class="input-field" th:with="id='autocomplete-user'" >
+                                    <input th:id="${id}" type="text"
+                                           th:attr="data-url=@{/user/users-autocomplete}, data-id=''"
+                                           th:value="''" class="autocomplete-user">
+                                    <label th:for="${id}" th:text="#{employee.add}"></label>
+                                    <div th:replace="base/validation :: validation-message(${validationErrors},${id})"></div>
+                                </div>
+                            </div>
+                                <div class="col-1 m_T10">
+                                <a class="b0 confirm" th:attr="data-action='add-group-user',data-url=@{/structure/group/useradd},data-message=#{group.user.add.confirm}" href="javascript:void(0);" th:title="#{employee.add}">
+                                    <i class=" icon-arrow-right-circle bpo-blue-color fs_17px"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <input type="hidden" id="groupId" name="groupId" th:value="${group?.groupId}">
+                        <input type="hidden" name="isNew" th:value="${isNew}"/>
+
+                    </div>
+                    <br>
+
+
+
+                    <div id="submitBtns">
+                        <div class="row">
+                            <div class="col s1">
+                                <button type="submit" id="saveUserButton" class="button sm-icn-save" th:text="#{btn.save}"></button>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+                <div th:replace="base/modal/validation_errors::errors(${validationErrors})" th:remove="tag"></div>
+            </div>
+        </div>
+        <div id="modify_data_status"></div>
+    </main>
+
+</div>
+
+<!-- JQuery files -->
+<footer class="page-footer" th:replace="base/footer"></footer>
+<div th:replace="base/template :: js-footer" th:remove="tag"></div>
+
+<script th:inline="javascript">
+    $(document).ready(function () {
+        executeCommonInitialization({
+            initializeFormElementsWrapper: "#editGroupDiv",
+        });
+    });
+</script>
+
+</body>
+</html>

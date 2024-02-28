@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg">
+
+<head th:replace="base/template :: head(title=|Индексиране|)"></head>
+<body class="dark">
+
+<div class="app-body">
+    <header class="app-header" th:replace="base/header"></header>
+    <!-- ****************************************************** Left Side Nav -->
+    <div class="left-sidebar">
+        <div id="psb" class="ps--active-y">
+            <nav class="sidebar-nav">
+            </nav>
+        </div>
+    </div>
+
+    <!-- ********************************************************** Main body -->
+    <main class="main">
+
+        <div class="inner">
+            <form id="search-form" method="POST">
+                <div id="panel-container" class="panel">
+                    <div style="margin-bottom: 25px">
+                        <h3 style="display: inline-block" class="ui-sortable-handle">Състояние на индекса</h3>
+                        <div id="indexStatus" style="display:none;" class="panel">
+                            <div>
+                                <b th:text="|Индексиране на : |" th:remove="tag"></b>
+                                <span class="indexing-entity"></span>
+                            </div>
+                            <div style="margin-top: 10px;">
+                                <b th:text="|Брой индексирани / Брой записи за индексиране: |" th:remove="tag"></b>
+                                <span class="indexing-records"></span>
+                            </div>
+                            <div style="margin-top: 10px;">
+                                <b th:text="|Прогрес: |" th:remove="tag"></b>
+                                <progress class="indexing-progress" value="0" max="100"></progress>
+                                <span class="indexing-progress-nbr"></span>
+
+                            </div>
+                            <div style="margin-top: 10px;display: none;" class="indexing-error-div">
+                                <b th:text="|Грешка: |" th:remove="tag"></b>
+                                <span class="indexing-error"></span>
+                            </div>
+                        </div>
+                        <div id="indexing-global-error-div" style="display: none;" th:class="panel">
+                            <b th:text="|Грешка: |" th:remove="tag"></b>
+                            <span id="indexing-global-error"></span>
+                        </div>
+
+                        <ul class="Linked-List" style="margin-top: 25px;">
+                            <li style="padding-left: 0">
+                                <div th:replace="ipobjects/common/search/fragments :: index-li-header"></div>
+                            </li>
+                            <li style="padding-left: 0">
+                                <div th:replace="ipobjects/common/search/fragments :: index-li('Масово индексиране', '', '', @{index/all}, '', @{index/delete-all}, ${isStartedIndexing})"></div>
+                            </li>
+                            <li style="padding-left: 0">
+                                <div th:replace="ipobjects/common/search/fragments :: index-li('IpPatent', ${dbCountPatents}, ${IndexCount.countPatents()}, @{index/patents}, @{index/missing/patents},'' , ${isStartedIndexing})"></div>
+                            </li>
+                            <li style="padding-left: 0">
+                                <div th:replace="ipobjects/common/search/fragments :: index-li('IpMark', ${dbCountMarks}, ${IndexCount.countMarks()}, @{index/marks}, @{index/missing/marks},'' , ${isStartedIndexing})"></div>
+                            </li>
+                            <li style="padding-left: 0">
+                                <div th:replace="ipobjects/common/search/fragments :: index-li('IpAction', ${dbCountActions}, ${IndexCount.countActions()}, @{index/actions}, @{index/missing/actions},'' , ${isStartedIndexing})"></div>
+                            </li>
+                            <li style="padding-left: 0">
+                                <div th:replace="ipobjects/common/search/fragments :: index-li('IpProc', ${dbCountProcesses}, ${IndexCount.countProcesses()}, @{index/processes}, @{index/missing/processes},'' , ${isStartedIndexing})"></div>
+                            </li>
+                            <li style="padding-left: 0">
+                                <div th:replace="ipobjects/common/search/fragments :: index-li('IpPersonAddress', ${dbCountPersonAddress}, ${IndexCount.countPersonAddresses()}, @{index/persons}, @{index/missing/persons},'' , ${isStartedIndexing})"></div>
+                            </li>
+                            <li style="padding-left: 0">
+                                <div th:replace="ipobjects/common/search/fragments :: index-li('IpPatentSummary', ${dbCountPatentSummaries}, ${IndexCount.countPatentSummary()}, @{index/patent-summaries}, @{index/missing/patent-summaries},'' , ${isStartedIndexing})"></div>
+                            </li>
+                            <li style="padding-left: 0">
+                                <div th:replace="ipobjects/common/search/fragments :: index-li('IpPatentIpcClasses', ${dbCountIpcClasses}, ${IndexCount.countIpcClasses()}, @{index/ipc-classes}, @{index/missing/ipc-classes},'' , ${isStartedIndexing})"></div>
+                            </li>
+                            <li style="padding-left: 0">
+                                <div th:replace="ipobjects/common/search/fragments :: index-li('IpPatentCpcClasses', ${dbCountCpcClasses}, ${IndexCount.countCpcClasses()}, @{index/cpc-classes}, @{index/missing/cpc-classes},'' , ${isStartedIndexing})"></div>
+                            </li>
+                            <li style="padding-left: 0">
+                                <div th:replace="ipobjects/common/search/fragments :: index-li('IpPatentLocarnoClasses', ${dbCountLocarnoClasses}, ${IndexCount.countPatentLocarnoClasses()}, @{index/locarno-classes}, @{index/missing/locarno-classes},'' , ${isStartedIndexing})"></div>
+                            </li>
+                            <li style="padding-left: 0">
+                                <div th:replace="ipobjects/common/search/fragments :: index-li('IpFileRelationship', ${dbCountFileRelationships}, ${IndexCount.countFileRelationships()}, @{index/file-relationships}, @{index/missing/file-relationships},'' , ${isStartedIndexing})"></div>
+                            </li>
+                            <li style="padding-left: 0">
+                                <div th:replace="ipobjects/common/search/fragments :: index-li('IpMarkNiceClasses', ${dbCountNiceClasses}, ${IndexCount.countNiceClasses()}, @{index/nice-classes}, @{index/missing/nice-classes},'' , ${isStartedIndexing})"></div>
+                            </li>
+                            <li style="padding-left: 0">
+                                <div th:replace="ipobjects/common/search/fragments :: index-li('IpLogoViennaClasses', ${dbCountViennaClasses}, ${IndexCount.countViennaClasses()}, @{index/vienna-classes}, @{index/missing/vienna-classes},'' , ${isStartedIndexing})"></div>
+                            </li>
+                            <li style="padding-left: 0">
+                                <div th:replace="ipobjects/common/search/fragments :: index-li('IpMarkAttachmentViennaClasses', ${dbCountMarkAttachmentViennaClasses}, ${IndexCount.countMarkAttachmentViennaClasses()}, @{index/mark-attachment-vienna-classes}, '', '' , ${isStartedIndexing})"></div>
+                            </li>
+                            <li style="padding-left: 0">
+                                <div th:replace="ipobjects/common/search/fragments :: index-li('IpDoc', ${dbCountDocs}, ${IndexCount.countDocs()}, @{index/docs}, @{index/missing/docs},'' , ${isStartedIndexing})"></div>
+                            </li>
+                            <li style="padding-left: 0">
+                                <div th:replace="ipobjects/common/search/fragments :: index-li('IpUserdoc', ${dbCountUserDocs}, ${IndexCount.countUserDocs()}, @{index/userdocs}, @{index/missing/userdocs},'' , ${isStartedIndexing})"></div>
+                            </li>
+                            <li style="padding-left: 0">
+                                <div th:replace="ipobjects/common/search/fragments :: index-li('IpUserdocPerson', ${dbCountUserDocPersons}, ${IndexCount.countUserDocPersons()}, @{index/userdoc-persons}, @{index/missing/userdoc-persons},'' , ${isStartedIndexing})"></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 style="display: inline-block" class="ui-sortable-handle">Чакащи за индексиране</h3>
+
+                        <ul class="Linked-List" style="margin-top: 25px;">
+                            <li style="padding-left: 0">
+                                <div id="result-header" class="row bld sortable">
+                                    <div class="col-1">
+                                        <span th:text="|ID|"></span>
+                                    </div>
+                                    <div class="col-3">
+                                        <span th:text="|Тип|"></span>
+                                    </div>
+                                    <div class="col-3">
+                                        <span th:text="|Вид операция|"></span>
+                                    </div>
+                                    <div class="col-3">
+                                        <span th:text="|Дата на въвеждане|"></span>
+                                    </div>
+                                    <div class="col-2">
+                                    </div>
+                                </div>
+                            </li>
+                            <li style="padding-left: 0" th:each="el : ${indexQueue}">
+                                <div class="row">
+                                    <div class="col-1">
+                                        <span th:text="${el.id}"></span>
+                                    </div>
+                                    <div class="col-3">
+                                        <span th:text="${#messages.msgOrNull('index.queue.type.' + el.type)}"
+                                              th:if="${el.type} &lt; 20"></span>
+                                        <span th:text="${el.type}"
+                                              th:if="${el.type} &gt; 20"></span>
+                                    </div>
+                                    <div class="col-3">
+                                        <span th:text="${el.operation}"></span>
+                                    </div>
+                                    <div class="col-3">
+                                        <span th:text="|${#dates.format(el.insertedAt, 'dd.MM.yyyy')}|"></span>
+                                    </div>
+                                    <div class="col-2">
+                                        <span th:text="${#messages.msgOrNull('index.queue.checked.' + el.checked)}"></span>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </main>
+</div>
+<footer class="page-footer" th:replace="base/footer"></footer>
+<script>
+
+</script>
+<script th:replace="base/template :: js-footer" th:remove="tag"></script>
+
+<script>
+$(document).ready(function() {
+    let interval;
+    if ([(${isStartedIndexing})]) {
+        getStatus();
+        interval = setInterval(getStatus, 5000); // The interval set to 5 seconds
+
+        // $.ajax({
+        //     url: '[(@{/index/indexingEntities})]',
+        //     type: 'GET',
+        //     datatype: 'html',
+        //     success: function (data) {
+        //
+        //         console.log(data);
+        //         $('#indexing-entities').html(data);
+        //     },
+        //     error: function (xhr, ajaxOptions, thrownError) {
+        //         console.log("asdasd");
+        //     }
+        // });
+    }
+
+    function getStatus() {
+        $.ajax({
+            url: '[(@{/index/status})]',
+            type: 'GET',
+            datatype: 'html',
+            success: function (data) {
+                // console.log("Inside succress...");
+                let entities = data.entities;
+                let hasError = false;
+                // console.log("Entities" + JSON.stringify(entities));
+                entities.forEach(function (item, index) {
+                    let id = item.entityType.replaceAll(".","");
+                    let div = $("#indexStatus-" + id);
+                    if (div.length == 0) {
+                        console.log("Creating new div...");
+                        div = $("#indexStatus").clone();
+                        div = $(div);
+                        div.attr("id", "indexStatus-" + id);
+                        div.show();
+                        $(div).insertBefore($("#indexStatus"));
+                    }
+
+                    div.find(".indexing-entity").html(item.entityType);
+                    div.find(".indexing-records").html(item.current + " / " + item.totalCount);
+                    div.find('.indexing-progress-nbr').html((item.percentsCompleted).toFixed(2) + ' %');
+                    div.find('.indexing-progress').val((item.percentsCompleted).toFixed(2));
+
+                    if (item.error != null && item.error != '') {
+                        hasError = true;
+                        div.find('.indexing-error-div').show();
+                        div.find('.indexing-error').html(item.error);
+                    } else if (!item.running) {
+                        div.hide();
+                    }
+
+                });
+                if (data.globalError != null && data.globalError != '') {
+                    hasError = true;
+                    $('#indexing-global-error-div').show();
+                    $('#indexing-global-error').html(data.globalError);
+                }
+
+                if (!data.running && !hasError) {
+                    if (interval) {
+                        clearInterval(interval);
+                        location.reload();
+                    }
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log(thrownError);
+            }
+        });
+
+    }
+});
+function confirmIndexDeletion() {
+    if (confirm('Наистина ли искате да изтриете индекса(индексите)?')) {
+        UIBlocker.block();
+        return true;
+    }
+    return false;
+}
+</script>
+
+</body>
+</html>

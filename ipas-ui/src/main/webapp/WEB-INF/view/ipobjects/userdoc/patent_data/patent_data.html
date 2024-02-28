@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="panel(patentData)">
+
+    <div>
+
+        <div class="row">
+            <div class="col-12">
+                <div th:replace="~{base/form/textarea :: basic(id = 'userdoc-patent-data-titleBg', value = ${patentData?.titleBg}, unescaped = true, label = #{bg.name.label})}"></div>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-6">
+                <div th:replace="~{base/form/input :: text(id = 'userdoc-patent-data-descriptionPagesCount', label = #{description.pages.number.label}, value = ${patentData?.descriptionPagesCount}, classes = 'number')}"></div>
+            </div>
+
+            <div class="col-6">
+                <div th:replace="~{base/form/input :: text(id = 'userdoc-patent-data-claimsCount', label = #{drawings.count.label}, value = ${patentData?.claimsCount}, classes = 'number')}"></div>
+            </div>
+
+            <div class="col-6">
+                <div th:replace="~{base/form/input :: text(id = 'userdoc-patent-data-drawingsCount', label = #{total.claims.number.label}, value = ${patentData?.drawingsCount}, classes = 'number')}"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>

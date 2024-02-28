@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="userdoc" type="bg.duosoft.ipas.core.model.userdoc.CUserdoc"*/-->
+<div th:fragment="panel(userdoc,userdocTypeMap)">
+    <div>
+        <div class="row">
+            <div class="col-12" th:classappend="${#strings.isEmpty(userdoc.userdocType.userdocType)}?none">
+                <div th:replace="~{base/form/select :: map(id = 'object-userdoc-userdocType', label = 'Вид', map = ${userdocTypeMap}, selected = ${userdoc.userdocType.userdocType}, classes = 'search-box')}"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

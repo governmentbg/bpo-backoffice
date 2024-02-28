@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="agent-power-of-attorney-form-modal(validationErrors,representativeType,attorneyInitialData)">
+    <div th:id="agent-power-of-attorney-form-modal" class="modal">
+        <input th:id="agent-personNbr" type="hidden" th:value="${attorneyInitialData.personNbr}">
+        <input th:id="agent-addressNbr" type="hidden" th:value="${attorneyInitialData.addressNbr}">
+        <input th:id="agent-kind" type="hidden" th:value="${attorneyInitialData.personKind}">
+        <div th:replace="~{ipobjects/common/person/modal/attorney_data_modal_content :: attorney-data-content(validationErrors = ${validationErrors},attorneyInitialData = ${attorneyInitialData},isEditMode = true )}"></div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="workingDate" type="java.util.Date"*/-->
+<!--/*@thymesVar id="receptionType" type="bg.duosoft.ipas.core.model.reception.CReceptionType"*/-->
+<!--/*@thymesVar id="submissionType" type="bg.duosoft.ipas.core.model.reception.CSubmissionType"*/-->
+<!--/*@thymesVar id="receptionForm" type="com.duosoft.ipas.webmodel.ReceptionForm"*/-->
+<div th:fragment="panel(receptionForm,workingDate,receptionTypes,submissionTypes,receptionSessionKey,validationErrors,userdocReceptionRelations,relatedUserdocObjectDetails,userdocFileTypeGroups)"
+     th:remove="tag"
+     th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)},
+              stringUtils=${T(org.springframework.util.StringUtils)},
+              validationUtils=${T(bg.duosoft.ipas.util.validation.ValidationUtils)},
+              securityUtils=${T(bg.duosoft.ipas.util.security.SecurityUtils)},
+              securityRoles=${T( bg.duosoft.ipas.enums.security.SecurityRole)},
+              createReceptionUtils=${T(com.duosoft.ipas.util.reception.CreateReceptionUtils)},
+              receptionTypeEnum=${T(bg.duosoft.ipas.enums.ReceptionType)},
+              receptionTypeUtils=${T(com.duosoft.ipas.util.ReceptionTypeUtils)},
+              euPatentReceptionTypeEnum=${T(bg.duosoft.ipas.enums.EuPatentReceptionType)},
+              euPatentUtils=${T(bg.duosoft.ipas.util.eupatent.EuPatentUtils)},
+              dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+
+
+    <div th:remove="tag" th:replace=":: email-document-without-abdocs-doc"></div>
+    <div th:remove="tag" th:replace=":: email-document-with-abdocs-doc"></div>
+    <div th:remove="tag" th:replace=":: inital-document-existing"></div>
+
+    <div th:id="reception-panel" class="panel">
+        <div th:id="reception-form-header" class="col-12 center">
+            <div>
+                <h1 class="inline-block section-header" th:text="#{'reception.type.title.'+${receptionTypeEnum.selectByCode(receptionForm.receptionType).name()}}"></h1>
+            </div>
+            <div th:id="'reception-from-email-div'" style="display: none">
+                <div th:replace="base/message :: warning-attention(#{reception.from.email.warning.message})"></div>
+            </div>
+            <div th:id="'reception-existed-record-div'" style="display: none">
+                <div th:replace="base/message :: warning-attention(#{reception.from.existed.record.message})"></div>
+            </div>
+            <div>
+                <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.IpasWorkingDateChange)}">
+                    <a href="javascript:void(0);" th:title="#{reception.button.change.working.date}" th:attr="data-action='open-ipas-working-date-modal'" class="b0">
+                        <i class="icon-calendar bpo-blue-color fs_17px"></i>
+                    </a>
+                    <div class="inline-block" th:id="change-ipas-working-date-modal-wrapper">
+                        <div th:remove="tag" th:replace="ipobjects/common/reception/workingdate/working_date_modal :: modal(${workingDate})"></div>
+                    </div>
+                </div>
+                <h4 class="inline-block" th:text="|#{reception.workingDate}: ${#dates.format(workingDate, dateFormatDot)}| "></h4>
+            </div>
+        </div>
+
+        <div th:id="reception-form-body" class="m_T10">
+            <form th:id="create-reception-form" th:action="@{/reception/create}" th:object="${receptionForm}" th:method="'POST'">
+                <div class="row">
+                    <div class="col-6">
+                        <div th:replace="~{base/form/select :: object(
+                            id = 'select-receptionType', label = #{reception.form.type},
+                            name = 'receptionType', url = @{/reception/create/change-reception-type},
+                            classes = 'search-box', objects = ${receptionTypes},
+                            valuePointer = 'id', textPointer = 'title',
+                            selected = ${receptionForm.receptionType})}">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div th:replace="~{base/form/select :: object(
+                            id = 'select-submissionType', label = #{reception.form.submission.type},
+                            name = 'submissionType', url = @{/reception/create/change-submission-type},
+                            classes = 'search-box', objects = ${submissionTypes},
+                            valuePointer = 'id', textPointer = 'name',
+                            selected = ${receptionForm.submissionType})}">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div th:remove="tag" th:switch="${securityUtils.hasRights(securityRoles.ReceptionEntryDateChange)}">
+                            <div th:case="true">
+                                <div th:replace="~{base/form/input :: datepicker(id = 'reception-entryDate', label = #{reception.form.entry.date},name = 'entryDate', value = ${#dates.format(receptionForm.entryDate,dateFormatDot)}, dataMaxDate = 0)}"></div>
+                            </div>
+                            <div th:case="false">
+                                <div th:replace="~{base/form/input :: readonly(label = #{reception.form.entry.date}, value = ${#dates.format(receptionForm.entryDate,dateFormatDot)})}"></div>
+                                <div th:replace="~{base/form/input :: hidden(id = 'reception-entryDate', value = ${#dates.format(receptionForm.entryDate,dateFormatDot)}, name = 'entryDate')}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row m_B5">
+                    <div th:class="col-12">
+                        <div style="width: 145px" class="inline-block">
+                            <span th:text="#{reception.form.original.expected}"></span>
+                        </div>
+                        <div th:replace="~{base/form/radio :: basic(name = 'originalExpected', label = #{yes}, value = true, checked = ${receptionForm.originalExpected}, classes = 'm_R10 m_L10')}"></div>
+                        <div th:replace="~{base/form/radio :: basic(name = 'originalExpected', label = #{no}, value = false, checked = ${!receptionForm.originalExpected })}"></div>
+                    </div>
+                </div>
+
+                <div class="row m_B5" th:if="${receptionForm.receptionType == receptionTypeEnum.MARK.code()}">
+                    <div th:class="col-12" th:id="figurative-mark-radio-wrapper" th:attr="data-url = @{/reception/create/change-figurative-mark}">
+                        <div class="inline-block">
+                            <span th:text="#{reception.form.figurative.mark}"></span>
+                        </div>
+                        <div th:replace="~{base/form/radio :: basic(name = 'mark.figurativeMark', label = #{yes}, value = true, checked = ${receptionForm.mark.figurativeMark}, classes = 'm_R10 m_L10')}"></div>
+                        <div th:replace="~{base/form/radio :: basic(name = 'mark.figurativeMark', label = #{no}, value = false, checked = ${!receptionForm.mark.figurativeMark })}"></div>
+                    </div>
+                </div>
+
+                <div class="row" th:if="${receptionForm.receptionType != receptionTypeEnum.USERDOC.code()}">
+                    <div class="col-12">
+                        <div th:remove="tag" th:switch="${(receptionForm.receptionType == receptionTypeEnum.EU_PATENT.code())}" th:with="label=${receptionTypeUtils.selectReceptionTypeName(@messageSource,receptionForm.receptionType)}">
+                            <div th:remove="tag" th:case="true">
+                                <div th:remove="tag" th:switch="${receptionForm.name == null}">
+                                    <div th:remove="tag" th:case="true">
+                                        <div th:replace="~{base/form/input :: text(id = '', label = ${label}, value = '', isDisabled = true, placeholder = #{reception.form.automatic.fill.field})}"></div>
+                                    </div>
+                                    <div th:remove="tag" th:case="false">
+                                        <div th:replace="~{base/form/input :: text(id = 'input-receptionName', label = ${label}, value = ${receptionForm.name}, isDisabled = true)}"></div>
+                                    </div>
+                                    <div th:replace="~{base/form/input :: hidden(id = '', value = ${receptionForm.name}, name = 'name')}"></div>
+                                </div>
+                            </div>
+                            <div th:remove="tag" th:case="false">
+                                <div th:if="${!((receptionForm.receptionType == receptionTypeEnum.MARK.code()) && (receptionForm.mark.figurativeMark)) && (receptionForm.receptionType != receptionTypeEnum.ACP.code())}">
+                                    <div th:replace="~{base/form/input :: text(id = 'input-receptionName', name = 'name', value = ${receptionForm.name}, label = ${label})}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12" th:if="${receptionForm.receptionType == receptionTypeEnum.EU_PATENT.code()}" th:id="euPatentType-select-wrapper" th:attr="data-url=@{/reception/create/eupatent/change-type}">
+                        <div th:replace="~{base/form/select :: map(id = 'select-euPatentType', name = 'euPatent.type', label = #{reception.form.ebd.type.label}, map = ${euPatentUtils.generateEuPatentReceptionTypeSelectOptions(@messageSource)}, selected = ${receptionForm.euPatent.type})}"></div>
+                    </div>
+                    <div class="col-12" th:if="${receptionForm.receptionType == receptionTypeEnum.USERDOC.code()}">
+                        <div th:replace="~{base/form/select :: map(id = 'select-userdocRelatedObjectGroupType',
+                            label = #{reception.form.udoc.type.label},
+                            map = ${userdocFileTypeGroups},
+                            url = @{/reception/create/change-userdoc-related-object-type}, name = 'userdoc.fileTypeGroup',
+                            selected = ${receptionForm.userdoc.fileTypeGroup}, classes = 'search-box')}"></div>
+                    </div>
+                </div>
+                <div th:id="reception-userdocRelatedObject-wrapper" th:if="${receptionForm.receptionType == receptionTypeEnum.USERDOC.code()}">
+                    <div th:remove="tag" th:replace="ipobjects/common/reception/userdoc/userdoc_related_object :: object(${receptionForm},${userdocReceptionRelations},${relatedUserdocObjectDetails})"></div>
+                </div>
+                <div th:id="reception-euPatent-wrapper" th:if="${receptionForm.receptionType == receptionTypeEnum.EU_PATENT.code()}">
+                    <div th:remove="tag" th:replace="ipobjects/common/reception/eupatent/eupatent :: object(${receptionForm})"></div>
+                </div>
+                <div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div th:with="isEditable=${!(receptionForm.receptionType == receptionTypeEnum.EU_PATENT.code())}">
+                                <div class="inline-block">
+                                    <div th:remove="tag" th:switch="${receptionForm.receptionType == receptionTypeEnum.USERDOC.code() or receptionForm.receptionType == receptionTypeEnum.ACP.code()}">
+                                        <h4 th:case="true" th:text="#{person.applicant.userdoc.title}"></h4>
+                                        <h4 th:case="*" th:text="#{person.applicant.title}"></h4>
+                                    </div>
+                                </div>
+                                <div th:if="${isEditable}" class="inline-block">
+                                    <div th:replace="ipobjects/common/person/elements :: search-person-button(${T(com.duosoft.ipas.enums.PersonKind).Applicant.code()},${true})"></div>
+                                </div>
+                                <div th:id="reception-applicant-wrapper">
+                                    <div th:remove="tag" th:replace="ipobjects/common/reception/correspondent/correspondent_list :: owner-list(${receptionForm.ownershipData},${isEditable})"></div>
+                                    <div th:if="${!#lists.isEmpty(validationErrors)}" class="m_T10">
+                                        <div th:replace="base/validation :: validation-message(${validationErrors},'reception-receptionOwners')"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" th:classappend="${receptionForm.initialDocument == null && (receptionForm.representationData == null || collectionUtils.isEmpty(receptionForm.representationData.representativeList))} ? 'none'">
+                        <div class="col-12">
+                            <div>
+                                <div class="inline-block">
+                                    <h4 th:text="#{person.agent.title}"></h4>
+                                </div>
+                                <div class="inline-block" th:with="personKind = ${T(com.duosoft.ipas.enums.PersonKind).Representative.code()}">
+                                    <div th:replace="ipobjects/common/person/elements :: import-agent-button(${true}, ${personKind}, ${true})"></div>
+                                </div>
+                                <div th:id="reception-agents-wrapper">
+                                    <div th:remove="tag" th:replace="ipobjects/common/reception/correspondent/correspondent_list :: agent-list(${receptionForm.representationData})"></div>
+                                    <div th:replace="base/validation :: validation-message(${validationErrors},'reception-receptionRepresentatives')"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row m_T20">
+                    <div class="col-12">
+                        <div th:replace="~{base/form/textarea :: basic(id = 'input-receptionNotes', name='notes', label = #{additional.notes}, value = ${receptionForm.notes})}"></div>
+                    </div>
+                </div>
+
+                <div th:remove="tag"
+                     th:with="receptionTypeObject = ${receptionTypeUtils.selectReceptionTypeById(receptionTypes,receptionForm.receptionType)}">
+                    <div class="row m_T20"
+                         th:if="${(null != receptionTypeObject) && !collectionUtils.isEmpty(receptionTypeObject.additionalUserdocs)}">
+                        <div class="col-12" th:with="additionalUserdocs = ${receptionTypeObject.additionalUserdocs}">
+                            <div class="m_T5" th:each="userdoc,userdocStat : ${additionalUserdocs}">
+                                <div th:replace="~{base/form/checkbox :: simple(id = '', label = ${userdoc.userdocTypeName}, value = ${userdoc.userdocType}, name = 'additionalUserdocs', dataType = 'reception-additionalUserdoc-checkbox',
+                                                checked = ${(null != receptionForm && null != receptionForm.additionalUserdocs) ? #lists.contains(receptionForm.additionalUserdocs,userdoc.userdocType) : false} )}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row m_T20">
+                    <div class="col-12" id="attachments-wrapper">
+                        <div th:replace="~{ipobjects/common/reception/reception_attachments :: attachments (attachments = ${receptionForm?.docflowDocument?.attachments}, hasAttachmentsFrame = ${receptionForm?.docflowDocument != null})}"></div>
+                        <div th:replace="~{ipobjects/common/reception/reception_attachments :: attachments (attachments = ${receptionForm?.docflowEmailDocument?.attachments}, hasAttachmentsFrame = ${receptionForm?.docflowEmailDocument != null})}"></div>
+                        <div th:replace="~{ipobjects/common/reception/reception_attachments :: attachments (attachments = ${receptionForm?.initialDocument?.attachments}, hasAttachmentsFrame = ${receptionForm?.initialDocument?.attachments != null})}"></div>
+
+                    </div>
+                </div>
+                <div class="none">
+                    <div th:replace="~{base/form/input :: hidden(id = '', value = ${receptionSessionKey}, name = 'sessionIdentifier', classes = 'form-ignore')}"></div>
+                </div>
+                <div class="m_T10">
+                    <div class="inline-block m_L10">
+                        <button th:text="#{btn.record}" class="button sm-icn-save m_0 confirm w_150px"
+                                th:attr="data-form='create-reception-form',
+                                             data-action='reception-submit-btn',
+                                             data-validation-block='#reception-panel',
+                                             data-same-data='true',
+                                             data-url=@{/reception/create/check-data},
+                                             data-url-original=@{/reception/create/is-original},
+                                             data-message=#{reception.submit.warning.message}" th:type="button">
+                        </button>
+                        <a th:replace="~{base/form/button :: material-btn(idBtn='clear-reception-form', label = #{btn.clear}, dataUrl = @{/reception/create} , icon = 'clear', classes='confirm w_150px m_L20', additionalArgs='data-message=#{general.message.continue.confirm}')}"></a>
+                    </div>
+                </div>
+                <input type="hidden" th:name="originalRequestId">
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div th:remove="tag" th:fragment="email-document-without-abdocs-doc">
+    <div th:if="${!stringUtils.isEmpty(receptionForm?.docflowEmailDocument?.emailId)}" class="panel" style="border-left: 5px solid #ffa700">
+        <div class="center m_B10 position-relative">
+            <div class="m_L10 position-absolute">
+                <i style="font-size: 30px" class="material-icons">mail</i>
+            </div>
+            <h3 class="inline-block" th:text="#{reception.docflow.email.send.title}"></h3>
+        </div>
+        <div>
+            <div class="row">
+                <div class="col-12">
+                    <a class="b0" style="padding-left: 0 !important;" th:href="|${@environment.getProperty('abdocs.rest.service.url')}/#/incomingEmails/${receptionForm.docflowEmailDocument.emailId}|" th:text="#{reception.email.view.abodcs.email}"></a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <span th:text="#{reception.email.data.subject}"></span>
+                    <span class="bold" th:text="${receptionForm.docflowEmailDocument.subject}"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <span th:text="#{reception.email.data.from}"></span>
+                    <span class="bold" th:text="${receptionForm.docflowEmailDocument.emailAddress}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="inital-document-existing">
+    <div th:if="${receptionForm.initialDocument != null}" class="panel" style="border-left: 5px solid #00ccff">
+        <div class="center m_B10 position-relative">
+            <h3 class="inline-block" th:text="#{reception.initial.document.title}"></h3>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <a class="b0" style="padding-left: 0 !important;" th:href="|${@environment.getProperty('abdocs.rest.service.url')}/#/docs/${receptionForm.initialDocument.documentId}/view|" th:text="#{abdocs.view.document}"></a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <span th:text="#{reception.email.data.abdocs.number}"></span>
+                <span class="bold" th:text="${receptionForm.initialDocument.regNumber}"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <span th:text="#{reception.email.data.subject}"></span>
+                <span class="bold" th:text="${receptionForm.initialDocument.subject}"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div th:remove="tag" th:fragment="email-document-with-abdocs-doc">
+    <div th:if="${receptionForm.docflowDocument != null && !stringUtils.isEmpty(receptionForm.docflowDocument.regUri)}" class="panel" style="border-left: 5px solid #00ccff">
+        <div class="center m_B10 position-relative">
+            <div class="m_L10 position-absolute">
+                <i style="font-size: 30px" class="material-icons">mail</i>
+            </div>
+            <h3 class="inline-block" th:text="#{reception.docflow.email.send.title}"></h3>
+        </div>
+        <div>
+            <div class="row">
+                <div class="col-12">
+                    <a class="b0" style="padding-left: 0 !important;" th:href="|${@environment.getProperty('abdocs.rest.service.url')}/#/docs/${receptionForm.docflowDocument.documentId}/view|" th:text="#{reception.email.view.abodcs.document}"></a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <span th:text="#{reception.email.data.abdocs.number}"></span>
+                    <span class="bold" th:text="${receptionForm.docflowDocument.regUri}"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <span th:text="#{reception.email.data.subject}"></span>
+                    <span class="bold" th:text="${receptionForm.docflowDocument.subject}"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <span th:text="#{reception.email.data.from}"></span>
+                    <span class="bold" th:text="${receptionForm.docflowDocument.emailAddress}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

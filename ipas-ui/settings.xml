@@ -1,0 +1,87 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                  http://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <env>dev</env>
+                <ipas.persistence.datasource.url>...</ipas.persistence.datasource.url>
+                <ipas.persistence.datasource.username>...</ipas.persistence.datasource.username>
+                <ipas.persistence.datasource.password>...</ipas.persistence.datasource.password>
+
+                <cronjob.database.url>...</cronjob.database.url>
+                <cronjob.database.user>...</cronjob.database.user>
+                <cronjob.database.password>...</cronjob.database.password>
+
+
+                <payment.rest.service.username>...</payment.rest.service.username>
+                <payment.rest.service.password>...</payment.rest.service.password>
+                <payment.rest.service.url>...</payment.rest.service.url>
+                <payment.url>...</payment.url>
+                <tmclass.heading.rest.service.url>....</tmclass.heading.rest.service.url>
+                <tmclass.verify.rest.service.url>...</tmclass.verify.rest.service.url>
+                <tmclass.alphaList.rest.service.url>...</tmclass.alphaList.rest.service.url>
+                <tmclass.translate.rest.service.url>...</tmclass.translate.rest.service.url>
+                <tmseniority.rest.service.url>...</tmseniority.rest.service.url>
+                <tmview.search.autocomplete.service.url>...</tmview.search.autocomplete.service.url>
+
+                <dsclass.verify.rest.service.url>...</dsclass.verify.rest.service.url>
+                <dsclass.search.rest.service.url>...</dsclass.search.rest.service.url>
+
+                <cas.login.url>...</cas.login.url>
+                <cas.server>...</cas.server>
+                <cas.logout.url>...</cas.logout.url>
+                <cas.application.logout.page>...</cas.application.logout.page>
+
+                <liferay.remote.user.name>...</liferay.remote.user.name>
+                <liferay.remote.user.password>...</liferay.remote.user.password>
+                <liferay.virtual.host>...</liferay.virtual.host>
+                <liferay.service.url>...</liferay.service.url>
+                <liferay.cas.ticket.url>...</liferay.cas.ticket.url>
+
+                <cas.service.url>...</cas.service.url>
+
+                <ipas.webservice.endpoint.address>...</ipas.webservice.endpoint.address>
+                <abdocs.rest.service.url>...</abdocs.rest.service.url>
+                <abdocs.rest.service.admin.user>...</abdocs.rest.service.admin.user>
+                <abdocs.rest.service.admin.password>...</abdocs.rest.service.admin.password>
+
+                <ebdD.jdbc.url>...</ebdD.jdbc.url>
+                <ebdD.jdbc.user>...</ebdD.jdbc.user>
+                <ebdD.jdbc.pass>...</ebdD.jdbc.pass>
+                <ipas.persistence.hibernate.show_sql>...</ipas.persistence.hibernate.show_sql>
+
+                <ipas.management.role>...</ipas.management.role>
+
+                <jasper.rest.url>...</jasper.rest.url>
+                <jasper.rest.username>...</jasper.rest.username>
+                <jasper.rest.password>...</jasper.rest.password>
+                <jasper.rest.report.url.search.ipos>...</jasper.rest.report.url.search.ipos>
+
+                <offidoc.static.templates.directory>...</offidoc.static.templates.directory>
+
+                <decisiondesktop.proxy.baseUrl>...</decisiondesktop.proxy.baseUrl>
+                <decisiondesktop.proxy.user>...</decisiondesktop.proxy.user>
+                <decisiondesktop.proxy.pass>...</decisiondesktop.proxy.pass>
+                <decisiondesktop.draftingeditor.app.url>...</decisiondesktop.draftingeditor.app.url>
+                <efuserchange.url>...</efuserchange.url>
+                <efuserchange.username>...</efuserchange.username>
+                <efuserchange.password>...</efuserchange.password>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+
+
+    </profiles>
+    <servers>
+        <server>
+            <id>dev</id>
+            <username>...</username>
+            <password>...</password>
+        </server>
+    </servers>
+</settings>

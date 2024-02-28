@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg">
+<head th:replace="base/template :: head(title=#{newly.allocated.userdocs.title})"></head>
+<body class="dark left-sidebar-show">
+<header class="app-header" th:replace="base/header"></header>
+
+<div class="app-body"  th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT},securityUtils=${T(bg.duosoft.ipas.util.security.SecurityUtils)}, securityRoles=${T( bg.duosoft.ipas.enums.security.SecurityRole)}">
+    <div th:replace="base/left-sidebars :: list(urls = ${T(com.duosoft.ipas.util.UrlMap).getHomeUrlsFiltered()})"></div>
+    <main class="main">
+        <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+        <div class="inner continer">
+            <div class="row">
+                <div class="col-12">
+                    <div class="panel">
+                        <div class="center">
+                            <h1 class="section-header" th:text="#{newly.allocated.userdocs.title}"></h1>
+                        </div>
+                        <div class="row">
+                            <div class="col-6" th:id="'newly-allocated-userdoc-userdocType-filter-wrapper'" th:with="id='newly-allocated-userdoc-userdocType-filter'">
+                                <div th:replace="~{base/form/select :: map(id = ${id}, label = 'Вида на документа', map = ${userdocTypeMap}, selected = ${newlyAllocatedUserdocsFilter.userdocType}, emptySelectOption = #{all}, classes = 'search-box')}"></div>
+                            </div>
+                            <div class="col-6">
+                                <div th:replace="~{base/form/input :: text(id = 'newly-allocated-userdoc-filingNumber-filter-input', label = 'Номер на документа',value=${newlyAllocatedUserdocsFilter.userdocFilingNumber})}"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div th:replace="~{base/form/input :: datepicker(id = 'newly-allocated-userdoc-filingDateFrom-filter-input', label = 'Дата на подаване от',value = ${null != newlyAllocatedUserdocsFilter.userdocFilingDateFrom ? #dates.format(newlyAllocatedUserdocsFilter.userdocFilingDateFrom, dateFormatDot) : ''})}"></div>
+                            </div>
+                            <div class="col-6">
+                                <div th:replace="~{base/form/input :: datepicker(id = 'newly-allocated-userdoc-filingDateTo-filter-input', label = 'Дата на подаване до',value = ${null != newlyAllocatedUserdocsFilter.userdocFilingDateTo ? #dates.format(newlyAllocatedUserdocsFilter.userdocFilingDateTo, dateFormatDot) : ''})}"></div>
+                            </div>
+                            <div class="col-6" th:id="'newly-allocated-userdoc-objectFileTyp-filter-wrapper'" th:with="id='newly-allocated-userdoc-objectFileTyp-filter'">
+                                <div th:replace="~{base/form/select :: map(id = ${id}, label = 'Вид на обекта', map = ${fileTypes}, selected = ${newlyAllocatedUserdocsFilter.objectFileTyp},emptySelectOption = #{all}, classes = 'search-box')}"></div>
+                            </div>
+                            <div class="col-6">
+                                <div th:replace="~{base/form/input :: text(id = 'newly-allocated-userdoc-objectFileNbr-filter-input', label = 'Номер на обекта',value=${newlyAllocatedUserdocsFilter.objectFileNbr})}"></div>
+                            </div>
+
+                            <div th:if="${securityUtils.hasRights(securityRoles.IpObjectsSearchForeignObjectsData)}" class="col-6">
+                                <div th:replace="~{base/form/input :: text(id = 'responsibleUser-filter', label = #{filter.responsibleUser.label},dataId = (${newlyAllocatedUserdocsFilter.responsibleUser}),dataFlag = (${newlyAllocatedUserdocsFilter.onlyActiveUsers}), value = (${newlyAllocatedUserdocsFilter.responsibleUserName}), url = @{/user/users-autocomplete}, classes = 'autocomplete-user')}"></div>
+                            </div>
+
+                            <div th:if="${securityUtils.hasRights(securityRoles.IpObjectsSearchForeignObjectsData)}" class="col-6">
+                                <div th:replace="~{base/form/checkbox :: basic(id = 'responsible-user-indinactive-checkbox', label = 'Само активни потребители', isChecked = ${newlyAllocatedUserdocsFilter.onlyActiveUsers})}"></div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="row right-align">
+                            <div class="col-12">
+                                <a th:replace="~{base/form/button :: material-btn(label = #{btn.search}, idBtn = 'search-newly-allocated-userdoc-btn', dataUrl = @{/newly-allocated-userdocs/search} , icon = 'search', classes = 'm_R20 m_T5')}"></a>
+                                <a th:replace="~{base/form/button :: material-btn(label = #{btn.clear}, idBtn = 'clear-newly-allocated-userdoc-btn',href=@{/newly-allocated-userdocs/list}, icon = 'clear', classes = 'm_T5')}"></a>
+                            </div>
+                        </div>
+
+                        <div th:id="newly-allocated-userdoc-table-wrapper" th:attr="data-url=@{/newly-allocated-userdocs/update-table}">
+                            <div th:replace="home/newly_allocated_userdocs/newly_allocated_userdocs_table :: table(newlyAllocatedUserdocs=${newlyAllocatedUserdocs},newlyAllocatedUserdocsCount=${newlyAllocatedUserdocsCount},newlyAllocatedUserdocsFilter=${newlyAllocatedUserdocsFilter})"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<footer class="page-footer" th:replace="base/footer"></footer>
+<div th:replace="base/template :: js-footer" th:remove="tag"></div>
+</body>
+</html>

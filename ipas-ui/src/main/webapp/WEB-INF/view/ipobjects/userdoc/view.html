@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="base/template :: head(title = (#{userdoc.breadcrumb.prefix} + ' ' + ${userdoc.documentId.createFilingNumber()}))"></head>
+
+<!--/*@thymesVar id="panelEnum" type="com.duosoft.ipas.enums.UserdocPanel"*/-->
+<!--/*@thymesVar id="userdoc" type="bg.duosoft.ipas.core.model.userdoc.CUserdoc"*/-->
+<body class="dark left-sidebar-show" th:with="panelEnum=${T(com.duosoft.ipas.enums.UserdocPanel)},userdocUIUtils=${T(com.duosoft.ipas.util.userdoc.UserdocUIUtils)}">
+
+<th:block th:with="panelsList=${userdocUIUtils.selectUserdocPanelCodes(userdoc.userdocType.panels)}">
+<div th:replace="ipobjects/userdoc/userdoc_view_page :: content(${panelsList},'userdoc')"></div>
+
+</th:block>
+
+</body>
+</html>

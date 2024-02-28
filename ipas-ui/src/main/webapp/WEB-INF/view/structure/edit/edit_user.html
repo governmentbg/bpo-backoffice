@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg" th:with="title=${isNew ? #messages.msg('user.title.create') : #messages.msg('user.title.change')}">
+<head th:replace="base/template :: head(title=${title})"></head>
+<body class="dark">
+
+<header class="app-header" th:replace="base/header"></header>
+
+<div class="app-body">
+
+    <div class="left-sidebar">
+        <div id="psb" class="ps--active-y">
+        </div><!-- #psb -->
+    </div><!-- .left-sidebar -->
+    <!-- ********************************************************** Main body -->
+    <main class="main">
+        <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+        <div class="inner" id="editUserDiv">
+            <div th:replace="base/message :: error-global(${errorMessage})"></div>
+            <div th:replace="base/message :: success-global(${successMessage})"></div>
+            <div th:replace="base/message :: general-validation-errors(${validationErrors})"></div>
+
+            <div id="user-panel" class="panel">
+                <div class="center">
+                    <h1 class="inline-block section-header" th:text="${title}"></h1>
+                </div>
+                <form action="#" th:action="@{/structure/user/save}" method="post" id="registrationForm">
+                    <!--TODO:
+                    <div th:if="*{getIndInactive() == 'S'}">
+                        <h3 style="color:red;" th:text="#{user.label.inactive}"></h3>
+                    </div>
+
+                    <div th:if="${user.userId != null}">
+                        <div id="activeRadio" th:if="*{getIndInactive() == 'S'}">
+                            <label for="active1" th:text="#{status.radio}"></label>
+                            <p>
+                                <label>
+                                    <input id="active1" class="with-gap" name="active" type="radio" th:field="*{reborn}"
+                                           th:value="N"/>
+                                    <span th:text="#{user.yes}"></span>
+                                </label>
+                            </p>
+
+                            <p>
+                                <label>
+                                    <input id="active2" class="with-gap" name="active" type="radio" th:field="*{reborn}"
+                                           th:value="S"/>
+                                    <span th:text="#{user.no}"></span>
+                                </label>
+                            </p>
+                        </div>
+                    </div>
+                    -->
+                    <div id="content">
+                        <div class="row m_B10">
+                            <div class="col-12">
+                                <div th:replace="~{base/form/input :: text(id = 'login', label = #{user.username}, value = ${user?.login}, name = 'login', isDisabled = ${!isNew})}"></div>
+                                <div th:remove="tag" th:if="${!isNew}">
+                                    <div th:replace="~{base/form/input :: hidden(id = 'login', value = ${user?.login}, name = 'login')}"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row m_B10">
+                            <div class="col-12">
+                                <div th:replace="~{base/form/input :: text(id = 'userName', label = #{name.label}, value = ${user?.userName}, name = 'userName')}"></div>
+                            </div>
+                        </div>
+                        <div class="row m_B10">
+                            <div class="col-12">
+                                <div th:replace="~{base/form/input :: text(id = 'initials', label = #{user.initials}, value = ${user?.initials}, name = 'initials')}"></div>
+                            </div>
+                        </div>
+                        <div class="row m_B10">
+                            <div class="col-12">
+                                <div th:replace="~{base/form/input :: text(id = 'fullName', label = #{user.full.name}, value = ${user?.fullName}, name = 'fullName')}"></div>
+                            </div>
+                        </div>
+                        <div class="row m_B10">
+                            <div class="col-12">
+                                <div th:replace="~{base/form/input :: text(id = 'email', label = #{user.email}, value = ${user?.email}, name = 'email')}"></div>
+                            </div>
+                        </div>
+                        <div class="row m_B10">
+                            <div class="col-12">
+                                <div th:replace="~{base/form/input :: text(id = 'telephone', label = #{user.phone}, value = ${user?.telephone}, name = 'telephone')}"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <span th:text="#{active}"></span>
+                                <label class="m_R10 m_L10">
+                                    <input value="false" class="with-gap" id="indInactive1" name="indInactive" type="radio" th:checked="${user?.indInactive == null ? true : !user.indInactive}">
+                                    <span th:text="#{yes}"></span>
+                                </label>
+                                <label>
+                                    <input value="true" class="with-gap" checked="checked" id="indInactive2" name="indInactive" type="radio" th:checked="${user?.indInactive == null ? false : user.indInactive}">
+                                    <span th:text="#{no}"></span>
+                                </label>
+                            </div>
+                            <div class="col-6">
+                                <span th:text="#{user.admin.label}"></span>
+                                <label class="m_R10 m_L10">
+                                    <input value="true" class="with-gap" id="indAdministrator1" name="indAdministrator" type="radio"  th:checked="${user?.indAdministrator == null ? false : user.indAdministrator}">
+                                    <span th:text="#{yes}"></span>
+                                </label>
+                                <label>
+                                    <input value="false" class="with-gap" checked="checked" id="indAdministrator2" name="indAdministrator" type="radio" th:checked="${user?.indAdministrator == null ? true : !user.indAdministrator}">
+                                    <span th:text="#{no}"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <br>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <span th:text="#{user.examiner.label}"></span>
+                                <label class="m_R10 m_L10">
+                                    <input value="true" class="with-gap" id="indExaminer1" name="indExaminer" type="radio" th:checked="${user?.indExaminer == null ? false : user.indExaminer}">
+                                    <span th:text="#{yes}"></span>
+                                </label>
+                                <label>
+                                    <input value="false" class="with-gap" checked="checked" id="indExaminer2" name="indExaminer" type="radio" th:checked="${user?.indExaminer == null ? true : !user.indExaminer}">
+                                    <span th:text="#{no}"></span>
+                                </label>
+                            </div>
+                            <div class="col-6">
+                                <span th:text="#{user.external.label}"></span>
+                                <label class="m_R10 m_L10">
+                                    <input value="true" class="with-gap" id="indExternal1" name="indExternal" type="radio" th:checked="${user?.indExternal == null ? false : user.indExternal}">
+                                    <span th:text="#{yes}"></span>
+                                </label>
+                                <label>
+                                    <input value="false" class="with-gap" checked="checked" id="indExternal2" name="indExternal" type="radio" th:checked="${user?.indExternal == null ? true : !user.indExternal}">
+                                    <span th:text="#{no}"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-12">
+                                <div id="division-select-div">
+                                    <div th:replace="structure/edit/select_division :: select-division(disabled = false, selectedDivision = ${user?.officeDivisionCode}, availableDivisions=${availableDivisions})"></div>
+                                    <div th:replace="base/validation :: validation-message(${validationErrors},'officeDivisionCode')"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div id="department-select-div">
+                                    <div th:replace="structure/edit/select_department :: select-department(disabled = false, selectedDepartment = ${user?.officeDepartmentCode}, availableDepartments=${availableDepartments})"></div>
+                                    <div th:replace="base/validation :: validation-message(${validationErrors},'officeDepartmentCode')"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div id="section-select-div">
+                                    <div th:replace="structure/edit/select_section :: select-section(disabled = false, selectedSection = ${user?.officeSectionCode}, availableSections=${availableSections})"></div>
+                                    <div th:replace="base/validation :: validation-message(${validationErrors},'officeSectionCode')"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div th:replace="~{base/form/select :: map(id = 'groups-select', label = #{user.groups.label},
+                                map = ${groupsMap},name = 'groupIds', multiple = true, classes = 'search-box',
+                                selectedExpression = ('user?.groupIds != null && user.groupIds.contains(mapRecord.key)'))}"></div>
+                            </div>
+                        </div>
+
+                        <input type="hidden" id="userId" name="userId" th:value="${user?.userId}">
+                        <input type="hidden" name="officeDivisionCode" id="divisionCode" th:value="${user?.officeDivisionCode}">
+                        <input type="hidden" name="officeDepartmentCode" id="departmentCode" th:value="${user?.officeDepartmentCode}">
+                        <input type="hidden" name="officeSectionCode" id="sectionCode" th:value="${user?.officeSectionCode}">
+                        <input type="hidden" name="isNew" th:value="${isNew}"/>
+                    </div>
+                    <br>
+                    <div id="submit"></div>
+                    <div class="submitBtns">
+                        <div class="row">
+                            <div class="col s1">
+                                <button type="submit" id="saveUserButton" class="button sm-icn-save" th:text="#{btn.save}"></button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div th:replace="base/modal/validation_errors::errors(${validationErrors})" th:remove="tag"></div>
+            </div>
+        </div>
+    </main>
+
+</div>
+
+<!-- JQuery files -->
+<footer class="page-footer" th:replace="base/footer"></footer>
+<div th:replace="base/template :: js-footer" th:remove="tag"></div>
+
+<script th:inline="javascript">
+    $(document).ready(function () {
+        executeCommonInitialization({
+            initializeFormElementsWrapper: "#editUserDiv",
+        });
+    });
+</script>
+
+</body>
+</html>

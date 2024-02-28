@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="valid-ipcs-form-modal(ipcList)">
+    <div th:id="valid-ipcs-form-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="#{valid.ipc.list.title}"></h4>
+            </div>
+            <div class="row m_B20" th:if="${!T(org.springframework.util.CollectionUtils).isEmpty(ipcList)}">
+                <div class="col-12">
+                    <table class="simple">
+                        <thead>
+                        <tr>
+                            <th th:text="#{ipc.edition.code.label}"></th>
+                            <th th:text="#{ipc.classes.label}"></th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="ipc : ${ipcList}">
+                            <td th:text="${ipc.ipcEdition}"></td>
+                            <td th:text="${#strings.concat(ipc.ipcSection,ipc.ipcClass,ipc.ipcSubclass,ipc.ipcGroup,ipc.ipcSubgroup,' - ',ipc.ipcSymbolDescription)}"
+                                th:title="${ipc.ipcSymbolDescription}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row m_B20" th:if="${T(org.springframework.util.CollectionUtils).isEmpty(ipcList)}">
+                <div th:replace="~{base/message :: warning(#{not.valid.ipcs.warning.message})}"></div>
+            </div>
+        </div>
+        <div class="modal-footer row">
+            <div class="col-12">
+                <button th:text="#{btn.cancel}" th:type="button" class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="relationshipData" type="com.duosoft.ipas.util.json.RelationshipData"*/-->
+<!--/*@thymesVar id="relationshipFileType" type="java.lang.String"*/-->
+<!--/*@thymesVar id="id" type="java.lang.String"*/-->
+<div th:fragment="relationship-row(id, relationshipData,relationshipFileType)" th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+    <div class="row" th:id="${id} + '-details'">
+        <div class="col-3" th:with="id1=${id} + '-file-id'">
+            <div th:id="|${id1}-hidden-div|">
+                <input th:id="|${id}-original-fullNumber|" type="hidden" th:value="${relationshipData?.fullNumber}" class="form-ignore">
+                <input th:id="|${id1}-fileNbr|" type="hidden" th:value="${relationshipData?.fileNbr}">
+                <input th:id="|${id1}-fileSeq|" type="hidden" th:value="${relationshipData?.fileSeq}">
+                <input th:id="|${id1}-fileSeries|" type="hidden" th:value="${relationshipData?.fileSeries}">
+                <input th:id="|${id1}-fileType|" type="hidden" th:value="${relationshipData?.fileType}">
+                <input th:id="|${id}-relationshipChanged|" type="hidden" th:value="${relationshipData?.relationshipChanged ?: false}">
+            </div>
+            <div class="input-field">
+                <input th:id="${id} + '-autocomplete'" type="text" th:value="${relationshipData?.fileNbr}"
+                       class="autocomplete form-ignore relationship-autocomplete number"
+                       th:attr="data-url=@{/autocomplete-relationship},data-master-file-type=${relationshipFileType},data-start=0,data-end=100000000">
+    
+                <label th:id="${id} + '-nonempty-lbl'" th:for="${id} + '-autocomplete'" th:style="${relationshipData?.fileNbr != null && relationshipData?.fileType != null ? '': 'display:none'}" th:text="|${relationshipData?.fileSeq}/${relationshipData?.fileType}/${relationshipData?.fileSeries}/|"></label>
+                <label th:id="${id} + '-empty-lbl'" th:for="${id} + '-autocomplete'" th:style="${relationshipData?.fileNbr == null || relationshipData?.fileType == null ? '': 'display:none'}" th:text="#{relationship.add.number}"></label>
+                <div th:replace="base/validation :: validation-message(${validationErrors}, ${id} + '-autocomplete')"></div>
+            </div>
+        </div>
+        <div class="col-4" th:classappend="${relationshipData?.name == null ? 'hidden-element':''}">
+            <div th:replace="~{base/form/input :: readonly(id = ${id} + '-name' , label = #{relationship.name}, value = ${relationshipData?.name})}"></div>
+        </div>
+        <div class="col-2" th:classappend="${relationshipData?.filingDate == null ? 'hidden-element':''}">
+            <div th:replace="~{base/form/input :: readonly(id = ${id} + '-filingDate' ,label = #{relationship.filingDate}, value = ${#dates.format(relationshipData?.filingDate, dateFormatDot)})}"></div>
+        </div>
+        <div class="col-2" th:classappend="${relationshipData?.registrationDate == null ? 'hidden-element':''}">
+            <div th:replace="~{base/form/input :: readonly(id = ${id} + '-registrationDate', label = #{relationship.registrationDate}, value = ${#dates.format(relationshipData?.registrationDate, dateFormatDot)})}"></div>
+        </div>
+    </div>
+    <div class="row hidden-element" th:if="${id}=='object-national-patent-relationship'">
+        <div class="p_10">
+                <span class="orange"
+                      th:text="#{rights.inventors.expiration.and.entitlement.date.replace.warning}"></span>
+        </div>
+    </div>
+</div>
+</body>
+</html>

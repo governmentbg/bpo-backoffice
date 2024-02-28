@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="lastAction" type="bg.duosoft.ipas.persistence.model.nonentity.IPObjectSimpleResult"*/-->
+<div th:fragment="result(progressBar, generatedDocuments)"
+     th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+
+    <div th:remove="tag" th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(generatedDocuments)}">
+        <div th:remove="tag" th:case="true"></div>
+        <div th:remove="tag" th:case="false">
+            <div class="row">
+                <div class="col-12">
+                    <div class="panel">
+                        <div class="row m_T20 m_B10">
+                            <div class="col-12">
+                                <div class="center">
+                                    <h3 th:text="#{patent.paid.fees.cert.results.title}"></h3>
+                                    <h4 class="bold" th:text="${#dates.format(progressBar.startAt,T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT)}"></h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row m_T20">
+                            <div class="col-12">
+                                <div class="center" th:text="#{patent.paid.fees.cert.uploadedToDoc}"></div>
+                                <div class="center">
+                                    <span style="cursor: pointer;color: #00b0ff" th:attr="data-action='abdocs-object-redirect',
+                                                   data-url=@{/process/document/open-object-document},
+                                                   data-number=${progressBar.lastPatentCertificateMainObject}"
+                                          th:text="${progressBar.lastPatentCertificateMainObject}">
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <span th:text="#{total}"></span>
+                                <span th:text="${#lists.size(generatedDocuments)}"></span>
+                            </div>
+                            <div class="col-12">
+                                <span class="m-green-text" th:text="#{patent.paid.fees.cert.total.success}"></span>
+                                <span th:text="${progressBar.selectSuccessful().size()}"></span>
+                            </div>
+                            <div class="col-12">
+                                <span class="m-red-text" th:text="#{patent.paid.fees.cert.total.error}"></span>
+                                <span th:text="${progressBar.selectUnsuccessful().size()}"></span>
+                            </div>
+                        </div>
+                        <div class="row m_T5">
+                            <div class="col-12">
+                                <table class="simple bpo medium-size-body" th:classappend="${!progressBar.inProgress} ? 'scroll-body'">
+                                    <div>
+                                        <thead>
+                                        <tr>
+                                            <th style="width: 25px" th:text="#{number.sign}"></th>
+                                            <th style="width: 150px" th:text="#{patent.paid.fees.cert.table.id}"></th>
+                                            <th style="width: 200px" th:text="#{patent.paid.fees.cert.table.liabilityType}"></th>
+                                            <th style="width: 75px" th:text="#{patent.paid.fees.cert.table.paymentDate}"></th>
+                                            <th style="width: 50px" th:text="#{patent.paid.fees.cert.table.amount}"></th>
+                                            <th th:text="#{patent.paid.fees.cert.table.payer}"></th>
+                                        </tr>
+                                        </thead>
+                                    </div>
+                                    <div>
+                                        <tbody>
+                                        <tr th:each="doc,docStat : ${generatedDocuments}" th:with="liabilityDetail = ${doc.extLiabilityDetail}">
+                                            <td style="width: 25px">
+                                                <span th:text="${docStat.count}"></span>
+                                            </td>
+                                            <td style="width: 150px">
+                                                <span th:text="${liabilityDetail.fileId.createFilingNumber()}"></span>
+                                            </td>
+                                            <td style="width: 200px">
+                                                <span th:text="${liabilityDetail.liabilityCodeName}"></span>
+                                            </td>
+                                            <td style="width: 75px">
+                                                <span th:text="${#dates.format(liabilityDetail.lastDatePayment,dateFormatDot)}"></span>
+                                            </td>
+                                            <td style="width: 50px">
+                                                <span th:text="${liabilityDetail.amount}"></span>
+                                            </td>
+                                            <td th:text="${liabilityDetail.lastPayerName}"></td>
+                                        </tr>
+                                        </tbody>
+                                    </div>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</body>
+</html>

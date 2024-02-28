@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="userdoc" type="bg.duosoft.ipas.core.model.userdoc.CUserdoc"*/-->
+<!--/*@thymesVar id="panelEnum" type="com.duosoft.ipas.enums.UserdocPanel"*/-->
+<div th:fragment="content(panelsList,panelPrefix)" th:with="securityUtils=${T(bg.duosoft.ipas.util.security.SecurityUtils)},
+                                                            collectionUtils=${T(org.springframework.util.CollectionUtils)},
+                                                            userdocPersonUtils=${T(bg.duosoft.ipas.util.userdoc.UserdocPersonUtils)},
+                                                            userdocUtils=${T(bg.duosoft.ipas.util.userdoc.UserdocUtils)},
+                                                            editEnabled=${securityUtils.isUserdocObjectEditEnabled(userdoc,@processServiceImpl,@userServiceImpl)},
+                                                            securityRoles=${T( bg.duosoft.ipas.enums.security.SecurityRole)},
+                                                            hasPersonPanel=${!userdocUtils.isUserdocWithoutCorrespondents(userdoc.userdocType, @userdocPanelServiceImpl)}"
+>
+
+    <div class="app-body">
+        <header class="app-header" th:replace="base/header"></header>
+        <div th:replace="ipobjects/userdoc/userdoc_view_left_sidebar :: sidebar(${panelsList},${panelPrefix})"></div>
+
+        <main class="main">
+            <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+            <div class="inner" th:with="objectUtils=${T(java.util.Objects)},
+                                        stringUtils=${T(org.springframework.util.StringUtils)}">
+
+                <div th:remove="tag" th:if="${collectionUtils.isEmpty(userdocPersonUtils.selectApplicants(userdoc.userdocPersonData)) && hasPersonPanel}">
+                    <div class="right-message-panel-wrapper">
+                        <div class="right-message-panel">
+                            <div class="right-message-panel-fixed">
+                                <div class="w_97p p_0">
+                                    <div th:replace="base/toast/message :: warning(message = #{right.panel.message.userdoc.missingApplicant},toastTitle = #{right.panel.title.userdoc.missingApplicant},removeCloseButton = true)"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div th:replace="base/toast/message :: error(message = ${errorMessage},unescaped = true)"></div>
+                    <div th:replace="base/toast/message :: success(message = ${successMessage},unescaped = true)"></div>
+                    <div th:replace="base/toast/message :: validation-errors(validationErrors = ${validationErrors})"></div>
+                    <div th:replace="base/toast/message :: warning(message = ${warningMessage},unescaped = true)"></div>
+                </div>
+
+                <div th:id="panel-container-userdoc" class="row panel-container-padding">
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.UserdocMainData.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocMainData)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: main-data"></div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.UserdocPatentData.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocPatentData)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: userdoc-patent-data"></div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.UserdocTypeData.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocTypeData)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: userdoc-type-data"></div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Renewal.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocRenewal)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: renewal"></div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Change.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocChange)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: change"></div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Change_correspondence_address.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocChangeCorrespondenceAddress)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: change-correspondence-address"></div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Change_representative.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocChangeRepresentative)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: change-representative"></div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Claim.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocClaim)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: claim"></div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Transfer.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocTransfer)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: transfer"></div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Pledge.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocPledge)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: pledge"></div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Entry_changes.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocEntryChanges)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: entry-changes"></div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Bankruptcy.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocBankruptcy)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: bankruptcy"></div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Withdrawal.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocWithdrawal)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: withdrawal"></div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.GenericRecordal.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocGenericRecordal)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: genericRecordal"></div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Invalidity.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocInvalidity)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: invalidity"></div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Licenses.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocLicense)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: license"></div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Objection.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocObjection)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: objection"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.SpcAnnulmentRequest.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocSpcAnnulmentRequest)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: spc-annulment-request"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.PatentAnnulmentRequest.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocPatentAnnulmentRequest)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: patent-annulment-request"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.UtilityModelAnnulmentRequest.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocUtilityModelAnnulmentRequest)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: utility-model-annulment-request"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.DesignAnnulmentRequest.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocDesignAnnulmentRequest)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: design-annulment-request"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Opposition.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocOpposition)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: opposition"></div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.ReviewerSquad.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocReviewerSquad)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: reviewer-squad"></div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Revocation.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocRevocation)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: revocation"></div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Security_measure.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocSecurityMeasure)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: security-measure"></div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.InternationalRegistration.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocInternationalRegistration)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: international-registration"></div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.ServiceScope.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocServiceScope)}">
+                            <div th:remove="tag" th:if="${userdocUtils.isUserdocMainObjectMarkOrDesign(userdoc.userdocParentData)}">
+                                <div th:replace="ipobjects/userdoc/userdoc_view_panels :: service-scope"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.InternationalNiceClassesRestrictions.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocInternationalNiceClasses)}">
+                             <div th:remove="tag" th:if="${userdocUtils.isUserdocMainObjectInternationalMark(userdoc.userdocParentData)}">
+                                <div th:replace="ipobjects/userdoc/userdoc_view_panels :: international-service-scope"></div>
+                             </div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Approved.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocApproved)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: approved"></div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.CourtAppeals.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocCourtAppeals)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: court-appeals"></div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Persons.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocPersons)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: person-data"></div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Process.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocProcess)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: process-data"></div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Payments.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.UserdocPayments)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: payments-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.History.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.IpObjectsHistory)}">
+                            <div th:replace="ipobjects/userdoc/userdoc_view_panels :: history-data"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div th:replace=":: submit-panel" th:remove="tag"></div>
+        </main>
+    </div>
+
+    <div th:replace=":: modals" th:remove="tag"></div>
+    <div th:replace=":: hidden-fields" th:remove="tag"></div>
+    <footer class="page-footer" th:replace="base/footer"></footer>
+    <div th:replace="base/template :: js-footer" th:remove="tag"></div>
+</div>
+
+<div th:remove="tag" th:fragment="modals">
+    <div th:if="${!#lists.isEmpty(validationErrors)}" th:replace="base/modal/validation_errors::errors(${validationErrors})" th:remove="tag"></div>
+    <div th:id="nice-class-terms-text-modal-wrapper"></div>
+    <div th:id="nice-class-terms-choose-modal-wrapper"></div>
+    <div th:id="nice-class-class-choose-modal-wrapper"></div>
+    <div th:id="nice-class-class-translate-modal-wrapper"></div>
+    <div th:id="userdoc-single-design-choose-modal-wrapper"></div>
+    <div th:id="person-modal-content"></div>
+    <div th:id="person-search-modal-wrapper"></div>
+    <div th:id="person-info-modal-wrapper"></div>
+    <div th:id="legal-ground-types-modal-div"></div>
+    <div th:id="court-appeals-modal-div"></div>
+    <div th:id="change-userdoc-position-modal-wrapper"></div>
+    <div th:id="change-userdoc-position-search-modal-wrapper"></div>
+    <div th:id="connect-new-owner-modal-wrapper"></div>
+    <div th:id="agent-modal-content"></div>
+    <div th:id="international-nice-terms-text-modal-wrapper"></div>
+    <div th:id="agent-power-of-attorney-modal-content"></div>
+    <div th:id="agent-power-of-attorney-info-modal-content"></div>
+</div>
+
+<div th:remove="tag" th:fragment="hidden-fields">
+    <input th:id="session-object-identifier" th:type="hidden" class="form-ignore" th:value="${sessionObjectIdentifier}">
+    <input th:if="${!#lists.isEmpty(validationErrors)}" type="hidden" th:id="userdoc-validation-errors" th:attr="data-size=${#lists.size(validationErrors)}">
+    <div th:if="${null != scrollToPanel}" class="none">
+        <input th:id="scroll-to-panel" th:type="hidden" class="form-ignore" th:value="${scrollToPanel}">
+    </div>
+
+    <div class="none" th:if="${!collectionUtils.isEmpty(editedPanels)}">
+        <div th:remove="tag" th:each="editePanel : ${editedPanels}">
+            <span class="edited-panel" th:attr="data-value=${editePanel}"></span>
+        </div>
+    </div>
+
+</div>
+
+<div th:remove="tag" th:fragment="submit-panel">
+    <div id="submitPanel" class="panel submit-panel">
+        <div class="row">
+            <button th:attr="data-action='save-ipobject',
+                             data-container='panel-container-userdoc',
+                             data-url=@{/userdoc/save-userdoc}"
+                    th:text="#{btn.save}" class="button submit-panel-btn sm-icn-save m_T5 pulse green">
+            </button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

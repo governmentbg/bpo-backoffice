@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="patent-attachments(patentAttachments,sessionObjectIdentifier)"
+     th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)}">
+    <div class="row">
+        <div th:replace="~{base/form/input :: hidden(id = 'attachmentType', value = '0', name = 'attachmentType', classes = 'form-ignore')}"></div>
+        <div th:replace="~{base/form/input :: file(
+                id = 'patent-attachment-upload',
+                accept = '.pdf, .xml',
+                name = 'uploadAttachment',
+                classes = 'input_file',
+                style = 'display:none;',
+                url = @{/patent-like/detail/validate-patent-attachment},
+                urlUpload = @{/patent-like/attachment/add} )}">
+        </div>
+
+        <th:block th:if="${!collectionUtils.isEmpty(patentAttachments)}">
+            <div class="col-12">
+                <table class="simple">
+                    <thead>
+                    <tr>
+                        <th class="p_L0" style="width: 50%">
+                            <span th:text="'Име на документ'"></span>
+                        </th>
+                        <th>
+                            <span th:text="'Вид документ'"></span>
+                        </th>
+                        <th>
+                            <span th:text="'Дата на създаване'"></span>
+                        </th>
+                        <th class="txtRight" style="width: 8%"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="attachment : ${patentAttachments}">
+                        <td class="p_L0">
+                            <a th:text="${attachment.attachmentName}" download
+                               th:href="@{'/patent-like/attachment/content?sessionIdentifier=' + ${sessionObjectIdentifier}+'&id=' + ${attachment.id} + '&attachmentTypeId=' + ${attachment.attachmentType.id}+'&time='+ ${#dates.format(#dates.createNow(),'HH:mm:ss.SSS')}}">
+                            </a>
+                        </td>
+                        <td th:text="${attachment.attachmentType.name}"></td>
+                        <td th:text="${#dates.format(attachment.dateCreated,T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}"></td>
+                        <td class="txtRight">
+                         <span>
+                           <a th:if="${!collectionUtils.isEmpty(attachment?.attachmentType?.bookmarks)}" style="border: 0; pointer-events: none" th:title="#{btn.bookmark.edit}" href="javascript:void(0);" class="confirm bookmarkButton"
+                               th:attr="data-action='edit-bookmarks-dialog-open',data-url=@{'/patent-like/attachment/bookmarks/open-edit-modal'},data-id=${attachment.id},data-type-id=${attachment.attachmentType.id}">
+                                <i th:if="${attachment.hasBookmarks == null or attachment.hasBookmarks==false}" class="zmdi zmdi-bookmark-outline"></i>
+                                <i th:if="${attachment.hasBookmarks != null and attachment.hasBookmarks==true}" class="zmdi zmdi-bookmark"></i>
+                            </a>
+                            <a style="border: 0" th:title="#{btn.delete}" href="javascript:void(0);" class="confirm hidden-element "
+                               th:attr="data-action='delete-patent-attachment',data-message=#{general.message.deleting.file},
+                               data-url=@{'/patent-like/attachment/delete?id='+${attachment.id}+'&attachmentTypeId='+${attachment.attachmentType.id}}">
+                                 <i class="icon-trash"></i>
+                            </a>
+                        </span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </th:block>
+    </div>
+    <div class="m_T5" th:id="uploaded-attachment-errors-div"></div>
+</div>
+
+</body>
+</html>

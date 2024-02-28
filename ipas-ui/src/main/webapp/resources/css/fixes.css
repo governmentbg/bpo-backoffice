@@ -1,0 +1,61 @@
+.column {
+    width: 170px;
+    float: left;
+    padding-bottom: 100px;
+}
+
+.pull-right {
+    margin-left: 200px;
+}
+
+.draggable {
+    margin: 0 1em 1em 0;
+}
+
+.draggable-header {
+    margin: 0.3em;
+    padding-bottom: 4px;
+    padding-left: 0.2em;
+}
+
+.draggable-header .ui-icon {
+    float: right;
+}
+
+.draggable-content {
+    padding: 0.4em;
+}
+
+.ui-sortable-placeholder {
+    border: 1px dotted black;
+    visibility: visible !important;
+    height: 50px !important;
+}
+
+.ui-sortable-placeholder * {
+    visibility: hidden;
+}
+
+input:-webkit-autofill {
+    transition: background-color 50000s ease-in-out 0s;
+}
+
+.btnMy{
+    display: block;
+    width: 115px;
+    height: 35px;
+    background: #4E9CAF;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+}
+
+.dataTables_filter {
+    float: left !important;
+}
+
+.ui-tooltip {
+    max-width: 80%;
+}

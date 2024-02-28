@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="activeStructure" type="java.util.List<com.duosoft.ipas.webmodel.structure.DivisionDepartmentSectionWebModel>"*/-->
+<div th:fragment="transfer-user-modal(activeStructure)" th:remove="tag">
+    <div id="transfer-user-modal" class="modal" style="overflow: visible">
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="#{transfer-users}"></h4>
+            </div>
+            <p><span th:text="#{transfer} + ':'"></span><span id="usernameToTransfer"></span></p>
+            <div class="input-field">
+                <select style="width: 50%" name="structure_select" id="structure-select">
+                    <option th:value="${null}" th:text="''">
+                    <option th:each="dropdownValue: ${activeStructure}"
+                            th:value="${dropdownValue.officeStructureId.code}"
+                            th:text="${dropdownValue != null} ? ${dropdownValue.name} : #{structure.empty}">
+
+                    </option>
+                </select>
+                <label th:for="structure_select_div" th:text="#{structure}"></label>
+            </div>
+        </div>
+        <div class="modal-footer row">
+            <input type="hidden" id="transfer_user_ids" value="" />
+            <div class="col-12">
+                <button id="transferUserBtn" th:attr="data-url=@{/structure/user/transfer}" th:text="#{btn.save}" class="button sm-icn-save wmin_130"></button>
+                <button th:text="#{btn.cancel}" th:type="button" class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+       </div>
+
+    </div>
+</div>
+
+</body>
+</html>

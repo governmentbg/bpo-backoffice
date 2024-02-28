@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="process" type="bg.duosoft.ipas.core.model.process.CProcess"*/-->
+<!--/*@thymesVar id="eventUserdoc" type="bg.duosoft.ipas.core.model.process.CUserdocProcessEvent"*/-->
+<!--/*@thymesVar id="processEvent" type="bg.duosoft.ipas.core.model.process.CProcessEvent"*/-->
+<div th:fragment="main-object(process, mainProcessUpperId, mainProcessId)" th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)},
+                                                                 dateTimeFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT},
+                                                                 processUtils=${T(com.duosoft.ipas.util.ProcessUtils)},
+                                                                 objectUtil=${T(java.util.Objects)}"
+
+>
+    <ul th:id="change-userdoc-position-process-tree" class="Linked-List" style="padding-top: 8px;">
+        <li style="border: 0 !important;">
+            <div class="row">
+                <div class="col-11">
+                    <div th:title="'Номер'"
+                         th:text="${process.processOriginData.fileId.createFilingNumber()}"></div>
+                </div>
+                <div class="col-1 txtRight">
+                    <div>
+                        <label>
+                            <input class="with-gap" th:value="|${process.processId.processType}-${process.processId.processNbr}|" th:name="selected-userdoc-parent" th:type="radio" th:checked="${processUtils.isSameProcess(process.processId, mainProcessUpperId)}"/>
+                            <span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div th:replace=" :: tree(${process},${mainProcessUpperId},${mainProcessId})"></div>
+        </li>
+    </ul>
+</div>
+
+<div th:fragment="tree(process,mainProcessUpperId, mainProcessId)"
+     th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)},dateTimeFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT},objectUtil=${T(java.util.Objects)}">
+    <div th:if="${!collectionUtils.isEmpty(process.processEventList)}" th:remove="tag">
+        <ul th:if="${processUtils.isContainUserdoc(process.processEventList)}">
+            <div th:remove="tag" th:each="processEvent : ${process.processEventList}">
+                <div th:replace=" :: node(${processEvent},${mainProcessUpperId},${mainProcessId})"></div>
+            </div>
+        </ul>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="node(processEvent,mainProcessUpperId, mainProcessId)" th:with="
+    collectionUtils=${T(org.springframework.util.CollectionUtils)},
+    dateTimeFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT},
+    objectUtil=${T(java.util.Objects)},
+    dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+
+    <div th:remove="tag"
+         th:with="
+         isUserdoc=${processEvent.eventType == 'USERDOC'},
+         isManual=${processEvent.eventType == 'MANUAL'},
+         processIdentifier=${processUtils.getProcessEventIdentifier(processEvent)}">
+
+        <div th:remove="tag" th:if="${isUserdoc}" th:with="eventUserdoc=${processEvent.eventUserdoc},
+                                                           isParentOfMainProcess=${(processUtils.isSameProcess(eventUserdoc.userdocProcessId,mainProcessUpperId))},
+                                                           isMainProcess=${(processUtils.isSameProcess(eventUserdoc.userdocProcessId,mainProcessId))}"
+        >
+            <li th:classappend="${isMainProcess} ? 'current-userdoc none'" th:attr=",data-type=${processEvent.eventType},data-process=${processIdentifier}">
+                <div th:remove="tag" th:if="${isUserdoc}" >
+                    <div class="row">
+                        <div class="col-1">
+                            <i class="dth-sm-doc-in " th:title="'Входящ документ'"></i>
+                        </div>
+                        <div class="col-3" th:with="number=(${#strings.isEmpty(eventUserdoc.externalSystemId)} ? #{not.registered} : ${eventUserdoc.externalSystemId})">
+                            <span th:title="#{process.tree.filing.number}" th:text="|${number} / ${#dates.format(eventUserdoc.filingDate, dateFormatDot)}|"></span>
+                        </div>
+                        <div class="col-4">
+                            <div th:title="'Вид документ'" th:text="${processEvent.eventDescription}"></div>
+                        </div>
+                        <div  class="col-3">
+                            <div th:switch="${objectUtil.nonNull(eventUserdoc.applicantName)}">
+                                <div th:case="true" th:title="'Заявител'" th:text="${eventUserdoc.applicantName}"></div>
+                                <div th:case="*" th:title="'Бележки'" th:text="${eventUserdoc.notes}"></div>
+                            </div>
+                        </div>
+                        <div class="col-1 txtRight" th:if="${!isMainProcess}">
+                            <div>
+                                <label>
+                                    <input class="with-gap" th:value="${processIdentifier}" th:name="selected-userdoc-parent" th:type="radio" th:checked="${isParentOfMainProcess}"/>
+                                    <span></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div th:if="${!isMainProcess}" th:remove="tag"
+                         th:with="subProcess=${@processServiceImpl.selectProcess(eventUserdoc.userdocProcessId, true)}">
+                        <div th:if="${objectUtil.nonNull(subProcess)}">
+                            <div th:replace=" :: tree(${subProcess},${mainProcessUpperId},${mainProcessId})"></div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

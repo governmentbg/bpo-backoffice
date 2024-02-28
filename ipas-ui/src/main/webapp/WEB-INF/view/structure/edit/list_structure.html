@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="structures" type="java.util.List<bg.duosoft.ipas.core.model.structure.OfficeSection>"*/-->
+<!--/*@thymesVar id="isActive" type="java.lang.Boolean"*/-->
+<div th:fragment="list-structure(type, isActive, structures)" th:remove="tag">
+    <ul class="Linked-List" th:if="${structures != null}">
+        <li>
+            <div class="row">
+                <div class="col-10">
+                    <div class="div-field">
+                        <div class="div-field">
+                            <span class="section-header" th:text="${#messages.msg(type + '.label')}"></span>
+                            <span class="sign bg__dark-blue"
+                                  th:text="${structures?.size()}"></span>
+                            <button type="button" th:id="${type} + 'TransferAll'" class="button sm-icn-right" th:text="#{transfer.all}" th:disabled="${!isActive}"></button>
+                            <label th:for="${type} + 'TransferAll'" th:text="#{warning.structure.active}"></label>
+                            <br>
+                            <div style="float: left">
+                                <label th:for="${type} + 'ActiveOnly'">
+                                    <input th:id="${type} + 'ActiveOnly'" type="checkbox" checked="checked"/>
+                                    <span th:text="#{active.only}"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <ul th:id="${type} + 'ActiveOnlyList'" class="list scrollable">
+                <li class="term-item" th:attr="data-status=${structure.active ? 'active' : 'inactive'}" th:each="structure:${structures}">
+                    <div th:replace="structure/edit/list_edit_template :: formFields(type=${type}, isActive=${isActive && structure.active},name=${structure.name},id=${structure.officeStructureId.code})">
+                    </div>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+
+
+
+</body>
+</html>

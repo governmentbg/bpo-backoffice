@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="base/header :: head_declaration"></head>
+<body>
+<header th:replace="base/header :: header"></header>
+
+<div th:fragment="paginator(page,pageSize,total,baseUrl,tableContainerDiv,additionalParams)" class="paginator">
+
+    <div class="ui-paginator" role="navigation"
+         th:with="totalPages= ${total%pageSize == 0 ? (total/pageSize) : (total/pageSize + 1)}">
+        <span class="nav-page-size">
+            <span th:text="#{paginator.current.page.size}"></span>
+            <select id="pageSize" class="page-size browser-default"
+                    th:with="pageSizeList= ${T(java.util.Arrays).asList(5,10,20,50,100)}">
+                <option th:each="pageSizeValue : ${pageSizeList}"
+                        th:with="url=@{/{baseUrl}(baseUrl=${baseUrl},page=1,pageSize=${pageSizeValue})}"
+                        th:value="${pageSizeValue}"
+                        th:selected="(${pageSize == pageSizeValue})"
+                        th:data-url="${#strings.concat(url,additionalParams)}"
+                        th:data-div="${tableContainerDiv}">
+                            <span th:text="${pageSizeValue}"></span>
+                </option>
+            </select>
+        </span>
+
+        <span id="pageInfo" style="margin-right: 1%;margin-left: 1%" th:text="|(${page} #{paginator.of.total} ${totalPages})|"></span>
+
+        <ul style="display: inline-block" class="">
+            <li class="paginator-page paginatorHref first-paginator-page"
+                th:classappend="${page == 1}? 'ui-state-disabled paginator-href-disabled'"
+                th:with="url=@{/{baseUrl}(baseUrl=${baseUrl},page=1,pageSize=${pageSize})}"
+                th:data-url="${#strings.concat(url,additionalParams)}"
+                th:data-div="${tableContainerDiv}">
+                <span th:text="#{paginator.first}"></span>
+            </li>
+            <li class="paginator-page paginatorHref"
+                th:classappend="${page == 1}? 'ui-state-disabled paginator-href-disabled'"
+                th:with="url=@{/{baseUrl}(baseUrl=${baseUrl},page=${page - 1},pageSize=${pageSize})}"
+                th:data-url="${#strings.concat(url,additionalParams)}" th:title="#{paginator.previous}"
+                th:data-div="${tableContainerDiv}">
+                <span>
+                    <i class="icon-arrow-left"></i>
+                </span>
+            </li>
+            <li th:each="p,iterStat : ${#numbers.sequence( (page <= 4)?1:( (page <= totalPages - 4)?(page - 4):(totalPages < 9 ? 1:totalPages - 8) ), ( (page >= totalPages - 4)?(totalPages):( (page <= 4)?(totalPages-8>0?9:totalPages):(page + 4) ) ))}"
+                class="paginator-page paginatorHref"
+                th:classappend="${page == p}? 'active-page paginator-href-disabled'"
+                th:with="url=@{/{baseUrl}(baseUrl=${baseUrl},page=${p},pageSize=${pageSize})}"
+                th:data-url="${#strings.concat(url,additionalParams)}" th:text="${p}"
+                th:data-div="${tableContainerDiv}">
+            </li>
+            <li class="paginator-page paginatorHref"
+                th:classappend="${page == totalPages}? 'ui-state-disabled paginator-href-disabled'"
+                th:with="url=@{/{baseUrl}(baseUrl=${baseUrl},page=${page + 1},pageSize=${pageSize})}"
+                th:data-url="${#strings.concat(url,additionalParams)}" th:title="#{paginator.next}"
+                th:data-div="${tableContainerDiv}">
+                <span>
+                    <i class="icon-arrow-right"></i>
+                </span>
+            </li>
+            <li class="paginator-page paginatorHref last-paginator-page"
+                th:classappend="${page == totalPages}? 'ui-state-disabled paginator-href-disabled'"
+                th:with="url=@{/{baseUrl}(baseUrl=${baseUrl},page=${totalPages},pageSize=${pageSize})}"
+                th:data-url="${#strings.concat(url,additionalParams)}" th:title="#{paginator.last}"
+                th:data-div="${tableContainerDiv}">
+                <span th:text="#{paginator.last}"></span>
+            </li>
+        </ul>
+
+
+    </div>
+
+    <input th:id="table-container-div" type="hidden" th:value="${tableContainerDiv}">
+</div>
+
+</body>
+</html>

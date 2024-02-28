@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="lastAction" type="bg.duosoft.ipas.persistence.model.nonentity.IPObjectSimpleResult"*/-->
+<div th:fragment="table(paidFees, document)"
+     th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+
+    <div class="row m_T20">
+        <div class="col-12">
+            <div class="center" th:text="#{patent.paid.fees.cert.uploadToDoc}"></div>
+            <div class="center">
+                <a class="b0 bold" style="padding-left: 0 !important;" th:target="_blank" th:href="|${@environment.getProperty('abdocs.rest.service.url')}/#/docs/${document.docId}/view|" th:text="${document.regUri}"></a>
+            </div>
+            <div th:replace="~{base/form/input :: hidden(id = 'selected-abdocsDoc', value = ${document.regUri}, name = 'selectedAbdocsDoc')}"></div>
+        </div>
+    </div>
+
+    <div th:remove="tag" th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(paidFees)}">
+        <div th:remove="tag" th:case="true">
+            <div class="p_T20_B20">
+                <div class="bg__light-blue p_10 m_B10 m_T10 center">
+                    <span th:text="#{empty.list}"></span>
+                </div>
+            </div>
+        </div>
+        <div th:remove="tag" th:case="false">
+            <div class="row">
+                <div class="col-12">
+                    <span th:text="#{total}"></span>
+                    <span th:text="${#lists.size(paidFees)}"></span>
+                </div>
+            </div>
+            <div class="row m_T5">
+                <div class="col-12">
+                    <table class="simple bpo scroll-body small-size-body">
+                        <div>
+                            <thead>
+                            <tr>
+                                <th style="width: 35px">
+                                    <div th:replace="~{base/form/checkbox :: basic(id ='patentCertificate-paidFees-checkbox-all', label = '', isChecked = false, classes='bpo-table-header-checkbox')}"></div>
+                                </th>
+                                <th style="width: 25px" th:text="#{number.sign}"></th>
+                                <th style="width: 50px" th:text="#{patent.paid.fees.cert.table.file}"></th>
+                                <th style="width: 150px" th:text="#{patent.paid.fees.cert.table.id}"></th>
+                                <th style="width: 200px" th:text="#{patent.paid.fees.cert.table.liabilityType}"></th>
+                                <th style="width: 75px" th:text="#{patent.paid.fees.cert.table.paymentDate}"></th>
+                                <th style="width: 50px" th:text="#{patent.paid.fees.cert.table.amount}"></th>
+                                <th th:text="#{patent.paid.fees.cert.table.payer}"></th>
+                            </tr>
+                            </thead>
+                        </div>
+                        <div>
+                            <tbody>
+                            <div th:remove="tag" th:each="paidFee,paidFeeStat : ${paidFees}">
+                                <tr>
+                                    <td style="width: 35px">
+                                        <div th:replace="~{base/form/checkbox :: basic(id = ${paidFee.id}, label = '', isChecked = false, classes='patentCertificate-paidFees-checkbox')}"></div>
+                                    </td>
+                                    <td style="width: 25px">
+                                        <span th:text="${paidFeeStat.count}"></span>
+                                    </td>
+                                    <td style="width: 50px">
+                                        <a th:href="@{/patent-certificates/paid-fees/download-file(id=${paidFee.id})}">
+                                            <img style="cursor: pointer" th:title="#{btn.download}" th:src="@{/img/docx-icon.png}">
+                                        </a>
+                                    </td>
+                                    <td style="width: 150px">
+                                        <div th:text="${paidFee.fileId.createFilingNumber()}"></div>
+                                        <div th:text="${paidFee.regNumber}"></div>
+                                        <div th:text="${paidFee.statusName}"></div>
+                                    </td>
+                                    <td style="width: 200px">
+                                        <span th:text="${paidFee.liabilityCodeName}"></span>
+                                    </td>
+                                    <td style="width: 75px">
+                                        <span th:text="${#dates.format(paidFee.paymentDate,dateFormatDot)}"></span>
+                                    </td>
+                                    <td style="width: 50px">
+                                        <span th:text="${paidFee.amount}"></span>
+                                    </td>
+                                    <td th:text="${paidFee.payer}"></td>
+                                </tr>
+                            </div>
+
+                            </tbody>
+                        </div>
+                    </table>
+                </div>
+            </div>
+            <div class="row m_T10">
+                <div class="col-12">
+                    <a th:replace="~{base/form/button :: material-btn(idBtn = 'start-patentCertificate-paidFees-process', label = #{patent.paid.fees.cert.btn.generate}, dataUrl = @{/patent-certificates/paid-fees/start-progressbar} , icon = 'check', classes = 'm_T5 w_150px right')}"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

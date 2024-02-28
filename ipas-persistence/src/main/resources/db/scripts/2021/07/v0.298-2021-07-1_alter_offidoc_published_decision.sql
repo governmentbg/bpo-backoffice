@@ -1,0 +1,15 @@
+--liquibase formatted sql
+
+--changeset mmurlev:298.1
+IF NOT EXISTS (
+  SELECT
+    *
+  FROM
+    INFORMATION_SCHEMA.COLUMNS
+  WHERE
+    TABLE_NAME = 'IP_OFFIDOC_PUBLISHED_DECISION' AND COLUMN_NAME = 'UPDATED_DATE')
+BEGIN
+ alter table ext_Core.IP_OFFIDOC_PUBLISHED_DECISION
+	add UPDATED_DATE datetime default GETDATE()
+END;
+

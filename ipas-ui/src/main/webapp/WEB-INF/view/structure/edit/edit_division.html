@@ -1,0 +1,7 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="base/template :: head(title=${isNew ? #messages.msg('division.title.create') : #messages.msg('division.title.change')})">
+</head>
+<body th:replace="structure/edit/edit_structure_template :: edit-structure-body(structure=${structure}, type='division', title=${isNew ? #messages.msg('division.title.create') : #messages.msg('division.title.change')}, isNew=${isNew}, hasDivisionDropDown = false, hasDepartmentDropDown = false)"></body>
+</html>

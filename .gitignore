@@ -1,0 +1,47 @@
+*.class
+.gradle
+.git
+.idea
+.DS_Store
+build/
+classes/
+node_modules/
+node/
+target/
+index/
+!gradle/wrapper/gradle-wrapper.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+none
+### NetBeans ###
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+### Log ###
+*.log
+*.log.zip
+
+ipas-ui/src/main/webapp/resources/js/lib/materialize.js
+ipas-ui/src/main/webapp/resources/css/materialize.css
+*.js.map
+
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*

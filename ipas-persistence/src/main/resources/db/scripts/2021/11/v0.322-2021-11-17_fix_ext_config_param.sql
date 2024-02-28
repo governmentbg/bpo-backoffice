@@ -1,0 +1,4 @@
+--liquibase formatted sql
+
+--changeset mmihova:322.1
+UPDATE IPASPROD.EXT_CONFIG_PARAM SET VALUE='3529' where CONFIG_CODE = 'INTL_MARK_WIPO_DIVIDED_ACTION_TYPE';

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="info-modal">
+    <div th:id="person-merge-info-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <div>
+                    <h4 th:text="${person.personName}"></h4>
+                </div>
+            </div>
+
+            <div>
+                <div class="row m_T30">
+                    <div class="col-4" th:if="${null != person.personNbr}">
+                        <div th:replace="~{base/form/input :: readonly(label = #{person.personNbr}, value = ${person.personNbr})}"></div>
+                    </div>
+                    <div class="col-4" th:if="${null != person.addressNbr}">
+                        <div th:replace="~{base/form/input :: readonly(label = #{person.addressNbr}, value = ${person.addressNbr})}"></div>
+                    </div>
+                    <div class="col-4" th:if="${null != person.nationalityCountryCode}">
+                        <div th:replace="~{base/form/input :: readonly(label = #{person.country}, value = ${countryMap.get(person.nationalityCountryCode)})}"></div>
+                    </div>
+                </div>
+                <div class="row m_T5">
+                    <div class="col-4" th:if="${!#strings.isEmpty(person.cityName)}">
+                        <div th:replace="~{base/form/input :: readonly(label = #{person.city}, value = ${person.cityName})}"></div>
+                    </div>
+                    <div class="col-4" th:if="${!#strings.isEmpty(person.addressStreet)}">
+                        <div th:replace="~{base/form/input :: readonly(label = #{person.street}, value = ${person.addressStreet})}"></div>
+                    </div>
+                    <div class="col-4" th:if="${!#strings.isEmpty(person.zipCode)}">
+                        <div th:replace="~{base/form/input :: readonly(label = #{person.zipCode}, value = ${person.zipCode})}"></div>
+                    </div>
+                </div>
+                <div class="row m_T5">
+                    <div class="col-4" th:if="${null != person.indCompany}">
+                        <div th:replace="~{base/form/input :: readonly(label = #{person.ind.company.label}, value = (${person.indCompany} ? #{person.legalEntity.type} : #{person.naturalPerson.type}))}"></div>
+                    </div>
+                    <div class="col-4" th:if="${null != person.agentCode}">
+                        <div th:replace="~{base/form/input :: readonly(label = #{person.agentCode}, value = ${person.agentCode})}"></div>
+                    </div>
+                    <div class="col-4" th:if="${null != person.gralPersonIdNbr}">
+                        <div th:replace="~{base/form/input :: readonly(label = #{person.gralPersonIdNbr}, value = ${person.gralPersonIdNbr})}"></div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div th:remove="tag" th:switch="${#maps.isEmpty(personUsageMap)}">
+                <div th:remove="tag" th:case="true">
+                    <div class="p_T20_B20">
+                        <div class="bg__light-blue p_10 m_B10 m_T10 center">
+                            <span th:text="#{merge.person.no.usage}"></span>
+                        </div>
+                    </div>
+                </div>
+                <div th:remove="tag" th:case="false">
+                    <div class="col-12">
+                        <table class="simple">
+                            <thead>
+                                <tr>
+                                    <th style="width: 500px" th:text="#{merge.person.tables.label}"></th>
+                                    <th style="width: 50px" class="txtRight" th:text="#{merge.person.uses}"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="table : ${personUsageMap}">
+                                <td th:text="${table.key}"></td>
+                                <td class="txtRight" th:text="${table.value}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-12 m_B15">
+                        <div class="right-align" style="margin-right: 17px;">
+                            <span th:text="#{merge.person.total.uses}"></span>
+                            <span th:text="${totalUses}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-12">
+                        <button type="button" class="button sm-icn-cross modal-close" th:text="#{btn.close}"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

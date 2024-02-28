@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="errors" type="java.util.List<bg.duosoft.ipas.validator.config.ValidationError>"*/-->
+<div th:fragment="info(text)" th:remove="tag"  th:with="stringUtils=${T(org.springframework.util.StringUtils)}">
+    <div th:remove="tag" th:if="${!stringUtils.isEmpty(text)}">
+        <div class="m-blue lighten-5 p_10 m_B10">
+            <i class="icon-info black-text m_L10"></i>
+            <span class="black-text m_L10" th:utext="${text}"></span>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="warning(text)" th:remove="tag"  th:with="stringUtils=${T(org.springframework.util.StringUtils)}">
+    <div th:remove="tag" th:if="${!stringUtils.isEmpty(text)}">
+        <div class="m-amber lighten-4 p_10 m_B10">
+            <div class="fltLeft">
+                <i class="icon-exclamation black-text m_L10"></i>
+            </div>
+            <span class="black-text m_L10" th:utext="${text}"></span>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="error(text)" th:remove="tag" th:with="stringUtils=${T(org.springframework.util.StringUtils)}">
+    <div th:remove="tag" th:if="${!stringUtils.isEmpty(text)}">
+        <div class="m-red lighten-4 p_10 m_B10">
+            <i class="icon-close black-text m_L10"></i>
+            <span class="black-text m_L10" th:utext="${text}"></span>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="success(text)" th:remove="tag" th:with="stringUtils=${T(org.springframework.util.StringUtils)}">
+    <div th:remove="tag" th:if="${!stringUtils.isEmpty(text)}">
+        <div class="m-green lighten-4 p_10 m_B10">
+            <i class="icon-check black-text m_L10"></i>
+            <span class="black-text m_L10" th:utext="${text}"></span>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="info-global(text)" th:remove="tag"  th:with="stringUtils=${T(org.springframework.util.StringUtils)}">
+    <div th:remove="tag" th:if="${!stringUtils.isEmpty(text)}">
+        <div class="m-blue lighten-1 p_10 m_B10 global-msg">
+            <i class="icon-info white-text m_L10"></i>
+            <span class="white-text m_L10" th:utext="${text}"></span>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="warning-global(text)" th:remove="tag"  th:with="stringUtils=${T(org.springframework.util.StringUtils)}">
+    <div th:remove="tag" th:if="${!stringUtils.isEmpty(text)}">
+        <div class="m-amber lighten-1 p_10 m_B10 global-msg">
+            <i class="icon-exclamation white-text m_L10"></i>
+            <span class="white-text m_L10" th:utext="${text}"></span>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="error-global(text)" th:remove="tag" th:with="stringUtils=${T(org.springframework.util.StringUtils)}">
+    <div th:remove="tag" th:if="${!stringUtils.isEmpty(text)}">
+        <div class="m-red lighten-1 p_10 m_B10 global-msg">
+            <i class="icon-close white-text m_L10"></i>
+            <span class="white-text m_L10" th:utext="${text}"></span>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="success-global(text)" th:remove="tag" th:with="stringUtils=${T(org.springframework.util.StringUtils)}">
+    <div th:remove="tag" th:if="${!stringUtils.isEmpty(text)}">
+        <div class="m-green lighten-1 p_10 m_B10 global-msg">
+            <i class="icon-check white-text m_L10"></i>
+            <span class="white-text m_L10" th:utext="${text}"></span>
+        </div>
+    </div>
+</div>
+
+
+<div th:fragment="general-validation-errors(validationErrors)" th:remove="tag">
+    <div th:remove="tag" th:if="${!#lists.isEmpty(validationErrors)}">
+        <div class="m-red lighten-1 p_10 m_B10 global-msg">
+            <i class="icon-close white-text m_L10"></i>
+            <span class="white-text m_L10" th:text="'Възникнаха грешки по време на операцията! За повече информация натиснете'"></span>
+            <a style="font-weight: bold;border-color: white" class=" white-text modal-trigger" th:href="'#validation-errors-modal'" th:text="'тук'"></a>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="info-link(text, linkHref, linkText)" th:remove="tag"  th:with="stringUtils=${T(org.springframework.util.StringUtils)}">
+    <div th:remove="tag" th:if="${!stringUtils.isEmpty(text)}">
+        <div class="m-blue lighten-5 p_10 m_B10">
+            <i class="icon-info black-text m_L10"></i>
+            <span class="black-text m_L10" th:utext="${text}"></span>
+            <a style="font-weight: bold" th:href="${linkHref}" th:text="${linkText}" th:attrappend="target=${target != null} ? ${target}"></a>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="warning-attention(text)" th:remove="tag" th:with="stringUtils=${T(org.springframework.util.StringUtils)}" >
+    <div th:remove="tag" th:if="${!stringUtils.isEmpty(text)}">
+        <div class="row m_B10">
+            <div class="col-12 center m-amber lighten-4 p_10">
+                <div style="font-weight: bold" th:text="#{attention}"></div>
+                <div th:utext="${text}"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

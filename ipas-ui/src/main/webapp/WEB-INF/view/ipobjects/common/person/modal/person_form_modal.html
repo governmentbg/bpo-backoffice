@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="person" type="bg.duosoft.ipas.core.model.person.CPerson"*/-->
+<!--/*@thymesVar id="searchForm" type="com.duosoft.ipas.webmodel.PersonModalSearchForm"*/-->
+<div th:fragment="person-form (personKind,person)">
+    <div style="overflow: visible" th:id="person-form-modal" class="modal remove-on-close">
+        <div class="modal-content" th:with="isNewPerson=${T(java.util.Objects).isNull(person.personNbr) && T(java.util.Objects).isNull(person.addressNbr)}" >
+            <div class="center">
+                <th:block th:switch="${isNewPerson}">
+                    <div th:case="true">
+                        <th:block th:switch="${personKind}">
+                            <h4 th:case="${T(com.duosoft.ipas.enums.PersonKind).Applicant.code()}"
+                                th:text="#{create.applicant.title}"></h4>
+                            <h4 th:case="${T(com.duosoft.ipas.enums.PersonKind).Representative.code()}"
+                                th:text="#{create.representative.title}"></h4>
+                            <h4 th:case="${T(com.duosoft.ipas.enums.PersonKind).CorrespondenceAddress.code()}"
+                                th:text="#{create.ca.title}"></h4>
+                            <h4 th:case="${T(com.duosoft.ipas.enums.PersonKind).AcpCorrespondenceAddress.code()}"
+                                th:text="#{acp.create.ca.title}"></h4>
+                            <h4 th:case="${T(com.duosoft.ipas.enums.PersonKind).AcpInfringer.code()}"
+                                th:text="#{acp.create.infringer.title}"></h4>
+                            <h4 th:case="${T(com.duosoft.ipas.enums.PersonKind).AcpRepresentative.code()}"
+                                th:text="#{acp.create.repr.title}"></h4>
+                            <h4 th:case="${T(com.duosoft.ipas.enums.PersonKind).NewCorrespondenceAddress.code()}"
+                                th:text="#{create.ca.title}"></h4>
+                            <h4 th:case="${T(com.duosoft.ipas.enums.PersonKind).Inventor.code()}"
+                                th:text="#{create.inventor.title}"></h4>
+                            <h4 th:case="*" th:text="#{create.person.title}"></h4>
+                        </th:block>
+                    </div>
+                    <div th:case="*">
+                        <th:block th:switch="${personKind}">
+                            <h4 th:case="${T(com.duosoft.ipas.enums.PersonKind).Applicant.code()}"
+                                th:text="#{edit.applicant.title}"></h4>
+                            <h4 th:case="${T(com.duosoft.ipas.enums.PersonKind).Representative.code()}"
+                                th:text="#{edit.representative.title}"></h4>
+                            <h4 th:case="${T(com.duosoft.ipas.enums.PersonKind).CorrespondenceAddress.code()}"
+                                th:text="#{edit.ca.title}"></h4>
+                            <h4 th:case="${T(com.duosoft.ipas.enums.PersonKind).AcpCorrespondenceAddress.code()}"
+                                th:text="#{acp.edit.ca.title}"></h4>
+                            <h4 th:case="${T(com.duosoft.ipas.enums.PersonKind).AcpInfringer.code()}"
+                                th:text="#{acp.edit.infringer.title}"></h4>
+                            <h4 th:case="${T(com.duosoft.ipas.enums.PersonKind).AcpRepresentative.code()}"
+                                th:text="#{acp.edit.repr.title}"></h4>
+                            <h4 th:case="${T(com.duosoft.ipas.enums.PersonKind).NewCorrespondenceAddress.code()}"
+                                th:text="#{create.ca.title}"></h4>
+                            <h4 th:case="${T(com.duosoft.ipas.enums.PersonKind).Inventor.code()}"
+                                th:text="#{edit.inventor.title}"></h4>
+                            <h4 th:case="*" th:text="#{edit.person.title}"></h4>
+                        </th:block>
+                        <div th:remove="tag" th:if="${0 < person.personNbr}">
+                            <div th:replace="~{base/message :: warning(#{edit.person.message})}"></div>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+            <div>
+                <div class="row" th:if="${!isNewPerson}">
+                    <div class="col-4" th:classappend="${0 > person.personNbr}?none">
+                        <div th:replace="~{base/form/input :: text(id = 'person-personNbr', label = #{person.personNbr}, value = ${person.personNbr}, isDisabled = true)}"></div>
+                    </div>
+                    <div class="col-4" th:classappend="${0 > person.addressNbr}?none">
+                        <div th:replace="~{base/form/input :: text(id = 'person-addressNbr', label = #{person.addressNbr}, value = ${person.addressNbr}, isDisabled = true)}"></div>
+                    </div>
+                    <div class="col-4" th:classappend="${null == person.gralPersonIdNbr}?none">
+                        <div th:replace="~{base/form/input :: text(id = 'person-gralPersonIdNbr', label = #{person.gralPersonIdNbr}, value = ${person.gralPersonIdNbr}, isDisabled = true)}"></div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-8">
+                        <div th:replace="~{base/form/input :: text(id = 'person-personName', label = #{person.personName}, value = ${person.personName}, classes = 'default-focus')}"></div>
+                    </div>
+                    <div class="col-4">
+                        <div th:replace="~{base/form/select :: map(id = 'person-nationalityCountryCode', label = #{person.nationality}, map = ${countryMap}, selected = ${person.nationalityCountryCode}, classes = 'search-box')}"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-8">
+                        <div th:replace="~{base/form/input :: text(id = 'person-addressStreet', label = #{person.street}, value = ${person.addressStreet})}"></div>
+                    </div>
+                    <div class="col-4">
+                        <div th:replace="~{base/form/select :: map(id = 'person-residenceCountryCode', label = #{person.country}, map = ${countryMap}, selected = ${person.residenceCountryCode}, url = @{/person/update-city-input}, classes = 'search-box')}"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-8" th:id="person-cityName-wrapper">
+                        <div th:replace="~{ipobjects/common/person/modal/person_form_modal_elements :: city-input(${person.residenceCountryCode},${person.cityName},${validationErrors})}"></div>
+                    </div>
+                    <div class="col-4">
+                        <div th:replace="~{base/form/input :: text(id = 'person-zipCode', label = #{person.zipCode}, value = ${person.zipCode})}"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <div th:replace="~{base/form/input :: text(id = 'person-email', label = #{person.email}, value = ${person.email})}"></div>
+                    </div>
+                    <div class="col-4">
+                        <div th:replace="~{base/form/input :: text(id = 'person-telephone', label = #{person.phone}, value = ${person.telephone})}"></div>
+                    </div>
+                    <div class="col-4">
+                        <div th:replace="~{base/form/input :: text(id = 'person-stateName', label = #{person.stateName}, value = ${person.stateName})}"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="input-field">
+                            <div>
+                                <div th:replace="~{base/form/radio :: basic(name = 'person-indCompany', label = #{person.naturalPerson.type}, value = false, checkedExpression = (${T(java.util.Objects).isNull(person.indCompany) || !person.indCompany}))}"></div>
+                                <div th:replace="~{base/form/radio :: basic(name = 'person-indCompany', label = #{person.legalEntity.type}, value = true, checked = (${T(java.util.Objects).nonNull(person.indCompany) && person.indCompany}))}"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4" th:id="person-individualIdType-wrapper">
+                        <div th:remove="tag" th:if="${!(person.isCompany() && person.isForeigner())}">
+                            <div th:replace="~{ipobjects/common/person/modal/person_form_modal_elements :: individualIdType-input(person = ${person}, validationErrors = ${validationErrors})}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${!T(org.springframework.util.CollectionUtils).isEmpty(validationErrors)}">
+                <div class="row m_T10 m_L10" th:id="person-multipleResultForSearchPerson">
+                    <div th:replace="~{base/validation :: validation-message(${validationErrors},'person-multipleResultForSearchPerson')}"></div>
+                </div>
+                <input th:id="person-validation" class="form-ignore" th:type="hidden" th:value="${!T(org.springframework.util.CollectionUtils).isEmpty(validationErrors)}">
+            </div>
+
+            <input th:id="person-personKind" th:type="hidden" th:value="${personKind}">
+            <input th:id="person-representativeType" th:type="hidden" th:value="${representativeType}">
+            <input th:id="person-tempParentPersonNbr" th:type="hidden" th:value="${person.tempParentPersonNbr}">
+            <input th:id="person-gralPersonIdTyp" th:type="hidden" th:value="${person.gralPersonIdTyp}">
+            <div class="none" th:id="person-update-individual-id-type-url" th:attrappend="data-url=@{/person/update-individual-id-type-radio}">
+        </div>
+        <div class="modal-footer">
+            <div class="col-12">
+                <button th:attr="data-action='save-person', data-validation-block='#person-form-modal', data-url=@{/person/save-person},data-kind=${personKind}" th:text="#{btn.save}" type="button" class="button sm-icn-save wmin_130"></button>
+                <button th:text="#{btn.cancel}" type="button" class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

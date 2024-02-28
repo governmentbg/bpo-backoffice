@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="userdoc" type="bg.duosoft.ipas.core.model.userdoc.CUserdoc"*/-->
+<div th:fragment="renewal(userdoc)"
+     th:with="extraDataUtils = ${T(bg.duosoft.ipas.util.userdoc.UserdocExtraDataUtils)},
+              panelName=${T(bg.duosoft.ipas.enums.RecordalType).Renewal.name()},
+              typesEnum=${T(bg.duosoft.ipas.enums.UserdocExtraDataTypeCode)},
+              types = ${extraDataUtils.selectTypes(userdoc, panelName)},
+              userdocExtraData=${userdoc.userdocExtraData},
+              userdocUtils=${T(bg.duosoft.ipas.util.userdoc.UserdocUtils)},
+              parentData=${userdoc.userdocParentData}">
+    <div class="row">
+        <div th:remove="tag" th:with="type = ${typesEnum.EFFECTIVE_DATE}">
+            <div th:replace="ipobjects/userdoc/extra_data/fragments.html :: dataDate(type = ${type}, value = ${extraDataUtils.selectDate(type, userdocExtraData)}, classes = 'col-4', allowedTypes = ${types})"></div>
+        </div>
+        <div>
+            <div th:id="renewal-expiration-date-wrapper" th:with="type = ${typesEnum.RENEWAL_NEW_EXPIRATION_DATE}">
+                <div th:replace="ipobjects/userdoc/extra_data/fragments.html :: dataDate(type = ${type}, value = ${extraDataUtils.selectDate(type, userdocExtraData)}, classes = 'col-4', allowedTypes = ${types})"></div>
+            </div>
+            <span>
+               <a th:title="'Изчисли автоматично'" class="hidden-element btn-floating ipas waves-effect waves-light action-button-top"
+                  th:attr="data-action='calculate-new-expiration-date', data-url=@{/userdoc/renewal/calculate-new-expiration-date}">
+                   <i class="material-icons">edit</i>
+               </a>
+            </span>
+        </div>
+    </div>
+
+    <div th:if="${userdocUtils.isUserdocMainObjectMark(parentData)}">
+        <div th:replace="ipobjects/userdoc/extra_data/nice_classes :: nice-classes(${userdoc})"></div>
+    </div>
+    <div th:if="${userdocUtils.isUserdocMainObjectDesign(parentData)}">
+        <div th:replace="~{ipobjects/userdoc/extra_data/single_designs :: single-designs(${userdoc})}"></div>
+    </div>
+</div>
+
+</body>
+</html>

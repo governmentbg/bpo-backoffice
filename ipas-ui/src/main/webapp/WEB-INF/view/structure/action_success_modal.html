@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="action-success(message)">
+    <div th:id="action_success" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="${message}"></h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+</html>
+

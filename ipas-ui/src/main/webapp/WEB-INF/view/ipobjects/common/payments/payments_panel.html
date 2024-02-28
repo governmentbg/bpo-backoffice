@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="liability" type="bg.duosoft.ipas.core.payments.PaymentLiabilityDetail"*/-->
+<div th:fragment="payments(liabilityDetails,editEnabled,referenceNumber,containsNotLinkedPayments, objectFilingNumber, hasError)">
+    <div th:remove="tag" th:switch="${hasError}">
+        <div th:remove="tag" th:case="true">
+            <div class="row m_B10">
+                <div th:replace=":: simple-payments-panel-header"></div>
+            </div>
+            <div th:replace="base/message :: error('Възникна грешка при опит за извличане на инфорамция за плащания !')"></div>
+        </div>
+        <div th:remove="tag" th:case="*">
+            <div th:replace="ipobjects/common/base/panel_url_header :: panel-url-header(title='Плащания',url=|@{${@environment.getProperty('ipas.properties.paymentsURL')}}/liabilities/edit?referenceNumber=${referenceNumber}|,editEnabled=${editEnabled})"></div>
+            <div class="row" th:if="${containsNotLinkedPayments}">
+                <div class="m-blue lighten-5 p_10 m_B10">
+                    <i class="icon-info black-text m_L10"></i>
+                    <span class="black-text m_L10" th:text="#{payments.contains.not.linked.payments(${objectFilingNumber})}"></span>
+                </div>
+            </div>
+            <div th:remove="tag" th:switch="${!T(org.springframework.util.CollectionUtils).isEmpty(liabilityDetails)}">
+                <div th:case="true">
+                    <div th:id="|panel-body-${T(com.duosoft.ipas.enums.MarkPanel).Payments.code()}|" th:class="row">
+                        <div th:replace="ipobjects/common/payments/payments_panel :: payments-body(liabilityDetails=${liabilityDetails})"></div>
+                    </div>
+                </div>
+                <div th:case="*">
+                    <div class="row m_T10">
+                        <div class="col-12">
+                            <div th:replace="base/message :: info('Няма намерени плащания !')"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div th:fragment="payments-body(liabilityDetails)" th:if="${!T(org.springframework.util.CollectionUtils).isEmpty(liabilityDetails)}">
+    <div class="col-12" >
+        <table class="simple">
+            <thead>
+            <tr>
+                <th th:text="'Тип на задължението'"></th>
+                <th th:text="'Дължима сума'"></th>
+                <th th:text="'Платена сума'"></th>
+                <th th:text="'Начин на плащане'"></th>
+                <th th:text="'Платец'"></th>
+                <th th:text="'Последна дата на плащане'"></th>
+                <th th:text="'Статус'"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="liability : ${liabilityDetails}">
+                <td>
+                    <div th:if="${liability.userdoc}" th:remove="tag">
+                        <b th:text="${liability.userdocNumber}" />
+                        <span th:text="${liability.userdocTypeName + ' : ' + liability.liabilityCodeName}"></span>
+                    </div>
+                    <span th:text="${liability.liabilityCodeName}" th:if="${!liability.userdoc}"></span>
+                </td>
+                <td th:text="${liability.amount}">...</td>
+                <td th:text="${liability.paidAmount}">...</td>
+                <td th:text="${liability.lastPaymentType}">...</td>
+                <td th:text="${liability.lastPayerName}">...</td>
+                <td th:text="${#dates.format(liability.lastDatePayment,T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}"></td>
+                <td th:text="${liability.statusName}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div th:fragment="payments-loader">
+    <div th:replace=":: simple-payments-panel-header"></div>
+    <div th:replace="base/loader :: local-loader"></div>
+</div>
+
+<div th:fragment="simple-payments-panel-header">
+    <div class="col-12">
+        <h3 class="inline-block" th:text="'Плащания'"></h3>
+    </div>
+</div>
+
+</body>
+</html>

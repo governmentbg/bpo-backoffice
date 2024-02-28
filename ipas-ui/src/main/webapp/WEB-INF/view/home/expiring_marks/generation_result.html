@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="lastAction" type="bg.duosoft.ipas.persistence.model.nonentity.IPObjectSimpleResult"*/-->
+<div th:fragment="result(progressBar)"
+     th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}, expiringMarksDocuments = ${progressBar.expiringMarkNotificationDocuments}">
+
+    <div th:remove="tag" th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(expiringMarksDocuments)}">
+        <div th:remove="tag" th:case="true"></div>
+        <div th:remove="tag" th:case="false">
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="panel">
+                        <div class="row m_T20 m_B10">
+                            <div class="col-12">
+                                <div class="center">
+                                    <h3  th:text="'Резултати от генерирането на уведомления старирано на'"></h3>
+                                    <h4 class="bold" th:text="${#dates.format(progressBar.startAt,T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT)}"></h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <span th:text="'Общ брой: '"></span>
+                                <span th:text="${#lists.size(expiringMarksDocuments)}"></span>
+                            </div>
+                            <div class="col-12">
+                                <span class="m-green-text" th:text="'Брой успешно генерирани уведомления: '"></span>
+                                <span th:text="${progressBar.selectSuccessful().size()}"></span>
+                            </div>
+                            <div class="col-12">
+                                <span class="m-red-text" th:text="'Брой неуспешно генерирани уведомления: '"></span>
+                                <span th:text="${progressBar.selectUnsuccessful().size()}"></span>
+                            </div>
+                            <div class="col-12">
+                                <span class="m-orange-text" th:text="'Брой генерирани уведомления по-рано днес: '"></span>
+                                <span th:text="${progressBar.selectAlreadyGenerated().size()}"></span>
+                            </div>
+                        </div>
+                        <div class="row m_T5">
+                            <div class="col-12">
+                                <table class="simple bpo medium-size-body" th:classappend="${!progressBar.inProgress} ? 'scroll-body'">
+                                    <div>
+                                        <thead>
+                                        <tr>
+                                            <th style="width: 50px" th:text="#{number}"></th>
+                                            <th style="width: 150px" th:text="'Заявителски номер'"></th>
+                                            <th style="width: 200px" th:text="'Статус'"></th>
+                                            <th th:text="'Линк за преглед в деловодната'"></th>
+                                        </tr>
+                                        </thead>
+                                    </div>
+                                    <div>
+                                        <tbody>
+                                        <tr th:each="mark,markStat : ${expiringMarksDocuments}">
+                                            <td style="width: 50px">
+                                                <span th:text="${markStat.count}"></span>
+                                            </td>
+                                            <td style="width: 150px">
+                                                <a class="b0" th:text="${mark.filingNumber}" th:target="_blank"
+                                                   th:href="@{/ipobject/view(filingNumber=${mark.filingNumber})}"></a>
+                                            </td>
+                                            <td style="width: 200px" th:with="statusEnum = ${T(com.duosoft.ipas.webmodel.ExpiringMarkNotificationDocument.Status)}">
+                                                <div th:remove="tag" th:switch="${mark.status}">
+                                                    <div th:remove="tag" th:case="${statusEnum.SUCCESS}">
+                                                        <i class="material-icons m_R5 m-green-text">brightness_1</i>
+                                                        <span th:text="'Успешно генериран'"></span>
+                                                    </div>
+                                                    <div th:remove="tag" th:case="${statusEnum.ERROR}">
+                                                        <i class="material-icons m_R5 m-red-text">brightness_1</i>
+                                                        <span th:text="'Грешка при генериране'"></span>
+                                                    </div>
+                                                    <div th:remove="tag" th:case="${statusEnum.ALREADY_GENERATED}">
+                                                        <i class="material-icons m_R5 m-orange-text">brightness_1</i>
+                                                        <span th:text="'Генериран по-рано днес'"></span>
+                                                    </div>
+                                                    <div th:remove="tag" th:case="*">
+                                                        <i class="material-icons m_R5 m-grey-text">brightness_1</i>
+                                                        <span th:text="'Неизвестен'"></span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <a th:if="${mark.doesDocumentExist()}" class="b0" style="padding-left: 0 !important;" th:target="_blank" th:href="|${@environment.getProperty('abdocs.rest.service.url')}/#/docs/${mark.documentId}/view|" th:text="#{abdocs.view.document}"></a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </div>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+</body>
+</html>

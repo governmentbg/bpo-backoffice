@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="single_design_locarno_classes_errors(filingNumber)">
+    <div class="row hidden-element">
+        <div class="m_T5" th:id="${filingNumber}+'locarno-classes-errors-div'"
+             th:attr="data-locarno-error-div-single-design-nbr=${filingNumber}">
+        </div>
+    </div>
+</div>
+</body>
+</html>

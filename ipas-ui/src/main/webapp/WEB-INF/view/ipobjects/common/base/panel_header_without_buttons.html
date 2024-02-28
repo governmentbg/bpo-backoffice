@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div class="row" th:fragment="panel-header(title)">
+    <div class="col-10" style="margin-bottom: 25px">
+        <h3 class="panel-title" style="display: inline-block" th:text="${title}"></h3>
+        <div style="display: inline-block">
+            <span class="sign bg__dark-red edit none" th:text="#{panel.header.edit}"></span>
+            <span class="sign bg__dark-red edited none" th:text="#{panel.header.edited}"></span>
+        </div>
+    </div>
+</div>
+</body>
+</html>

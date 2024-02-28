@@ -1,0 +1,673 @@
+ipas.properties:
+  maxSessionObjects: 5
+  logoMaxSize: 2000000
+  userDocsLegalGroundTypesVersion: "2019"
+  logoAllowedTypeRegex: ([^\s]+(\.(?i)(jpg|jpeg|png|gif|bmp))$)
+  audioMaxSize: 20971520
+  videoMaxSize: 20971520
+  maxAutoCompletResults: 30
+  niceClassMin: 1
+  niceClassMax: 45
+  restServicesAdminExecutionUsername: ipasprod
+  search:
+    leading-zero: 6 # default is 6
+    #userdoc.leading-zero: 6 # default is as ipas.properties.search.leading-zero
+    mark:
+      leading-zero: 6 # default is 6
+      msg-prefix: "mark"
+      detail-pageUrl: "mark"
+      export-file-name: "export-mark"
+      file-types: [ "D", "N" ]
+      file-nbr: "file-nbr"
+      title: "title"
+      title-search-type: "CONTAINS_STRING"
+      responsible-user: "responsible-user-id"
+      appl-typ: "appl-typ"
+      signCode: "signCode"
+      filing-date: "filing-date"
+      registration-nbr: "registration-nbr"
+      registration-date: "registration-date"
+      international-registration-nbr: "international-registration-nbr"
+      expiration-date: "expiration-date"
+      entitlement-date: "entitlement-date"
+      owner: "owner"
+      owner-name: "owner-name"
+      owner-nationality: "owner-nationality"
+      owner-name-search-type: "EXACTLY"
+      service-person: "service-person"
+      service-person-name: "service-person-name"
+      service-person-nationality: "service-person-nationality"
+      service-person-name-search-type: "EXACTLY"
+      representative: "representative"
+      representative-name: "representative-name"
+      representative-name-search-type: "EXACTLY"
+      agent-code: "agent-code"
+      status-codes: "status-codes"
+      publication: "publication"
+      action-types: "action-types"
+      nice-classes: "nice-classes"
+      vienna-class-codes: "vienna-class-codes"
+    international-mark:
+      leading-zero: 6 # default is 6
+      msg-prefix: "international_mark"
+      detail-pageUrl: "international_mark"
+      export-file-name: "export-international_mark"
+      file-types: [ "R", "I", "B" ]
+      file-nbr: "file-nbr"
+      title: "title"
+      title-search-type: "CONTAINS_STRING"
+      responsible-user: "responsible-user-id"
+      appl-typ: "appl-typ"
+      signCode: "signCode"
+      filing-date: "filing-date"
+      registration-nbr: "registration-nbr"
+      registration-date: "registration-date"
+      expiration-date: "expiration-date"
+      entitlement-date: "entitlement-date"
+      owner: "owner"
+      owner-name: "owner-name"
+      owner-nationality: "owner-nationality"
+      owner-name-search-type: "EXACTLY"
+      service-person: "service-person"
+      service-person-name: "service-person-name"
+      service-person-nationality: "service-person-nationality"
+      service-person-name-search-type: "EXACTLY"
+      representative: "representative"
+      representative-name: "representative-name"
+      representative-name-search-type: "EXACTLY"
+      agent-code: "agent-code"
+      status-codes: "status-codes"
+      publication: "publication"
+      action-types: "action-types"
+      nice-classes: "nice-classes"
+      vienna-class-codes: "vienna-class-codes"
+    acp:
+      msg-prefix: "acp"
+      detail-pageUrl: "acp"
+      export-file-name: "export-acp"
+      file-types: ["A"]
+      file-nbr: "file-nbr"
+      title-search-type: "CONTAINS_STRING"
+      responsible-user: "responsible-user-id"
+      appl-typ: "appl-typ"
+      filing-date: "filing-date"
+      owner: "owner"
+      owner-name: "owner-name"
+      owner-nationality: "owner-nationality"
+      owner-name-search-type: "EXACTLY"
+      status-codes: "status-codes"
+      action-types: "action-types"
+    gi:
+      msg-prefix: "geographical_indications"
+      detail-pageUrl: "geographical_indications"
+      export-file-name: "export-gi"
+      file-types: ["Г"]
+      file-nbr: "file-nbr"
+      title: "title"
+      title-search-type: "CONTAINS_STRING"
+      responsible-user: "responsible-user-id"
+      appl-typ: "appl-typ"
+      filing-date: "filing-date"
+      registration-nbr: "registration-nbr"
+      registration-date: "registration-date"
+      expiration-date: "expiration-date"
+      entitlement-date: "entitlement-date"
+      owner: "owner"
+      owner-name: "owner-name"
+      owner-nationality: "owner-nationality"
+      owner-name-search-type: "EXACTLY"
+      service-person: "service-person"
+      service-person-name: "service-person-name"
+      service-person-nationality: "service-person-nationality"
+      service-person-name-search-type: "EXACTLY"
+      representative: "representative"
+      representative-name: "representative-name"
+      representative-name-search-type: "EXACTLY"
+      agent-code: "agent-code"
+      status-codes: "status-codes"
+      publication: "publication"
+      action-types: "action-types"
+      nice-classes: "nice-classes"
+      vienna-class-codes: "vienna-class-codes"
+    plant:
+      msg-prefix: "plants_and_breeds"
+      detail-pageUrl: "plants_and_breeds"
+      export-file-name: "export-plant"
+      file-types: ["С"]
+      file-nbr: "file-nbr"
+      title: "title"
+      title-search-type: "KEYWORDS"
+      english-title: "english-title"
+      english-title-search-type: "KEYWORDS"
+      responsible-user: "responsible-user-id"
+      appl-typ: "appl-typ"
+      filing-date: "filing-date"
+      registration-nbr: "registration-nbr"
+      registration-date: "registration-date"
+      expiration-date: "expiration-date"
+      entitlement-date: "entitlement-date"
+      owner: "owner"
+      owner-name: "owner-name"
+      owner-nationality: "owner-nationality"
+      owner-name-search-type: "EXACTLY"
+      service-person: "service-person"
+      service-person-name: "service-person-name"
+      service-person-nationality: "service-person-nationality"
+      service-person-name-search-type: "EXACTLY"
+      inventor-name: "inventor-name"
+      inventor-name-search-type: "EXACTLY"
+      representative: "representative"
+      representative-name: "representative-name"
+      representative-name-search-type: "EXACTLY"
+      agent-code: "agent-code"
+      status-codes: "status-codes"
+      publication: "publication"
+      action-types: "action-types"
+      patent-summary: "patent-summary"
+      patent-summary-search-type: "KEYWORDS"
+      ipc-classes: "ipc-classes"
+      cpc-classes: "cpc-classes"
+      taxon: "taxon"
+      proposed-denomination: "proposed-denomination"
+      proposed-denomination-eng: "proposed-denomination-eng"
+      publ-denomination: "publ-denomination"
+      publ-denomination-eng: "publ-denomination-eng"
+      appr-denomination: "appr-denomination"
+      appr-denomination-eng: "appr-denomination-eng"
+      rej-denomination: "rej-denomination"
+      rej-denomination-eng: "rej-denomination-eng"
+      features: "features"
+      stability: "stability"
+      testing: "testing"
+    design:
+      msg-prefix: "design"
+      detail-pageUrl: "design"
+      export-file-name: "export-design"
+      file-types: ["Д", "Р"]
+      file-nbr: "file-nbr"
+      title: "title"
+      title-search-type: "KEYWORDS"
+      responsible-user: "responsible-user-id"
+      appl-typ: "appl-typ"
+      filing-date: "filing-date"
+      registration-nbr: "registration-nbr"
+      registration-date: "registration-date"
+      expiration-date: "expiration-date"
+      entitlement-date: "entitlement-date"
+      owner: "owner"
+      owner-name: "owner-name"
+      owner-nationality: "owner-nationality"
+      owner-name-search-type: "EXACTLY"
+      service-person: "service-person"
+      service-person-name: "service-person-name"
+      service-person-nationality: "service-person-nationality"
+      service-person-name-search-type: "EXACTLY"
+      inventor-name: "inventor-name"
+      inventor-name-search-type: "EXACTLY"
+      representative: "representative"
+      representative-name: "representative-name"
+      representative-name-search-type: "EXACTLY"
+      agent-code: "agent-code"
+      status-codes: "status-codes"
+      publication: "publication"
+      action-types: "action-types"
+      locarno-classes: "locarno-classes"
+    international-design:
+      msg-prefix: "international-design"
+      detail-pageUrl: "design"
+      export-file-name: "export-design"
+      file-types: [ "Х" ]
+      file-nbr: "file-nbr"
+      title: "title"
+      title-search-type: "KEYWORDS"
+      responsible-user: "responsible-user-id"
+      appl-typ: "appl-typ"
+      filing-date: "filing-date"
+      registration-nbr: "registration-nbr"
+      registration-date: "registration-date"
+      expiration-date: "expiration-date"
+      entitlement-date: "entitlement-date"
+      owner: "owner"
+      owner-name: "owner-name"
+      owner-nationality: "owner-nationality"
+      owner-name-search-type: "EXACTLY"
+      service-person: "service-person"
+      service-person-name: "service-person-name"
+      service-person-nationality: "service-person-nationality"
+      service-person-name-search-type: "EXACTLY"
+      inventor-name: "inventor-name"
+      inventor-name-search-type: "EXACTLY"
+      representative: "representative"
+      representative-name: "representative-name"
+      representative-name-search-type: "EXACTLY"
+      agent-code: "agent-code"
+      status-codes: "status-codes"
+      publication: "publication"
+      action-types: "action-types"
+      locarno-classes: "locarno-classes"
+    patent:
+      msg-prefix: "patent"
+      detail-pageUrl: "patent"
+      export-file-name: "export-patent"
+      file-types: ["P"]
+      file-nbr: "file-nbr"
+      title: "title"
+      title-search-type: "KEYWORDS"
+      responsible-user: "responsible-user-id"
+      appl-typ: "appl-typ"
+      filing-date: "filing-date"
+      registration-nbr: "registration-nbr"
+      registration-date: "registration-date"
+      expiration-date: "expiration-date"
+      entitlement-date: "entitlement-date"
+      owner: "owner"
+      owner-name: "owner-name"
+      owner-nationality: "owner-nationality"
+      owner-name-search-type: "EXACTLY"
+      service-person: "service-person"
+      service-person-name: "service-person-name"
+      service-person-nationality: "service-person-nationality"
+      service-person-name-search-type: "EXACTLY"
+      inventor-name: "inventor-name"
+      inventor-name-search-type: "EXACTLY"
+      representative: "representative"
+      representative-name: "representative-name"
+      representative-name-search-type: "EXACTLY"
+      agent-code: "agent-code"
+      status-codes: "status-codes"
+      publication: "publication"
+      action-types: "action-types"
+      patent-summary: "patent-summary"
+      patent-summary-search-type: "KEYWORDS"
+      ipc-classes: "ipc-classes"
+      cpc-classes: "cpc-classes"
+    eupatent:
+      msg-prefix: "eupatent"
+      detail-pageUrl: "eupatent"
+      export-file-name: "export-eupatent"
+      file-types: ["T"]
+      file-nbr: "file-nbr"
+      title: "title"
+      title-search-type: "KEYWORDS"
+      english-title: "english-title"
+      english-title-search-type: "KEYWORDS"
+      responsible-user: "responsible-user-id"
+      appl-typ: "appl-typ"
+      filing-date: "filing-date"
+      registration-nbr: "registration-nbr"
+      registration-date: "registration-date"
+      expiration-date: "expiration-date"
+      entitlement-date: "entitlement-date"
+      owner: "owner"
+      owner-name: "owner-name"
+      owner-nationality: "owner-nationality"
+      owner-name-search-type: "EXACTLY"
+      service-person: "service-person"
+      service-person-name: "service-person-name"
+      service-person-nationality: "service-person-nationality"
+      service-person-name-search-type: "EXACTLY"
+      inventor-name: "inventor-name"
+      inventor-name-search-type: "EXACTLY"
+      representative: "representative"
+      representative-name: "representative-name"
+      representative-name-search-type: "EXACTLY"
+      agent-code: "agent-code"
+      status-codes: "status-codes"
+      publication: "publication"
+      action-types: "action-types"
+      patent-summary: "patent-summary"
+      patent-summary-search-type: "KEYWORDS"
+      ipc-classes: "ipc-classes"
+      cpc-classes: "cpc-classes"
+      request-for-validation: "request-for-validation"
+    utilityModel:
+      msg-prefix: "utility_model"
+      detail-pageUrl: "utility_model"
+      export-file-name: "export-utility_model"
+      file-types: ["U"]
+      file-nbr: "file-nbr"
+      title: "title"
+      title-search-type: "KEYWORDS"
+      responsible-user: "responsible-user-id"
+      appl-typ: "appl-typ"
+      filing-date: "filing-date"
+      registration-nbr: "registration-nbr"
+      registration-date: "registration-date"
+      expiration-date: "expiration-date"
+      entitlement-date: "entitlement-date"
+      owner: "owner"
+      owner-name: "owner-name"
+      owner-nationality: "owner-nationality"
+      owner-name-search-type: "EXACTLY"
+      service-person: "service-person"
+      service-person-name: "service-person-name"
+      service-person-nationality: "service-person-nationality"
+      service-person-name-search-type: "EXACTLY"
+      inventor-name: "inventor-name"
+      inventor-name-search-type: "EXACTLY"
+      representative: "representative"
+      representative-name: "representative-name"
+      representative-name-search-type: "EXACTLY"
+      agent-code: "agent-code"
+      status-codes: "status-codes"
+      publication: "publication"
+      action-types: "action-types"
+      patent-summary: "patent-summary"
+      patent-summary-search-type: "KEYWORDS"
+      ipc-classes: "ipc-classes"
+      cpc-classes: "cpc-classes"
+    spc:
+      msg-prefix: "spc"
+      detail-pageUrl: "spc"
+      export-file-name: "export-spc"
+      file-types: ["S"]
+      file-nbr: "file-nbr"
+      title: "title"
+      title-search-type: "KEYWORDS"
+      english-title: "english-title"
+      english-title-search-type: "KEYWORDS"
+      responsible-user: "responsible-user-id"
+      appl-typ: "appl-typ"
+      filing-date: "filing-date"
+      registration-nbr: "registration-nbr"
+      registration-date: "registration-date"
+      expiration-date: "expiration-date"
+      entitlement-date: "entitlement-date"
+      owner: "owner"
+      owner-name: "owner-name"
+      owner-nationality: "owner-nationality"
+      owner-name-search-type: "EXACTLY"
+      service-person: "service-person"
+      service-person-name: "service-person-name"
+      service-person-nationality: "service-person-nationality"
+      service-person-name-search-type: "EXACTLY"
+      inventor-name: "inventor-name"
+      inventor-name-search-type: "EXACTLY"
+      representative: "representative"
+      representative-name: "representative-name"
+      representative-name-search-type: "EXACTLY"
+      agent-code: "agent-code"
+      status-codes: "status-codes"
+      publication: "publication"
+      action-types: "action-types"
+      patent-summary: "patent-summary"
+      patent-summary-search-type: "KEYWORDS"
+      ipc-classes: "ipc-classes"
+      cpc-classes: "cpc-classes"
+      bg-permit-number: "bg-permit-number"
+      bg-permit-date: "bg-permit-date"
+      eu-permit-number: "eu-permit-number"
+      eu-permit-date: "eu-permit-date"
+    patent-like:
+      msg-prefix: "patent-like"
+      detail-pageUrl: "patent-like"
+      export-file-name: "export-patent-like"
+      file-type-urls: [ "spc", "utility_model", "eupatent", "patent", "design", "design", "plants_and_breeds" ]
+      file-types: [ "S", "U", "T", "P", "Д", "Р", "С" ]
+      file-nbr: "file-nbr"
+      title: "title"
+      title-search-type: "KEYWORDS"
+      responsible-user: "responsible-user-id"
+      appl-typ: "appl-typ"
+      filing-date: "filing-date"
+      registration-nbr: "registration-nbr"
+      registration-date: "registration-date"
+      expiration-date: "expiration-date"
+      entitlement-date: "entitlement-date"
+      owner: "owner"
+      owner-name: "owner-name"
+      owner-nationality: "owner-nationality"
+      owner-name-search-type: "EXACTLY"
+      service-person: "service-person"
+      service-person-name: "service-person-name"
+      service-person-nationality: "service-person-nationality"
+      service-person-name-search-type: "EXACTLY"
+      inventor-name: "inventor-name"
+      inventor-name-search-type: "EXACTLY"
+      representative: "representative"
+      representative-name: "representative-name"
+      representative-name-search-type: "EXACTLY"
+      agent-code: "agent-code"
+      status-codes: "status-codes"
+      publication: "publication"
+      action-types: "action-types"
+      patent-summary: "patent-summary"
+      patent-summary-search-type: "KEYWORDS"
+      ipc-classes: "ipc-classes"
+      cpc-classes: "cpc-classes"
+javamelody:
+  storage-directory: ${catalina.base}/javamelody-data
+
+spring:
+  jackson:
+    deserialization:
+      FAIL_ON_UNKNOWN_PROPERTIES: true
+  application:
+    name: IPAS
+  profiles:
+    active: '@env@'
+  servlet:
+    multipart:
+      max-file-size: 75MB
+      max-request-size: 75MB
+  jpa:
+    open-in-view: false
+  thymeleaf:
+    prefix: /WEB-INF/view/
+    suffix: .html
+  resources:
+    static-locations: /resources/
+  liquibase:
+    change-log: classpath:db/db.master.xml
+    drop-first: false
+    liquibase-schema: LIQUIBASE
+server:
+  error:
+    include-exception: true
+    include-stacktrace: always
+  servlet:
+    session:
+      timeout: 120m
+---
+spring:
+  profiles: dev
+  devtools:
+    restart:
+      exclude: META-INF/
+      additional-paths: src/main/resources/
+      enabled: true
+    livereload:
+      enabled: true
+  thymeleaf:
+    cache: false
+  liquibase:
+    enabled: false
+server.port: 8084
+debug: true
+ipas.properties:
+  paymentsURL: https://testportal.bpo.bg/payments
+  publicRegisterURL: https://testportal.bpo.bg/rd
+  seniorityURL: http://172.18.1.12/eutmdownload/listSeniorities.htm
+  courtURL: http://172.16.1.58:88/PenalProceeding
+  journalURL: http://172.16.1.40:8087/bpo-journal
+  validateSecurityRoles: false
+  abdocsSuperUser: test
+  jasper-url: "http://172.18.1.10:8090/jasperserver/flow.html?_flowId=searchFlow&j_username=bpouser&j_password=bpouser"
+  dd.template-manager-url: "http://localhost:8082/#/app"
+  notLinkedPaymentsURL: "https://testportal.bpo.bg/payments/importfile/notlinked/selectdates"
+  unclearObjectPaymentsURL: "https://testportal.bpo.bg/payments/importfile/selectdates"
+  wrongLiabilitiesPaymentsURL: "https://testportal.bpo.bg/payments/importfile/wrongLiabilityDetails"
+  waitingLiabilitiesPaymentsURL: "https://testportal.bpo.bg/payments/importfile/waitingLiabilityDetails"
+  paidLiabilitiesPaymentsURL: "https://testportal.bpo.bg/payments/importfile/paidLiabilityDetails"
+  importFilePaymentsURL: "https://testportal.bpo.bg/payments/importfile/select"
+  noObjectPaymentsURL: "https://testportal.bpo.bg/payments/importfile/payments-without-object"
+  configLiabilitiesPaymentsURL: "https://testportal.bpo.bg/payments/config/liabilitycodes/list"
+  feeValidationURL: "https://testportal.bpo.bg/app-management/feevalidation/validate"
+  slack:
+    webhook: ""
+  abdocs:
+    responsibleUserChange:
+      targeting:
+        fixedDelay: 60000 # milliseconds
+    person:
+      sync:
+        fixedDelay: 60000 # milliseconds
+
+---
+spring:
+  profiles: office
+  devtools:
+    restart:
+      enabled: false
+    livereload:
+      enabled: false
+  thymeleaf:
+    cache: false
+  liquibase:
+    enabled: true
+server.port: 8084
+ipas.properties:
+  paymentsURL: https://testportal.bpo.bg/payments
+  publicRegisterURL: https://testportal.bpo.bg/rd
+  seniorityURL:
+  courtURL: http://172.16.1.58:88/PenalProceeding
+  journalURL: http://172.16.1.40:8087/bpo-journal
+  validateSecurityRoles: false
+  abdocsSuperUser: test
+  jasper-url: "http://172.18.1.10:8090/jasperserver/flow.html?_flowId=searchFlow&j_username=bpouser&j_password=bpouser"
+  dd.template-manager-url: "http://172.16.1.99:8082/#/app"
+  slack:
+    webhook: ""
+  abdocs:
+    responsibleUserChange:
+      targeting:
+        fixedDelay: 300000 # milliseconds
+    person:
+      sync:
+        fixedDelay: 300000 # milliseconds
+
+---
+spring:
+  profiles: office-dev
+  devtools:
+    restart:
+      enabled: false
+    livereload:
+      enabled: false
+  thymeleaf:
+    cache: false
+  liquibase:
+    enabled: false
+server.port: 8084
+ipas.properties:
+  paymentsURL: https://testportal.bpo.bg/payments
+  publicRegisterURL: https://testportal.bpo.bg/rd
+  seniorityURL:
+  courtURL: http://172.16.1.58:88/PenalProceeding
+  journalURL: http://172.16.1.40:8087/bpo-journal
+  validateSecurityRoles: false
+  abdocsSuperUser: test
+  jasper-url: "http://172.18.1.10:8090/jasperserver/flow.html?_flowId=searchFlow&j_username=bpouser&j_password=bpouser"
+  dd.template-manager-url: "http://172.16.1.99:8082/#/app"
+  notLinkedPaymentsURL: "https://testportal.bpo.bg/payments/importfile/notlinked/selectdates"
+  unclearObjectPaymentsURL: "https://testportal.bpo.bg/payments/importfile/selectdates"
+  wrongLiabilitiesPaymentsURL: "https://testportal.bpo.bg/payments/importfile/wrongLiabilityDetails"
+  waitingLiabilitiesPaymentsURL: "https://testportal.bpo.bg/payments/importfile/waitingLiabilityDetails"
+  paidLiabilitiesPaymentsURL: "https://testportal.bpo.bg/payments/importfile/paidLiabilityDetails"
+  importFilePaymentsURL: "https://testportal.bpo.bg/payments/importfile/select"
+  noObjectPaymentsURL: "https://testportal.bpo.bg/payments/importfile/payments-without-object"
+  configLiabilitiesPaymentsURL: "https://testportal.bpo.bg/payments/config/liabilitycodes/list"
+  feeValidationURL: "https://testportal.bpo.bg/app-management/feevalidation/validate"
+  slack:
+    webhook: ""
+  abdocs:
+    responsibleUserChange:
+      targeting:
+        fixedDelay: 300000 # milliseconds
+    person:
+      sync:
+        fixedDelay: 300000 # milliseconds
+
+---
+spring:
+  profiles: test
+  devtools:
+    restart:
+      enabled: false
+    livereload:
+      enabled: false
+  thymeleaf:
+    cache: true
+  liquibase:
+    enabled: true
+server.port: 8080
+ipas.properties:
+  paymentsURL: https://testportal.bpo.bg/payments
+  publicRegisterURL: https://testportal.bpo.bg/rd
+  seniorityURL: http://172.18.1.12/eutmdownload/listSeniorities.htm
+  courtURL: http://172.16.1.58:88/PenalProceeding
+  journalURL: http://172.16.1.40:8087/bpo-journal
+  validateSecurityRoles: true
+  abdocsSuperUser: test
+  jasper-url: "http://172.18.1.10:8090/jasperserver/flow.html?_flowId=searchFlow&j_username=bpouser&j_password=bpouser"
+  dd.template-manager-url: "http://172.16.1.99:8082/#/app"
+  notLinkedPaymentsURL: "https://testportal.bpo.bg/payments/importfile/notlinked/selectdates"
+  unclearObjectPaymentsURL: "https://testportal.bpo.bg/payments/importfile/selectdates"
+  wrongLiabilitiesPaymentsURL: "https://testportal.bpo.bg/payments/importfile/wrongLiabilityDetails"
+  waitingLiabilitiesPaymentsURL: "https://testportal.bpo.bg/payments/importfile/waitingLiabilityDetails"
+  paidLiabilitiesPaymentsURL: "https://testportal.bpo.bg/payments/importfile/paidLiabilityDetails"
+  importFilePaymentsURL: "https://testportal.bpo.bg/payments/importfile/select"
+  noObjectPaymentsURL: "https://testportal.bpo.bg/payments/importfile/payments-without-object"
+  configLiabilitiesPaymentsURL: "https://testportal.bpo.bg/payments/config/liabilitycodes/list"
+  feeValidationURL: "https://testportal.bpo.bg/app-management/feevalidation/validate"
+  slack:
+    webhook: https://hooks.slack.com/services/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
+  abdocs:
+    responsibleUserChange:
+      targeting:
+        fixedDelay: 300000 # milliseconds
+    person:
+      sync:
+        fixedDelay: 300000 # milliseconds
+
+---
+spring:
+  profiles: prod
+  devtools:
+    restart:
+      enabled: false
+    livereload:
+      enabled: false
+  thymeleaf:
+    cache: true
+  liquibase:
+    enabled: true
+server.port: 8084
+ipas.properties:
+  paymentsURL: https://portal.bpo.bg/payments
+  publicRegisterURL: https://portal.bpo.bg/rd
+  seniorityURL: http://172.18.1.12/eutmdownload/listSeniorities.htm
+  courtURL: http://172.16.1.58/PenalProceeding
+  journalURL: https://portal.bpo.bg/bpo-journal
+  validateSecurityRoles: true
+  abdocsSuperUser: ipasprod
+  jasper-url: "http://172.18.1.10:8090/jasperserver/flow.html?_flowId=searchFlow&j_username=bpouser&j_password=bpouser"
+  dd.template-manager-url: "http://172.16.1.100:8082/#/app"
+  notLinkedPaymentsURL: "https://portal.bpo.bg/payments/importfile/notlinked/selectdates"
+  unclearObjectPaymentsURL: "https://portal.bpo.bg/payments/importfile/selectdates"
+  wrongLiabilitiesPaymentsURL: "https://portal.bpo.bg/payments/importfile/wrongLiabilityDetails"
+  waitingLiabilitiesPaymentsURL: "https://portal.bpo.bg/payments/importfile/waitingLiabilityDetails"
+  paidLiabilitiesPaymentsURL: "https://portal.bpo.bg/payments/importfile/paidLiabilityDetails"
+  importFilePaymentsURL: "https://portal.bpo.bg/payments/importfile/select"
+  noObjectPaymentsURL: "https://portal.bpo.bg/payments/importfile/payments-without-object"
+  configLiabilitiesPaymentsURL: "https://portal.bpo.bg/payments/config/liabilitycodes/list"
+  feeValidationURL: "https://portal.bpo.bg/app-management/feevalidation/validate"
+  slack:
+    webhook: https://hooks.slack.com/services/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
+  abdocs:
+    responsibleUserChange:
+      targeting:
+        fixedDelay: 300000 # milliseconds
+    person:
+      sync:
+        fixedDelay: 300000 # milliseconds

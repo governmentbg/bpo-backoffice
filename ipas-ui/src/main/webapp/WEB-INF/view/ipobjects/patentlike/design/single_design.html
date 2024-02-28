@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="single_design(singleDesign,sessionObjectIdentifier,index,registrationNbr,mainDesignFileNbr)" th:with="objectUtils=${T(java.util.Objects)}">
+    <li th:if="${singleDesign!=null}" class="row Single-Designs-li" th:with="filingNumber = ${singleDesign.file.fileId.createFilingNumber()}" th:id="'single-design-area-'+${index}" th:attr="data-single-design-area-filling-number=${filingNumber}">
+        <div class="row m_T20 m_B10">
+            <input type="text" th:id="'filingNumber-'+${index}" th:type="hidden" th:value="${filingNumber}">
+            <div class="col-6">
+                <div th:replace="~{base/form/input :: readonly(id ='fl-number-readonly-'+${index},style = 'font-weight: bold', label = #{single.design.id.label},divClasses ='inline-block' ,value =  ${T(com.duosoft.ipas.util.DesignUtils).formatSingleDesignIdentityNumber(mainDesignFileNbr,filingNumber)} )}"></div>
+                <a  th:attr="data-filingnumber=${filingNumber}, data-message=#{single.design.delete.confirmation.message}, data-action='delete-single-design',data-url=@{/design/detail/delete-single-design}"
+                    style="border: 0" th:title="#{btn.delete}" href="javascript:void(0);"
+                    class="hidden-element btn-floating ipas waves-effect waves-light action-button-top confirm m_B10">
+                    <i class="icon-trash"></i>
+                </a>
+            </div>
+            <div class="col-6" th:if="${objectUtils.nonNull(registrationNbr)}">
+                <div th:replace="~{base/form/input :: readonly(label = 'Регистров номер', value = ${T(com.duosoft.ipas.util.DesignUtils).formatSingleDesignRegistrationNbr(registrationNbr,mainDesignFileNbr,singleDesign.file.fileId.fileNbr)})}"></div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div th:replace="~{base/form/select :: object(id = 'designSingleApplSubType-'+${index},
+                            label = #{single.design.application.subtype.label}, objects = ${singleDesignAppSubTypes}, valuePointer = 'applicationSubType',
+                             textPointer = 'applicationSubTypeName',selected = ${singleDesign.file.filingData.applicationSubtype})}"> </div>
+                </div>
+                <div class="col-6">
+                    <div th:replace="~{base/form/select :: object(id = 'designSingleStatusCode-'+${index},
+                            label = #{single.design.status.label}, objects = ${singleDesignStatuses}, valuePointer = 'statusId.statusCode',
+                             textPointer = 'statusName',selected = ${singleDesign.file.processSimpleData.statusCode})}"> </div>
+                </div>
+            </div>
+
+            <div class="col-8 hidden-element">
+                <div th:replace="~{base/form/textarea :: basic(id = ${index}+'-'+${singleDesign.file.fileId.fileNbr}+'-designSingleTitle',value = ${singleDesign.technicalData.title}, unescaped = true, label = #{single.design.name.label})}"></div>
+            </div>
+
+            <div class="col-8">
+                <div th:replace="~{base/form/textarea :: basic(id = ${index}+'-'+${singleDesign.file.fileId.fileNbr}+'-designSingleTitleEn',value = ${singleDesign.technicalData.englishTitle}, unescaped = true, label = #{single.design.name.en.label})}"></div>
+            </div>
+
+            <div class="col-4 hidden-element" th:attr="data-locarno-single-design-nbr=${filingNumber}">
+                <div th:replace="ipobjects/patentlike/design/single_design_locarno_classes :: single_design_locarno_classes(${singleDesign},${filingNumber})"></div>
+            </div>
+
+        </div>
+        <div th:id="|poduct-term-${index}|">
+            <div th:replace="ipobjects/patentlike/design/product_verification :: product_verification(${singleDesign},${index},null)"></div>
+        </div>
+
+        <input class="form-ignore" type="text" th:id="${index}+'locarno-edition-code'" th:type="hidden" th:value="''">
+        <div class="row m_T20 m_B10 hidden-element">
+            <div class="col-10">
+                <div class="input-field">
+                    <input th:id="${index}+'-'+${singleDesign.file.fileId.fileNbr}+'-locarnoClassAutocomplete'" type="text" class="autocomplete form-ignore locarno-autocomplete"
+                           th:placeholder="#{locarno.class.to.search.text}"
+                           th:attr="data-url=@{/design/locarno/autocomplete},
+                           data-locarno-button-add=${index}+'locarno-add-button',
+                           data-locarno-edition-code=${index}+'locarno-edition-code'">
+                </div>
+            </div>
+            <div>
+                <button th:id="${index}+'locarno-add-button'" th:text="#{add.locarno.class.button}"
+                        th:attr="data-action='add-locarno-class',data-url=@{/design/locarno/add},
+                                 data-filingNumber=${filingNumber},
+                                 data-locarno-class-autocomplete =${index}+'-'+${singleDesign.file.fileId.fileNbr}+'-locarnoClassAutocomplete',
+                                 data-locarno-edition-code=${index}+'locarno-edition-code'" th:type="button"
+                        class="button sm-icn-add m_T10 locarno-add-button">
+                </button>
+            </div>
+        </div>
+        <div class="row  hidden-element">
+            <div th:replace="ipobjects/patentlike/design/single_design_locarno_classes_errors :: single_design_locarno_classes_errors(${filingNumber})"></div>
+        </div>
+        <div class="row m_T20 m_B10 hidden-element">
+            <div th:replace="base/validation :: validation-message(${validationErrors},${index}+'-'+${singleDesign.file.fileId.fileNbr}+'-locarnoClassAutocomplete')"></div>
+        </div>
+        <div class="col-11">
+            <div class="inline-block m_T10 m_B10">
+                <div th:replace="~{base/form/input :: multiple-file(
+                                      id = 'single-design-drawing-upload-'+${index},
+                                      accept = '.jpg, .jpeg, .png, .gif, .bmp',
+                                      name = 'uploadDrawing',
+                                      classes = 'input_file',
+                                      style = 'display:none;',
+                                      url = @{/design/drawing/add},
+                                      urlUpload = @{/design/drawing/load-on-add-complete},
+                                      filingNumber=${filingNumber})}">
+                </div>
+                <span th:text="#{single.design.drawingс.label}"></span>
+                <a class="btn-floating ipas small waves-effect action-button-bot waves-light hidden-element" th:title="#{btn.add}"
+                   th:attr="data-action='single-design-drawing-upload-href',data-triggered-action='single-design-drawing-upload-'+${index}">
+                    <i class="material-icons">add</i>
+                </a>
+                <div  class="hidden-element b0 inline-block">
+                    <span th:text="#{drawing.max.file.size.message}"></span>
+                    <span th:text="#{drawing.file.type.message}"></span>
+                </div>
+            </div>
+        </div>
+
+
+        <div th:attr="data-single-design-nbr=${filingNumber}">
+            <div th:replace="ipobjects/patentlike/design/single_design_drawings :: single_design_drawings(${singleDesign.technicalData.drawingList},${filingNumber},${sessionObjectIdentifier})"></div>
+        </div>
+    </li>
+</div>
+</body>
+</html>

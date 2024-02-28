@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="agent-power-of-attorney-info-modal(reprPowerOfAttorneyData)">
+    <div th:id="agent-power-of-attorney-info-modal" class="modal"
+         th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}, objectUtils=${T(java.util.Objects)}">
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="#{person.agent.power.of.attorney.info.title}"></h4>
+            </div>
+            <div class="row">
+                <th:block th:if="${objectUtils.nonNull(reprPowerOfAttorneyData.attorneyPowerTerm)}">
+                    <div class="col-4">
+                        <div th:replace="~{base/form/input :: datepicker(id = 'agent-data-attorney-power-term', isDisabled = true, label = #{agent.attorney.power.term.label}, value = ${#dates.format(reprPowerOfAttorneyData.attorneyPowerTerm,dateFormatDot)})}"></div>
+                    </div>
+                </th:block>
+
+                <th:block th:if="${objectUtils.isNull(reprPowerOfAttorneyData.attorneyPowerTerm)}">
+                    <div class="col-4">
+                        <div th:replace="~{base/form/input :: readonly(label = #{agent.attorney.power.term.label}, value = #{agent.attorney.power.term.indefinite.label})}"></div>
+                    </div>
+                </th:block>
+
+                <th:block th:if="${reprPowerOfAttorneyData.reauthorizationRight == true}">
+                    <div class="col-4">
+                        <div th:replace="~{base/form/input :: readonly(label = #{agent.reauthorization.right.label}, value = #{agent.reauthorization.right.yes.label})}"></div>
+                    </div>
+                </th:block>
+                <th:block th:if="${reprPowerOfAttorneyData.reauthorizationRight == false}">
+                    <div class="col-4">
+                        <div th:replace="~{base/form/input :: readonly(label = #{agent.reauthorization.right.label}, value = #{agent.reauthorization.right.no.label})}"></div>
+                    </div>
+                </th:block>
+
+                <th:block th:if="${reprPowerOfAttorneyData.priorReprsRevocation == true}">
+                    <div class="col-4">
+                        <div th:replace="~{base/form/checkbox :: basic(id = 'agent-data-prior-reprs-revocation',isDisabled = true, label = #{agent.prior.reprs.revocation.label}, isChecked = ${reprPowerOfAttorneyData.priorReprsRevocation})}"></div>
+                    </div>
+                </th:block>
+
+
+            </div>
+            <div class="row m_T10" th:if="${objectUtils.nonNull(reprPowerOfAttorneyData.authorizationCondition)}">
+                <div class="col-12">
+                    <div th:replace="~{base/form/textarea :: basic(id = 'agent-data-authorization-condition',isDisabled = true, value = ${reprPowerOfAttorneyData.authorizationCondition}, label = #{agent.authorization.condition.label})}"></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer row">
+            <div class="col-12">
+                <button th:text="#{btn.cancel}" th:type="button"
+                        class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

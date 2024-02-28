@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="search_ipos" pageWidth="1191" pageHeight="842" orientation="Landscape" columnWidth="1151" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ea6b3717-7f01-4fee-b8b2-5a3e2379815c">
+	<property name="net.sf.jasperreports.data.adapter" value="172.16.1.94-DataAdapter.xml"/>
+	<property name="ireport.jasperserver.url" value="http://172.18.1.10:8090/jasperserver/"/>
+	<property name="ireport.jasperserver.user" value="jasperadmin"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/IPAS/172.16.1.93_search_ipos_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/IPAS/172.16.1.93_search_ipos"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="172.16.1.93-DataAdapter.xml"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.cell.border" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.wrap.text" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.white.page.background" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.sheet.names.{arbitrary_name}" value="Sheet1"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Dataset1" uuid="71f01558-73ac-4fa0-8363-5f2940f23968">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192.168.3.65-DataAdapter.xml"/>
+		<property name="net.sf.jasperreports.data.adapter" value="172.16.1.94-DataAdapter.xml"/>
+		<parameter name="dataparam" class="java.lang.String" evaluationTime="Early">
+			<property name="net.sf.jasperreports.http.data.body"/>
+			<defaultValueExpression><![CDATA["{\"username\": \"test\", \"data\": {\"fileTypes\":[\"D\", \"N\"],\"pageSize\":1}}"]]></defaultValueExpression>
+		</parameter>
+		<parameter name="requestForValidationType" class="java.lang.String"/>
+		<parameter name="leadingZero" class="java.lang.Integer"/>
+		<queryString language="json">
+			<![CDATA[data.rows]]>
+		</queryString>
+		<field name="pk.fileSeq" class="java.lang.String">
+			<property name="net.sf.jasperreports.json.field.expression" value="pk.fileSeq"/>
+			<fieldDescription><![CDATA[pk.fileSeq]]></fieldDescription>
+		</field>
+		<field name="pk.fileType" class="java.lang.String">
+			<property name="net.sf.jasperreports.json.field.expression" value="pk.fileType"/>
+			<fieldDescription><![CDATA[pk.fileType]]></fieldDescription>
+		</field>
+		<field name="pk.fileSeries" class="java.lang.String">
+			<property name="net.sf.jasperreports.json.field.expression" value="pk.fileSeries"/>
+			<fieldDescription><![CDATA[pk.fileSeries]]></fieldDescription>
+		</field>
+		<field name="pk.fileNbr" class="java.lang.String">
+			<property name="net.sf.jasperreports.json.field.expression" value="pk.fileNbr"/>
+			<fieldDescription><![CDATA[pk.fileNbr]]></fieldDescription>
+		</field>
+		<field name="filingDate" class="java.lang.String">
+			<property name="net.sf.jasperreports.json.field.expression" value="filingDate"/>
+			<fieldDescription><![CDATA[filingDate]]></fieldDescription>
+		</field>
+		<field name="registrationDate" class="java.lang.String">
+			<property name="net.sf.jasperreports.json.field.expression" value="registrationDate"/>
+			<fieldDescription><![CDATA[registrationDate]]></fieldDescription>
+		</field>
+		<field name="registrationNbr" class="java.lang.Integer">
+			<property name="net.sf.jasperreports.json.field.expression" value="registrationNbr"/>
+			<fieldDescription><![CDATA[registrationNbr]]></fieldDescription>
+		</field>
+		<field name="mainOwner" class="java.lang.String">
+			<property name="net.sf.jasperreports.json.field.expression" value="mainOwner"/>
+			<fieldDescription><![CDATA[mainOwner]]></fieldDescription>
+		</field>
+		<field name="title" class="java.lang.String">
+			<property name="net.sf.jasperreports.json.field.expression" value="title"/>
+			<fieldDescription><![CDATA[title]]></fieldDescription>
+		</field>
+		<field name="hasImg" class="java.lang.String">
+			<property name="net.sf.jasperreports.json.field.expression" value="hasImg"/>
+			<fieldDescription><![CDATA[hasImg]]></fieldDescription>
+		</field>
+		<field name="status" class="java.lang.String">
+			<property name="net.sf.jasperreports.json.field.expression" value="status"/>
+			<fieldDescription><![CDATA[status]]></fieldDescription>
+		</field>
+		<field name="requestForValidationNbr" class="java.lang.String">
+			<property name="net.sf.jasperreports.json.field.expression" value="requestForValidationNbr"/>
+			<fieldDescription><![CDATA[requestForValidationNbr]]></fieldDescription>
+		</field>
+	</subDataset>
+	<parameter name="json" class="java.lang.String" evaluationTime="Early">
+		<property name="net.sf.jasperreports.http.data.body"/>
+		<defaultValueExpression><![CDATA["{\"username\":\"test\",\"data\":{\"title\":\"\",\"titleTypeSearch\":\"KEYWORDS\",\"fileTypes\":[\"T\"],\"fromFileNbr\":\"\",\"toFileNbr\":\"\",\"ipcClassType\":\"AND\",\"niceClassesType\":\"AND\",\"viennaClassCodeType\":\"AND\",\"requestForValidationType\":\"EV\",\"locarnoClassCodeType\":\"AND\",\"page\":0,\"sortOrder\":\"asc\",\"sortColumn\":\"title\"}}"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="leadingZero" class="java.lang.Integer" evaluationTime="Early">
+		<defaultValueExpression><![CDATA[6]]></defaultValueExpression>
+	</parameter>
+	<parameter name="requestForValidationType" class="java.lang.String" evaluationTime="Early">
+		<defaultValueExpression><![CDATA["request-for-validation"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="JSON">
+		<![CDATA[]]>
+	</queryString>
+	<field name="totalElements" class="java.lang.String">
+		<property name="net.sf.jasperreports.json.field.expression" value="data.totalElements"/>
+		<fieldDescription><![CDATA[data.totalElements]]></fieldDescription>
+	</field>
+	<title>
+		<band height="30" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+			<textField textAdjust="ScaleFont">
+				<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="1151" height="15" isPrintWhenDetailOverflows="true" uuid="a7483567-4288-4b7c-b489-886b857ac9cf">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["Общ брой: "+$F{totalElements}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement stretchType="ContainerBottom" x="0" y="15" width="1151" height="15" isPrintWhenDetailOverflows="true" uuid="322f1218-f4c0-4fd7-b53f-0b7458ff8882">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[DATEFORMAT(NOW( ),"dd/MM/yyyy")]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="50">
+			<componentElement>
+				<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="1370" height="35" uuid="1e4b5eb3-66fa-4258-b37f-d825ee6051de">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="com.jaspersoft.studio.components.autoresize.next" value="true"/>
+					<property name="com.jaspersoft.studio.components.autoresize.proportional" value="true"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Dataset1" uuid="98ae389c-52af-4ea2-b284-52e601431409">
+						<datasetParameter name="dataparam">
+							<datasetParameterExpression><![CDATA[$P{json}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="requestForValidationType">
+							<datasetParameterExpression><![CDATA[$P{requestForValidationType}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="leadingZero">
+							<datasetParameterExpression><![CDATA[$P{leadingZero}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="254" uuid="f5a178a7-cb1a-4402-bde8-867a1da4fed0">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<printWhenExpression><![CDATA[$P{requestForValidationType} != null && LEN($P{requestForValidationType} )>0]]></printWhenExpression>
+						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+							<box leftPadding="0" rightPadding="0"/>
+							<staticText>
+								<reportElement x="0" y="0" width="254" height="20" uuid="6ebda3d6-953a-45d7-bf0f-87b7f995003f"/>
+								<box leftPadding="5" rightPadding="5"/>
+								<text><![CDATA[Искане за валидиране]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="15">
+							<box leftPadding="0" rightPadding="0"/>
+							<textField textAdjust="StretchHeight">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="254" height="15" uuid="3efb5f26-375b-4d7c-a466-728a33b1dc9e"/>
+								<box leftPadding="5" rightPadding="5"/>
+								<textFieldExpression><![CDATA[$F{requestForValidationNbr}!=null?$F{requestForValidationNbr}.replaceAll("[\\[\\]\"]*", ""):""]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="150" uuid="fb319541-2db6-4bdd-b154-68d8265b354c">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+							<box leftPadding="0" rightPadding="0"/>
+							<staticText>
+								<reportElement x="0" y="0" width="150" height="20" uuid="4b13fbd5-41e5-49d7-a8f0-39985f9008bf"/>
+								<box leftPadding="5" rightPadding="5"/>
+								<text><![CDATA[Номер]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="15">
+							<box leftPadding="0" rightPadding="0"/>
+							<textField textAdjust="StretchHeight">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="150" height="15" uuid="cf9b8d46-811c-4b20-a078-9617758ad994"/>
+								<box leftPadding="5" rightPadding="5"/>
+								<textFieldExpression><![CDATA[$F{pk.fileSeq}+"/"+$F{pk.fileType}+"/"+$F{pk.fileSeries}+"/"+
+IF( $P{leadingZero} > LEN($F{pk.fileNbr}),
+	(RIGHT(""+(int)Math.pow(10,$P{leadingZero}), $P{leadingZero}) +"" + $F{pk.fileNbr}).substring($F{pk.fileNbr}.length()),
+	$F{pk.fileNbr}
+)]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="116" uuid="c2bb404e-e5e9-4b7d-85b6-625128ed13d2">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+							<box leftPadding="0" rightPadding="0"/>
+							<staticText>
+								<reportElement x="0" y="0" width="116" height="20" uuid="1a49b1e7-0324-4be1-95bd-b6a74bd68578"/>
+								<box leftPadding="5" rightPadding="5"/>
+								<text><![CDATA[Дата на заявяване]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="15">
+							<box leftPadding="0" rightPadding="0"/>
+							<textField textAdjust="StretchHeight">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="116" height="15" uuid="bddd6f39-d338-4402-be1d-afb8e6b3e0e9"/>
+								<box leftPadding="5" rightPadding="5"/>
+								<textFieldExpression><![CDATA[$F{filingDate}!=null?DATEFORMAT((new SimpleDateFormat("dd.MM.yyyy")).parse($F{filingDate}), "dd/MM/yyyy"):""]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="112" uuid="d5617d9f-237b-452c-a9ba-872edad2b615">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+							<box leftPadding="0" rightPadding="0"/>
+							<staticText>
+								<reportElement x="0" y="0" width="112" height="20" uuid="bf582e34-cec3-4901-a927-6d5481f1bd8c"/>
+								<box leftPadding="5" rightPadding="5"/>
+								<text><![CDATA[Регистров номер]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="15">
+							<box leftPadding="0" rightPadding="0"/>
+							<textField textAdjust="StretchHeight">
+								<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="0" width="112" height="15" uuid="9a204a9e-f27e-4f9b-98d8-55eb501cbc5c"/>
+								<box leftPadding="5" rightPadding="5"/>
+								<textFieldExpression><![CDATA[$F{registrationNbr}!=null?$F{registrationNbr}:""]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="140" uuid="b1b8b5e2-e99e-4867-aa8a-22076382c6ff">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+							<box leftPadding="0" rightPadding="0"/>
+							<staticText>
+								<reportElement x="0" y="0" width="140" height="20" uuid="2318ccbf-6591-465c-99d1-f808527e787d"/>
+								<box leftPadding="5" rightPadding="5"/>
+								<text><![CDATA[Заявител]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="15">
+							<box leftPadding="0" rightPadding="0"/>
+							<textField textAdjust="StretchHeight">
+								<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="0" width="140" height="15" uuid="094b6a2c-0769-4722-8d9f-85653f670830"/>
+								<box leftPadding="5" rightPadding="5"/>
+								<textFieldExpression><![CDATA[$F{mainOwner}!=null?$F{mainOwner}:""]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="258" uuid="3f775af2-021b-4eb9-a28f-e3c9e0bbb70f">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
+						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+							<box leftPadding="0" rightPadding="0"/>
+							<staticText>
+								<reportElement x="0" y="0" width="258" height="20" uuid="d0134355-ea37-4a54-840a-8c6a9cf0c187"/>
+								<box leftPadding="5" rightPadding="5"/>
+								<text><![CDATA[Наименование]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="15">
+							<box leftPadding="0" rightPadding="0"/>
+							<textField textAdjust="StretchHeight">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="258" height="15" uuid="339bc932-0870-4052-88a1-f7fde0665448"/>
+								<box leftPadding="5" rightPadding="5"/>
+								<textFieldExpression><![CDATA[$F{title}!=null?$F{title}:""]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="56" uuid="77e9d657-4e0f-40b9-b685-0ea3ebfa1da1">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
+						<printWhenExpression><![CDATA[FALSE( )]]></printWhenExpression>
+						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+							<box leftPadding="0" rightPadding="0"/>
+							<staticText>
+								<reportElement x="0" y="0" width="56" height="20" uuid="8dc9eeb8-761d-4ef8-95df-50dee19e9fd5">
+									<printWhenExpression><![CDATA[$P{REPORT_CONTEXT}.getParameterValue( "url" )!=null]]></printWhenExpression>
+								</reportElement>
+								<box leftPadding="5" rightPadding="5"/>
+								<text><![CDATA[Изображение]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="15">
+							<box leftPadding="0" rightPadding="0"/>
+							<textField>
+								<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="0" width="56" height="15" uuid="daffbcd5-ad62-4932-aa02-40d8562cad4a"/>
+								<box leftPadding="5" rightPadding="5"/>
+								<textFieldExpression><![CDATA[$F{hasImg}!=null?$F{hasImg}:""]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="284" uuid="b69d96a9-9bbf-4867-9514-bb936547ec1b">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
+						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+							<box leftPadding="0" rightPadding="0"/>
+							<staticText>
+								<reportElement x="0" y="0" width="284" height="20" uuid="cc762239-3efe-487c-be6b-2d7dc18320a2"/>
+								<box leftPadding="5" rightPadding="5"/>
+								<text><![CDATA[Статус]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="15">
+							<box leftPadding="0" rightPadding="0"/>
+							<textField textAdjust="StretchHeight">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="284" height="15" uuid="cbcb7b2b-8095-4600-a549-2c380281d453"/>
+								<box leftPadding="5" rightPadding="5"/>
+								<textFieldExpression><![CDATA[$F{status}!=null?$F{status}:""]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</summary>
+</jasperReport>

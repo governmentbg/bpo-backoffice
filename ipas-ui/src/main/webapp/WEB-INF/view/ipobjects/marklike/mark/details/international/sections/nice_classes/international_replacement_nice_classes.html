@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="mark" type="bg.duosoft.ipas.core.model.mark.CMark"*/-->
+<div th:fragment="mark_replacement_nice_classes(isAllServices, replacementNiceClasses, config)"
+     th:with="allowEdit=${config.allowEdit(isAllServices)}">
+
+    <div class="col-12">
+        <div th:id="|nice-classes-table-${config.niceListType}|" class="nice-classes-table">
+            <div th:if="${replacementNiceClasses != null}">
+                <div th:remove="tag" th:if="${isAllServices != true || config.hasViewAll }">
+                    <div th:replace="ipobjects/common/nice_class/nice_classes_table :: nice-classes-table(allowEdit=${allowEdit}, niceClassList=${mark.markInternationalReplacement.replacementNiceClasses},niceConfig=${config})"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="row m_T10">
+            <span th:if="${config.hasDeleteAll}" th:classappend="${(isAllServices == true) || (isAllServices == null)}? 'none'" class="delete-all-nice-classes-wrapper">
+                <span class="hidden-element">
+                    <a th:replace="~{base/form/button :: material-btn(additionalArgs = 'data-listtype=${config.niceListType}',label = #{btn.delete.all.nice.classes}, dataAction = 'delete-all-nice-classes',dataUrl = @{/nice-class/{niceListType}/delete-all-nice-classes(niceListType=${config.niceListType})}, icon = 'delete', classes = 'right m_L10')}"></a>
+                </span>
+            </span>
+            <span th:if="${config.hasReloadOriginal}" th:classappend="${(isAllServices == true) || (isAllServices == null)}? 'none'" class="restore-original-nice-classes-wrapper">
+                <span class="hidden-element">
+                    <a th:replace="~{base/form/button :: material-btn(additionalArgs = 'data-listtype=${config.niceListType}',label = #{btn.select.original.nice.classes}, dataAction = 'restore-nice-classes',dataUrl = @{/nice-class/{niceListType}/restore-original-nice-classes(niceListType=${config.niceListType})}, icon = 'refresh', classes = 'right m_L10')}"></a>
+                </span>
+            </span>
+            <span th:if="${config.hasReloadOriginal}" th:classappend="${(isAllServices == true) || (isAllServices == null)}? 'none'" class="add-class-from-original-wrapper">
+                <span class="hidden-element">
+                    <a th:replace="~{base/form/button :: material-btn(label = #{btn.select.add.original.class}, dataAction = 'select-add-original-class',dataUrl = @{/nice-class/{niceListType}/select-add-original-class(niceListType=${config.niceListType})}, icon = 'add', classes = 'right m_L10')}"></a>
+                </span>
+            </span>
+        </div>
+    </div>
+
+
+</div>
+</body>
+</html>

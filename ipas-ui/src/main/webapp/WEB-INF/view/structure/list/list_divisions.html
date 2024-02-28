@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="divisions" type="com.duosoft.ipas.webmodel.structure.DivisionWebModel"*/-->
+
+<div class="row" th:fragment="list-divisions(divisions, index)" th:remove="tag">
+    <ul th:id="'LinkedList' + ${index}" class="Linked-List" >
+        <th:block th:each="division,divStat:${divisions}">
+            <li th:replace="structure/list/list_division :: list-division(division = ${division})"></li>
+        </th:block>
+    </ul>
+</div>
+
+
+
+</body>
+</html>

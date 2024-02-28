@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="mark" type="bg.duosoft.ipas.core.model.mark.CMark"*/-->
+<div th:remove="tag" th:fragment="main-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${T(com.duosoft.ipas.enums.ManualSubProcessPanel).MainData.code()}">
+        <div th:replace="ipobjects/common/base/panel_header_only_save_button.html :: panel-header(title=#{panel.title.msprocess.main.data},panel=${panelName},actionURL=null,initURL=null,editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/common/process/msprocess/main_data/main_data_panel :: panel(${manualSubProcess})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="process-data" th:with="panelName=${T(com.duosoft.ipas.enums.ManualSubProcessPanel).Process.code()}">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName},data-url=@{/process/load-panel},data-process=|${manualSubProcess.processId.processType}-${manualSubProcess.processId.processNbr}|">
+        <div th:replace="ipobjects/common/process/process_panel :: loader"></div>
+    </div>
+</div>
+
+</body>
+</html>

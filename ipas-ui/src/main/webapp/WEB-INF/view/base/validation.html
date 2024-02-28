@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="errors" type="java.util.List<bg.duosoft.ipas.validator.config.ValidationError>"*/-->
+<div th:fragment="validation-message(errors,id)" th:remove="tag">
+    <th:block th:if="${!#lists.isEmpty(errors)}">
+        <div th:each="error : ${errors}"
+             th:with="pointer=${#strings.replace(error.pointer,'.','-')},idPointer=${#strings.indexOf(id,'-') > -1 ? #strings.substring(id,(#strings.indexOf(id,'-')+1)) : id}"
+             th:remove="tag">
+            <div class="m_B10 validation-error" th:attr="data-id=${id}"
+                 th:if="${#strings.equalsIgnoreCase(pointer,idPointer)}">
+                <div th:switch="${#strings.isEmpty(error.messageCode)}" th:remove="tag">
+                    <span style="color: #d21010" th:case="false" th:utext="#{${error.messageCode}}"></span>
+                    <span style="color: #d21010" th:case="*" th:utext="${error.message}"></span>
+                </div>
+            </div>
+        </div>
+            <span class="none validation-indication"></span>
+    </th:block>
+</div>
+</body>
+</html>

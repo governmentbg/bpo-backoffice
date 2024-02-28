@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="confirm-modal">
+    <div th:id="confirm-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h3 th:text="'Внимание !'"></h3>
+            </div>
+            <div th:id="confirm-modal-message" class="center m_T10" th:attr="data-text='Сигурни ли сте, че искате да извършите избраното действие ?'">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div  class="center" style="display: inline-block" th:id="confirm-modal-yes-div" th:attr="data-yes='Да'"></div>
+            <div style="display: inline-block">
+                <button th:type="button" class="bg__dark-red modal-close button minw_100" th:text="'Не'"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="confirm-funcs-modal">
+    <div th:id="confirm-funcs-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h3 th:text="#{general.message.attention}"></h3>
+            </div>
+            <div style="display: none" th:attr="data-message=#{general.message.continue.confirm}" id="confirm-funcs-modal-basic-text"></div>
+            <div th:id="confirm-funcs-modal-message" class="center m_T10">
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="center" style="display: inline-block">
+                <button th:type="button" style="min-width: 100px"
+                        th:attr="data-label=#{btn.continue}"
+                        class="bg__dark-green modal-close button" id="action-continue-btn"></button>
+            </div>
+            <div style="display: inline-block">
+                <button th:type="button" style="min-width: 100px"
+                        th:attr="data-label=#{btn.cancel}"
+                        class="bg__dark-red modal-close button" id="action-cancel-btn"></button>
+            </div>
+            <div id="action-close-btn-wrapper" class="center none" style="display: inline-block">
+                <button th:type="button" style="min-width: 100px"
+                        th:attr="data-label=#{btn.close}"
+                        class="button" id="action-close-btn"></button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div th:fragment="info-modal">
+    <div th:id="info-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h3 class="m-red-text darken-3" th:text="#{general.message.attention}"></h3>
+            </div>
+            <div th:id="info-modal-message" class="center m_T10">
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div>
+                <button th:text="#{btn.understand}" type="button" class="button sm-icn-save modal-close"></button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

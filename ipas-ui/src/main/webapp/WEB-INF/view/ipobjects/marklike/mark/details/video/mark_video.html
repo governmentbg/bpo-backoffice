@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="mark" type="bg.duosoft.ipas.core.model.mark.CMark"*/-->
+<div th:fragment="video(mark,sessionObjectIdentifier,attachmentIndex, attachment)"
+     th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)},markSignTypeUtils=${T(bg.duosoft.ipas.util.mark.MarkSignTypeUtils)}">
+    <hr class="hidden-element">
+    <div>
+        <div class="row">
+            <div class="col-4" th:id="'mark-video-div-'+${attachmentIndex}">
+                <div th:replace="~{ipobjects/marklike/mark/details/video/video :: tag(url=@{/mark/file/video/}, sessionIdentifier =${sessionObjectIdentifier},attachmentIndex= ${attachmentIndex})}"></div>
+            </div>
+            <div class="col-7 hidden-element">
+                <div>
+                    <span>
+                        <input th:accept="'.mp4'" th:id="'mark-videoFile-'+${attachmentIndex}" th:type="file" th:name="'uploadMarkVideo'" class="input_file" th:attr="data-url=@{/mark/validate-uploaded-video},data-action='upload-mark-video',data-index=${attachmentIndex}">
+                        <label th:for="'mark-videoFile-'+${attachmentIndex}" class="bttn bg__blue inline-block" th:text="'Изберете файл'"></label>
+                    </span>
+                    <span style="font-weight: bold" th:id="'mark-video-file-name-'+${attachmentIndex}" th:attr="data-label='Избран файл: '"></span>
+                </div>
+                <div>
+                    <div class="m_T5">
+                        <div th:replace="~{base/validation :: validation-message(${validationErrors},'mark-videoFile-'+${attachmentIndex})}"></div>
+                        <div th:id="'mark-video-error-div-'+${attachmentIndex}"></div>
+                    </div>
+                    <div class="m_T5">
+                        <span th:text="'Изборът на видео файл е ограничен до MP4 формат'"></span>
+                    </div>
+                    <div class="m_T5">
+                        <span th:text="'Максимален размер на файла: 20 MB'"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="hidden-element right">
+                <a class="btn-floating ipas small waves-effect waves-light" th:title="'Изтрий файла'"
+                   th:attr="data-action='delete-mark-attachment',data-index=${attachmentIndex},data-url=@{/mark/delete-mark-attachment},data-type=${T(bg.duosoft.ipas.enums.AttachmentType).VIDEO.name()}"
+                >
+                    <i class="material-icons">close</i>
+                </a>
+            </div>
+        </div>
+        <div th:if="${markSignTypeUtils.isMarkContainVideo(mark.signData.signType)}">
+            <div th:replace="~{ipobjects/marklike/mark/details/vienna/vienna.html :: section(attachment = ${attachment}, attachmentIndex = ${attachmentIndex}, attachmentType = ${T(bg.duosoft.ipas.enums.AttachmentType).VIDEO.name()})}"></div>
+        </div>
+    </div>
+    <hr class="hidden-element">
+</div>
+
+</body>
+</html>

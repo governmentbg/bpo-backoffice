@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+
+<body>
+<header class="app-header" th:fragment="header" th:with="securityUtils=${T(bg.duosoft.ipas.util.security.SecurityUtils)}, securityRoles=${T( bg.duosoft.ipas.enums.security.SecurityRole)}">
+
+    <meta name="_csrf" content="${_csrf.token}"/>
+    <meta name="_csrf_header" content="${_csrf.headerName}"/>
+    <meta name="_ctx" th:content="@{/}"/>
+
+    <div th:replace="base/template :: env"></div>
+
+    <div th:replace="base/svg"></div>
+    <div class="part-left">
+        <button id="btn-menu" class="btn-icon-menu"></button>
+        <a th:href="@{/home}"  id="home" class="logo-home">Единна информационна система за индустриална собственост</a>
+    </div>
+    <div class="part-right">
+        <span class="user-name" th:with="securityUtils = ${T(bg.duosoft.ipas.util.security.SecurityUtils)}">
+            <div th:text="${#strings.isEmpty(securityUtils.getLoggedUserFullName())} ? ${securityUtils.getLoggedUsername()} : ${securityUtils.getLoggedUserFullName()}">
+              UserName
+            </div>
+            <div th:if="${securityUtils.hasAuthorizedByUsers()}" th:text="'*'" th:title="${#strings.listJoin(securityUtils.getAuthorizedByUserNames(), ', ')}" class="m_L5">
+              UserName
+            </div>
+        </span>
+        <a id="btn-logout" class="btn-icon-logout" th:href="@{/j_spring_security_logout}" th:align="${#messages.msgOrNull('btn.header.logout')}" th:title="${#messages.msgOrNull('btn.header.logout')}"></a>
+
+        <a id="btn-guide" class="btn-icon-book" th:href="@{/guides/IPAS-guide.pdf}" target="_blank" th:align="${#messages.msgOrNull('btn.header.guide')}" th:title="${#messages.msgOrNull('btn.header.guide')}"></a>
+
+        <div class="right-sidebar">
+            <button id="btn-search" class="btn-icon-search" th:title="${#messages.msgOrNull('btn.header.search')}"></button>
+            <div class="nav-dropdown-search" >
+                <div th:each="url : ${T(com.duosoft.ipas.util.UrlMap).getServiceUrlsFiltered()}" th:remove="tag">
+                    <a th:href="${url.urlPropertyConfiguration} ? ${@environment.getProperty(url.url)} : @{${url.url}}" th:title="${#messages.msgOrNull(url.text)}"
+                       data-blockui='true'>
+                        <svg class="icon">
+                            <use th:attr="'xlink:href'=${url.xhref}"></use>
+                        </svg>
+                        <span th:if="${url.xhref =='#icon-trademark'}" th:utext="${#messages.msgOrNull(url.shortText)}" style="width: 110px"></span>
+                        <span th:if="${url.xhref =='#icon-EUpatent'}" th:utext="${#messages.msgOrNull(url.shortText)}" style="width: 125px"></span>
+                        <span th:if="${url.xhref !='#icon-trademark' && url.xhref !='#icon-EUpatent'}" th:utext="${#messages.msgOrNull(url.shortText)}"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="right-sidebar">
+            <button id="btn-aside" class="btn-icon-aside" th:title="${#messages.msgOrNull('btn.header.admin.services')}"></button>
+            <div class="nav-dropdown" >
+                <div th:each="url : ${T(com.duosoft.ipas.util.UrlMap).getAdminServiceUrlsFiltered()}" th:remove="tag">
+                    <a th:href="${url.urlPropertyConfiguration} ? ${@environment.getProperty(url.url)} : @{${url.url}}" th:title="${#messages.msgOrNull(url.text)}"
+                       data-blockui='true'>
+                        <svg class="icon">
+                            <use th:attr="'xlink:href'=${url.xhref}"></use>
+                        </svg>
+                        <span th:if="${url.xhref =='#icon-trademark'}" th:utext="${#messages.msgOrNull(url.shortText)}" style="width: 110px"></span>
+                        <span th:if="${url.xhref =='#icon-EUpatent'}" th:utext="${#messages.msgOrNull(url.shortText)}" style="width: 125px"></span>
+                        <span th:if="${url.xhref !='#icon-trademark' && url.xhref !='#icon-EUpatent'}" th:utext="${#messages.msgOrNull(url.shortText)}"></span>
+                    </a>
+                </div>
+                <a th:href="${@environment.getProperty('ipas.properties.jasper-url')}"
+                   th:title="${#messages.msgOrNull('search.jasper-url')}"
+                   target="_blank">
+                    <svg class="icon">
+                        <use th:attr="'xlink:href'=${T(com.duosoft.ipas.util.UrlMap).JASPER_SOFT_URL.getXhref()}"></use>
+                    </svg>
+                    <span th:utext="${#messages.msgOrNull('search.jasper-url')}"></span>
+                </a>
+                <a th:href="${@environment.getProperty('ipas.properties.dd.template-manager-url')}"
+                   th:title="${#messages.msgOrNull('dd.template-manager-url')}"
+                   th:with="xhref=${T(com.duosoft.ipas.util.UrlMap).DD_TEMPLATE_MANAGER_URL.getXhref()}"
+                   target="_blank">
+                    <svg class="icon">
+                        <use th:attr="'xlink:href'=${xhref}"></use>
+                    </svg>
+                    <span th:utext="${#messages.msgOrNull('dd.template-manager-url')}"></span>
+                </a>
+            </div>
+        </div>
+        <div class="right-sidebar">
+            <button th:id="btn-session-objects" class="btn-icon-sess-obj" th:title="${#messages.msgOrNull('btn.header.session')}"></button>
+            <div th:id="session-objects-panel" class="nav-dropdown-session" th:attr="data-url=@{/session/get-objects}"></div>
+        </div>
+    </div>
+    <div th:replace="base/modal/confirmation::confirm-modal" th:remove="tag"></div>
+    <div th:replace="base/modal/confirmation::confirm-funcs-modal" th:remove="tag"></div>
+    <div th:replace="base/modal/confirmation::info-modal" th:remove="tag"></div>
+    <div th:replace="base/modal/global_modal::error-modal" th:remove="tag"></div>
+    <div th:replace="base/modal/global_modal::success-modal" th:remove="tag"></div>
+    <div th:replace="base/modal/error :: error-modal-exception" th:remove="tag"></div>
+    <div th:replace="base/loader :: global-loader"></div>
+    <div th:id="error-modal-wrapper"></div>
+    <div th:id="process-action-modal-wrapper"></div>
+</header>
+
+
+</body>
+</html>

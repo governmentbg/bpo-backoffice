@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="lastPaymentsList" type="java.util.List<bg.duosoft.ipas.core.model.payments.CPaymentDetailExtended>"*/-->
+<!--/*@thymesVar id="lastPaymentsCount" type="java.lang.Integer"*/-->
+<!--/*@thymesVar id="lastPaymentsFilter" type="bg.duosoft.ipas.util.filter.LastPaymentsFilter"*/-->
+<div th:fragment="table(lastPaymentsList,lastPaymentsCount, lastPaymentsFilter)"
+    th:with="sorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.SorterUtils)},lastPaymentsSorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.LastPaymentsSorterUtils)}">
+
+    <div class="m_T10">
+        <div th:replace="base/message :: success(${successMessage})"></div>
+    </div>
+
+    <div th:remove="tag" th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(lastPaymentsList)}">
+        <div th:remove="tag" th:case="true">
+            <div th:replace="base/message :: info(#{empty.list})"></div>
+        </div>
+        <div th:remove="tag" th:case="false">
+            <div class="row">
+                <div>
+                    <span th:text="#{total}"></span>
+                    <span th:text="${lastPaymentsCount}"></span>
+
+                </div>
+            </div>
+            <div class="m_T5">
+                <table class="simple bpo">
+                    <thead>
+                    <tr>
+                        <th style="width: 40px" th:text="#{number}"></th>
+
+                        <th style="width: 160px;" th:with="isSelected=${#strings.equalsIgnoreCase(lastPaymentsFilter.sortColumn,lastPaymentsSorterUtils.FILING_NUMBER)},dataSort=${lastPaymentsSorterUtils.FILING_NUMBER}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,lastPaymentsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{filing.number},${lastPaymentsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+
+                        <th th:with="isSelected=${#strings.equalsIgnoreCase(lastPaymentsFilter.sortColumn,lastPaymentsSorterUtils.LAST_DATE_PAYMENT)},dataSort=${lastPaymentsSorterUtils.LAST_DATE_PAYMENT}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,lastPaymentsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{payments.date.payment},${lastPaymentsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th th:with="isSelected=${#strings.equalsIgnoreCase(lastPaymentsFilter.sortColumn,lastPaymentsSorterUtils.LIABILITY_AMOUNT)},dataSort=${lastPaymentsSorterUtils.LIABILITY_AMOUNT}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,lastPaymentsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{payments.liability.amount},${lastPaymentsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th th:with="isSelected=${#strings.equalsIgnoreCase(lastPaymentsFilter.sortColumn,lastPaymentsSorterUtils.LIABILITY_AMOUNT_OUTSTANDING)},dataSort=${lastPaymentsSorterUtils.LIABILITY_AMOUNT_OUTSTANDING}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,lastPaymentsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{payments.liability.amount.outstanding},${lastPaymentsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th th:with="isSelected=${#strings.equalsIgnoreCase(lastPaymentsFilter.sortColumn,lastPaymentsSorterUtils.LAST_PAYER_NAME)},dataSort=${lastPaymentsSorterUtils.LAST_PAYER_NAME}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,lastPaymentsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{payments.payer.name},${lastPaymentsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th th:with="isSelected=${#strings.equalsIgnoreCase(lastPaymentsFilter.sortColumn,lastPaymentsSorterUtils.LIABILITY_CODE_NAME)},dataSort=${lastPaymentsSorterUtils.LIABILITY_CODE_NAME}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,lastPaymentsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{payments.liability.code.name},${lastPaymentsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="payment,paymentStat : ${lastPaymentsList}">
+                        <td>
+                            <span th:text="${paymentStat.count + ((lastPaymentsFilter.page - 1)*lastPaymentsFilter.pageSize)}">
+                            </span>
+                        </td>
+                        <td>
+                           <a class="b0"
+                              th:href="@{/ipobject/view(filingNumber=${payment.createFilingNumber()})}"
+                              th:text="${payment.getExternalSystemIdOrFilingNumber()}"></a>
+                        </td>
+                        <td>
+                            <span th:text="${#dates.format(payment.lastDatePayment,T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${#numbers.formatDecimal(payment.amount, 1, 'NONE', 2, 'POINT')}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${#numbers.formatDecimal(payment.amountOutstanding, 1, 'NONE', 2, 'POINT')}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${payment.lastPayerName}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${payment.liabilityCodeName}"></span>
+                        </td>
+
+                        <td>
+                            <a th:replace="~{base/form/button :: material-table-btn(title = #{btn.payment.processed},dataAction='mark-payment-as-processed',  dataUrl =@{/last-payments/mark-as-processed} ,classes ='confirm',
+                            additionalArgs='data-sort-order=${lastPaymentsFilter.sortOrder},data-sort-column=${lastPaymentsFilter.sortColumn},data-filing-number=${payment?.createFilingNumber()},data-id=${payment.id},data-message=#{mark.payment.as.processed.msg}', icon = 'edit')}"></a>
+                        </td>
+
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="home-panel-paginator">
+                    <div th:replace="base/paginator :: paginator(page=${lastPaymentsFilter.page},pageSize=${lastPaymentsFilter.pageSize},total=${lastPaymentsCount},baseUrl=@{last-payments/update-table},
+                        tableContainerDiv='last-payments-table-wrapper',
+                        additionalParams='' +
+                        ${lastPaymentsFilter.dateLastPaymentFrom != null ? '&dateLastPaymentFrom='+lastPaymentsFilter.dateLastPaymentFrom : '' }+
+                        ${lastPaymentsFilter.dateLastPaymentTo  != null ? '&dateLastPaymentTo='+lastPaymentsFilter.dateLastPaymentTo : '' }+
+                        '&sortOrder='+${lastPaymentsFilter.sortOrder}+
+                                         '&sortColumn='+${lastPaymentsFilter.sortColumn})">
+                    </div>
+                </div>
+            </div>
+            <div>
+                <input th:type="hidden" class="form-ignore" th:id="last-payments-page" th:value="${lastPaymentsFilter.page}">
+                <input th:type="hidden" class="form-ignore" th:id="last-payments-pageSize" th:value="${lastPaymentsFilter.pageSize}">
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

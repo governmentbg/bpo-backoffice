@@ -1,0 +1,327 @@
+/**
+ *    File: buttons.css
+ *
+ * Created: 01.10.2007
+ * Revised: 07.08.2018
+ *  Author: Diana Todorova DTH, http://www.adianam.info, http://www.dth.bg
+ * -------------------------------------------------------------------------- */
+
+/* Buttons & Links like button
+============================================================================= */
+
+  .button,
+  [class*="sm-icn-"] {
+    position:relative;
+    display:inline-block;
+    white-space:nowrap;
+    margin:0 0.5em;
+    text-shadow:0 1px 0 rgba(0,0,0,.2);
+    text-decoration:none;
+    border-width:1px;
+    border-style:solid;
+    outline:none;
+    cursor:pointer;
+    z-index:66;}
+
+  .button {padding:0.375rem 0.75rem;line-height:1.5;}
+
+  .button.clean {border-color:var(--border-sm-icn);color:var(--color-bpo);background:#fff;}
+
+  [class*="sm-icn-"],
+  [class*="sm-icn-"].button {
+    color:var(--color-bpo);
+    background-color:var(--color-gray_fa);
+    border-color:var(--border-sm-icn);
+    padding:0 16px 0 48px;
+    height:32px;
+    line-height:32px;}
+
+  [class*="sm-icn-"]:hover {background-color:var(--color-f0f2f4);}
+
+  .button:active,
+  [class*="sm-icn-"]:active
+    {
+    position:relative;
+            box-shadow: 0 0 4px 2px rgba(0,0,0,.15) inset;
+    -webkit-box-shadow: 0 0 4px 2px rgba(0,0,0,.15) inset;
+    top:1px;}
+
+  .button:focus,
+  [class*="sm-icn-"]:focus {
+    outline:0;
+    background-color:#fafafa;}
+
+  [class*="sm-icn-"].button:before {
+    position:absolute;
+    left:0;
+    top:0;
+    display:block;
+    overflow:hidden;
+    width:32px;
+    height:30px;
+    background-color:rgba(0,0,0,.05);
+    text-align:center;
+    margin:0;
+    padding:0;
+
+    -webkit-box-shadow:1px 0 0 rgba(0,0,0,.3), 2px 0 0 rgba(255,255,255,.1);
+            box-shadow:1px 0 0 rgba(0,0,0,.3), 2px 0 0 rgba(255,255,255,.1);
+    -webkit-border-radius:3px 0 0 3px;
+            border-radius:3px 0 0 3px;
+
+    pointer-events:none;
+    content:"";
+    z-index:67;}
+
+ /* Small Buttons (links)
+ --------------------------------------------------------------------------- */
+  [class*="sm-icn-"].small {
+    width:32px;
+    padding:0;
+    text-indent:-9999em;}
+
+  [class*="sm-icn-"].small,
+  [class*="sm-icn-"].button:before {
+    background-image:url("../img/sprite_icons.svg");
+    background-repeat:no-repeat;}
+
+  .sm-icn-edit          , .sm-icn-edit:before,
+  .sm-icn-edit:focus    , .sm-icn-edit:focus:before     {background-position:0 0;}
+
+  .sm-icn-print         , .sm-icn-print:before,
+  .sm-icn-print:focus   , .sm-icn-print:focus:before    {background-position:0 -30px;}
+
+  .sm-icn-add           , .sm-icn-add:before,
+  .sm-icn-add:focus     , .sm-icn-add:focus:before      {background-position:0 -60px;}
+
+  .sm-icn-cross         , .sm-icn-cross:before,
+  .sm-icn-cross:focus   , .sm-icn-cross:focus:before    {background-position:0 -90px;}
+
+  .sm-icn-down          , .sm-icn-down:before,
+  .sm-icn-down:focus    , .sm-icn-down:focus:before     {background-position:0 -120px;}
+
+  .sm-icn-up            , .sm-icn-up:before,
+  .sm-icn-up:focus      , .sm-icn-up:focus:before       {background-position:0 -150px;}
+
+  .sm-icn-left          , .sm-icn-left:before,
+  .sm-icn-left:focus    , .sm-icn-left:focus:before     {background-position:0 -180px;}
+
+  .sm-icn-right         , .sm-icn-right:before,
+  .sm-icn-right:focus   , .sm-icn-right:focus:before    {background-position:0 -210px;}
+
+  .sm-icn-save          , .sm-icn-save:before,
+  .sm-icn-save:focus    , .sm-icn-save:focus:before     {background-position:0 -240px;}
+
+  .sm-icn-eye           , .sm-icn-eye:before,
+  .sm-icn-eye:focus     , .sm-icn-eye:focus:before      {background-position:0 -270px;}
+
+  .sm-icn-download      , .sm-icn-download:before,
+  .sm-icn-download:focus, .sm-icn-download:focus:before {background-position:0 -300px;}
+
+  .sm-icn-delete        , .sm-icn-delete:before,
+  .sm-icn-delete:focus  , .sm-icn-delete:focus:before   {background-position:0 -330px;}
+
+  .sm-icn-back        , .sm-icn-back:before,
+  .sm-icn-back:focus  , .sm-icn-back:focus:before   {background-position:0 -390px;}
+
+  .sm-icn-reload          , .sm-icn-reload:before,
+  .sm-icn-reload:focus    , .sm-icn-reload:focus:before     {background-position:0 -420px;}
+
+  [class*="bg__"].sm-icn-delete:before,
+  [class*="bg__"].sm-icn-delete:focus:before {
+    background-color:rgba(0,0,0,.15);
+    background-position:-30px -330px;}
+
+ /* --- The disabled styles --- */
+  .button[disabled],
+  .button[disabled]:hover,
+  .button.disabled,
+  .button.disabled:hover {
+    color:var(--color-gray_aaa);
+    background:#eee;
+    border-color:var(--color-gray_aaa) !important;
+    text-shadow:none;
+    position:static;
+            box-shadow:none;
+    -webkit-box-shadow:none;
+    cursor:default;}
+
+ /* --- Sizes --- */
+  .button.btn-sm {padding:0.25rem .5rem;font-size:0.765625rem;line-height:1.5;border-radius:.2rem;}
+  .button.btn-lg {padding:0.50rem  1rem;font-size:1.09375rem; line-height:1.5;border-radius:.3rem;}
+
+ /* --- Icons 16x17, 07.08.2018 --- */
+  [class*="dth-sm"] {
+    position:relative;
+    display:inline-block;
+    width:16px;
+    height:17px;
+    margin:2px 2px 0 0;
+    background-color:transparent;
+    background-repeat:none;
+    background-image:url("../img/sprite_icons.svg");
+    white-space:nowrap;}
+
+  .dth-sm-doc       {background-position:0 -450px;}
+  .dth-sm-doc-in    {background-position:0 -720px;}
+  .dth-sm-doc-out   {background-position:0 -510px;}
+  .dth-sm-doc-gen   {background-position:0 -540px;}
+  .dth-sm-doc-publ  {background-position:0 -570px;}
+  .dth-sm-proc-base {background-position:0 -600px;}
+  .dth-sm-proc-sub  {background-position:0 -630px;}
+  .dth-sm-info      {background-position:0 -660px;}
+  .dth-sm-alert     {background-position:0 -690px;}
+
+/*  SUBMIT
+============================================================================= */
+input[type="submit"],
+button[type="submit"] {letter-spacing:1px;}
+
+input[type="submit"].default,
+input[type="submit"].default,
+button[type="submit"].default,
+button[type="submit"].default
+{
+  background-color:var(--color-bpo);
+  color:#fff;
+  border:1px solid var(--color-bpo);
+}
+
+input[type="submit"].default:hover,
+input[type="submit"].default:focus,
+button[type="submit"].default:hover,
+button[type="submit"].default:focus  {background-color:var(--color-bpo-hover);}
+
+
+button.bpo, a.bpo {
+    background-color: var(--color-bpo);
+    color: #fff;
+    border: 1px solid var(--color-bpo);
+}
+
+button.bpo, a.bpo {
+    letter-spacing: 1px;
+}
+
+button.bpo:hover,
+button.bpo:focus,
+a.bpo:hover,
+a.bpo:focus {
+  background-color: var(--color-bpo-hover);
+}
+
+
+/*BUTTONS SIMILAR TO SM-ICN, BUT USING MATERIAL DESIGN ICONS*/
+.btn.ipas, .btn-large.ipas, .btn-flat.ipas {
+  font-size: 15px;
+  height: 32px;
+  line-height: 32px;
+  text-transform: none;
+  padding: 0 15px 0 0;
+  box-shadow: none;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, .2);
+}
+
+.btn.ipas > .material-icons, .btn-large.ipas > .material-icons, .btn-flat.ipas > .material-icons {
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+.btn.ipas > .material-icons, .btn-large.ipas > .material-icons {
+  border-right: 1px solid;
+  background: rgba(0, 0, 0, .05);
+  padding: 0px 6px;
+}
+
+.btn.ipas, .btn-large.ipas {
+  text-decoration: none;
+  color: var(--color-bpo);
+  background-color: var(--color-gray_fa);
+  text-align: center;
+  letter-spacing: .1px;
+  -webkit-transition: .2s ease-out;
+  transition: .2s ease-out;
+  cursor: pointer;
+  border: 1px solid var(--border-sm-icn);
+}
+
+.btn.ipas:hover, .btn.ipas:focus, .btn-large.ipas:hover, .btn-large.ipas:focus {
+  background-color: var(--color-f0f2f4);
+  box-shadow: none;
+}
+
+.btn.ipas:active, .btn-large.ipas:active, .btn-floating.ipas:active {
+  position: relative;
+  box-shadow: 0 0 4px 2px rgba(0, 0, 0, .15) inset;
+  -webkit-box-shadow: 0 0 4px 2px rgba(0, 0, 0, .15) inset;
+  top: 1px;
+}
+
+.btn.ipas[disabled]{
+  background-color: var(--color-gray_fa) !important;
+}
+
+.btn-floating.ipas {
+  color: #fff;
+  width: 26px;
+  height: 26px;
+  line-height: 26px;
+  background-color: var(--color-gray_fa);
+  border: 1px solid var(--color-bpo);
+  box-shadow: none;
+}
+
+.btn-floating.ipas i {
+  color: var(--color-bpo);
+  line-height: 25px;
+  width: 23px;
+}
+
+
+.btn-floating.ipas:hover {
+  background-color: var(--color-f0f2f4);
+  box-shadow: none;
+}
+
+.btn-floating.ipas i:hover {
+  background-color: var(--color-f0f2f4);
+  box-shadow: none;
+}
+
+.btn.ipas.small, .btn-large.ipas.small, .btn-flat.ipas.small {
+  width: 33px;
+  border-radius: 3px;
+}
+
+.btn.ipas.small i:hover, .btn-large.ipas.small i:hover, .btn-flat.ipas.small i:hover {
+  background-color: var(--color-f0f2f4);
+}
+
+.btn.ipas.small i, .btn-large.ipas.small i, .btn-flat.ipas.small i {
+  background-color: var(--color-white);
+}
+
+.btn.ipas span, .btn-large.ipas span, .btn-flat.ipas span {
+  margin-left: 5px;
+}
+
+.btn-floating.ipas.small i {
+  line-height: 20px;
+  width: 18px;
+}
+
+.btn-floating.ipas.small {
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+}
+
+.action-button-top{
+  position: relative;
+  margin-top: 5px;
+}
+
+.action-button-bot{
+  position: relative;
+  margin-bottom: 5px;
+}

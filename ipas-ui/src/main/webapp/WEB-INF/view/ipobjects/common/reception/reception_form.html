@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg">
+
+<head th:replace="base/template :: head(title = #{reception.page.title})"></head>
+
+<body class="dark left-sidebar-show">
+
+<header class="app-header" th:replace="base/header"></header>
+
+<div class="app-body">
+
+    <div class="left-sidebar">
+        <div id="psb" class="ps--active-y">
+            <nav class="sidebar-nav" th:with="receptionTypeEnum=${T(bg.duosoft.ipas.enums.ReceptionType)}">
+                <ul class="nav DropDownMenu" th:with="receptionTypeUtils = ${T(com.duosoft.ipas.util.ReceptionTypeUtils)}">
+                    <li>
+                        <a th:attr="data-action='change-reception-type',data-type=${receptionTypeEnum.MARK.code()}"
+                           href="javascript:void(0);" th:text="${receptionTypeUtils.selectReceptionTypeShortTitle(receptionTypes, receptionTypeEnum.MARK)}"></a>
+                    </li>
+                    <li>
+                        <a th:attr="data-action='change-reception-type',data-type=${receptionTypeEnum.PATENT.code()}"
+                           href="javascript:void(0);" th:text="${receptionTypeUtils.selectReceptionTypeShortTitle(receptionTypes, receptionTypeEnum.PATENT)}"></a>
+                    </li>
+                    <li>
+                        <a th:attr="data-action='change-reception-type',data-type=${receptionTypeEnum.SPC.code()}"
+                           href="javascript:void(0);" th:text="${receptionTypeUtils.selectReceptionTypeShortTitle(receptionTypes, receptionTypeEnum.SPC)}"></a>
+                    </li>
+                    <li>
+                        <a th:attr="data-action='change-reception-type',data-type=${receptionTypeEnum.UTILITY_MODEL.code()}"
+                           href="javascript:void(0);" th:text="${receptionTypeUtils.selectReceptionTypeShortTitle(receptionTypes, receptionTypeEnum.UTILITY_MODEL)}"></a>
+                    </li>
+                    <li>
+                        <a th:attr="data-action='change-reception-type',data-type=${receptionTypeEnum.GEOGRAPHICAL_INDICATION.code()}"
+                           href="javascript:void(0);" th:text="${receptionTypeUtils.selectReceptionTypeShortTitle(receptionTypes, receptionTypeEnum.GEOGRAPHICAL_INDICATION)}"></a>
+                    </li>
+                    <li>
+                        <a th:attr="data-action='change-reception-type',data-type=${receptionTypeEnum.DESIGN.code()}"
+                           href="javascript:void(0);" th:text="${receptionTypeUtils.selectReceptionTypeShortTitle(receptionTypes, receptionTypeEnum.DESIGN)}"></a>
+                    </li>
+                    <li>
+                        <a th:attr="data-action='change-reception-type',data-type=${receptionTypeEnum.SORT_AND_BREEDS.code()}"
+                           href="javascript:void(0);" th:text="${receptionTypeUtils.selectReceptionTypeShortTitle(receptionTypes, receptionTypeEnum.SORT_AND_BREEDS)}"></a>
+                    </li>
+                    <li>
+                        <a th:attr="data-action='change-reception-type',data-type=${receptionTypeEnum.EU_PATENT.code()}"
+                           href="javascript:void(0);" th:text="${receptionTypeUtils.selectReceptionTypeShortTitle(receptionTypes, receptionTypeEnum.EU_PATENT)}"></a>
+                    </li>
+                    <li>
+                        <a th:attr="data-action='change-reception-type',data-type=${receptionTypeEnum.USERDOC.code()}"
+                           href="javascript:void(0);" th:text="${receptionTypeUtils.selectReceptionTypeShortTitle(receptionTypes, receptionTypeEnum.USERDOC)}"></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <main class="main">
+        <div class="breadcrumbs ignore-default-breadcrumb" th:id="breadcrumbs">
+            <ol class="crumbs">
+                <div th:remove="tag">
+                    <li>
+                        <a th:href="${@environment.getProperty('abdocs.rest.service.url')}" th:text="#{reception.breadcrumb.documents.system}"></a>
+                    </li>
+                    <li>
+                        <span th:text="#{reception.breadcrumb.document.registration}"></span>
+                    </li>
+                </div>
+            </ol>
+        </div>
+
+        <div class="inner">
+            <div th:replace="base/toast/message :: error(message = ${errorMessage},unescaped = true)"></div>
+            <div th:replace="base/toast/message :: success(message = ${successMessage},unescaped = true)"></div>
+            <div th:replace="base/toast/message :: validation-errors(validationErrors = ${validationErrors})"></div>
+            <div class="row" th:id="reception-panel-wrapper">
+                <div th:replace="ipobjects/common/reception/reception_panel :: panel(${receptionForm},${workingDate},${receptionTypes},${submissionTypes},${receptionSessionKey},${validationErrors},${userdocReceptionRelations},${relatedUserdocObjectDetails}, ${userdocFileTypeGroups})"></div>
+            </div>
+        </div>
+    </main>
+    <div th:remove="tag" th:if="${!#lists.isEmpty(validationErrors)}">
+        <div th:replace="base/modal/validation_errors::errors(${validationErrors})" th:remove="tag"></div>
+    </div>
+    <div th:id="person-modal-content" th:attr="data-about='reception'"></div>
+    <div th:id="person-search-modal-wrapper"></div>
+    <div th:id="person-info-modal-wrapper"></div>
+    <div th:id="agent-modal-content" th:attr="data-about='reception'"></div>
+    <div>
+        <input th:id="session-object-identifier" th:type="hidden" class="form-ignore" th:value="${receptionSessionKey}">
+    </div>
+    <div th:if="${null != document && continueWithSameData}">
+        <div th:replace="ipobjects/common/reception/success_modal :: modal(document = ${document},euPatentDocument = ${euPatentDocument}, receptionForm = ${receptionForm}, url = ${url})"></div>
+    </div>
+</div>
+
+
+<footer class="page-footer" th:replace="base/footer"></footer>
+<div th:replace="base/template :: js-footer" th:remove="tag"></div>
+
+</body>
+</html>

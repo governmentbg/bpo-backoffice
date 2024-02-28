@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<a th:fragment="material-btn(label, icon)" class="waves-effect waves-light btn ipas" th:with="additionalArgs=${additionalArgs==null} ? ${'_empty=${null}'} : ${additionalArgs}"
+   th:classappend="${classes != null} ? ${classes}"
+   th:disabled="${(isDisabled == null)} ? false : ${isDisabled}"
+   th:attr="__${additionalArgs}__"
+   th:styleappend="${btnStyle != null} ? ${btnStyle}"
+   th:attrappend="id=${idBtn != null} ? ${idBtn},
+                  href=${href != null} ? ${href} : 'javascript:void(0);',
+                  hrefTarget=${hrefTarget != null} ? ${hrefTarget},
+                  name=${name != null} ? ${name},
+                  data-url=${dataUrl != null} ? ${dataUrl},
+                  data-validation-block=${dataValidationBlock != null} ? ${dataValidationBlock},
+                  data-file-type=${dataFileType != null} ? ${dataFileType},
+                  data-action=${dataAction != null} ? ${dataAction}"
+>
+    <i class="material-icons left" th:text="${icon}"></i>
+    <span th:text="${label}"></span>
+</a>
+
+<a th:fragment="material-table-btn(title, icon)" class="b0" th:with="additionalArgs=${additionalArgs==null} ? ${'_empty=${null}'} : ${additionalArgs}"
+   th:classappend="${classes != null} ? ${classes}"
+   th:title="${title}"
+   th:attr="__${additionalArgs}__"
+   th:attrappend="id=${idBtn != null} ? ${idBtn},
+                  href=${href != null} ? ${href} : 'javascript:void(0);',
+                  hrefTarget=${hrefTarget != null} ? ${hrefTarget},
+                  data-url=${dataUrl != null} ? ${dataUrl},
+                  data-user=${dataUser != null} ? ${dataUser},
+                  data-action=${dataAction != null} ? ${dataAction}"
+>
+    <i style="font-size: 20px" class="material-icons zoom" th:text="${icon}"></i>
+</a>
+
+</body>
+</html>

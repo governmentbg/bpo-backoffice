@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:remove="tag" th:fragment="edit-nice-class-panel">
+    <div th:replace="base/toast/message :: success(message = ${successMessage},unescaped = true)"></div>
+
+    <div id="nice-class-panel" class="panel">
+        <div class="center">
+            <h2 class="inline-block" th:text="#{nice.class.list.edit}"></h2>
+        </div>
+
+        <div id="content">
+            <div class="row">
+                <div class="col-3">
+                    <div th:replace="~{base/form/input :: readonly(id='nice-class-readonly', label = #{mark.nice.class}, value = ${niceClass.niceClassCode})}"></div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div th:replace="~{base/form/textarea :: basic(id = 'nice-class-heading', value = ${niceClass.heading}, label = #{nice.class.heading})}"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="right-align">
+                        <a th:replace="~{base/form/button :: material-btn(label = #{btn.clear}, idBtn = 'clear-nice-heading', icon = 'clear', classes = 'm_R20 m_T5')}"></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div th:replace="~{base/form/textarea :: basic(id = 'nice-class-alpha-list', value = ${niceClass.alphaList}, label = #{nice.class.alpha.list})}"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="right-align">
+                        <a th:replace="~{base/form/button :: material-btn(label = #{btn.clear}, idBtn = 'clear-nice-alpha-list', icon = 'clear', classes = 'm_R20 m_T5')}"></a>
+                    </div>
+                </div>
+            </div>
+            <hr>
+
+            <div class="row m_T10">
+                <div>
+                    <a class="button sm-icn-save right"
+                       th:attr="data-url = @{/admin/nice-class/save-nice-class}, data-action='nice-class-save'"
+                       th:text="#{btn.save}"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

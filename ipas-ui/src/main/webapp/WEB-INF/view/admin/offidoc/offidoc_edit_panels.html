@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:remove="tag" th:fragment="main-offidoc-type-data">
+    <div th:replace="base/toast/message :: success(message = ${successMessage},unescaped = true)"></div>
+
+    <div id="offidoc-type-main-panel" class="panel"
+         th:with="offidocTypeUtils=${T(bg.duosoft.ipas.util.offidoc_type.OffidocTypeUtils)}, defaultDirection = ${T(bg.duosoft.ipas.enums.OffidocDirection).INTERNAL_DOCUMENT.getValue()}">
+
+        <div class="row m_B10">
+            <div class="col-12">
+                <h3 class="panel-title ui-sortable-handle inline-block" th:text="#{offidoc.main.data.title}"></h3>
+            </div>
+        </div>
+        <div id="content-main-data">
+
+            <div class="row">
+                <div class="col-3">
+                    <div th:replace="~{base/form/input :: readonly(id='offidocType-readonly', label = #{offidoc.type.label}, value = ${offidocType.offidocType})}"></div>
+                </div>
+                <div class="col-9">
+                    <div th:replace="~{base/form/input :: text(id = 'offidocName', label = #{offidoc.name.label}, value = (${offidocType?.offidocName}), classes='required')}"></div>
+                </div>
+            </div>
+            <div class="row m_T5">
+                <div class="col-12">
+                    <div th:replace="~{base/form/select :: map(id = 'direction', label = #{offidoc.direction.label},
+                     map = ${offidocTypeUtils.generateOffidocDirectionSelectOptions(@messageSource)}, selected = ${offidocType.direction != null ? offidocType.direction : defaultDirection})}"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                     <div th:replace="~{base/form/checkbox :: basic(id = 'hasPublication', label = #{offidoc.publication.label}, isChecked = ${offidocType.hasPublication})}"></div>
+                </div>
+            </div>
+
+            <div class="row m_T10">
+                <div>
+                    <a class="button sm-icn-save right"
+                       th:attr="data-url = @{/admin/offidoc/save-main-offidoc-data}, data-action='main-offidoc-panel-save'"
+                       th:text="#{btn.save}"></a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+
+<div th:remove="tag" th:fragment="offidoc-templates-data">
+    <div id="offidoc-templates-panel" class="panel">
+        <div class="row m_B10">
+            <div class="col-12">
+                <h3 class="panel-title ui-sortable-handle inline-block" th:text="#{offidoc.templates.data.title}"></h3>
+            </div>
+        </div>
+
+        <div id="content-templates-data">
+            <div class="row">
+                <div class="col-12">
+                    <div th:replace="~{base/form/input :: readonly(id='defaultTemplate', label = #{offidoc.default.template.label}, value = ${offidocType.defaultTemplate})}"></div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-11">
+                    <div th:replace="~{base/form/input :: text(id = 'offidoc-template', label = #{offidoc.template.add}, value = '')}"></div>
+                </div>
+                <div class="col-1 m_T10">
+                    <a class="hidden-element btn-floating ipas waves-effect waves-light action-button-top confirm"
+                       th:attr="data-action='add-offidoc-template',data-message=#{offidoc.add.template.confirmation.message}, data-url=@{/admin/offidoc/add-offidoc-template}"
+                       href="javascript:void(0);" th:title="#{offidoc.template.add}">
+                        <i class="material-icons">arrow_forward</i>
+                    </a>
+                </div>
+            </div>
+
+            <div th:remove="tag"
+                 th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(offidocType.templates)}">
+                <div th:remove="tag" th:case="true">
+                    <div class="row">
+                        <div class="col-12 p_T20_B20">
+                            <div class="bg__light-blue p_10 m_B10 m_T10 center">
+                                <span th:text="#{offidoc.empty.template.list}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div th:remove="tag" th:case="false">
+                    <div class="row m_T5">
+                        <div class="col-12">
+                            <table class="simple">
+                                <tbody>
+                                <tr th:each="template : ${offidocType.templates}">
+                                    <td th:text="${template.nameWFile}"></td>
+                                    <td th:text="${template.nameFileConfig}"></td>
+                                    <td class="right-align">
+                                        <div th:remove="tag" th:if="${!#strings.equals(offidocType.defaultTemplate,template.nameWFile)}">
+                                        <a class="b0 confirm"
+                                           th:attr="data-action='change-default-template',data-message=#{offidoc.change.default.template.confirmation.message}, data-url=@{/admin/offidoc/change-offidoc-default-template}, data-id=${template.nameWFile}"
+                                           href="javascript:void(0);" th:title="#{btn.change.offidoc.default.template}">
+                                            <i class="icon-share-alt bpo-blue-color fs_17px"></i>
+                                        </a>
+                                        <a class="b0 confirm"
+                                           th:attr="data-action='delete-offidoc-template',data-message=#{offidoc.delete.template.confirmation.message}, data-url=@{/admin/offidoc/delete-offidoc-template}, data-id=${template.nameWFile}"
+                                           href="javascript:void(0);" th:title="#{btn.delete}">
+                                            <i class="icon-trash bpo-blue-color fs_17px"></i>
+                                        </a>
+                                        </div>
+                                        <a class="b0"
+                                           th:attr="data-action='open-offidoc-template-modal', data-url=@{/admin/offidoc/open-offidoc-template-modal}, data-id=${template.nameWFile}"
+                                           href="javascript:void(0);" th:title="#{btn.edit}">
+                                            <i class="icon-pencil bpo-blue-color fs_17px"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:id="offidoc-template-edit-modal-wrapper"></div>
+</div>
+
+
+</body>
+</html>

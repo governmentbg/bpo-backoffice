@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="sorter(name,sortOrder,isSelected)" th:remove="tag">
+    <div style="display: flex">
+        <div class="table-sorter-description" th:text="${name}"></div>
+        <div class="table-sorter-wrapper">
+            <div th:switch="${isSelected}" th:remove="tag">
+                <div th:case="true" class="table-sorter-arrows-wrapper">
+                    <div th:remove="tag" th:if="${#strings.equalsIgnoreCase(sortOrder,T(bg.duosoft.ipas.core.model.search.Sortable).ASC_ORDER)}">
+                        <span class="icon-arrow-up table-sorter-arrows"></span>
+                    </div>
+                    <div th:remove="tag" th:if="${#strings.equalsIgnoreCase(sortOrder,T(bg.duosoft.ipas.core.model.search.Sortable).DESC_ORDER)}">
+                        <span class="icon-arrow-down table-sorter-arrows"></span>
+                    </div>
+                </div>
+                <div th:case="*" class="table-sorter-arrows-wrapper">
+                    <span class="icon-arrow-up table-sorter-arrows"></span>
+                    <span class="icon-arrow-down table-sorter-arrows"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

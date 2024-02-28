@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="transformation_like_body(patent,nationalPatentRelationshipData,relationshipType)" th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+    <div th:with="relationshipExt=${patent.relationshipExtended},hasNationalPatentSupport = ${T(com.duosoft.ipas.util.CFileRelationshipUtils).hasNationalPatentSupport(patent.file.fileId)},isEpRelationshipExt=${patent.relationshipExtended?.applicationType == T(bg.duosoft.ipas.enums.PatentRelationshipExtApplType).EUROPEAN_PATENT.code()},isInternationalRelationshipExt=${patent.relationshipExtended?.applicationType == T(bg.duosoft.ipas.enums.PatentRelationshipExtApplType).INTERNATIONAL_PATENT.code()}">
+        <div class="row">
+            <div class="col-4" th:with="patentClaimUtils = ${T(com.duosoft.ipas.util.PatentClaimUtils)}">
+                <div th:replace="~{base/form/select :: map(id = 'patent-object-relationshipExtended-applicationType',classes='patent-object-relationshipExtended-applicationType', label = #{transformation.type},
+                                map = ${patentClaimUtils.generatePatentClaimsSelectOptions(@messageSource, hasNationalPatentSupport,relationshipType)},
+                                selected = (${nationalPatentRelationshipData !=null} ? ${T(bg.duosoft.ipas.enums.PatentRelationshipExtApplType).NATIONAL_PATENT.code()} : (${relationshipExt != null} ? ${relationshipExt.applicationType} : null) ))}"></div>
+            </div>
+        </div>
+        <div th:id="'ep-relationship-ext-div'" th:classappend="'ep-relationship-ext-div'" th:style="${isEpRelationshipExt ? '' : 'display:none'}" th:with="classes=${isEpRelationshipExt  ? null : 'form-ignore'}">
+            <input th:id="'ep-relationship-ext-changed'" th:value="false" th:type="hidden" class="form-ignore ep-relationship-ext-changed"/>
+            <input th:id="'ep-relationship-ext-original-filing-number'" th:value="${relationshipExt?.filingNumber}" th:type="hidden" class="form-ignore ep-relationship-ext-original-filing-number"/>
+
+            <div class="row" >
+                <div class="col-4">
+                    <div th:replace="~{base/form/input :: text(id ='ep-relationshipExtended-filingNumber', label = #{patent.ep.transformation.application.number}, value = ${isEpRelationshipExt ? relationshipExt.filingNumber: ''}, classes=${classes != null ? classes +' ep-relationshipExtended-filingNumber':'ep-relationshipExtended-filingNumber'}, url=@{'/ebd-autocomplete'})}"></div>
+                </div>
+                <div class="col-4">
+                    <div th:replace="~{base/form/input :: text(id = 'ep-relationshipExtended-filingDate', label = #{patent.ep.transformation.application.date}, value = ${isEpRelationshipExt and relationshipExt.filingDate != null ? #dates.format(relationshipExt.filingDate, dateFormatDot): ''}, classes=${classes != null ? classes +' ep-relationshipExtended-filingDate':'ep-relationshipExtended-filingDate'}, isDisabled=true)}"></div>
+                </div>
+            </div>
+            <div class="row hidden-element">
+                <div class="p_10">
+                            <span class="orange"
+                                  th:text="#{rights.inventors.expiration.and.entitlement.date.replace.warning}"></span>
+                </div>
+            </div>
+        </div>
+        <div th:id="'international-relationship-ext-div'" th:classappend="'international-relationship-ext-div'" th:style="${isInternationalRelationshipExt  ? '' : 'display:none'}" th:with="classes=${isInternationalRelationshipExt  ? null : 'form-ignore'}">
+            <input th:id="'int-relationshipExtended-filingNumber-original'" th:value="${isInternationalRelationshipExt ? relationshipExt.filingNumber: ''}" th:type="hidden" class="form-ignore int-relationshipExtended-filingNumber-original"/>
+            <input th:id="'int-relationshipExtended-filingDate-original'" th:value="${isInternationalRelationshipExt ? #dates.format(relationshipExt?.filingDate, dateFormatDot): ''}" th:type="hidden" class="form-ignore int-relationshipExtended-filingDate-original"/>
+            <div class="row">
+                <div class="col-4">
+                    <div th:replace="~{base/form/input :: text(id ='int-relationshipExtended-filingNumber', label = #{patent.int.transformation.application.number}, value = ${isInternationalRelationshipExt ? relationshipExt.filingNumber: ''}, classes=${classes != null ? classes +' int-relationshipExtended-filingNumber':'int-relationshipExtended-filingNumber'})}"></div>
+                </div>
+                <div class="col-4">
+                    <div th:replace="~{base/form/input :: datepicker(id = 'int-relationshipExtended-filingDate', label = #{patent.int.transformation.application.date}, value = ${isInternationalRelationshipExt ? #dates.format(relationshipExt?.filingDate, dateFormatDot): ''}, classes=${classes != null ? classes +' int-relationshipExtended-filingDate':'int-relationshipExtended-filingDate'})}"></div>
+                </div>
+                <div class="col-4">
+                    <div th:replace="~{base/form/select :: map(id ='int-relationshipExtended-registrationCountry', label = #{patent.int.transformation.application.country}, map = ${countryMap}, selected = ${isInternationalRelationshipExt ? relationshipExt?.registrationCountry : null}, emptySelectOption = #{default.select.option}, classes = 'search-box', classes=${classes != null ? classes +' int-relationshipExtended-registrationCountry':'int-relationshipExtended-registrationCountry'})}"></div>
+                </div>
+            </div>
+            <div class="row" >
+                <div class="col-4" th:id="transformation-publId-wrap">
+                    <div th:replace="~{base/form/input :: text(id ='int-relationshipExtended-registrationNumber', label = #{patent.int.transformation.publication.number}, value = ${isInternationalRelationshipExt ? relationshipExt.registrationNumber: ''}, classes=${classes != null ? classes +' int-relationshipExtended-registrationNumber':'int-relationshipExtended-registrationNumber'})}"></div>
+                </div>
+                <div class="col-4" th:id="transformation-publDate-wrap">
+                    <div th:replace="~{base/form/input :: datepicker(id ='int-relationshipExtended-registrationDate', label = #{patent.int.transformation.publication.date}, value = ${isInternationalRelationshipExt ? #dates.format(relationshipExt?.registrationDate, dateFormatDot): ''}, classes=${classes != null ? classes +' int-relationshipExtended-registrationDate':'int-relationshipExtended-registrationDate'})}"></div>
+                </div>
+            </div>
+            <div class="row hidden-element">
+                <div class="p_10">
+                            <span class="orange"
+                                  th:text="#{rights.expiration.and.entitlement.date.replace.warning}"></span>
+                </div>
+            </div>
+        </div>
+        <div th:id="'national-patent-relationship-ext-div'" th:classappend="'national-patent-relationship-ext-div'" th:style="${nationalPatentRelationshipData !=null ? '' : 'display:none'}" th:if="${hasNationalPatentSupport}">
+            <div th:replace="ipobjects/common/relationship/relationship :: relationship-row(id='object-national-patent-relationship', relationshipData=${nationalPatentRelationshipData},relationshipFileType=${T(bg.duosoft.ipas.enums.FileType).PATENT.code()})"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

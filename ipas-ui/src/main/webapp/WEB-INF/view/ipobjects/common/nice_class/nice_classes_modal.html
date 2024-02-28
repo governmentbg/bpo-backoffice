@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="nice-classes">
+    <div th:id="nice-class-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="#{mark.nice.add}"></h4>
+            </div>
+            <div>
+                <div class="row">
+                    <div class="col-4">
+                        <div th:replace="~{base/form/input :: text(id = 'nice-class-class-input', value = ${classNbr}, label = #{mark.nice.class}, classes = 'number')}"></div>
+                    </div>
+                    <div class="col-4 p_T10">
+                        <div th:replace="~{base/form/checkbox :: basic(id = 'nice-class-header-input', label = 'Импортирай заглавията от този клас', isChecked = ${heading}, classes='single-selectable-nice')}"></div>
+                    </div>
+                    <div class="col-4 p_T10">
+                        <div th:replace="~{base/form/checkbox :: basic(id = 'nice-class-alpha-input', label = 'Импортирай азбучен списък', isChecked = ${alpha}, classes='single-selectable-nice')}"></div>
+                    </div>
+                </div>
+                <div class="row" th:id="nice-class-description-textarea-wrapper" th:classappend="${heading == true or alpha == true} ? 'none'">
+                    <div class="col-12">
+                        <div th:replace="~{base/form/textarea :: basic(id = 'nice-class-description-textarea', value = ${niceDescription}, label = #{mark.nice.gs})}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer row">
+            <div class="col-12">
+                <button th:id="save-nice-classes-btn" th:attr="data-listtype=${niceListType},data-url=@{/nice-class/{niceListType}/add-nice-classes(niceListType=${niceListType})}, data-validation-block='#nice-class-modal'" class="button sm-icn-save wmin_130" th:text="#{btn.save}"> </button>
+                <button th:text="#{btn.cancel}" type="button" class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div th:fragment="nice-class-terms-text">
+    <div th:id="nice-class-terms-text-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="#{mark.nice.edit.terms.text}"></h4>
+            </div>
+            <div>
+                <div class="row">
+                    <div class="col-12">
+                        <div th:replace="~{base/form/input :: text(id = 'nice-class-terms-class-input', value = ${niceClassNbr}, label = #{mark.nice.class}, classes = 'number', isDisabled=true)}"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div th:replace="~{base/form/textarea :: basic(id = 'nice-class-terms-description-textarea', value = ${niceClassDescription}, label = #{mark.nice.gs})}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer row">
+            <div class="col-12">
+                <button th:if="${isEdit == true}" th:id="save-terms-text-btn" th:attr="data-url=@{/nice-class/{niceListType}/save-terms-text(niceListType=${niceListType})},
+                data-listtype=${niceListType},data-validation-block='#nice-class-terms-text-modal'" class="button sm-icn-save wmin_130" th:text="#{btn.save}"> </button>
+                <button th:text="#{btn.cancel}" type="button" class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="nice-class-terms-choose">
+    <div th:id="nice-class-terms-choose-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="|#{choose.terms.modal.header} ${niceClass.niceClassNbr}|"> </h4>
+            </div>
+            <div>
+                <div class="errorNoTerms" style="color: red; display: none" th:text="#{select.terms}"></div>
+                <table class="simple">
+                    <thead>
+                        <tr>
+                            <th>
+                                <label>
+                                    <input type="checkbox" class="filled-in chooseAllTerms">
+                                    <span></span>
+                                </label>
+                            </th>
+                            <th th:text="#{mark.nice.gs}">Term text</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="term, iteration : ${niceClass.terms}">
+                            <td>
+                                <label>
+                                    <input type="checkbox" class="filled-in term-choice" th:attr="data-val=${term.termText}"
+                                    th:checked="${currentSessionTermsList.contains(term)}">
+                                    <span></span>
+                                </label>
+                            </td>
+                            <td th:text="${term.termText}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="errorNoTerms" style="color: red; display: none" th:text="#{select.terms}"></div>
+        </div>
+        <div class="modal-footer row">
+            <div class="col-12">
+                <button th:if="${niceClass.terms != null}" th:attr="data-url=@{/nice-class/{niceListType}/save-terms-choice(niceListType=${niceListType})},
+                data-listtype=${niceListType},data-id=${niceClass.niceClassNbr},data-action='replace',data-validation-block='#nice-class-terms-choose-modal'"
+                        class="button sm-icn-save wmin_130 save-terms-choice" th:text="#{btn.replace.with.selected}"> </button>
+                <button th:if="${niceClass.terms != null}" th:attr="data-url=@{/nice-class/{niceListType}/save-terms-choice(niceListType=${niceListType})},
+                data-listtype=${niceListType},data-id=${niceClass.niceClassNbr},data-action='add',data-validation-block='#nice-class-terms-choose-modal'"
+                        class="button sm-icn-save wmin_130 save-terms-choice" th:text="#{btn.add.selected}"> </button>
+                <button th:text="#{btn.cancel}" type="button" class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="nice-class-class-choose">
+    <div th:id="nice-class-class-choose-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="#{choose.class.modal.header}"> </h4>
+            </div>
+            <div th:if="${niceClassesMap != null}">
+                <div th:replace="~{base/form/select :: map(id = 'nice-class-choice', label = #{select.nice.class}, map = ${niceClassesMap}, isDisabled = false)}"></div>
+            </div>
+            <div th:if="${niceClassesMap == null}" >
+                <div th:text="#{all.classes.already.added}" style="color: blue"/>
+            </div>
+        </div>
+        <div class="modal-footer row">
+            <div class="col-12">
+                <button th:if="${niceClassesMap != null}" th:attr="data-url=@{/nice-class/{niceListType}/save-class-choice(niceListType=${niceListType})},
+                data-listtype=${niceListType},data-validation-block='#nice-class-class-choose-modal'"
+                        class="button sm-icn-save wmin_130 save-class-choice" th:text="#{btn.add.selected.class}"> </button>
+                <button th:text="#{btn.cancel}" type="button" class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

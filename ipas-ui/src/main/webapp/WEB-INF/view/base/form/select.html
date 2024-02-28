@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:remove="tag" th:fragment="map(id, label, map)">
+    <div class="input-field" th:classappend="${isDisabled} ? 'readonly'">
+        <select th:id="${id}"
+                th:disabled="${(isDisabled == null)} ? false : ${isDisabled}"
+                th:attrappend="name=${name != null} ? ${name}, multiple=${multiple != null && multiple == true} ? true,data-url=${url != null} ? ${url}"
+                th:classappend="${classes != null} ? ${classes}">
+            <option th:if="${emptySelectOption != null}"
+                    th:text="${emptySelectOption}"
+                    th:value="null"
+                    th:selected="${null == selected || '' == selected}">
+            </option>
+            <option th:each="mapRecord : ${map}"
+                    th:value="${mapRecord.key}"
+                    th:text="${mapRecord.value}"
+                    th:selected="${selectedExpression != null} ? ${__${selectedExpression}__} : (${selected != null} ? ${#strings.equalsIgnoreCase(mapRecord.key, selected)})    ">
+            </option>
+        </select>
+        <label th:for="${id}" th:text="${label}"></label>
+        <div th:replace="base/validation :: validation-message(${validationErrors}, ${id})"></div>
+    </div>
+</div>
+
+
+<div th:remove="tag" th:fragment="object(id, label, objects, valuePointer, textPointer)">
+    <div class="input-field">
+        <select th:id="${id}"
+                th:disabled="${(isDisabled == null)} ? false : ${isDisabled}"
+                th:attrappend="data-url=${url != null} ? ${url}, name=${name != null} ? ${name},data-type=${dataType != null} ? ${dataType}"
+                th:classappend="${classes != null} ? ${classes}">
+            <option th:if="${emptySelectOption != null}"
+                    th:text="${emptySelectOption}"
+                    th:value="null"
+                    th:selected="${selectedExpression != null} ? ${__${selectedExpression}__} : (${null == selected || '' == selected})">
+            </option>
+            <div th:remove="tag" th:each="object : ${objects}">
+                <option th:value="${__${'object.' + valuePointer}__}"
+                        th:text="${__${'object.' + textPointer}__}"
+                        th:attrappend="data-type=${optionDataTypePointer != null} ? (${__${'object.' + optionDataTypePointer}__})"
+                        th:selected="${selectedExpression != null} ? ${__${selectedExpression}__} : (${selected != null } ? ${__${'object.' + valuePointer}__ == selected})">
+                </option>
+            </div>
+        </select>
+        <label th:for="${id}" th:text="${label}"></label>
+        <div th:replace="base/validation :: validation-message(${validationErrors}, ${id})"></div>
+    </div>
+</div>
+
+</body>
+</html>

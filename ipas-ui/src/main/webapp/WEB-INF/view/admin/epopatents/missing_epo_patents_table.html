@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="table(result)" th:with="dateUtils = ${T(bg.duosoft.ipas.util.date.DateUtils)}, objectsUtils = ${T(java.util.Objects)}">
+    <div th:remove="tag" th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(result)}">
+        <div th:remove="tag" th:case="true">
+            <div th:replace="base/message :: info(#{no.records.found})"></div>
+        </div>
+        <div th:remove="tag" th:case="false">
+            <div class="m_T5">
+                <table class="simple bpo">
+                    <thead>
+                    <tr>
+                        <th th:text="#{search.result.filingNumber}"></th>
+                        <th th:text="#{search.result.filingDate}"></th>
+                        <th th:text="#{search.result.registrationNumber}"></th>
+                        <th th:text="#{search.result.registrationDate}"></th>
+                        <th th:text="#{search.result.description}"></th>
+                        <th th:text="#{search.result.owners}"></th>
+                        <th th:text="#{search.result.status}"></th>
+                        <th th:text="#{options.label}"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="ebdPatent,ebdPatentStat : ${result}">
+                        <td>
+                            <span th:text="${ebdPatent.filingNumber}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${#dates.format(ebdPatent.filingDate, dateUtils.DATE_FORMAT_DOT)}"></span>
+                        </td>
+                        <td>
+                            <span th:if="${objectsUtils.nonNull(ebdPatent.registrationNumber)}" th:text="${ebdPatent.registrationNumber}"></span>
+                        </td>
+                        <td>
+                            <span th:if="${objectsUtils.nonNull(ebdPatent.registrationDate)}" th:text="${#dates.format(ebdPatent.registrationDate, dateUtils.DATE_FORMAT_DOT)}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${ebdPatent.title}"></span>
+                        </td>
+                        <td >
+                            <span  th:if="${objectsUtils.nonNull(ebdPatent.ownerNames)}" th:text="${ebdPatent.ownerNames}"></span>
+                        </td>
+                        <td>
+                            <div th:remove="tag" th:switch="${objectsUtils.isNull(ebdPatent.backofficeFileNbr)}">
+                                <span th:case="true" th:text="${ebdPatent.status}"></span>
+                                <span th:case="false" th:text="${ebdPatent.ipasStatus}"></span>
+                            </div>
+                        </td>
+                        <td class="p_0 center">
+                            <a th:replace="~{base/form/button :: material-table-btn(title = #{btn.add}, dataAction = 'save-missing-epo-patent', dataUrl = @{/admin/missing-epo-patents/save}, icon = 'add_circle', classes = 'm_L10 confirm fs_28px', additionalArgs = 'data-number=${ebdPatent.filingNumber}')}"></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

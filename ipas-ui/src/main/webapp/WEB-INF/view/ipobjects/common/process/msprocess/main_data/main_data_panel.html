@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="manualSubProcess" type="bg.duosoft.ipas.core.model.process.CProcess"*/-->
+<div th:fragment="panel(manualSubProcess)">
+    <div th:with="objectUtils=${T(java.util.Objects)}, dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}, dateTimeFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT}">
+        <div class="row">
+            <div class="col-8">
+                <div th:replace="~{base/form/select :: map(id = 'msprocess-type-select', label = 'Вид', map = ${processTypeMap}, selected = ${manualSubProcess.processId.processType}, isDisabled = true)}"></div>
+            </div>
+            <div class="col-4">
+                <div th:replace="~{base/form/input :: readonly(label = 'Дата', value = ${#dates.format(manualSubProcess.creationDate, dateTimeFormatDot)})}"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12" th:classappend="${#strings.isEmpty(manualProcDescription)}?none" th:with="manualProcDescription=${manualSubProcess.processOriginData.manualProcDescription}">
+                <div th:replace="~{base/form/textarea :: basic(id = 'msprocess-manualProcDescription', value = ${manualProcDescription}, label = 'Описание')}"></div>
+            </div>
+        </div>
+        <div th:if="${objectUtils.nonNull(manualSubProcessParentData)}">
+            <div class="row">
+                <div class="col-12">
+                    <div th:replace="~{base/form/label :: active(title = 'Към обект/документ')}"></div>
+                </div>
+            </div>
+            <div class="row m_T5">
+                <div class="col-12">
+                    <div th:replace="~{ :: manual-sub-process-parent(${manualSubProcessParentData})}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="manual-sub-process-parent(manualSubProcessParentData)" th:with="objectUtils=${T(java.util.Objects)},stringUtils=${T(org.springframework.util.StringUtils)}">
+    <div th:remove="tag" th:if="${objectUtils.nonNull(manualSubProcessParentData.fileId)}">
+        <span class="inline-block">
+            <a class="b0 p_0" th:href="@{/ipobject/view(filingNumber=${manualSubProcessParentData.fileId.createFilingNumber()})}" th:text="${manualSubProcessParentData.fileId.createFilingNumber()}"></a>
+        </span>
+        <div th:remove="tag" th:if="${manualSubProcessParentData.isTopProcessFile()}" th:with="title=${manualSubProcessParentData.topProcessFileData.title}">
+            <span th:text="'('"></span>
+            <span th:if="${!stringUtils.isEmpty(title)}" th:text="${title}+' - '"></span>
+            <span th:text="${manualSubProcessParentData.topProcessFileData.statusName}"></span>
+            <span th:text="')'"></span>
+        </div>
+    </div>
+    <div th:remove="tag" th:if="${objectUtils.nonNull(manualSubProcessParentData.userdocId)}">
+        <span class="inline-block">
+            <a class="b0 p_0" th:href="@{/ipobject/view(userdocFilingNumber=${manualSubProcessParentData.userdocId.createFilingNumber()})}" th:text="${manualSubProcessParentData.userdocRegistrationNumber}"></a>
+        </span>
+        <span class="m_L5 m_R5" th:text="'към'"></span>
+        <div th:if="${objectUtils.nonNull(manualSubProcessParentData.parent)}" th:replace="~{ :: manual-sub-process-parent(${manualSubProcessParentData.parent})}"></div>
+    </div>
+</div>
+</body>
+</html>

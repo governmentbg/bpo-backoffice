@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="seniorities(seniorities)">
+    <hr>
+    <div class="row">
+        <div class="col-12">
+            <h4 th:text="#{mark.seniorities}"></h4>
+            <div th:if="${tmSeniorityError}" th:remove="tag">
+                <div  th:replace="base/message :: error(#{mark.seniorities.error})"></div>
+            </div>
+        </div>
+    </div>
+    <div th:remove="tag" th:if="${!tmSeniorityError}">
+        <div class="row" th:if="${#lists.isEmpty(seniorities)}">
+            <div class="col-12">
+                <div th:replace="base/message :: info(#{mark.seniorities.empty.table})"></div>
+            </div>
+        </div>
+        <div class="row" th:if="${!#lists.isEmpty(seniorities)}">
+            <div class="row">
+                <div class="col-12">
+                    <h4 th:text="''"></h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <table class="simple">
+                        <thead>
+                        <tr>
+                            <th th:text="#{mark.seniority.number}"></th>
+                            <th th:text="#{mark.seniority.name}"></th>
+                            <th th:text="#{mark.seniority.filingDate}"></th>
+                            <th th:text="#{mark.seniority.registrationDate}"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="seniority : ${seniorities}">
+                            <td th:text="${seniority.number}"></td>
+                            <td th:text="${seniority.markName}"></td>
+                            <td th:text="${#dates.format(seniority.applicationDate, T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}"></td>
+                            <td th:text="${#dates.format(seniority.registrationDate, T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row m_T20">
+                <div class="col-12">
+                    <div>
+                        <a th:target="_blank" th:href="${@environment.getProperty('ipas.properties.seniorityURL')}" class="b0">
+                            <i style="font-size: 25px !important;" class="material-icons black-text m_R5">open_in_browser</i>
+                            <span style="position: absolute;padding-top: 2px" th:text="#{mark.seniority.to.eutmd}"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div th:fragment="seniority-loader">
+    <hr>
+    <div class="row">
+        <div class="col-12">
+            <h4 th:text="#{mark.seniorities}"></h4>
+        </div>
+    </div>
+    <div th:replace="base/loader :: local-loader"></div>
+</div>
+
+</body>
+</html>

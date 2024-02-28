@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="international-nice-class-terms-text">
+    <div th:id="international-nice-class-terms-text-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="#{international.nice.terms.text}"></h4>
+            </div>
+            <div>
+                <div class="row">
+                    <div class="col-12">
+                        <div th:replace="~{base/form/text :: readonly(text = ${niceClassCode}, label = #{mark.nice.class}, classes = 'number m_B10')}"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div th:replace="~{base/form/textarea :: basic(id = 'international-nice-terms-description-textarea', value = ${niceClassDescription}, label = #{mark.nice.gs})}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer row">
+            <div class="col-12">
+                <button th:text="#{btn.cancel}" type="button" class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

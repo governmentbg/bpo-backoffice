@@ -1,0 +1,32 @@
+<jaxb:bindings jaxb:version="2.1"
+               xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+               xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+               xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
+               jaxb:extensionBindingPrefixes="xjc">
+
+    <jaxb:bindings schemaLocation="CTM-GoodsServices.xsd">
+        <jaxb:schemaBindings>
+            <jaxb:package name="bg.duosoft.ipas.integration.tmclass.heading.model"/>
+        </jaxb:schemaBindings>
+    </jaxb:bindings>
+    <jaxb:bindings schemaLocation="GoodsServices-Verification-Response-V1-1.xsd">
+        <jaxb:schemaBindings>
+            <jaxb:package name="bg.duosoft.ipas.integration.tmclass.verify.model"/>
+        </jaxb:schemaBindings>
+    </jaxb:bindings>
+    <jaxb:bindings schemaLocation="TM-Seniority-V0-01.xsd">
+        <jaxb:schemaBindings>
+            <jaxb:package name="bg.duosoft.ipas.integration.tmseniority.model"/>
+        </jaxb:schemaBindings>
+    </jaxb:bindings>
+    <jaxb:bindings schemaLocation="EM-TM-GoodsServices-GetNiceAlphaList-V0-3.xsd">
+        <jaxb:schemaBindings>
+            <jaxb:package name="bg.duosoft.ipas.integration.tmclass.alpha.model"/>
+        </jaxb:schemaBindings>
+    </jaxb:bindings>
+    <jaxb:bindings schemaLocation="GoodsServices-Translation-Response.xsd">
+        <jaxb:schemaBindings>
+            <jaxb:package name="bg.duosoft.ipas.integration.tmclass.translate.model"/>
+        </jaxb:schemaBindings>
+    </jaxb:bindings>
+</jaxb:bindings>

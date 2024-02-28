@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<infinispan xmlns="urn:infinispan:config:9.4">
+    <cache-container>
+        <local-cache-configuration name="defaultRestLoginCacheConfiguration">
+            <expiration max-idle="120000"/> <!-- 120 seconds after the last access time -->
+            <memory>
+                <object size="2000"/>
+            </memory>
+        </local-cache-configuration>
+        <local-cache name="portalValidateUserPasswordCache" configuration="defaultRestLoginCacheConfiguration" />
+        <local-cache name="portalUserByScreenNameCache"     configuration="defaultRestLoginCacheConfiguration" />
+    </cache-container>
+
+
+</infinispan>

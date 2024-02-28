@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="file" type="bg.duosoft.ipas.core.model.file.CFile"*/-->
+<!--/*@thymesVar id="representative" type="bg.duosoft.ipas.core.model.person.CRepresentative"*/-->
+<div th:fragment="agents(file)" th:with="objectUtils=${T(java.util.Objects)}, personKind = ${T(com.duosoft.ipas.enums.PersonKind).Representative.code()},representativeTypeEnum = ${T(bg.duosoft.ipas.enums.RepresentativeType)}">
+    <div class="col-12" th:classappend="${#lists.isEmpty(file.representationData.representativeList)}?'hidden-element'">
+        <div th:replace=" :: agents-header"></div>
+        <div th:replace=" :: agents-body"></div>
+        <div th:id="ipobject-representativeList">
+            <div th:replace="base/validation :: validation-message(${validationErrors},'ipobject-representativeList')"></div>
+        </div>
+    </div>
+
+</div>
+
+<div th:remove="tag" th:fragment="agents-header">
+    <div>
+        <div class="inline-block">
+            <h4 th:text="#{person.agent.title}"></h4>
+        </div>
+        <div class="inline-block">
+            <div th:replace="ipobjects/common/person/elements :: import-agent-button(${true}, ${personKind}, ${false})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="agents-body">
+    <div th:if="${!#lists.isEmpty(file.representationData.representativeList)}" th:with="servicePerson=${file.servicePerson}">
+        <div class="list-elements-wrapper">
+            <div th:remove="tag" th:each="representative : ${file.representationData.representativeList}">
+                <div class="row list-element" th:with="person=${representative.person},representativeType=${representativeTypeEnum.selectByCode(representative.representativeType)}">
+                    <div class="col-11">
+                        <div th:replace="ipobjects/common/person/elements :: label-other-representative(${representativeType})"></div>
+                        <div th:replace="ipobjects/common/person/elements :: label-representative(${person})"></div>
+                        <div th:replace="ipobjects/common/person/elements :: label-ca(${servicePerson},${person})"></div>
+                        <div th:replace="ipobjects/common/person/elements :: label-power-of-attorney(${representative})"></div>
+                        <div th:replace="ipobjects/common/person/elements :: person-info(${person})"></div>
+                    </div>
+                    <div th:replace=" :: agents-menu"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="agents-menu">
+    <div class="col-1 hidden-element right-align action-menu-list-fs" th:with="menuId=|representative-menu-${person.personNbr}-${person.addressNbr}|">
+        <i th:title="#{menu}" th:attr="data-action='toggle-menu',data-id=${menuId}" class="zmdi zmdi-menu"></i>
+        <div th:id="${menuId}" class="action-menu none" th:with="isCurrentPersonCA=${T(com.duosoft.ipas.util.PersonUtils).isCurrentPersonCA(person.personNbr,person.addressNbr,file)}">
+            <div th:replace="ipobjects/common/person/elements :: menu-option-view-person(person = ${person})"></div>
+            <div th:remove="tag" th:if="${T(java.util.Objects).isNull(servicePerson) || (!((servicePerson.personNbr == person.personNbr) && (servicePerson.addressNbr == person.addressNbr)))}">
+                <div th:replace="ipobjects/common/person/elements :: menu-option-change-ca(${personKind},${person.personNbr},${person.addressNbr}, null, ${false})"></div>
+            </div>
+            <div th:remove="tag" th:if="${!person.hasAgentCode()}">
+                <div th:replace="ipobjects/common/person/elements :: menu-option-edit(${personKind},${person.personNbr},${person.addressNbr})"></div>
+            </div>
+            <div th:replace="ipobjects/common/person/elements :: menu-option-edit-power-of-attorney(${person},${personKind})"></div>
+            <div th:replace="ipobjects/common/person/elements :: menu-option-delete(${personKind},${person.personNbr},${person.addressNbr},((${isCurrentPersonCA } ? #{person.agent.delete.message} : '') + #{person.agent.delete.confirm.message}))"></div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

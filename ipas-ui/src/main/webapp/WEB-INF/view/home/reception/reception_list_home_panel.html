@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="panel(receptions,total)"
+     th:with="collectionUtils = ${T(org.springframework.util.CollectionUtils)},
+              coreUtils=${T(com.duosoft.ipas.util.CoreUtils)}">
+
+    <div class="panel m_H260 br_20px z-depth-1">
+        <div class="pies">
+            <div class="pie-title">
+                <h3 th:text="#{reception.list.title}"></h3>
+            </div>
+            <div class="pie-count green">
+                <svg class="icon">
+                    <use xlink:href="#icon-ring"></use>
+                </svg>
+                <span th:text="${total}">77</span>
+            </div>
+        </div><!-- pies -->
+        <div th:remove="tag" th:switch="${collectionUtils.isEmpty(receptions)}">
+            <div th:remove="tag" th:case="false">
+                <div class="h130">
+                    <ul class="m_T0">
+                        <li class="home-panel-list" th:each="reception : ${receptions}" th:with="filingNumber=${coreUtils.createFilingNumber(reception.fileSeq,reception.fileType,reception.fileSer,reception.fileNbr,false)}">
+                            <div th:remove="tag" th:with="name=${filingNumber + ', '+#dates.format(reception.filingDate,T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT) + ' - '+reception.name}">
+                                <a class="b0 tooltip" th:data-blockui="true" th:classappend="${#strings.length(name) > coreUtils.HOME_PANEL_MAX_TEXT_LENGTH} ? 'tooltip'" th:attr="title=${#strings.length(name) > coreUtils.HOME_PANEL_MAX_TEXT_LENGTH} ? ${name} : ''" th:href="@{/reception/detail/{id}(id=${filingNumber})}" th:text="${name}"></a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <span class="txtRight">
+                    <a class="button bg__dark-green btn-sm" th:href="@{/reception/list}" th:text="#{btn.view.all.small}" th:data-blockui="true"></a>
+                </span>
+            </div>
+            <div th:case="true" class="m_T10">
+                <div th:replace="base/message :: info(#{empty.list})"></div>
+            </div>
+        </div>
+    </div><!-- .panel -->
+
+</div>
+</body>
+</html>

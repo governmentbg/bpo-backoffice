@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <springProperty scope="context" name="SLACK_WEBHOOK" source="ipas.properties.slack.webhook"/>
+    <appender name="SLACK" class="com.duosoft.ipas.config.logback.SlackAppender">
+        <webhook>${SLACK_WEBHOOK}</webhook>
+        <level>ERROR</level>
+    </appender>
+    <!--do not print the logback status messages -->
+    <!--<statusListener class="ch.qos.logback.core.status.NopStatusListener" />-->
+    <appender name="FILE"  class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <file>${catalina.base}/logs/ipas.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>
+                %d{yyyy-MM-dd HH:mm:ss} %-5level %logger - %msg%n
+            </Pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${catalina.base}/logs/ipas.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="FILE_MASS_INDEXING"  class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${catalina.base}/logs/ipas_index.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>
+                %d{yyyy-MM-dd HH:mm:ss} %-5level %logger - %msg%n
+            </Pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${catalina.base}/logs/ipas-index.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>5</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="FILE_ABDOCS_PERSON_SYNC"  class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${catalina.base}/logs/ipas_abdocs_sync.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>
+                %d{yyyy-MM-dd HH:mm:ss} %-5level %logger - %msg%n
+            </Pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${catalina.base}/logs/ipas_abdocs_sync.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>5</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="FILE_ABDOCS_USER_TARGETING"  class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${catalina.base}/logs/ipas_abdocs_user_targeting.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>
+                %d{yyyy-MM-dd HH:mm:ss} %-5level %logger - %msg%n
+            </Pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${catalina.base}/logs/ipas_abdocs_user_targeting.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>5</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="FILE_ABDOCS_NOTIFICATION"  class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${catalina.base}/logs/ipas_abdocs_notifications.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>
+                %d{yyyy-MM-dd HH:mm:ss} %-5level %logger - %msg%n
+            </Pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${catalina.base}/logs/ipas_abdocs_notifications.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>5</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender" >
+        <target>System.err</target>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger - %msg%n
+            </Pattern>
+        </layout>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+    </appender>
+
+    <logger name="bg.duosoft" level="debug" />
+    <logger name="net.duosoft" level="debug" />
+    <logger name="com.duosoft" level="debug" />
+    <logger name="bg.duosoft.security" level="WARN" />
+    <logger name="bg.duosoft.cronjob.cron.CronJobBase" level="WARN" />
+    <!--    <logger name="org.hibernate.type" level="trace" />--> <!-- for showing SQL parameters-->
+    <!--    <logger name="org.springframework.security" level="trace" />-->
+    <!--    <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="TRACE" />-->  <!-- for showing all the RequestMappings-->
+    <springProfile name="dev">
+
+        <root level="warn">
+            <appender-ref ref="FILE" />
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="SLACK" />
+        </root>
+
+        <logger name="com.duosoft.ipas.controller.abdocs.PersonSyncController" level="info" additivity="false">
+            <appender-ref ref="FILE_ABDOCS_PERSON_SYNC" />
+        </logger>
+        <logger name="com.duosoft.ipas.controller.rest.abdocs.notification" level="info" additivity="false">
+            <appender-ref ref="FILE_ABDOCS_NOTIFICATION" />
+        </logger>
+        <logger name="bg.duosoft.ipas.core.service.impl.abdocs.notification" level="info" additivity="false">
+            <appender-ref ref="FILE_ABDOCS_NOTIFICATION" />
+        </logger>
+        <logger name="com.duosoft.ipas.controller.ipobjects.common.process.cron.responsibleuser.AbdocsUserTargetingController" level="info" additivity="false">
+            <appender-ref ref="FILE_ABDOCS_USER_TARGETING" />
+        </logger>
+    </springProfile>
+
+    <springProfile name="office | office-dev | test">
+        <logger name="org.hibernate.search" level="error" additivity="false">
+            <appender-ref ref="FILE_MASS_INDEXING" />
+        </logger>
+        <logger name="bg.duosoft.ipas.util.search.EntityIndexProgressMonitor" level="info" additivity="false">
+            <appender-ref ref="FILE_MASS_INDEXING" />
+        </logger>
+        <logger name="bg.duosoft.ipas.cronjob.search" level="info" additivity="false">
+            <appender-ref ref="FILE_MASS_INDEXING" />
+        </logger>
+        <logger name="bg.duosoft.ipas.core.service.impl.ext" level="info" additivity="false">
+            <appender-ref ref="FILE_MASS_INDEXING" />
+        </logger>
+        <logger name="bg.duosoft.ipas.core.service.impl.search" level="info" additivity="false">
+            <appender-ref ref="FILE_MASS_INDEXING" />
+        </logger>
+        <logger name="com.duosoft.ipas.controller.abdocs.PersonSyncController" level="info" additivity="false">
+            <appender-ref ref="FILE_ABDOCS_PERSON_SYNC" />
+        </logger>
+        <logger name="com.duosoft.ipas.controller.rest.abdocs.notification" level="info" additivity="false">
+            <appender-ref ref="FILE_ABDOCS_NOTIFICATION" />
+        </logger>
+        <logger name="bg.duosoft.ipas.core.service.impl.abdocs.notification" level="info" additivity="false">
+            <appender-ref ref="FILE_ABDOCS_NOTIFICATION" />
+        </logger>
+        <logger name="com.duosoft.ipas.controller.ipobjects.common.process.cron.responsibleuser.AbdocsUserTargetingController" level="info" additivity="false">
+            <appender-ref ref="FILE_ABDOCS_USER_TARGETING" />
+        </logger>
+        <root level="warn">
+            <appender-ref ref="FILE" />
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="SLACK" />
+        </root>
+    </springProfile>
+
+    <springProfile name="prod">
+        <logger name="bg.duosoft.ipas.util.search.EntityIndexProgressMonitor" level="error" additivity="false">
+            <appender-ref ref="FILE_MASS_INDEXING" />
+        </logger>
+        <logger name="org.hibernate.search" level="error" additivity="false">
+            <appender-ref ref="FILE_MASS_INDEXING" />
+        </logger>
+        <logger name="bg.duosoft.ipas.cronjob.search" level="error" additivity="false">
+            <appender-ref ref="FILE_MASS_INDEXING" />
+        </logger>
+        <logger name="bg.duosoft.ipas.core.service.impl.ext" level="error" additivity="false">
+            <appender-ref ref="FILE_MASS_INDEXING" />
+        </logger>
+        <logger name="bg.duosoft.ipas.core.service.impl.search" level="error" additivity="false">
+            <appender-ref ref="FILE_MASS_INDEXING" />
+        </logger>
+        <logger name="com.duosoft.ipas.controller.abdocs.PersonSyncController" level="info" additivity="false">
+            <appender-ref ref="FILE_ABDOCS_PERSON_SYNC" />
+        </logger>
+        <logger name="com.duosoft.ipas.controller.rest.abdocs.notification" level="info" additivity="false">
+            <appender-ref ref="FILE_ABDOCS_NOTIFICATION" />
+        </logger>
+        <logger name="bg.duosoft.ipas.core.service.impl.abdocs.notification" level="info" additivity="false">
+            <appender-ref ref="FILE_ABDOCS_NOTIFICATION" />
+        </logger>
+        <logger name="com.duosoft.ipas.controller.ipobjects.common.process.cron.responsibleuser.AbdocsUserTargetingController" level="info" additivity="false">
+            <appender-ref ref="FILE_ABDOCS_USER_TARGETING" />
+        </logger>
+        <root level="warn">
+            <appender-ref ref="FILE" />
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="SLACK" />
+        </root>
+    </springProfile>
+</configuration>

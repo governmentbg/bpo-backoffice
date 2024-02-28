@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg">
+
+<head th:replace="~{base/template :: head(title = #{payments.module.title})}"></head>
+<body class="dark left-sidebar-show">
+<header class="app-header" th:replace="base/header"></header>
+
+<div class="app-body"
+     th:with="urlMap = ${T(com.duosoft.ipas.util.UrlMap)},
+              securityUtils=${T(bg.duosoft.ipas.util.security.SecurityUtils)},
+              paymentsModuleUrls = ${T(com.duosoft.ipas.util.UrlMap).getPaymentsModuleUrlsFiltered()}">
+    <div th:replace="base/left-sidebars :: list(urls = ${paymentsModuleUrls})"></div>
+    <main class="main">
+        <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+        <div class="row">
+            <th:block th:if="${securityUtils.hasAnyRights(urlMap.NOT_LINKED_PAYMENTS_PORTAL.roles)}">
+                <div class="col-6">
+                    <div class="card blue-grey darken-1">
+                        <div class="card-content m_H200">
+                        <span class="card-title m-blue-text text-darken-4"
+                              th:text="#{payments.module.notlinked.title}"></span>
+                            <div class="card-content-description">
+                                <span th:text="#{payments.module.notlinked.text}"></span>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <a th:href="@{${@environment.getProperty(urlMap.NOT_LINKED_PAYMENTS_PORTAL.url)}}"
+                               th:target="_blank" th:text="#{btn.open.page}" class="b0 text-darken-4"></a>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+
+            <th:block th:if="${securityUtils.hasAnyRights(urlMap.UNCLEAR_OBJECT_PAYMENTS_PORTAL.roles)}">
+                <div class="col-6">
+                    <div class="card blue-grey darken-1">
+                        <div class="card-content m_H200">
+                        <span class="card-title m-blue-text text-darken-4"
+                              th:text="#{payments.module.unclear.object.title}"></span>
+                            <div class="card-content-description">
+                                <span th:text="#{payments.module.unclear.object.text}"></span>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <a th:href="@{${@environment.getProperty(urlMap.UNCLEAR_OBJECT_PAYMENTS_PORTAL.url)}}"
+                               th:target="_blank" th:text="#{btn.open.page}" class="b0 text-darken-4"></a>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+
+            <th:block th:if="${securityUtils.hasAnyRights(urlMap.WRONG_PAYMENTS_PORTAL.roles)}">
+                <div class="col-6">
+                    <div class="card blue-grey darken-1">
+                        <div class="card-content m_H200">
+                        <span class="card-title m-blue-text text-darken-4"
+                              th:text="#{payments.module.wrong.liabilities.title}"></span>
+                            <div class="card-content-description">
+                                <span th:text="#{payments.module.wrong.liabilities.text}"></span>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <a th:href="@{${@environment.getProperty(urlMap.WRONG_PAYMENTS_PORTAL.url)}}"
+                               th:target="_blank"
+                               th:text="#{btn.open.page}" class="b0 text-darken-4"></a>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+
+            <th:block th:if="${securityUtils.hasAnyRights(urlMap.WAITING_PAYMENTS_PORTAL.roles)}">
+                <div class="col-6">
+                    <div class="card blue-grey darken-1">
+                        <div class="card-content m_H200">
+                        <span class="card-title m-blue-text text-darken-4"
+                              th:text="#{payments.module.waiting.liabilities.title}"></span>
+                            <div class="card-content-description">
+                                <span th:text="#{payments.module.waiting.liabilities.text}"></span>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <a th:href="@{${@environment.getProperty(urlMap.WAITING_PAYMENTS_PORTAL.url)}}"
+                               th:target="_blank" th:text="#{btn.open.page}" class="b0 text-darken-4"></a>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+
+            <th:block th:if="${securityUtils.hasAnyRights(urlMap.PAID_PAYMENTS_PORTAL.roles)}">
+                <div class="col-6">
+                    <div class="card blue-grey darken-1">
+                        <div class="card-content m_H200">
+                        <span class="card-title m-blue-text text-darken-4"
+                              th:text="#{payments.module.paid.liabilities.title}"></span>
+                            <div class="card-content-description">
+                                <span th:text="#{payments.module.paid.liabilities.text}"></span>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <a th:href="@{${@environment.getProperty(urlMap.PAID_PAYMENTS_PORTAL.url)}}"
+                               th:target="_blank"
+                               th:text="#{btn.open.page}" class="b0 text-darken-4"></a>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+
+            <th:block th:if="${securityUtils.hasAnyRights(urlMap.IMPORT_FILE_PAYMENTS_PORTAL.roles)}">
+                <div class="col-6">
+                    <div class="card blue-grey darken-1">
+                        <div class="card-content m_H200">
+                            <span class="card-title m-blue-text text-darken-4"
+                                  th:text="#{payments.module.import.file.title}"></span>
+                            <div class="card-content-description">
+                                <span th:text="#{payments.module.import.file.text}"></span>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <a th:href="@{${@environment.getProperty(urlMap.IMPORT_FILE_PAYMENTS_PORTAL.url)}}"
+                               th:target="_blank" th:text="#{btn.open.page}" class="b0 text-darken-4"></a>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+
+            <th:block th:if="${securityUtils.hasAnyRights(urlMap.NO_OBJECT_PAYMENTS_PORTAL.roles)}">
+                <div class="col-6">
+                    <div class="card blue-grey darken-1">
+                        <div class="card-content m_H200">
+                        <span class="card-title m-blue-text text-darken-4"
+                              th:text="#{payments.module.payments.no.object.title}"></span>
+                            <div class="card-content-description">
+                                <span th:text="#{payments.module.payments.no.object.text}"></span>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <a th:href="@{${@environment.getProperty(urlMap.NO_OBJECT_PAYMENTS_PORTAL.url)}}"
+                               th:target="_blank" th:text="#{btn.open.page}" class="b0 text-darken-4"></a>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+
+            <th:block th:if="${securityUtils.hasAnyRights(urlMap.CONFIG_PAYMENTS_PORTAL.roles)}">
+                <div class="col-6">
+                    <div class="card blue-grey darken-1">
+                        <div class="card-content m_H200">
+                        <span class="card-title m-blue-text text-darken-4"
+                              th:text="#{payments.module.config.liabilities.title}"></span>
+                            <div class="card-content-description">
+                                <span th:text="#{payments.module.config.liabilities.text}"></span>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <a th:href="@{${@environment.getProperty(urlMap.CONFIG_PAYMENTS_PORTAL.url)}}"
+                               th:target="_blank" th:text="#{btn.open.page}" class="b0 text-darken-4"></a>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+
+            <th:block th:if="${securityUtils.hasAnyRights(urlMap.FEE_VALIDATION_PORTAL.roles)}">
+                <div class="col-6">
+                    <div class="card blue-grey darken-1">
+                        <div class="card-content m_H200">
+                        <span class="card-title m-blue-text text-darken-4"
+                              th:text="#{payments.module.fee.validation.title}"></span>
+                            <div class="card-content-description">
+                                <span th:text="#{payments.module.fee.validation.text}"></span>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <a th:href="@{${@environment.getProperty(urlMap.FEE_VALIDATION_PORTAL.url)}}"
+                               th:target="_blank"
+                               th:text="#{btn.open.page}" class="b0 text-darken-4"></a>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+    </main>
+</div>
+
+<footer class="page-footer" th:replace="base/footer"></footer>
+<div th:replace="base/template :: js-footer" th:remove="tag"></div>
+</body>
+</html>

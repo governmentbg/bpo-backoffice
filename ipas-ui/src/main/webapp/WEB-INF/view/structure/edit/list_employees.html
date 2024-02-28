@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="employees" type="java.util.List<bg.duosoft.ipas.core.model.structure.User>"*/-->
+<!--/*@thymesVar id="isActive" type="java.lang.Boolean"*/-->
+<div th:fragment="list-employees(isActive, employees)" th:remove="tag">
+    <ul id="EmployeesLinkedList" class="Linked-List">
+        <li>
+            <div class="row">
+                <div class="col-10">
+                    <div class="div-field">
+                        <div class="div-field">
+                            <span class="section-header" th:text="#{users.label}"></span>
+                            <span class="sign bg__dark-blue"
+                                  th:text="${employees?.size()}"></span>
+                            <button type="button" id="transferAllUsers" class="button sm-icn-right" th:text="#{transfer.all}" th:disabled="${!isActive}">
+                            </button>
+                            <label for="transferAllUsers" th:text="#{warning.user.active}"></label>
+                            <div style="float: left">
+                                <label for="activeOnlyUsers">
+                                    <input id="activeOnlyUsers" type="checkbox" checked="checked"/>
+                                    <span th:text="#{active.only}"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <ul id="activeOnlyUsersList" class="list scrollable">
+                <li class="term-item" th:attr="data-status=${!employee.getIndInactive() ? 'active' : 'inactive'}" th:each="employee:${employees}">
+                    <div th:replace="structure/edit/list_edit_template :: formFields(type='users', isActive=${isActive && !employee.getIndInactive()},name=${employee.getUserName()},id=${employee.getUserId()})">
+                    </div>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+
+
+
+</body>
+</html>

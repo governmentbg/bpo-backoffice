@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg">
+<head th:replace="base/template :: head(title=#{last.actions.title})"></head>
+<body class="dark left-sidebar-show">
+<header class="app-header" th:replace="base/header"></header>
+
+<div class="app-body" th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT},securityUtils=${T(bg.duosoft.ipas.util.security.SecurityUtils)}, securityRoles=${T( bg.duosoft.ipas.enums.security.SecurityRole)}">
+    <div th:replace="base/left-sidebars :: list(urls = ${T(com.duosoft.ipas.util.UrlMap).getHomeUrlsFiltered()})"></div>
+
+    <main class="main">
+        <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+        <div class="inner continer">
+            <div class="row">
+                <div class="col-12">
+                    <div class="panel">
+                        <div class="center">
+                            <h1 class="section-header" th:text="#{last.actions.title}"></h1>
+                        </div>
+                        <div class="table-filter-wrapper m_T10">
+                            <div class="row">
+                                <div class="col-6" th:id="'last-action-userdocType-filter-wrapper'" th:with="id='last-action-userdocType-filter'">
+                                    <div th:replace="~{base/form/select :: map(id = ${id}, label = 'Вид на документа', map = ${userdocTypeMap}, selected = ${lastActionFilter.userdocType}, emptySelectOption = #{all}, classes = 'search-box')}"></div>
+                                </div>
+                                <div class="col-6">
+                                    <div th:replace="~{base/form/input :: text(id = 'last-action-filingNumber-filter-input', label = 'Номер на документа')}"></div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="input-field" th:with="id='last-action-fileType-filter'">
+                                        <select th:id="${id}">
+                                            <option th:text="'Всички'" th:value="''"></option>
+                                            <option th:each="fileType : ${fileTypesMap}"
+                                                    th:value="${fileType.key}"
+                                                    th:text="${fileType.value}"
+                                                    th:selected="${#strings.equalsIgnoreCase(fileType.key,lastActionFilter.fileType )}">
+                                            </option>
+                                        </select>
+                                        <label th:for="${id}" th:text="'Вид на обекта'"></label>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div th:replace="~{base/form/input :: text(id = 'last-action-objectFileNbr-filter-input', label = 'Номер на обекта',value = ${lastActionFilter.userdocFilingNumber})}"></div>
+                                </div>
+                                <div class="col-6">
+                                    <div th:replace="~{base/form/input :: datepicker(id = 'last-action-actionDateFrom-filter-input', label = 'Дата на извършване на действието от',value = ${null != lastActionFilter.actionDateFrom ? #dates.format(lastActionFilter.actionDateFrom, dateFormatDot) : ''})}"></div>
+                                </div>
+                                <div class="col-6">
+                                    <div th:replace="~{base/form/input :: datepicker(id = 'last-action-actionDateTo-filter-input', label = 'Дата на извършване на действието до',value = ${null != lastActionFilter.actionDateTo ? #dates.format(lastActionFilter.actionDateTo, dateFormatDot) : ''})}"></div>
+                                </div>
+                                <div class="col-6" th:with="actionTypeKind=${T(bg.duosoft.ipas.enums.ActionTypeKind)}">
+                                    <div class="input-field" th:with="id='action-type-kind-filter'">
+                                        <select th:id="${id}">
+                                            <option th:text="'Всички'" th:value="${actionTypeKind.BOTH.code()}" th:selected="${actionTypeKind.BOTH.code() == lastActionFilter.actionTypeKind}"></option>
+                                            <option th:text="'Автоматични'" th:value="${actionTypeKind.AUTOMATIC.code()}" th:selected="${actionTypeKind.AUTOMATIC.code() == lastActionFilter.actionTypeKind}"></option>
+                                            <option th:text="'Ръчни'" th:value="${actionTypeKind.MANUAL.code()}" th:selected="${actionTypeKind.MANUAL.code() == lastActionFilter.actionTypeKind}"></option>>
+                                        </select>
+                                        <label th:for="${id}" th:text="'Вид действия'"></label>
+                                    </div>
+                                </div>
+
+                                <div th:if="${securityUtils.hasRights(securityRoles.IpObjectsSearchForeignObjectsData)}" class="col-6">
+                                    <div th:replace="~{base/form/input :: text(id = 'responsibleUser-filter', label = #{filter.responsibleUser.label},dataId = (${lastActionFilter.responsibleUser}), value = (${lastActionFilter.responsibleUserName}), url = @{/user/users-autocomplete}, classes = 'autocomplete-user')}"></div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div th:replace="~{base/form/input :: text(id = 'captureUser-filter', label = 'Изпълнител',dataFlag=false,dataId = (${lastActionFilter.captureUser}), value = (${lastActionFilter.captureUserName}), url = @{/user/users-autocomplete}, classes = 'autocomplete-user')}"></div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12 right-align">
+                                    <a th:replace="~{base/form/button :: material-btn(idBtn = 'search-last-action-btn', label = #{btn.search}, dataUrl = @{/last-action/search} , icon = 'search', classes = 'm_R20 m_T5')}"></a>
+                                    <a th:replace="~{base/form/button :: material-btn(label = #{btn.clear}, idBtn = 'clear-last-action-btn',href=@{/last-action/list}, icon = 'clear', classes = 'm_T5')}"></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div th:id="last-action-table-wrapper" th:attr="data-url=@{/last-action/update-table}">
+                                    <div th:replace="home/lastaction/last_action_table :: table(lastActionList=${lastActionList},lastActionCount=${lastActionCount},lastActionFilter=${lastActionFilter})"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div><!-- .row -->
+        </div><!-- .inner -->
+    </main>
+</div><!-- .app-body -->
+
+<footer class="page-footer" th:replace="base/footer"></footer>
+<div th:replace="base/template :: js-footer" th:remove="tag"></div>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="mark-usage-rules(markUsageRules,sessionObjectIdentifier)" th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)}">
+
+    <div class="row">
+        <div th:replace="~{base/form/input :: hidden(id = 'usageRuleType', value = '0', name = 'usageRuleType', classes = 'form-ignore')}"></div>
+        <div th:replace="~{base/form/input :: file(
+                id = 'mark-usage-rule-upload',
+                accept = '.pdf',
+                name = 'uploadUsageRule',
+                classes = 'input_file',
+                style = 'display:none;',
+                url = @{/mark/validate-usage-rule},
+                urlUpload = @{/mark/upload-usage-rule} )}">
+        </div>
+
+        <th:block th:if="${!collectionUtils.isEmpty(markUsageRules)}">
+            <div class="col-12">
+                <table class="simple">
+                    <thead>
+                    <tr>
+                        <th class="p_L0" style="width: 60%">
+                            <span th:text="'Име на документ'"></span>
+                        </th>
+                        <th>
+                            <span th:text="'Вид документ'"></span>
+                        </th>
+                        <th>
+                            <span th:text="'Дата на създаване'"></span>
+                        </th>
+                        <th class="hidden-element txtRight"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="usageRule : ${markUsageRules}">
+                        <td class="p_L0">
+                            <a th:text="${usageRule.name}" download
+                               th:href="@{'/mark/usage-rule-content?sessionIdentifier=' + ${sessionObjectIdentifier}+'&id=' + ${usageRule.id} + '&usageRuleTypeId=' + ${usageRule.usageRule.id}+'&time='+ ${#dates.format(#dates.createNow(),'HH:mm:ss.SSS')}}">
+                            </a>
+                        </td>
+                        <td th:text="${usageRule.usageRule.name}"></td>
+                        <td th:text="${#dates.format(usageRule.dateCreated,T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}"></td>
+                        <td class="hidden-element txtRight">
+                         <span>
+                            <a style="border: 0" th:title="#{btn.delete}" href="javascript:void(0);" class="confirm"
+                               th:attr="data-action='delete-usage-rule',data-message=#{general.message.deleting.file},
+                               data-url=@{'/mark/delete-usage-rule?id='+${usageRule.id}+'&usageRuleTypeId='+${usageRule.usageRule.id}}">
+                                 <i class="icon-trash"></i>
+                            </a>
+                        </span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </th:block>
+    </div>
+    <div class="m_T5" th:id="uploaded-usage-rule-errors-div"></div>
+</div>
+
+</body>
+</html>

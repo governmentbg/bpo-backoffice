@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<!--/*@thymesVar id="structure" type="bg.duosoft.ipas.core.model.structure.StructureNode"*/-->
+<body th:fragment="edit-structure-body(type, structure, title, isNew, hasDivisionDropDown, hasDepartmentDropDown)" class="dark">
+    <header class="app-header" th:replace="base/header"></header>
+    <div class="app-body">
+        <div class="left-sidebar">
+            <div id="psb" class="ps--active-y">
+            </div><!-- #psb -->
+        </div><!-- .left-sidebar -->
+
+        <main class="main" th:with="active=${isNew ? true : structure.active},stringUtils=${T(org.springframework.util.StringUtils)}">
+            <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+            <form th:action="@{/structure/{type}/save(type=${type})}" method="post">
+            <div id="structureFormDiv" class="inner continer">
+                    <div class="row panel">
+                        <div class="center">
+                            <h2 th:text="${title}"></h2>
+                        </div>
+
+                        <div id="content">
+                            <div th:replace="base/message :: success(${successMessage})"></div>
+                            <div th:replace="base/message :: error(${errorMessage})"></div>
+                            <div th:replace="base/message :: general-validation-errors(${validationErrors})"></div>
+                            <br>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div th:class="input-field">
+                                        <input type="text" class="required" id="structureName" name="name" th:value="${structure?.name}" th:disabled="${!active}"/>
+                                        <label for="structureName" th:text="#{name.label}"></label>
+                                        <div th:replace="base/validation :: validation-message(${validationErrors},'stucture-name')"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+
+                            <div th:if="${!active}">
+                                <h3 style="color:red;" th:text="#{structure.label.inactive}"></h3>
+                            </div>
+
+                            <div th:if="${!isNew}" class="row">
+                                <div class="col-12">
+                                    <div id="activeRadio" th:if="${!active}">
+                                        <div th:class="input-field">
+                                            <label for="active1" th:text="#{status.radio}"></label>
+                                            <p>
+                                                <label>
+                                                    <input id="active1" class="with-gap" name="active" type="radio" th:value="true"/>
+                                                    <span th:text="#{yes}"></span>
+                                                </label>
+                                            </p>
+
+                                            <p>
+                                                <label>
+                                                    <input id="active2" class="with-gap" name="active" type="radio" th:value="false"/>
+                                                    <span th:text="#{no}"></span>
+                                                </label>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12">
+                                    <div id="division-select-div" th:if="${hasDivisionDropDown}">
+                                        <div th:replace="structure/edit/select_division :: select-division(disabled = ${!isNew}, selectedDivision = ${structure?.officeStructureId?.officeDivisionCode}, availableDivisions=${availableDivisions})"></div>
+                                        <div th:replace="base/validation :: validation-message(${validationErrors},'stucture-division')"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12">
+                                    <div id="department-select-div" th:if="${hasDepartmentDropDown}">
+                                        <div th:replace="structure/edit/select_department :: select-department(disabled = ${!isNew}, selectedDepartment = ${structure?.officeStructureId?.officeDepartmentCode}, availableDepartments=${availableDepartments})"></div>
+                                        <div th:replace="base/validation :: validation-message(${validationErrors},'stucture-department')"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12">
+                                    <div th:replace="structure/edit/select_director :: select-director(isActive = ${active}, selectedDirectorId = ${structure?.signatureUser?.userId}, directors=${directors})"></div>
+                                    <div th:replace="base/validation :: validation-message(${validationErrors},'stucture-signatureUser')"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div th:if="${!isNew}" >
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="input-field">
+                                        <input th:placeholder="#{search.structure.user.text}" id="request_place" type="text" class="" th:disabled="${!active}" />
+                                        <label for="request_place" th:text="#{search.label}"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
+
+                            <div>
+                                <div th:replace="structure/edit/list_employees :: list-employees(isActive = ${active}, employees=${structureEmployees})"></div>
+                                <div th:replace="structure/edit/list_structure :: list-structure(type='sections', isActive = ${active}, structures=${structureSections})"></div>
+                                <div th:replace="structure/edit/list_structure :: list-structure(type='departments', isActive = ${active}, structures=${structureDepartments})"></div>
+                            </div>
+                        </div>
+                        <br>
+
+                        <div th:replace="structure/edit/transfer_section_modal :: transfer-section-modal(activeDepartments=${transferSectionDepartments})"></div>
+                        <div th:replace="structure/edit/transfer_department_modal :: transfer-department-modal(activeDivisions=${transferDepartmentDivisions})"></div>
+                        <div th:replace="structure/edit/transfer_user_modal :: transfer-user-modal(activeStructure=${transferUserStructure})"></div>
+
+                        <input type="hidden" name="officeStructureId.officeDivisionCode" id="divisionCode" th:value="${structure?.officeStructureId?.officeDivisionCode}">
+                        <input type="hidden" name="officeStructureId.officeDepartmentCode" id="departmentCode" th:value="${structure?.officeStructureId?.officeDepartmentCode}">
+                        <input type="hidden" name="officeStructureId.officeSectionCode" id="sectionCode" th:value="${structure?.officeStructureId?.officeSectionCode}">
+                        <input type="hidden" name="isNew" id="isNew" th:value="${isNew}" />
+                        <input type="hidden" name="active" id="active" th:value="${active}" th:if="${active}">
+                        <input type="hidden" name="type" th:value="${type}" />
+
+                        <br>
+                        <div class="submitBtns">
+                            <div class="row">
+                                <div class="col s1">
+                                    <button type="submit" id="save_structure_btn" class="button sm-icn-save" th:text="#{btn.save}"></button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+            </div>
+            </form>
+        </main>
+        <div id="save_structure_status"></div>
+        <div th:replace="base/modal/validation_errors::errors(${validationErrors})" th:remove="tag"></div>
+    </div>
+
+    <!-- JQuery files -->
+    <footer class="page-footer" th:replace="base/footer"></footer>
+    <div th:replace="base/template :: js-footer" th:remove="tag"></div>
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            //hiding all the inactive users/section
+            toggleInactiveStructureElements($('.list li'), false);
+            executeCommonInitialization({
+                initializeFormElementsWrapper: "#structureFormDiv, #transfer-user-modal, #transfer-section-modal, #transfer-department-modal",
+            });
+        });
+    </script>
+</body>
+</html>

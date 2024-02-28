@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="tag(url,sessionIdentifier,attachmentIndex)" th:remove="tag">
+    <audio controls="controls">
+        <source th:src="|${url}?sessionIdentifier=${sessionIdentifier}&attachmentIndex=${attachmentIndex}&time=${#dates.format(#dates.createNow(), 'HH:mm:ss.SSS')}|" />
+        Your browser does not support the audio element.
+    </audio>
+</div>
+
+</body>
+</html>

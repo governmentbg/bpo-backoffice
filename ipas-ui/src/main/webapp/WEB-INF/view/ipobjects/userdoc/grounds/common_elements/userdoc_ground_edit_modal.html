@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+
+<div th:fragment="legal-ground-types-modal-content(rootGround)"
+     th:with="rootGroundId = ${rootGround.rootGroundId},panel = ${rootGround.panel},groundMotives = ${rootGround.motives},legalGroundsTypes=${rootGround.legalGroundsTypes}">
+
+    <div class="modal-content">
+        <div class="center">
+            <h4 th:text="${rootGroundId == null} ? #{userdoc.new.grounds.title} : #{userdoc.edit.grounds.title}"></h4>
+        </div>
+
+        <th:block th:if="${hasLegalGroundCategories == true}">
+            <div th:replace="ipobjects/userdoc/grounds/common_elements/subsections/legal_grounds_categories_subsection ::legal-grounds-categories-subsection(${rootGround},${panel},${rootGroundId},${earlierLegalGroundCategories})"></div>
+        </th:block>
+
+        <th:block th:if="${hasEarlierRightTypes == true}">
+            <div th:replace="ipobjects/userdoc/grounds/common_elements/subsections/earlier_right_type_subsection ::earlier-right-type-subsection(${rootGround},${panel},${rootGroundId},${earlierRightTypes})"></div>
+        </th:block>
+
+        <th:block th:if="${hasLegalGroundTypes == true && hasEarlierRightTypes == false} or
+                         ${hasEarlierRightTypes==true && rootGround.earlierRightType!=null} ">
+            <div th:replace="ipobjects/userdoc/grounds/common_elements/subsections/legal_ground_types_and_motives_subsection :: legal-ground-types-and-motives-subsection(${panel},${groundMotives},${legalGroundsTypes})"></div>
+        </th:block>
+
+        <th:block th:if="${hasPatentGroundData == true}">
+         <div th:replace="ipobjects/userdoc/grounds/common_elements/subsections/patent_ground_data_subsection :: patent-ground-data(${rootGround.patentGroundData})"></div>
+        </th:block>
+
+        <th:block th:if="${hasNationalDesignImport == true}">
+            <div th:replace="ipobjects/userdoc/grounds/common_elements/subsections/national_design_import_subsection :: national-design-import-subsection(${rootGround},${panel})"></div>
+        </th:block>
+
+        <th:block th:if="${hasEarlierRightTypes == true}">
+
+            <th:block th:if="${T(bg.duosoft.ipas.util.userdoc.UserdocGroundsUtils).isApplicantAuthoritiesSectionVisible(rootGround.earlierRightType)}">
+                <div th:replace="ipobjects/userdoc/grounds/common_elements/subsections/authorities_subsection :: applicant-authorities-subsection(${rootGround},${panel})"></div>
+            </th:block>
+
+            <th:block th:if="${T(bg.duosoft.ipas.util.userdoc.UserdocGroundsUtils).isGeographicalIndicationsSubSectionVisible(rootGround.earlierRightType)}">
+                <div th:replace="ipobjects/userdoc/grounds/common_elements/subsections/geographical_indications_subsection :: geographical-indications-earlier-right-type-subsection(${rootGround})"></div>
+            </th:block>
+
+            <th:block th:if="${T(bg.duosoft.ipas.util.userdoc.UserdocGroundsUtils).isMandatoryDescriptionSubSectionVisible(rootGround.earlierRightType)}">
+                <div th:replace="ipobjects/userdoc/grounds/common_elements/subsections/mandatory_description_subsection :: mandatory-description-earlier-right-type-subsection(${rootGround})"></div>
+            </th:block>
+
+            <th:block th:if="${T(bg.duosoft.ipas.util.userdoc.UserdocGroundsUtils).isMarkSubSectionVisible(rootGround.earlierRightType) || activeEarlierMarkLegalGround == true}">
+                <div th:replace="ipobjects/userdoc/grounds/common_elements/subsections/mark_earlier_right_type_subsection :: mark-earlier-right-type-subsection(${rootGround},${panel},${sessionObjectIdentifier})"></div>
+            </th:block>
+
+        </th:block>
+    </div>
+    <div class="modal-footer row">
+        <div class="col-12">
+            <button th:attr="data-action='edit-userdoc-root-grounds', data-url=@{/{panel}/edit-userdoc-root-grounds(panel=${panel})}, data-root-ground-id=${rootGroundId}, data-panel = ${panel}, data-validation-block='#legal-ground-types-modal'"
+                    th:text="#{btn.save}" class="button sm-icn-save wmin_130">
+            </button>
+            <button th:text="#{btn.cancel}" th:type="button" class="button sm-icn-cross modal-close wmin_130"></button>
+        </div>
+    </div>
+
+</div>
+
+<div th:fragment="legal-ground-types-modal(rootGround)">
+    <div th:id="legal-ground-types-modal" class="modal legal-ground-types-modal">
+        <div th:replace="~{ :: legal-ground-types-modal-content(${rootGround})}"></div>
+    </div>
+</div>
+
+
+</body>
+</html>

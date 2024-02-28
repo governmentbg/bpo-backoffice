@@ -1,0 +1,7 @@
+--liquibase formatted sql
+
+--changeset mmihova:330.1
+ALTER TABLE EXT_CORE.IP_USERDOC_OLD_DOCUMENT ADD REGISTER_IN_ABDOCS bit default 0;
+
+--changeset mmihova:330.2
+UPDATE EXT_CORE.IP_USERDOC_OLD_DOCUMENT SET REGISTER_IN_ABDOCS = 0;

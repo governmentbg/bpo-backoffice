@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="table(offidocTypeList, offidocTypeCount, offidocTypeFilter)"
+     th:with="sorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.SorterUtils)},offidocTypeSorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.OffidocTypeSorterUtils)},
+     coreUtils=${T(com.duosoft.ipas.util.CoreUtils)}">
+
+    <div th:remove="tag" th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(offidocTypeList)}">
+        <div th:remove="tag" th:case="true">
+            <div class="bg__light-blue p_10 m_B10 m_T10 center">
+                <span th:text="#{empty.list}"></span>
+            </div>
+        </div>
+        <div th:remove="tag" th:case="false">
+            <div class="row">
+                <div>
+                    <span th:text="#{total}"></span>
+                    <span th:text="${offidocTypeCount}"></span>
+                </div>
+            </div>
+            <div class="m_T5">
+                <table class="simple bpo">
+                    <thead>
+                    <tr>
+                        <th style="width: 40px" th:text="#{number}"></th>
+                        <th style="width: 300px"
+                            th:with="isSelected=${#strings.equalsIgnoreCase(offidocTypeFilter.sortColumn,offidocTypeSorterUtils.OFFIDOC_NAME)},dataSort=${offidocTypeSorterUtils.OFFIDOC_NAME}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,offidocTypeFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{offidoc.name.filter.label},${offidocTypeFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th style="width: 150px"
+                            th:with="isSelected=${#strings.equalsIgnoreCase(offidocTypeFilter.sortColumn,offidocTypeSorterUtils.OFFIDOC_NAME_WFILE)},dataSort=${offidocTypeSorterUtils.OFFIDOC_NAME_WFILE}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,offidocTypeFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{offidoc.name.w.file},${offidocTypeFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th style="width: 30px" th:text="#{options.label}"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="type : ${offidocTypeList}">
+                        <td>
+                            <span th:text="${typeStat.count + ((offidocTypeFilter.page - 1)*offidocTypeFilter.pageSize)}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${type.offidocName}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${type.defaultTemplate}"></span>
+                        </td>
+                        <td class="p_0 center">
+                            <a th:replace="~{base/form/button :: material-table-btn(title = #{btn.edit},dataAction='edit-offidoc', dataUrl = @{/admin/offidoc/edit/{id}(id=${type.offidocType})} , icon = 'edit')}"></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div th:replace="base/paginator :: paginator(page=${offidocTypeFilter.page},pageSize=${offidocTypeFilter.pageSize},total=${offidocTypeCount},baseUrl=@{admin/offidoc/update-table},
+                        tableContainerDiv='offidoc-table-wrapper',
+                        additionalParams='&tableCount='+${offidocTypeCount}+
+                        '&sortOrder='+${offidocTypeFilter.sortOrder}+ ${offidocTypeFilter.sortColumn!=null ? '&sortColumn='+ offidocTypeFilter.sortColumn:''}+
+                        ${offidocTypeFilter.offidocName != null ? '&offidocName='+offidocTypeFilter.offidocName : '' })">
+                </div>
+            </div>
+
+            <input th:type="hidden" th:id="table-count" th:value="'?tableCount='+${offidocTypeCount}">
+            <div th:replace="~{admin/offidoc/offidoc_table :: filter-params(${offidocTypeFilter})}"></div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="filter-params(offidocTypeFilter)">
+    <div th:id="offidoc-filter-params">
+        <input th:type="hidden" th:id="offidoc-page" th:value="${offidocTypeFilter.page}">
+        <input th:type="hidden" th:id="offidoc-pageSize" th:value="${offidocTypeFilter.pageSize}">
+        <input th:type="hidden" th:id="offidoc-sortColumn" th:value="${offidocTypeFilter.sortColumn}">
+        <input th:type="hidden" th:id="offidoc-sortOrder" th:value="${offidocTypeFilter.sortOrder}">
+        <input th:if="${!#strings.isEmpty(offidocTypeFilter.offidocName)}" th:type="hidden"
+               th:id="offidoc-offidocName" th:value="${offidocTypeFilter.offidocName}">
+    </div>
+</div>
+
+</body>
+</html>

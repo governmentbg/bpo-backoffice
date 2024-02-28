@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="session-objects-list(sessionObjects,activeSessionObject)" style="max-height: 500px;overflow-y: auto">
+    <div class="center">
+        <h4 th:text="'Oбекти в сесията'"></h4>
+    </div>
+
+    <div th:switch="${#lists.isEmpty(sessionObjects)}">
+        <div th:remove="tag" th:case="true">
+            <div class="white center">
+                <span style="color: black" th:text="'Списъкът е празен'"></span>
+            </div>
+        </div>
+        <div th:remove="tag" th:case="false">
+            <table class="simple">
+                <thead>
+                <tr>
+                    <th class="p_0"></th>
+                    <th class="p_0"></th>
+                    <th class="p_0"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="sessionObject,sessionObjectStat : ${sessionObjects}">
+                    <td class="col-1" th:text="${sessionObjectStat.index+1}"></td>
+                    <td class="col-9" th:with="filingNumber=${T(com.duosoft.ipas.util.session.HttpSessionUtils).getFilingNumberFromSessionObject(sessionObject)}">
+                        <a th:if="${!#strings.isEmpty(activeSessionObject) && #strings.contains(sessionObject,activeSessionObject)}"
+                           style="padding: 0;display: inline"
+                           th:text="${filingNumber}"
+                           href="javascript:void(0);"></a>
+
+                        <a th:if="${#strings.isEmpty(activeSessionObject) || !#strings.contains(sessionObject,activeSessionObject)}"
+                           style="padding: 0;display: inline;border-bottom: 1px solid"
+                           th:text="${filingNumber}"
+                           th:href="@{/ipobject/view(filingNumber=${filingNumber})}"></a>
+                    </td>
+                    <td class="col-2">
+                        <span th:if="${!#strings.isEmpty(activeSessionObject) && #strings.contains(sessionObject,activeSessionObject)}"
+                              th:text="'Активен'" style="color: #0f9d58"></span>
+                        <a th:if="${#strings.isEmpty(activeSessionObject) || !#strings.contains(sessionObject,activeSessionObject)}"
+                           class="p_0 m_0 ui-no-block"
+                           style="border: 0;color: red"
+                           th:attr="data-action='remove-session-object',data-url=@{/session/remove-object},data-id=${sessionObject}"
+                           th:title="'Премахни'" href="javascript:void(0);" th:text="'Премахни'">
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

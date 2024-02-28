@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="table(userdocCorrespondenceTermsList, userdocCorrespondenceTermsCount, userdocCorrespondenceTermsFilter)"
+     th:with="sorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.SorterUtils)},userdocCorrespondenceTermsSorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.UserdocCorrespondenceTermsSortedUtils)},
+     coreUtils=${T(com.duosoft.ipas.util.CoreUtils)},securityUtils=${T(bg.duosoft.ipas.util.security.SecurityUtils)}, securityRoles=${T( bg.duosoft.ipas.enums.security.SecurityRole)}">
+
+    <div th:remove="tag" th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(userdocCorrespondenceTermsList)}">
+        <div th:remove="tag" th:case="true">
+            <div class="bg__light-blue p_10 m_B10 m_T10 center">
+                <span th:text="#{empty.list}"></span>
+            </div>
+        </div>
+        <div th:remove="tag" th:case="false">
+            <div class="row">
+                <div>
+                    <span th:text="#{total}"></span>
+                    <span th:text="${userdocCorrespondenceTermsCount}"></span>
+                </div>
+            </div>
+            <div class="m_T5">
+                <table class="simple bpo">
+                    <thead>
+                    <tr>
+                        <th  th:text="'Номер'"></th>
+                        <th  th:with="isSelected=${#strings.equalsIgnoreCase(userdocCorrespondenceTermsFilter.sortColumn,userdocCorrespondenceTermsSorterUtils.REGISTRATION_NUMBER)},dataSort=${userdocCorrespondenceTermsSorterUtils.REGISTRATION_NUMBER}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,userdocCorrespondenceTermsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Входящ номер',${userdocCorrespondenceTermsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th  th:with="isSelected=${#strings.equalsIgnoreCase(userdocCorrespondenceTermsFilter.sortColumn,userdocCorrespondenceTermsSorterUtils.USERDOC_TYPE)},dataSort=${userdocCorrespondenceTermsSorterUtils.USERDOC_TYPE}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,userdocCorrespondenceTermsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Вида на документа',${userdocCorrespondenceTermsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th  th:with="isSelected=${#strings.equalsIgnoreCase(userdocCorrespondenceTermsFilter.sortColumn,userdocCorrespondenceTermsSorterUtils.STATUS_NAME)},dataSort=${userdocCorrespondenceTermsSorterUtils.STATUS_NAME}"
+                             th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,userdocCorrespondenceTermsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Статус',${userdocCorrespondenceTermsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th  th:with="isSelected=${#strings.equalsIgnoreCase(userdocCorrespondenceTermsFilter.sortColumn,userdocCorrespondenceTermsSorterUtils.EXPIRATION_DATE)},dataSort=${userdocCorrespondenceTermsSorterUtils.EXPIRATION_DATE}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,userdocCorrespondenceTermsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Срок за приключване',${userdocCorrespondenceTermsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th  th:text="'Обект'"></th>
+                        <th th:if="${securityUtils.hasRights(securityRoles.IpObjectsSearchForeignObjectsData)}" th:with="isSelected=${#strings.equalsIgnoreCase(userdocCorrespondenceTermsFilter.sortColumn,userdocCorrespondenceTermsSorterUtils.USER_NAME)},dataSort=${userdocCorrespondenceTermsSorterUtils.USER_NAME}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,userdocCorrespondenceTermsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{tableHeader.responsibleUser.label},${userdocCorrespondenceTermsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="userdoc,myUserdocStat : ${userdocCorrespondenceTermsList}">
+                        <td>
+                            <span th:text="${myUserdocStat.count + ((userdocCorrespondenceTermsFilter.page - 1)*userdocCorrespondenceTermsFilter.pageSize)}"></span>
+                        </td>
+                        <td>
+                            <a th:text="${!T(java.util.Objects).isNull(userdoc.externalSystemId)}?${userdoc.externalSystemId}:${userdoc.documentId.createFilingNumber()}" th:href="@{/ipobject/view(userdocFilingNumber=${userdoc.documentId.createFilingNumber()})}"></a>
+                        </td>
+                        <td>
+                            <span th:text="${userdoc.userdocTypeName}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${userdoc.statusName}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${#dates.format(userdoc.expirationDate,T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}"></span>
+                        </td>
+                        <td th:with="regNumLabel=#{my.userdocs.reg.nbr.title},objectFilingNumber=${userdoc.userdocIpObject.cFileId.createFilingNumber()},regNumText=${!T(java.util.Objects).isNull(userdoc.userdocIpObject.registrationNbr)}?${#strings.concat('; ',regNumLabel,userdoc.userdocIpObject.registrationNbr)}
+                                     ,titleText=${!T(java.util.Objects).isNull(userdoc.userdocIpObject.title) && #strings.length(userdoc.userdocIpObject.title) > coreUtils.HOME_PANEL_MAX_TEXT_LENGTH_50}?${'; '.concat(#strings.substring(userdoc.userdocIpObject.title,0,coreUtils.HOME_PANEL_MAX_TEXT_LENGTH_50).concat('...'))}:(${!T(java.util.Objects).isNull(userdoc.userdocIpObject.title)}?${#strings.concat('; ',userdoc.userdocIpObject.title)})">
+                            <a th:text="${#strings.concat(objectFilingNumber,regNumText,titleText)}" th:href="@{/ipobject/view(filingNumber=${objectFilingNumber})}"></a>
+                        </td>
+                        <td th:if="${securityUtils.hasRights(securityRoles.IpObjectsSearchForeignObjectsData)}">
+                            <span th:text="${userdoc.responsibleUserName}"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="home-panel-paginator">
+                    <div th:replace="base/paginator :: paginator(page=${userdocCorrespondenceTermsFilter.page},pageSize=${userdocCorrespondenceTermsFilter.pageSize},total=${userdocCorrespondenceTermsCount},baseUrl=@{userdoc-correspondence-terms/update-table},
+                        tableContainerDiv='userdoc-correspondence-terms-table-wrapper',
+                        additionalParams='&tableCount='+${userdocCorrespondenceTermsCount}+${userdocCorrespondenceTermsFilter.userdocType != null ? '&userdocType='+userdocCorrespondenceTermsFilter.userdocType : '' }+
+                         ${userdocCorrespondenceTermsFilter.objectFileNbr != null ? '&objectFileNbr='+userdocCorrespondenceTermsFilter.objectFileNbr : '' }+
+                         ${userdocCorrespondenceTermsFilter.userdocFilingNumber != null ? '&userdocFilingNumber='+userdocCorrespondenceTermsFilter.userdocFilingNumber : '' }+
+                         ${userdocCorrespondenceTermsFilter.objectFileTyp != null ? '&objectFileTyp='+userdocCorrespondenceTermsFilter.objectFileTyp : '' }+
+                         ${userdocCorrespondenceTermsFilter.statusCode != null ? '&statusCode='+userdocCorrespondenceTermsFilter.statusCode : '' }+
+                        '&inTerm='+${userdocCorrespondenceTermsFilter.inTerm}+
+                        '&finished='+${userdocCorrespondenceTermsFilter.finished}+
+                        '&sortOrder='+${userdocCorrespondenceTermsFilter.sortOrder}+ ${userdocCorrespondenceTermsFilter.sortColumn!=null ? '&sortColumn='+ userdocCorrespondenceTermsFilter.sortColumn:''}+
+                        ${userdocCorrespondenceTermsFilter.responsibleUser != null ? '&responsibleUser='+userdocCorrespondenceTermsFilter.responsibleUser : '' })">
+                    </div>
+                </div>
+            </div>
+            <div>
+                <input th:type="hidden" class="form-ignore" th:id="userdoc-correspondence-terms-page" th:value="${userdocCorrespondenceTermsFilter.page}">
+                <input th:type="hidden" class="form-ignore" th:id="table-count" th:value="'?tableCount='+${userdocCorrespondenceTermsCount}">
+                <input th:type="hidden" class="form-ignore" th:id="userdoc-correspondence-terms-pageSize" th:value="${userdocCorrespondenceTermsFilter.pageSize}">
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

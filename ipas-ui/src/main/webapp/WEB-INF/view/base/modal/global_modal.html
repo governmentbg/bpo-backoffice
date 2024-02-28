@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="error-modal">
+    <div th:id="error-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h3 class="m-red-text" th:text="#{general.message.error}"></h3>
+            </div>
+            <div th:id="error-modal-message" class="center m_T10"></div>
+        </div>
+        <div class="modal-footer">
+            <div>
+                <button th:text="#{btn.understand}" type="button" class="button sm-icn-save modal-close"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="success-modal">
+    <div th:id="success-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h3 class="m-green-text" th:text="#{general.message.success}"></h3>
+            </div>
+            <div th:id="success-modal-message" class="center m_T10"></div>
+        </div>
+        <div class="modal-footer">
+            <div>
+                <button th:text="#{btn.understand}" type="button" class="button sm-icn-save modal-close"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

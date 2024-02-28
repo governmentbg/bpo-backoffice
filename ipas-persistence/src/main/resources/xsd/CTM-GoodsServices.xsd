@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="http://www.tm-xml.org/TM-XML_xsl/TM-XML_OnlineDictionary.xsl"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://www.oami.europa.eu/CTM/CTM-GoodsServices"
+           targetNamespace="http://www.oami.europa.eu/CTM/CTM-GoodsServices"
+           version="1.0"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified">
+  <!-- ********************************************************************** -->
+  <!-- * * -->
+  <!-- * CTM-GoodsServices Version 0.2 for Comment - XML Schema 2011-04-27 * -->
+  <!-- * * -->
+  <!-- ********************************************************************** -->
+  <xs:annotation>
+    <xs:documentation>
+      CTM-GoodsServices for e-Filing Version 0.2 for Comment Dated 27-April-2011
+    </xs:documentation>
+  </xs:annotation>
+  <!-- ********************************************************************** -->
+  <!-- ********************************************************************** -->
+  <!-- * TRANSACTION/MESSAGE TYPES LIBRARY ********************************** -->
+  <!-- ********************************************************************** -->
+  <!-- ********************************************************************** -->
+  <!-- ====================================================================== -->
+  <!-- Root Messages -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- Top Level Transaction for all Types of Message -->
+  <!-- ====================================================================== -->
+  <xs:element name="Transaction" type="TransactionType"/>
+  <!-- ====================================================================== -->
+  <!-- Type Name : TransactionBodyType -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- CTM-GS Version 0.2 Dated 2011-04-27 -->
+  <!-- ====================================================================== -->
+  <xs:complexType name="TransactionBodyType">
+    <xs:sequence>
+      <xs:element name="TransactionContentDetails">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="TransactionIdentifier" type="xs:string" minOccurs="0"/>
+            <xs:element name="TransactionCode" type="EM_CTM-GS_TransactionCodeType"/>
+            <xs:element name="TransactionData" type="TransactionDataType"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- ====================================================================== -->
+  <!-- Type Name : TransactionDataType -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- CTM-GS Version 0.2 Dated 2011-04-27 -->
+  <!-- ====================================================================== -->
+  <xs:complexType name="TransactionDataType">
+    <xs:sequence>
+      <xs:element name="NiceClassHeadingsRequest" type="NiceClassHeadingsRequestType" minOccurs="0" />
+      <!-- ================================================================= -->
+      <!-- Set of Goods and Services -->
+      <!-- ================================================================= -->
+      <xs:element name="GoodsServicesDetails">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="GoodServices" type="GoodsServicesType" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- ====================================================================== -->
+  <!-- Type Name : TransactionHeaderType -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- CTM-GS Version 0.2 Dated 2011-04-27 -->
+  <!-- ====================================================================== -->
+  <xs:complexType name="TransactionHeaderType">
+    <xs:sequence>
+      <xs:element name="SenderDetails">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="RequestProducerDateTime" type="xs:dateTime"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- ====================================================================== -->
+  <!-- Type Name : TransactionType -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- CTM-GS Version 0.2 Dated 2011-04-27 -->
+  <!-- ====================================================================== -->
+  <xs:complexType name="TransactionType">
+    <xs:sequence>
+      <xs:element name="TransactionHeader" type="TransactionHeaderType" minOccurs="0"/>
+      <!-- ================================================================= -->
+      <!-- Trade mark transaction -->
+      <!-- ================================================================= -->
+      <xs:element name="TradeMarkTransactionBody" type="TransactionBodyType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- ********************************************************************** -->
+  <!-- ********************************************************************** -->
+  <!-- * BUSINESS TYPES LIBRARY ********************************************* -->
+  <!-- ********************************************************************** -->
+  <!-- ********************************************************************** -->
+  <!-- ====================================================================== -->
+  <!-- Type Name : ClassDescriptionType -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- CTM-GS Version 0.2 Dated 2011-04-27 -->
+  <!-- ====================================================================== -->
+  <xs:complexType name="ClassDescriptionType">
+    <xs:sequence>
+      <xs:element name="ClassNumber" type="NiceClassNumberType"/>
+      <xs:element name="GoodsServicesDescription" type="TextType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- ====================================================================== -->
+  <!-- Type Name : GoodsServicesType -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- CTM-GS Version 0.2 Dated 2011-04-27 -->
+  <!-- ====================================================================== -->
+  <xs:complexType name="GoodsServicesType">
+    <xs:sequence>
+      <xs:element name="ClassificationVersion" type="xs:string" minOccurs="0"/>
+      <xs:element name="ClassDescriptionDetails">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ClassDescription" type="ClassDescriptionType" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- ====================================================================== -->
+  <!-- Type Name : NiceClassHeadingsRequestType -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- CTM-GS Version 0.2 Dated 2011-04-27 -->
+  <!-- ====================================================================== -->
+  <xs:complexType name="NiceClassHeadingsRequestType">
+    <xs:sequence>
+      <xs:element name="RequestLanguageCode" type="xs:language" minOccurs="0" />
+      <xs:element name="RequestNiceClass" type="xs:string" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+  <!-- ********************************************************************** -->
+  <!-- ********************************************************************** -->
+  <!-- * ADDITIONAL TYPES LIBRARY ******************************************* -->
+  <!-- * ******************************************************************** -->
+  <!-- ********************************************************************** -->
+  <!-- ====================================================================== -->
+  <!-- Type Name : EM_CTM-GS_TransactionCodeType -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- CTM-GS Version 0.2 Dated 2011-04-27 -->
+  <!-- ====================================================================== -->
+  <xs:simpleType name="EM_CTM-GS_TransactionCodeType">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="CTM-GS Goods and Services"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- ====================================================================== -->
+  <!-- Type Name : EM_CTM-GS_TransactionCodeType -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- CTM-GS Version 0.2 Dated 2011-04-27 -->
+  <!-- ====================================================================== -->
+  <xs:simpleType name="NiceClassNumberType">
+    <xs:restriction base="xs:nonNegativeInteger">
+      <xs:maxInclusive value="45"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- ====================================================================== -->
+  <!-- Type Name : TextType -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- CTM-GS Version 0.2 Dated 2011-04-27 -->
+  <!-- ====================================================================== -->
+  <xs:complexType name="TextType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="languageCode" type="xs:language" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+</xs:schema>

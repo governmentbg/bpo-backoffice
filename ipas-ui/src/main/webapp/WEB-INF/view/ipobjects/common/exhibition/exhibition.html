@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="exhibition(file)" th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+    <div th:with="hasExhibition=${file.priorityData.hasExhibitionData}" id="exhibition-subpanel">
+        <hr th:classappend="${!hasExhibition ? 'hidden-element':''}">
+        <div class="row">
+            <div class="row m_B10">
+                <div class="col-6" th:classappend="${!hasExhibition ? 'hidden-element':''}">
+                    <div th:replace="~{base/form/checkbox :: basic(id = 'object-exhibition-hasExhibitionData', target = 'exhibition-details', label = #{exhibition}, isChecked = ${hasExhibition}, classes = 'rights-checkbox')}"></div>
+                </div>
+            </div>
+            <div class="row" id="exhibition-details" th:style="${hasExhibition? '': 'display:none'}">
+                <div class="col-8">
+                    <div th:replace="~{base/form/input :: text(id = 'object-exhibition-exhibitionNotes', label = #{exhibition.notes}, value = ${file.priorityData != null ? file.priorityData.exhibitionNotes:''})}"></div>
+                </div>
+                <div class="col-4">
+                    <div th:replace="~{base/form/input :: datepicker(id = 'object-exhibition-exhibitionDate', label = #{exhibition.date}, value = ${file.priorityData != null and file.priorityData.exhibitionDate != null ? #dates.format(file.priorityData.exhibitionDate, dateFormatDot) : ''})}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

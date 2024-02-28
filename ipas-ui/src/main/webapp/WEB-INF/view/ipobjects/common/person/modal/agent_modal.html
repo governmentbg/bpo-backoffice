@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="person" type="bg.duosoft.ipas.core.model.person.CPerson"*/-->
+<div th:fragment="agent-form-modal(validationErrors,representativeType,attorneyInitialData)"
+     th:with="objectsUtils = ${T(java.util.Objects)}, representativeTypeEnum = ${T(bg.duosoft.ipas.enums.RepresentativeType)}, representativeSelectUtils = ${T(com.duosoft.ipas.util.RepresentativeSelectUtils)}">
+    <div style="overflow: visible" th:id="agent-form-modal" class="modal remove-on-close">
+        <div class="none">
+            <div th:replace="~{base/form/input :: hidden(id = 'agentForm-personKind', value = ${personKind}, classes = 'form-ignore')}"></div>
+            <div th:replace="~{base/form/input :: hidden(id = 'agentForm-onlyActive', value = ${onlyActive}, classes = 'form-ignore')}"></div>
+        </div>
+        <th:block th:if="${objectsUtils.nonNull(representativeType)}">
+            <div th:replace="~{:: agent-modal-content-fragment(validationErrors = ${validationErrors},representativeType = ${representativeType})}"></div>
+        </th:block>
+        <th:block th:if="${objectsUtils.isNull(representativeType)}">
+            <div th:replace="~{ipobjects/common/person/modal/attorney_data_modal_content :: attorney-data-content(validationErrors = ${validationErrors},
+            attorneyInitialData = ${attorneyInitialData} , isEditMode = false )}"></div>
+        </th:block>
+
+
+    </div>
+</div>
+
+<div th:fragment="agent-modal-content-fragment(validationErrors,representativeType)"
+     th:with="representativeTypeEnum = ${T(bg.duosoft.ipas.enums.RepresentativeType)}, representativeSelectUtils = ${T(com.duosoft.ipas.util.RepresentativeSelectUtils)}">
+    <div class="position-relative">
+        <div class="row position-absolute" th:id="search-person-loader" style="display: none">
+            <div class="progress m_T0">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-content">
+        <div class="center">
+            <div>
+                <h4 th:text="#{representative.modal.title}"></h4>
+            </div>
+        </div>
+
+        <div class="row m_B10">
+            <div class="col-12">
+                <div th:replace="~{base/form/select :: map(id = 'representative-select-representativeType', label = #{representativeType.select.label}, map = ${representativeSelectUtils.generateRepresentativeTypeSelectOptions(@messageSource)}, selected = ${representativeType})}"></div>
+            </div>
+        </div>
+
+        <div th:id="agent-form-modal-content" th:attr="data-url=@{/person/representative-modal/update-conent}">
+            <div th:replace="~{:: agent-form-content-fragment(representativeType = ${representativeType})}"></div>
+        </div>
+    </div>
+</div>
+
+
+<div th:fragment="agent-form-content-fragment(representativeType)"
+     th:with="representativeTypeEnum = ${T(bg.duosoft.ipas.enums.RepresentativeType)}">
+    <div th:remove="tag" th:if="${representativeType == representativeTypeEnum.NATURAL_PERSON.name()}">
+        <div th:replace="~{:: natural-person-form}"></div>
+    </div>
+    <div th:remove="tag" th:if="${representativeType == representativeTypeEnum.PARTNERSHIP.name()}">
+        <div th:replace="~{:: partnership-form}"></div>
+    </div>
+    <div th:remove="tag" th:if="${representativeType == representativeTypeEnum.LAWYER.name()}">
+        <div th:replace="~{:: lawyer-form}"></div>
+    </div>
+    <div th:remove="tag" th:if="${representativeType == representativeTypeEnum.LAWYER_COMPANY.name()}">
+        <div th:replace="~{:: lawyer-company-form}"></div>
+    </div>
+    <div th:remove="tag" th:if="${representativeType == representativeTypeEnum.LAWYER_PARTNERSHIP.name()}">
+        <div th:replace="~{:: lawyer-partnership-form}"></div>
+    </div>
+    <div th:remove="tag" th:if="${representativeType == representativeTypeEnum.TEMP_SERVICE_PERSON.name()}">
+        <div th:replace="~{:: temp-service-person-form}"></div>
+    </div>
+</div>
+
+<div th:fragment="natural-person-form"
+     th:with="representativeTypeEnum = ${T(bg.duosoft.ipas.enums.RepresentativeType)}">
+    <div class="row">
+        <div class="col-12">
+            <div class="input-field" th:with="id='autocomplete-agentImport'">
+                <input th:id="${id}" type="text" class="autocomplete form-ignore default-focus"
+                       th:attr="data-url=@{/person/agent-autocomplete},data-onlyactive=${onlyActive},data-representativetype=${representativeTypeEnum.NATURAL_PERSON.name()}">
+                <label th:for="${id}" th:text="#{representativeType.input.NATURAL_PERSON}"></label>
+                <div class="validation-wrapper">
+                    <div th:replace="base/validation :: validation-message(${validationErrors},${id})"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row m_T10">
+        <div class="col-12">
+            <button th:text="#{btn.cancel}" type="button"
+                    class="button sm-icn-cross modal-close wmin_130 right"></button>
+            <button th:attr="data-action='save-agent', data-url=@{/person/save-agent}, data-kind = ${personKind},data-onlyactive = ${onlyActive}, data-representativetype=${representativeTypeEnum.NATURAL_PERSON.name()}"
+                    th:text="#{btn.save}" type="button" class="button sm-icn-save wmin_130 right"></button>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="partnership-form" th:with="representativeTypeEnum = ${T(bg.duosoft.ipas.enums.RepresentativeType)}">
+    <div class="row">
+        <div class="col-12">
+            <div class="input-field" th:with="id='autocomplete-agentImport'">
+                <input th:id="${id}" type="text" class="autocomplete form-ignore default-focus"
+                       th:attr="data-url=@{/person/agent-autocomplete},data-onlyactive=${onlyActive},data-representativetype=${representativeTypeEnum.PARTNERSHIP.name()}">
+                <label th:for="${id}" th:text="#{representativeType.input.PARTNERSHIP}"></label>
+                <div class="validation-wrapper">
+                    <div th:replace="base/validation :: validation-message(${validationErrors},${id})"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row m_T10">
+        <div class="col-12">
+            <button th:text="#{btn.cancel}" type="button"
+                    class="button sm-icn-cross modal-close wmin_130 right"></button>
+            <button th:attr="data-action='save-agent', data-url=@{/person/save-agent}, data-kind = ${personKind},data-onlyactive = ${onlyActive}, data-representativetype=${representativeTypeEnum.PARTNERSHIP.name()}"
+                    th:text="#{btn.save}" type="button" class="button sm-icn-save wmin_130 right"></button>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="lawyer-form">
+    <div th:replace="~{ipobjects/common/person/modal/person_search_modal :: person-search-content-data}"></div>
+    <div th:replace="~{base/form/input :: hidden(id = 'person-searchModal-indCompany', value = 'false')}"></div>
+</div>
+
+<div th:fragment="lawyer-company-form">
+    <div th:replace="~{ipobjects/common/person/modal/person_search_modal :: person-search-content-data}"></div>
+    <div th:replace="~{base/form/input :: hidden(id = 'person-searchModal-indCompany', value = 'true')}"></div>
+</div>
+
+<div th:fragment="lawyer-partnership-form">
+    <div th:replace="~{ipobjects/common/person/modal/person_search_modal :: person-search-content-data}"></div>
+    <div th:replace="~{base/form/input :: hidden(id = 'person-searchModal-indCompany', value = 'true')}"></div>
+</div>
+
+<div th:fragment="temp-service-person-form">
+    <div th:replace="~{ipobjects/common/person/modal/person_search_modal :: person-search-content-data}"></div>
+    <div th:replace="~{base/form/input :: hidden(id = 'person-searchModal-indCompany', value = 'false')}"></div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="cProcessEvent" type="bg.duosoft.ipas.core.model.process.CProcessEvent"*/-->
+<div th:fragment="edit-action(cProcessEvent,validationErrors,openJournalsMap)" th:with="objectUtils=${T(java.util.Objects)},
+                                                                        dateTimeFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT},
+                                                                        journalUtils=${T(bg.duosoft.ipas.util.journal.JournalUtils)},
+                                                                        dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+    <div style="overflow: visible" th:id="edit-action-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <div>
+                    <h3 th:text="'Редакция'"></h3>
+                    <h4 th:text="|${cProcessEvent.eventDescription} от ${#dates.format(cProcessEvent.eventAction.captureDate, dateTimeFormatDot)}|"></h4>
+                </div>
+            </div>
+            <div>
+                <div class="row">
+                    <div class="col-12">
+                        <div th:replace="~{base/form/input :: datepicker(id = 'edit-action-actionDate', label = #{edit.action.actionDate}, classes = 'modal-date',dataMaxDate = 0, value = ${#dates.format(cProcessEvent.eventAction.actionDate, dateFormatDot)})}"></div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div th:replace="~{base/form/textarea :: basic(id = 'edit-action-notes', label = #{edit.action.actionNotes}, value = ${cProcessEvent.eventAction.notes})}"></div>
+                    </div>
+                </div>
+
+                <div class="row m_T12" th:if="${journalUtils.hasJournalForEdit(cProcessEvent)}">
+                    <div class="col-12">
+                        <div th:replace="~{base/form/select :: map(id = 'edit-journal-journalCode', label = #{edit.action.journal}, map = ${openJournalsMap}, emptySelectOption = #{default.select.option.none}, selected = ${cProcessEvent.actionJournalCode})}"></div>
+                    </div>
+                </div>
+
+                <div th:remove="tag" th:with="actionType=${cProcessEvent.eventAction.actionType}">
+                    <div th:remove="tag" th:each="noteNumber : ${ {'1', '2', '3', '4', '5'} }" th:with="notePrompt = (${__${'actionType.notes' + noteNumber + 'Prompt'}__})">
+                        <div class="row" th:if="${null != notePrompt}">
+                            <div class="col-12">
+                                <div th:replace="~{base/form/textarea :: basic(id = ('edit-action-notes'+${noteNumber}), label = ${notePrompt}, value = (${__${'cProcessEvent.eventAction.notes' + noteNumber}__}))}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer row">
+            <div class="col-12">
+                <button th:attr="data-action='action-modal-edit-submit',
+                             data-validation-block='#edit-action-modal',
+                             data-action-id=${T(com.duosoft.ipas.util.ProcessUtils).getProcessEventIdentifier(cProcessEvent)},
+                             data-url=@{/process/edit-action},
+                             data-validation-url=@{/process/edit-action/validate-form}"
+                        th:text="#{btn.save}" type="button" class="button sm-icn-save wmin_130">
+                </button>
+                <button th:text="#{btn.cancel}" th:type="button" class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

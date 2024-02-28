@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="patent" type="bg.duosoft.ipas.core.model.patent.CPatent"*/-->
+<!--/*@thymesVar id="nationalPatentTransformationData" type="com.duosoft.ipas.util.json.RelationshipData"*/-->
+<div th:fragment="transformation(patent)">
+
+    <div class="row" id="patent-transformation-subpanel" th:with="showTransformationBody = ${patent.file.fileId.fileType == T(bg.duosoft.ipas.enums.FileType).PATENT.code()},relationshipType = ${T(bg.duosoft.ipas.enums.RelationshipType).TRANSFORMED_NATIONAL_PATENT_TYPE}, nationalPatentRelationshipData=${nationalPatentTransformationData},hasTransformation=${T(com.duosoft.ipas.util.CFileRelationshipUtils).hasTransformation(patent)}, hasNationalPatentTransformation=${nationalPatentTransformationData != null}">
+        <hr th:classappend="${hasTransformation || hasNationalPatentTransformation ? '' : 'hidden-element'}">
+        <div class="row">
+            <div class="row">
+                <div class="col-6" th:classappend="${hasTransformation || hasNationalPatentTransformation  ? '' : 'hidden-element'}">
+                    <div class="m_B10">
+                        <div th:replace="~{base/form/checkbox :: basic(id = 'patent-transformation-hasTransformationData', target = 'patent-transformation-details', label = #{patent.transformation}, isChecked = ${hasTransformation || hasNationalPatentTransformation}, classes = 'rights-checkbox', additionalArgs='data-disables=\'pct-hasPctData,patent-parallel-data-hasParallelData,divisional-app-hasDivisionalData\'')}"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" th:attr="data-load-rights-body-url=@{/utility_model/load-transformation-body}" id="patent-transformation-details" th:style="${hasTransformation || hasNationalPatentTransformation ? '': 'display:none'}">
+                <th:block th:if="${hasTransformation || hasNationalPatentTransformation || showTransformationBody}">
+                    <div th:replace="ipobjects/patentlike/common/rights/transformation_like_body :: transformation_like_body(${patent},${nationalPatentRelationshipData},${relationshipType})"></div>
+                </th:block>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

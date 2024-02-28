@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="file" type="bg.duosoft.ipas.core.model.file.CFile"*/-->
+<!--/*@thymesVar id="person" type="bg.duosoft.ipas.core.model.person.CPerson"*/-->
+
+<div th:remove="tag" th:fragment="person-info(person)">
+    <span>
+        <span th:remove="tag" th:if="${!#strings.isEmpty(person.personName)}" th:text="${person.personName}" ></span>
+        <span th:remove="tag" th:if="${!#strings.isEmpty(person.addressStreet)}" th:text="|, ${person.addressStreet}|" ></span>
+        <span th:remove="tag" th:if="${!#strings.isEmpty(person.cityName)}" th:text="|, ${person.cityName}|" ></span>
+        <span th:remove="tag" th:if="${!#strings.isEmpty(person.zipCode)}" th:text="|, ${person.zipCode}|" ></span>
+        <span th:remove="tag" th:if="${!#strings.isEmpty(person.stateName)}" th:text="|, ${person.stateName}|" ></span>
+        <span th:remove="tag" th:if="${!#strings.isEmpty(person.nationalityCountryCode)}" th:text="|, ${person.nationalityCountryCode}|" ></span>
+    </span>
+</div>
+
+<div th:remove="tag" th:fragment="search-person-button(personKind,isHidden)">
+    <a class="btn-floating ipas small waves-effect waves-light action-button-bot" th:classappend="${isHidden} ? 'hidden-element'"
+       th:title="'Добави'"
+       th:attr="data-action='person-search-modal',
+                data-url=@{/person/search-modal/open},
+                data-kind=${personKind}"
+    >
+        <i class="material-icons">add</i>
+    </a>
+</div>
+
+<div th:remove="tag" th:fragment="import-agent-button(isHidden, personKind, onlyActive)">
+    <a class="btn-floating ipas small waves-effect waves-light action-button-bot" th:classappend="${isHidden} ? 'hidden-element'"
+       th:title="#{btn.add}"
+       th:attr="data-action='open-representative-modal',
+                data-url=@{/person/representative-modal/open},
+                data-onlyactive = ${onlyActive},
+                data-kind=${personKind}"
+    >
+        <i class="material-icons">add</i>
+    </a>
+</div>
+
+<div th:remove="tag" th:fragment="create-person-button(personKind, isHidden)">
+    <a class="btn-floating ipas small waves-effect waves-light action-button-bot" th:classappend="${isHidden} ? 'hidden-element'"
+       th:title="#{btn.add}"
+       th:attr="data-action='open-person-form-modal',
+                data-url=@{/person/open-person-modal},
+                data-kind=${personKind}"
+    >
+        <i class="material-icons">add</i>
+    </a>
+</div>
+
+<div th:remove="tag" th:fragment="import-new-owner-representatives(personKind,isHidden)">
+    <a class="btn-floating ipas small waves-effect waves-light action-button-bot" th:classappend="${isHidden} ? 'hidden-element'"
+       th:title="'Добави пълномощници'"
+       th:attr="data-action='import-new-owner-representatives',
+                data-url=@{/userdoc/person/import-new-owner-representatives},data-kind=${personKind}"
+    >
+        <i class="material-icons">person_add</i>
+    </a>
+</div>
+
+<div th:remove="tag" th:fragment="copy-person-button(personKind, personCopyType, title, isHidden)">
+    <div th:if="${personCopyType != null}">
+        <a class="btn-floating ipas small waves-effect waves-light action-button-bot" th:classappend="${isHidden} ? 'hidden-element'"
+           th:title="${title}"
+           th:attr="data-action='copy-person',
+                data-url=@{/person/copy},
+                data-copy=${personCopyType},
+                data-kind=${personKind}"
+        >
+            <i class="material-icons" th:text="${iconName != null ? iconName : 'swap_horiz'}"></i>
+        </a>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="import-gral-person(personKind, isHidden)">
+    <a class="btn-floating ipas small waves-effect waves-light action-button-bot" th:classappend="${isHidden} ? 'hidden-element'"
+       th:title="'Добави'"
+       th:attr="data-action='import-gral-person',
+                data-url=@{/person/gral-import},
+                data-kind=${personKind}"
+    >
+        <i class="material-icons">add</i>
+    </a>
+</div>
+
+<div th:remove="tag" th:fragment="menu-option-change-position(personKind, personNumber, addressNumber, direction)">
+    <span th:with="directionEnum = ${T(bg.duosoft.ipas.enums.Direction)}">
+        <i class="material-icons" th:text="${direction == directionEnum.DOWN} ? 'arrow_downward' : 'arrow_upward'"></i>
+        <a class="b0" href="javascript:void(0);"
+           th:text="${direction == directionEnum.UP} ? 'Нагоре' : (${direction == directionEnum.DOWN} ? 'Надолу' : '')" th:title="${direction == directionEnum.UP} ? 'Нагоре' : (${direction == directionEnum.DOWN} ? 'Надолу' : '')"
+           th:attr="data-action='person-change-position',
+                    data-kind=${personKind},
+                    data-person=${personNumber},
+                    data-address=${addressNumber},
+                    data-direction=${direction},
+                    data-url=@{/person/change-position}">
+        </a>
+    </span>
+</div>
+
+<div th:remove="tag" th:fragment="menu-option-edit(personKind, personNumber, addressNumber)"
+     th:with="securityUtils=${T(bg.duosoft.ipas.util.security.SecurityUtils)},securityRoles=${T( bg.duosoft.ipas.enums.security.SecurityRole)}">
+    <span th:if="${(personNumber<0) || (personNumber>0 && securityUtils.hasRights(securityRoles.AdminEditPerson))}">
+        <i class="icon-pencil"></i>
+        <a class="b0" href="javascript:void(0);"
+           th:text="#{btn.change}" th:title="#{btn.change}"
+           th:attr="data-action='open-person-form-modal',
+                    data-kind=${personKind},
+                    data-person=${personNumber},
+                    data-address=${addressNumber},
+                    data-representativetype=${representativeType},
+                    data-url=@{/person/open-person-modal}">
+        </a>
+    </span>
+</div>
+
+<div th:remove="tag" th:fragment="menu-option-delete(personKind, personNumber, addressNumber, message)">
+    <span>
+        <i class="icon-trash"></i>
+        <a class="b0 confirm" href="javascript:void(0);"
+           th:text="#{btn.delete}" th:title="#{btn.delete}"
+           th:attr="data-action='delete-person',
+                    data-kind=${personKind},
+                    data-person=${personNumber},
+                    data-address=${addressNumber},
+                    data-url=@{/person/delete-person},
+                    data-message=${message}">
+        </a>
+    </span>
+</div>
+
+
+<div th:remove="tag" th:fragment="menu-option-change-ca(personKind, personNumber, addressNumber, message, hasConfirm)">
+    <span>
+        <i class="icon-envelope"></i>
+        <a class="b0" href="javascript:void(0);"
+           th:text="#{person.menu.choose.ca}" th:title="#{person.menu.choose.ca}"
+           th:classappend="${hasConfirm} ? 'confirm'"
+           th:attr="data-action='change-person-ca',
+                    data-kind=${personKind},
+                    data-person=${personNumber},
+                    data-address=${addressNumber},
+                    data-message=${message},
+                    data-url=@{/person/change-service-person}">
+        </a>
+    </span>
+</div>
+
+<div th:remove="tag" th:fragment="menu-option-change-main-owner(personKind, personNumber, addressNumber, message, hasConfirm)">
+    <span>
+        <i class="icon-home"></i>
+        <a class="b0" href="javascript:void(0);"
+           th:text="#{person.menu.choose.main}" th:title="#{person.menu.choose.main}"
+           th:classappend="${hasConfirm} ? 'confirm'"
+           th:attr="data-action='change-main-owner',
+                    data-kind=${personKind},
+                    data-person=${personNumber},
+                    data-address=${addressNumber},
+                    data-message=${message},
+                    data-url=@{/person/change-main-owner}">
+        </a>
+    </span>
+</div>
+
+<div th:remove="tag" th:fragment="menu-option-view-connected-old-owner(personNumber)">
+    <span>
+        <i class="icon-eye"></i>
+        <a class="b0" href="javascript:void(0);"
+           th:text="#{view.old.owner.person}" th:title="#{view.old.owner.person}"
+           th:attr="data-action='view-connected-old-owner',
+                                    data-person=${personNumber},
+                                    data-url=@{/userdoc/person/view-connected-old-owner}">
+        </a>
+    </span>
+</div>
+
+<div th:remove="tag" th:fragment="menu-option-connect-new-owner(personNumber)">
+    <span>
+        <i class="material-icons" th:text="'transfer_within_a_station'"></i>
+        <a class="b0" href="javascript:void(0);"
+           th:text="#{connect.to.main.owner.person}" th:title="#{connect.to.main.owner.person}"
+           th:attr="data-action='open-connect-new-owner-modal',
+                                    data-person=${personNumber},
+                                    data-url=@{/userdoc/person/open-connect-new-owner-modal}">
+        </a>
+    </span>
+</div>
+
+<div th:remove="tag" th:fragment="label-ca(servicePerson, person)">
+    <div th:remove="tag" th:if="${objectUtils.nonNull(servicePerson)}">
+        <span th:if="${(servicePerson.personNbr == person.personNbr) && (servicePerson.addressNbr == person.addressNbr)}" class="m_R5" th:title="#{person.owner.service.person}">
+            <i class="icon-envelope bpo-blue-color"></i>
+        </span>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="label-power-of-attorney(representative)" th:with="dateUtils = ${T(bg.duosoft.ipas.util.date.DateUtils)}, dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+    <div th:remove="tag" th:if="${objectUtils.nonNull(representative.attorneyPowerTerm) || representative.reauthorizationRight == true || representative.priorReprsRevocation == true  || objectUtils.nonNull(representative.authorizationCondition)}">
+
+        <a style="border-bottom:0; margin-bottom: 3px" class="ipas waves-effect waves-light"
+           th:title="'Информация за пълномощник'"
+           th:attr="data-action='open-attorney-info-modal',
+                    data-powerterm= ${#dates.format(representative.attorneyPowerTerm,dateFormatDot)},
+                    data-right=${representative.reauthorizationRight},
+                    data-condition=${representative.authorizationCondition},
+                    data-revocation=${representative.priorReprsRevocation},
+                    data-url=@{/representative/power-of-attorney-data/open-attorney-info-modal}">
+           <span>
+                <th:block th:if="${objectUtils.isNull(representative.attorneyPowerTerm) || dateUtils.isFutureDate(representative.attorneyPowerTerm)}"><i class="icon-info bpo-blue-color"></i></th:block>
+                <th:block th:if="${objectUtils.nonNull(representative.attorneyPowerTerm) && !dateUtils.isFutureDate(representative.attorneyPowerTerm)}"><i style="color:red" class="icon-info bpo-blue-color"></i></th:block>
+           </span>
+        </a>
+
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="label-other-representative(representativeType)">
+    <div th:remove="tag" th:if="${(null != representativeType) && (#strings.equals(representativeType,'LAWYER'))}">
+        <span th:title="#{person.lawyer}">
+            <svg color="#059" width="15" height="15" class="icon">
+                <use xlink:href="#icon-law2"></use>
+            </svg>
+        </span>
+    </div>
+    <div th:remove="tag" th:if="${(null != representativeType) && (#strings.equals(representativeType,'LAWYER_COMPANY'))}">
+        <span th:title="#{person.lawyer.company}">
+            <svg color="#059" width="15" height="15" class="icon">
+                <use xlink:href="#icon-law2"></use>
+            </svg>
+        </span>
+    </div>
+    <div th:remove="tag" th:if="${(null != representativeType) && (#strings.equals(representativeType,'LAWYER_PARTNERSHIP'))}">
+        <span th:title="#{person.lawyer.partnership}">
+            <svg color="#059" width="15" height="15" class="icon">
+                <use xlink:href="#icon-law2"></use>
+            </svg>
+        </span>
+    </div>
+    <div th:remove="tag" th:if="${(null != representativeType) && (#strings.equals(representativeType,'TEMP_SERVICE_PERSON'))}">
+        <span th:title="#{person.temp.service.person}">
+            <svg color="#059" width="15" height="15" class="icon">
+                <use xlink:href="#icon-temp-person"></use>
+            </svg>
+        </span>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="label-main-owner(owner, minOrderNumber)">
+    <span th:if="${(null != minOrderNumber) && (minOrderNumber == owner.orderNbr )}" class="m_R5" th:title="#{person.owner.main}" >
+        <i class="icon-home bpo-blue-color"></i>
+    </span>
+</div>
+
+<div th:remove="tag" th:fragment="label-main-person(indMain)">
+    <span th:if="${indMain}" class="m_R5" th:title="#{person.main}" >
+        <i class="icon-home bpo-blue-color"></i>
+    </span>
+</div>
+
+<div th:remove="tag" th:fragment="label-temp-parent-person(tempParentPersonNbr)">
+    <span th:remove="tag" th:if="${tempParentPersonNbr != null}" class="m_R5" th:title="${tempParentPersonNbr}" >
+        <span class="sign m-green white-text" th:text="'СВЪРЗАН'"></span>
+    </span>
+</div>
+
+<div th:remove="tag" th:fragment="label-representative(person)">
+    <div th:remove="tag" th:if="${person.hasAgentCode()}">
+        <div th:remove="tag" th:switch="${#strings.startsWith(person.agentCode,T(bg.duosoft.ipas.util.DefaultValue).PARTNERSHIP_PREFIX)}">
+            <span th:case="true" class="m_R5" th:attrappend="title=${person.isAgentInactive} ? #{person.partnership.inactive} : #{person.partnership}">
+                <i class="icon-people" th:classappend="${person.isAgentInactive} ? 'm-red-text' : 'bpo-blue-color'"></i>
+            </span>
+            <div th:remove="tag" th:case="false">
+                <div th:remove="tag" th:with="representativeUtils = ${T(bg.duosoft.ipas.util.person.RepresentativeUtils)}">
+                    <div th:remove="tag" th:switch="${representativeUtils.isAgentForIntellectualProperty(person.agentCode)}">
+                         <span th:case="true" class="m_R5" th:attrappend="title=${person.isAgentInactive} ? #{person.representative.intellectual.inactive} : #{person.representative.intellectual}">
+                            <i class="icon-user-following" th:classappend="${person.isAgentInactive} ? 'm-red-text' : 'bpo-blue-color'"></i>
+                         </span>
+                         <span th:case="false" class="m_R5" th:attrappend="title=${person.isAgentInactive} ? #{person.representative.inactive} : #{person.representative}">
+                            <i class="icon-user-following" th:classappend="${person.isAgentInactive} ? 'm-red-text' : 'bpo-blue-color'"></i>
+                         </span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="label-representative-search-modal(person)">
+    <div th:remove="tag" th:if="${person.hasAgentCode()}">
+        <div th:remove="tag" th:switch="${#strings.startsWith(person.agentCode,T(bg.duosoft.ipas.util.DefaultValue).PARTNERSHIP_PREFIX)}">
+            <span th:case="true" class="m_R5" th:title="#{person.partnership}">
+                <i class="icon-people" th:classappend="${person.agentIndInactive} ? 'm-red-text' : 'bpo-blue-color'"></i>
+            </span>
+            <div th:remove="tag" th:case="false">
+                <div th:remove="tag" th:with="representativeUtils = ${T(bg.duosoft.ipas.util.person.RepresentativeUtils)}">
+                    <div th:remove="tag" th:switch="${representativeUtils.isAgentForIntellectualProperty(person.agentCode)}">
+                         <span th:case="true" class="m_R5" th:attrappend="title=${person.agentIndInactive} ? #{person.representative.intellectual.inactive} : #{person.representative.intellectual}">
+                            <i class="icon-user-following" th:classappend="${person.agentIndInactive} ? 'm-red-text' : 'bpo-blue-color'"></i>
+                         </span>
+                        <span th:case="false" class="m_R5" th:attrappend="title=${person.agentIndInactive} ? #{person.representative.inactive} : #{person.representative}">
+                            <i class="icon-user-following" th:classappend="${person.agentIndInactive} ? 'm-red-text' : 'bpo-blue-color'"></i>
+                         </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="menu-option-search-new-owner-person(personKind, tempParentPersonNbr)">
+    <span>
+        <i class="icon-pencil"></i>
+        <a class="b0" href="javascript:void(0);"
+           th:text="#{search.new.owner.person}" th:title="#{search.new.owner.person}"
+           th:attr="data-action='person-search-modal',
+                data-url=@{/person/search-modal/open},
+                data-tempParentPersonNbr=${tempParentPersonNbr},
+                data-kind=${personKind}">
+        </a>
+    </span>
+</div>
+
+<div th:remove="tag" th:fragment="menu-option-view-person(person)">
+    <span>
+        <i class="icon-eye"></i>
+        <a class="b0" href="javascript:void(0);"
+           th:text="#{btn.view}" th:title="#{btn.view}"
+           th:attr="data-action='person-info-modal',
+                    data-person=${person.personNbr},
+                    data-address=${person.addressNbr},
+                    data-url=@{/person/info-modal/open}">
+        </a>
+    </span>
+</div>
+
+
+<div th:remove="tag" th:fragment="menu-option-edit-power-of-attorney(person, personKind)">
+    <span>
+        <i class="icon-pencil"></i>
+        <a class="b0" href="javascript:void(0);"
+           th:text="#{btn.edit.power.of.attorney.data}" th:title="#{btn.edit.power.of.attorney.data}"
+           th:attr="data-action='open-agent-power-of-attorney-modal',
+                    data-person=${person.personNbr},
+                    data-address=${person.addressNbr},
+                    data-kind=${personKind},
+                    data-url=@{/representative/power-of-attorney-data/open-edit-modal}">
+        </a>
+    </span>
+</div>
+
+</body>
+</html>

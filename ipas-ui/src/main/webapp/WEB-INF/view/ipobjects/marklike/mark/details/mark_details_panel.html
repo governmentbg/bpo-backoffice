@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="mark" type="bg.duosoft.ipas.core.model.mark.CMark"*/-->
+<div th:fragment="mark-details(mark,signTypesMap,sessionObjectIdentifier)"
+     th:with="markSignType=${mark.signData.signType},
+              objectUtils=${T(java.util.Objects)},
+              markSignTypeUtils=${T(bg.duosoft.ipas.util.mark.MarkSignTypeUtils)},
+              markSignDataAttachmentUtils=${T(bg.duosoft.ipas.util.mark.MarkSignDataAttachmentUtils)},
+              internationalMarkUtils=${T(bg.duosoft.ipas.util.mark.InternationalMarkUtils)},
+              dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT},
+              collectionUtils = ${T(org.springframework.util.CollectionUtils)},
+              markUsageRulesUtils = ${T(com.duosoft.ipas.util.MarkUsageRulesUtils)}">
+    <div>
+        <div class="row">
+            <div class="col-4" th:classappend="${#strings.isEmpty(mark.signData.signType)} ? 'none'">
+                <div th:replace="~{base/form/select :: map(id = 'mark-signData-signType', label = 'Вид', map = ${signTypesMap}, selected = ${markSignType.code()}, url = @{/mark/update-mark-details})}"></div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-12" th:if="${(markSignTypeUtils.isMarkContainName(markSignType))}">
+                <div th:replace="~{base/form/textarea :: basic(id = 'mark-signData-markName',value=${mark.signData.markName} ,label = 'Наименование')}"></div>
+            </div>
+        </div>
+
+        <div th:remove="tag" th:if="${internationalMarkUtils.isInternationalMark(mark.file.fileId)}">
+            <div class="row">
+                <div class="col-4">
+                    <div th:replace="~{base/form/textarea :: basic(id = 'mark-signData-markTransliteration', label = 'Транслитерация', value = ${mark.signData.markTransliteration})}"></div>
+                </div>
+                <div class="col-8">
+                    <div th:replace="~{base/form/textarea :: basic(id = 'mark-signData-markTranslation', label = 'Превод', value = ${mark.signData.markTranslation})}"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div th:replace="~{base/form/textarea :: basic(id = 'mark-limitationData-disclaimer', label = 'Незащитими елементи', value = ${mark.limitationData.disclaimer})}"></div>
+            </div>
+        </div>
+        <div th:remove="tag" th:if="${objectUtils.nonNull(mark.renewalData)}" th:with="renewalData=${mark.renewalData}">
+            <div class="row">
+                <div class="col-4" th:if="${objectUtils.nonNull(renewalData.lastRenewalDate)}">
+                    <div th:replace="~{base/form/input :: readonly(label = 'Последно подновяване', value = ${#dates.format(renewalData.lastRenewalDate, dateFormatDot)})}"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row" th:if="${markSignTypeUtils.isMarkContainImages(markSignType)}">
+            <div class="col-12" th:with="firstImageAttachment=${markSignDataAttachmentUtils.selectFirstImageAttachment(mark.signData)}">
+                <div th:replace="~{base/form/textarea :: basic(id = 'mark-signData-image-colourDescription', label = 'Претенции за цветове', value = ${firstImageAttachment?.colourDescription})}"></div>
+            </div>
+        </div>
+        <div th:id="mark-attachments-wrapper" th:if="${(markSignTypeUtils.isMarkContainAttachments(markSignType))}">
+            <div th:replace="~{ipobjects/marklike/mark/details/attachment_data :: attachments(mark = ${mark},sessionObjectIdentifier = ${sessionObjectIdentifier})}"></div>
+        </div>
+    </div>
+    <div th:class="row" th:classappend="${#strings.isEmpty(mark.description)} ? 'hidden-element'">
+        <div class="col-12">
+            <div th:replace="~{base/form/textarea :: basic(id = 'imark-description',value=${mark?.description} ,label = #{description})}"></div>
+        </div>
+    </div>
+
+
+    <th:block th:if="${markUsageRulesUtils.showUsageRules(mark.file.filingData.applicationSubtype)}">
+        <div th:id="mark-usage-rules-wrapper">
+            <div th:replace="ipobjects/marklike/mark/details/mark_usage_rules :: mark-usage-rules(${mark?.usageRules},${sessionObjectIdentifier})"></div>
+        </div>
+
+        <div class="hidden-element">
+            <div class="col-6 m_T20-i form-ignore">
+                <div th:replace="~{base/form/select :: object(id = 'mark-usageRule', label = 'Вид документ', objects = ${usageRules},
+                     valuePointer = 'id', textPointer = 'name')}"></div>
+            </div>
+            <div class="col-6 m_T20-i">
+                <button th:text="'Добави документ'"
+                        th:attr="data-action='add-mark-usage-rule'" th:type="button"
+                        class="button sm-icn-add m_T10">
+                </button>
+            </div>
+        </div>
+    </th:block>
+
+
+</div>
+
+</body>
+</html>

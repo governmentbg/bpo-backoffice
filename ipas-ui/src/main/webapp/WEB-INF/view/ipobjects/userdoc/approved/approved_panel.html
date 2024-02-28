@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="approved(userdoc)" th:with="userdocUtils=${T(bg.duosoft.ipas.util.userdoc.UserdocUtils)}">
+    <div th:if="${userdocUtils.isUserdocMainObjectMark(userdoc.userdocParentData)}">
+        <div th:replace="~{ipobjects/userdoc/extra_data/nice_classes :: nice-classes-approved(${userdoc})}"></div>
+    </div>
+</div>
+</body>
+</html>

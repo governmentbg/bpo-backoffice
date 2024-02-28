@@ -1,0 +1,4 @@
+--liquibase formatted sql
+
+--changeset mnakova:343.1
+ALTER TABLE EXT_CORE.IP_MARK_INTL_REPLACEMENT ALTER COLUMN REGISTRATION_NBR numeric(10) NULL;

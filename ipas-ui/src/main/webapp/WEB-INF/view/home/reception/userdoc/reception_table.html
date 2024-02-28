@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="receptionUserdocListFilter" type="bg.duosoft.ipas.util.filter.ReceptionUserdocListFilter"*/-->
+<div th:fragment="reception-table(userdocReceptions,total,receptionUserdocListFilter,myObjectsParentUrl)"
+     th:with="sorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.SorterUtils)},
+              basicUtils=${T(bg.duosoft.ipas.util.general.BasicUtils)},
+              dateUtils=${T(bg.duosoft.ipas.util.date.DateUtils)},
+              coreUtils=${T(com.duosoft.ipas.util.CoreUtils)},
+              receptionUserdocSorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.ReceptionUserdocSorterUtils)}">
+
+    <div th:remove="tag" th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(userdocReceptions)}">
+        <div th:remove="tag" th:case="true">
+            <div th:replace="base/message :: info(#{empty.list})"></div>
+        </div>
+        <div th:remove="tag" th:case="false">
+            <div class="row">
+                <div>
+                    <span th:text="#{total}"></span>
+                    <span th:text="${total}"></span>
+                </div>
+            </div>          <div class="m_T5">
+                <table class="simple bpo">
+                    <thead>
+                    <tr>
+                        <th>
+                            <div th:replace="~{base/form/checkbox :: basic(id ='proc-change-ruser-checbox-all', label = '', isChecked = false,classes='bpo-table-header-checkbox')}"></div>
+                        </th>
+                        <th th:text="#{number}"></th>
+                        <th th:with="isSelected=${#strings.equalsIgnoreCase(receptionUserdocListFilter.sortColumn,receptionUserdocSorterUtils.RECEPTION_USERDOC_FILING_DATE)},dataSort=${receptionUserdocSorterUtils.RECEPTION_USERDOC_FILING_DATE}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,receptionUserdocListFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{reception.userdoc.table.filingDate},${receptionUserdocListFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th th:with="isSelected=${#strings.equalsIgnoreCase(receptionUserdocListFilter.sortColumn,receptionUserdocSorterUtils.RECEPTION_USERDOC_EXTERNAL_SYSTEM_ID)},dataSort=${receptionUserdocSorterUtils.RECEPTION_USERDOC_EXTERNAL_SYSTEM_ID}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,receptionUserdocListFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{reception.userdoc.table.filingNumber},${receptionUserdocListFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th style="width: 200px" th:with="isSelected=${#strings.equalsIgnoreCase(receptionUserdocListFilter.sortColumn,receptionUserdocSorterUtils.RECEPTION_USERDOC_TYPE)},dataSort=${receptionUserdocSorterUtils.RECEPTION_USERDOC_TYPE}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,receptionUserdocListFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{reception.userdoc.table.type},${receptionUserdocListFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th th:with="isSelected=${#strings.equalsIgnoreCase(receptionUserdocListFilter.sortColumn,receptionUserdocSorterUtils.RECEPTION_USERDOC_SUBMISSION_TYPE)},dataSort=${receptionUserdocSorterUtils.RECEPTION_USERDOC_SUBMISSION_TYPE}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,receptionUserdocListFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{reception.userdoc.table.submissionType},${receptionUserdocListFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th style="width: 300px" th:text="#{reception.userdoc.table.object}"></th>
+                        <th th:with="isSelected=${#strings.equalsIgnoreCase(receptionUserdocListFilter.sortColumn,receptionUserdocSorterUtils.RECEPTION_USERDOC_CREATE_DATE)},dataSort=${receptionUserdocSorterUtils.RECEPTION_USERDOC_CREATE_DATE}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,receptionUserdocListFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{reception.userdoc.table.createDate},${receptionUserdocListFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="reception,receptionStat : ${userdocReceptions}"
+                        th:with="filingNumber=${reception.documentId.createFilingNumber()}">
+                        <td>
+                            <div th:replace="~{base/form/checkbox :: basic(id =${reception.procId}, label = '', isChecked = false,classes='proc-change-ruser-checbox')}"></div>
+                        </td>
+                        <td>
+                            <span th:text="${receptionStat.count + ((receptionUserdocListFilter.page - 1)*receptionUserdocListFilter.pageSize)}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${#dates.format(reception.filingDate,T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}"></span>
+                        </td>
+                        <td>
+                            <a th:text="${reception.externalSystemId}" th:href="@{/ipobject/view(userdocFilingNumber=${filingNumber})}"></a>
+                        </td>
+                        <td>
+                            <span th:text="${reception.userdocTypeName}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${reception.submissionType}"></span>
+                        </td>
+
+                        <td th:with="responsibleUserLabel=#{userdoc.object.responsible.user.title},responsibleUserText=${!T(java.util.Objects).isNull(reception.userdocIpObject.responsibleUserName)}?${#strings.concat(',</br>',reception.userdocIpObject.responsibleUserName)}
+                                     ,regNumLabel=#{my.userdocs.reg.nbr.title},objectFilingNumber=${reception.userdocIpObject.cFileId.createFilingNumber()},regNumText=${!T(java.util.Objects).isNull(reception.userdocIpObject.registrationNbr)}?${#strings.concat(',</br>',regNumLabel,reception.userdocIpObject.registrationNbr)}
+                                     ,titleText=${!T(java.util.Objects).isNull(reception.userdocIpObject.title) && #strings.length(reception.userdocIpObject.title) > coreUtils.HOME_PANEL_MAX_TEXT_LENGTH_50}?${',</br> '.concat(#strings.substring(reception.userdocIpObject.title,0,coreUtils.HOME_PANEL_MAX_TEXT_LENGTH_50).concat('...'))}:(${!T(java.util.Objects).isNull(reception.userdocIpObject.title)}?${#strings.concat(',</br> ',reception.userdocIpObject.title)})">
+                            <a th:utext="${#strings.concat(objectFilingNumber,responsibleUserText,regNumText,titleText)}" th:href="@{/ipobject/view(filingNumber=${objectFilingNumber})}"></a>
+                        </td>
+                        <td>
+                            <span th:text="${#dates.format(reception.createDate,T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT)}"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                 <div class="home-panel-paginator" th:with="paginatorBaseUrl=${myObjectsParentUrl =='reception-userdoc-zm-zmr'} ? @{reception-userdoc-zm-zmr/update-table} : @{reception-userdoc/update-table}">
+                    <div th:replace="base/paginator :: paginator(page=${receptionUserdocListFilter.page},pageSize=${receptionUserdocListFilter.pageSize},total=${total},baseUrl=@{${paginatorBaseUrl}},
+                            tableContainerDiv='reception-userdoc-table-wrapper',additionalParams='&tableCount='+${total}+
+                            ${receptionUserdocListFilter.objectFileNbr != null ? '&objectFileNbr='+receptionUserdocListFilter.objectFileNbr : '' }+
+                            ${receptionUserdocListFilter.userdocFilingDateFrom != null ? '&userdocFilingDateFrom='+receptionUserdocListFilter.userdocFilingDateFrom : '' }+
+                            ${receptionUserdocListFilter.userdocFilingDateTo != null ? '&userdocFilingDateTo='+receptionUserdocListFilter.userdocFilingDateTo : '' }+
+                            ${receptionUserdocListFilter.userdocFilingNumber != null ? '&userdocFilingNumber='+receptionUserdocListFilter.userdocFilingNumber : '' }+
+                            ${receptionUserdocListFilter.statusCode != null ? '&statusCode='+receptionUserdocListFilter.statusCode : '' }+
+                            ${receptionUserdocListFilter.objectFileTyp != null ? '&objectFileTyp='+receptionUserdocListFilter.objectFileTyp : '' }+
+                            ${receptionUserdocListFilter.userdocType != null ? '&userdocType='+receptionUserdocListFilter.userdocType : '' }+
+                            '&sortOrder='+${receptionUserdocListFilter.sortOrder}+'&sortColumn='+${receptionUserdocListFilter.sortColumn})"></div>
+                </div>
+                </div>
+            <div>
+                <input th:type="hidden" class="form-ignore" th:id="reception-userdoc-page" th:value="${receptionUserdocListFilter.page}">
+                <input th:type="hidden" class="form-ignore" th:id="table-count" th:value="'?tableCount='+${total}">
+                <input th:type="hidden" class="form-ignore" th:id="reception-userdoc-pageSize" th:value="${receptionUserdocListFilter.pageSize}">
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

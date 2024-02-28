@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg">
+<head th:replace="base/template :: head(title=#{'title.'+${myObjectsParentUrl}})"></head>
+<body class="dark left-sidebar-show">
+<header class="app-header" th:replace="base/header"></header>
+
+<div class="app-body" th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+    <div th:replace="base/left-sidebars :: list(urls = ${T(com.duosoft.ipas.util.UrlMap).getHomeUrlsFiltered()})"></div>
+    <main class="main">
+        <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+        <div class="inner continer">
+            <div class="home-panel-messages-div">
+                <div th:replace="base/toast/message :: error(message = ${errorMessage},unescaped = true)"></div>
+                <div th:replace="base/toast/message :: success(message = ${successMessage},unescaped = true)"></div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="panel">
+                        <div class="center">
+                            <h1 class="section-header" th:text="#{'title.'+${myObjectsParentUrl}}"></h1>
+                        </div>
+                        <div class="row">
+                            <div class="col-6" th:id="'reception-userdoc-userdocType-filter-wrapper'" th:with="id='reception-userdoc-userdocType-filter'">
+                                <div th:replace="~{base/form/select :: map(id = ${id}, label = 'Вида на документа', map = ${userdocTypeMap}, selected = ${receptionUserdocListFilter.userdocType}, emptySelectOption = #{all}, classes = 'search-box')}"></div>
+                            </div>
+                            <!--                            <div class="col-6" th:id="'reception-userdoc-status-filter-wrapper'" th:with="id='reception-userdoc-status-filter'">-->
+                            <!--                                <div th:replace="~{base/form/select :: map(id = ${id}, label = 'Статус', map = ${statusMap}, selected = ${receptionUserdocListFilter.statusCode},emptySelectOption = #{all}, classes = 'search-box')}"></div>-->
+                            <!--                            </div>-->
+                            <div class="col-6">
+                                <div th:replace="~{base/form/input :: text(id = 'reception-userdoc-filingNumber-filter-input', label = 'Номер на документа',value=${receptionUserdocListFilter.userdocFilingNumber})}"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div th:replace="~{base/form/input :: datepicker(id = 'reception-userdoc-filingDateFrom-filter-input', label = 'Дата на подаване от',value = ${null != receptionUserdocListFilter.userdocFilingDateFrom ? #dates.format(receptionUserdocListFilter.userdocFilingDateFrom, dateFormatDot) : ''})}"></div>
+                            </div>
+                            <div class="col-6">
+                                <div th:replace="~{base/form/input :: datepicker(id = 'reception-userdoc-filingDateTo-filter-input', label = 'Дата на подаване до',value = ${null != receptionUserdocListFilter.userdocFilingDateTo ? #dates.format(receptionUserdocListFilter.userdocFilingDateTo, dateFormatDot) : ''})}"></div>
+                            </div>
+                            <div class="col-6" th:id="'reception-userdoc-objectFileTyp-filter-wrapper'" th:with="id='reception-userdoc-objectFileTyp-filter'">
+                                <div th:replace="~{base/form/select :: map(id = ${id}, label = 'Вид на обекта', map = ${fileTypes}, selected = ${receptionUserdocListFilter.objectFileTyp},emptySelectOption = #{all}, classes = 'search-box')}"></div>
+                            </div>
+                            <div class="col-6">
+                                <div th:replace="~{base/form/input :: text(id = 'reception-userdoc-objectFileNbr-filter-input', label = 'Номер на обекта',value=${receptionUserdocListFilter.objectFileNbr})}"></div>
+                            </div>
+                        </div>
+
+                        <div class="row right-align">
+                            <div class="col-12">
+                                <a th:replace="~{base/form/button :: material-btn(label = #{btn.search}, idBtn = 'search-reception-userdoc-btn', dataUrl = @{/{path}/search(path=${myObjectsParentUrl})} , icon = 'search', classes = 'm_R20 m_T5')}"></a>
+                                <a th:replace="~{base/form/button :: material-btn(label = #{btn.clear}, idBtn = 'clear-reception-userdoc-btn',href=@{/{path}/list(path=${myObjectsParentUrl})}, icon = 'clear', classes = 'm_T5')}"></a>
+                            </div>
+                        </div>
+                        <div class="row m_B20">
+                            <div class="col-5">
+                                <div th:replace="~{base/form/input :: text(id = 'responsibleUser-filter', label = #{filter.responsibleUser.label}, url = @{/user/users-autocomplete}, classes = 'autocomplete-user')}"></div>
+                            </div>
+                            <div class="col-1 m_T10">
+                                <a th:title="#{process.panel.btn.responsibleUser.edit}" class="btn-floating ipas waves-effect waves-light action-button-top"
+                                   th:attr="data-action='generic-responsible-user-change',redirect-url='/reception-userdoc/list',data-url=@{/generic-responsible-user-change/change}">
+                                    <i class="material-icons">arrow_forward</i>
+                                </a>
+                            </div>
+                        </div>
+
+
+                        <div th:id="reception-userdoc-table-wrapper" th:attr="data-url=@{/{path}/update-table(path=${myObjectsParentUrl})}">
+                            <div th:replace="home/reception/userdoc/reception_table :: reception-table(userdocReceptions=${userdocReceptions},total=${total},receptionUserdocListFilter=${receptionUserdocListFilter},myObjectsParentUrl=${myObjectsParentUrl})"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<footer class="page-footer" th:replace="base/footer"></footer>
+<div th:replace="base/template :: js-footer" th:remove="tag"></div>
+</body>
+</html>

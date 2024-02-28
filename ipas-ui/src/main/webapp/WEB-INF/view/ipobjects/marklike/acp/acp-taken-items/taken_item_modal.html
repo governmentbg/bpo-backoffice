@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="modal(item)">
+    <div th:id="acp-item-form-modal" class="modal" th:with="unspecifiedStorageId = 2">
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="${item.id==null} ? #{acp.taken.item.create} : #{acp.taken.item.edit}"></h4>
+            </div>
+            <input th:id="acp-taken-item-id" type="hidden" th:value="${item.id}">
+
+
+            <div class="row">
+                <div class="col-12">
+                    <div th:replace="~{base/form/select :: object(id = 'acp-taken-item-type', label = #{acp.taken.item.type.label},selected=${item?.type?.id}, objects = ${types}, emptySelectOption= #{default.select.option},
+                     valuePointer = 'id', textPointer = 'name',classes = 'form-ignore')}"></div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div th:replace="~{base/form/textarea :: basic(id = 'acp-taken-item-type-description', label = #{acp.taken.item.type.description.label}, value = ${item.typeDescription}, unescaped = true)}"></div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-12">
+                    <div th:replace="~{base/form/select :: object(id = 'acp-taken-item-storage', label = #{acp.taken.item.storage.label},selected=${item?.storage?.id}, objects = ${storages},emptySelectOption= #{default.select.option},
+                     valuePointer = 'id', textPointer = 'name',classes = 'form-ignore')}"></div>
+                </div>
+            </div>
+
+            <div id="acp-taken-item-storage-description-div" class="row" th:style="(${item?.storage?.id != unspecifiedStorageId} ? 'display: none')">
+                <div class="col-12">
+                    <div th:replace="~{base/form/textarea :: basic(id = 'acp-taken-item-storage-description', label = #{acp.taken.item.storage.description.label}, value = ${item.storageDescription}, unescaped = true)}"></div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-4">
+                    <div th:replace="~{base/form/input :: text(id = 'acp-taken-item-count', label = #{acp.taken.item.count.label}, value = ${item.count}, classes = 'number')}"></div>
+                </div>
+            </div>
+
+            <div class="row">
+
+
+                <div class="col-4">
+                    <div th:replace="~{base/form/checkbox :: basic(id ='acp-taken-item-forDestruction', label = #{acp.taken.item.for.destruction.label}, isChecked = ${item.forDestruction})}"></div>
+                </div>
+
+                <div class="col-4">
+                    <div th:replace="~{base/form/checkbox :: basic(id ='acp-taken-item-returned', label = #{acp.taken.item.returned.label}, isChecked = ${item.returned})}"></div>
+                </div>
+                <div class="col-4">
+                    <div th:replace="~{base/form/checkbox :: basic(id ='acp-taken-item-in-stock', label = #{acp.taken.item.in.stock.label}, isChecked = ${item.inStock})}"></div>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer row">
+            <div class="col-12">
+                <button th:attr="data-action='edit-acp-taken-item',data-url=@{/acp/taken-items/edit-list}, data-validation-block='#acp-item-form-modal'"
+                        th:text="#{btn.save}" class="button sm-icn-save wmin_130">
+                </button>
+                <button th:text="#{btn.cancel}" th:type="button"
+                        class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

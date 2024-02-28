@@ -1,0 +1,24 @@
+--liquibase formatted sql
+
+--changeset mmihova:306.1
+INSERT INTO EXT_USER.CF_SECURITY_ROLES (ROLE_NAME, DESCRIPTION) VALUES ('userdoc.userdoc-international-registration','Вторични действия: Преглед на панел "Международна регистрация"');
+
+--changeset mmihova:306.2
+INSERT INTO EXT_CORE.CF_USERDOC_UI_PANEL (PANEL, IND_RECORDAL, NAME, NAME_EN) VALUES ('InternationalRegistration', 'N', 'Международна регистрация', 'International Registration');
+
+--changeset mmihova:306.3
+INSERT INTO EXT_CORE.CF_USERDOC_TYPE_TO_UI_PANEL (USERDOC_TYP, PANEL) VALUES ('ЗМР', 'InternationalRegistration');
+
+--changeset mmihova:306.4
+INSERT INTO EXT_CORE.CF_USERDOC_EXTRA_DATA_TYPE (CODE, TITLE, IS_TEXT) VALUES ('INTERNATIONAL_REGISTRATION_NUMBER', N'Международен регистров номер', 1);
+INSERT INTO EXT_CORE.CF_USERDOC_EXTRA_DATA_TYPE (CODE, TITLE, IS_DATE) VALUES ('INTERNATIONAL_REGISTRATION_DATE', N'Дата на международно заявяване', 1);
+INSERT INTO EXT_CORE.CF_USERDOC_EXTRA_DATA_TYPE (CODE, TITLE, IS_TEXT) VALUES ('INTERNATIONAL_REGISTRATION_TRANSACTION_TYPE', N'Трансакция', 1);
+INSERT INTO EXT_CORE.CF_USERDOC_EXTRA_DATA_TYPE (CODE, TITLE, IS_DATE) VALUES ('INTERNATIONAL_REGISTRATION_NOTIFICATION_DATE', N'Дата на нотификация', 1);
+INSERT INTO EXT_CORE.CF_USERDOC_EXTRA_DATA_TYPE (CODE, TITLE, IS_TEXT) VALUES ('INTERNATIONAL_REGISTRATION_GAZNO', N'Бордеро', 1);
+
+--changeset mmihova:306.5
+insert into ext_core.CF_USERDOC_EXTRA_DATA_TO_UI_PANEL(CODE, PANEL) values('INTERNATIONAL_REGISTRATION_NUMBER','InternationalRegistration');
+insert into ext_core.CF_USERDOC_EXTRA_DATA_TO_UI_PANEL(CODE, PANEL) values('INTERNATIONAL_REGISTRATION_DATE','InternationalRegistration');
+insert into ext_core.CF_USERDOC_EXTRA_DATA_TO_UI_PANEL(CODE, PANEL) values('INTERNATIONAL_REGISTRATION_TRANSACTION_TYPE','InternationalRegistration');
+insert into ext_core.CF_USERDOC_EXTRA_DATA_TO_UI_PANEL(CODE, PANEL) values('INTERNATIONAL_REGISTRATION_NOTIFICATION_DATE','InternationalRegistration');
+insert into ext_core.CF_USERDOC_EXTRA_DATA_TO_UI_PANEL(CODE, PANEL) values('INTERNATIONAL_REGISTRATION_GAZNO','InternationalRegistration');

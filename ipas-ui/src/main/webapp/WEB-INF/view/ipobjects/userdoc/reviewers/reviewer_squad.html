@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:remove="tag" th:fragment="reviewer_squad(reviewers)">
+    <div th:id="'reviewer-squad-wrapper'">
+        <div th:replace="ipobjects/userdoc/reviewers/reviewer_squad_content :: reviewer_squad_content(${reviewers})"></div>
+    </div>
+</div>
+</div>
+</body>
+</html>

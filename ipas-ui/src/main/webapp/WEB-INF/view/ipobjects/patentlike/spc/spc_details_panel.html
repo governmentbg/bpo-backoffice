@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="spc-details(patent)" th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT},
+                                                spcData = ${patent.spcExtended !=null} ? ${patent.spcExtended}">
+
+    <div>
+
+        <div class="row">
+            <div class="col-12" th:if="${patent.technicalData.title != null && patent.technicalData.title != ''}">
+                <div th:replace="~{base/form/input :: readonly(id = 'patent-technicalData-title', label = #{spc.bg.name.label}, value =  ${patent.technicalData.title} )}"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12" th:if="${patent.technicalData.englishTitle != null && patent.technicalData.englishTitle != ''}">
+                <div th:replace="~{base/form/input :: readonly(id = 'patent-technicalData-englishTitle', label = #{spc.en.name.label}, value =  ${patent.technicalData.englishTitle} )}"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div th:replace="~{base/form/textarea :: basic(id = 'patent-technicalData-mainAbstract', value = ${patent.technicalData.mainAbstract}, unescaped = true, label = #{spc.bg.product.name.label})}"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div th:replace="~{base/form/textarea :: basic(id = 'patent-technicalData-englishAbstract', value = ${patent.technicalData.englishAbstract}, unescaped = true, label = #{spc.en.product.name.label})}"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <div th:replace="~{base/form/input :: text(id = 'patent-spcExtended-bgPermitNumber', label = #{spc.bg.permission.number.label}, value = ${spcData !=null} ? ${patent.spcExtended.bgPermitNumber})}"></div>
+            </div>
+
+            <div class="col-3">
+                <div th:replace="~{base/form/input :: datepicker(id = 'patent-spcExtended-bgPermitDate', label = #{spc.authorization.date.label}, value =${spcData !=null} ? ${#dates.format(patent.spcExtended.bgPermitDate,dateFormatDot)})}"></div>
+            </div>
+
+            <div class="col-3">
+                <div th:replace="~{base/form/input :: datepicker(id = 'patent-spcExtended-bgNotificationDate', label = #{spc.notification.date.label}, value =${spcData !=null} ? ${#dates.format(patent.spcExtended.bgNotificationDate,dateFormatDot)})}"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <div th:replace="~{base/form/input :: text(id = 'patent-spcExtended-euPermitNumber', label = #{spc.eu.permission.number.label}, value =${spcData !=null} ? ${patent.spcExtended.euPermitNumber})}"></div>
+            </div>
+
+            <div class="col-3">
+                <div th:replace="~{base/form/input :: datepicker(id = 'patent-spcExtended-euPermitDate', label = #{spc.authorization.date.label }, value =${spcData !=null} ? ${#dates.format(patent.spcExtended.euPermitDate,dateFormatDot)})}"></div>
+            </div>
+
+            <div class="col-3">
+                <div th:replace="~{base/form/input :: datepicker(id = 'patent-spcExtended-euNotificationDate', label = #{spc.notification.date.label}, value =${spcData !=null} ? ${#dates.format(patent.spcExtended.euNotificationDate,dateFormatDot)})}"></div>
+            </div>
+
+        </div>
+
+
+        <div class="row">
+            <div class="col-6">
+                <div th:replace="~{base/form/input :: text(id = 'patent-spcExtended-productClaims', label = #{spc.product.claims.label}, value =${spcData !=null} ? ${patent.spcExtended.productClaims})}"></div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

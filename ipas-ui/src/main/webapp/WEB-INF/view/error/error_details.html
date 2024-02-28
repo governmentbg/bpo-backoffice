@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:remove="tag" th:fragment="message(exception,message,status,error,trace)">
+    <div class="center" th:if="${trace != null}">
+        <p style="font-weight: bold" th:text="'Подробна информация:'"></p>
+        <p th:text="${exception}"></p>
+        <p th:text="${message}"></p>
+        <p th:text="${status}"></p>
+        <p th:text="${error}"></p>
+        <p th:text="${trace}"></p>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg">
+
+<head th:replace="~{base/template :: head(title = #{missing.epo.patents.title})}"></head>
+
+<body class="dark left-sidebar-show">
+
+<header class="app-header" th:replace="base/header"></header>
+
+<div class="app-body">
+    <div class="left-sidebar">
+        <div id="psb" class="ps--active-y">
+            <nav class="sidebar-nav">
+                <ul class="nav DropDownMenu">
+                    <li th:each="url : ${T(com.duosoft.ipas.util.UrlMap).ADMIN_PANEL_URLS}">
+                    <a th:href="@{${url.url}}" th:title="${#messages.msgOrNull(url.text)}" th:text="${#messages.msgOrNull(url.shortText)}"></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <main class="main">
+        <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+        <div class="inner continer">
+            <div th:replace="base/toast/message :: error(message = ${errorMessage},unescaped = true)"></div>
+            <div th:replace="base/toast/message :: success(message = ${successMessage},unescaped = true)"></div>
+            <div th:replace="base/toast/message :: info(message=#{missing.epo.patents.info.msg},removeCloseButton = true)"></div>
+
+            <div class="panel">
+                <div class="center">
+                    <h1 class="section-header" th:text="#{missing.epo.patents.title}"></h1>
+                </div>
+                <div >
+                    <div class="m_T10">
+                        <div class="row m_B10">
+                            <div class="col-12" th:with="applicationSearchType = ${T(bg.duosoft.ipas.enums.ApplicationSearchType)}">
+                                <div th:replace="~{base/form/radio :: basic(name = 'search-missing-epopatent-radio', label = #{object.filingNumber}, value = ${applicationSearchType.FILE_NUMBER.code()}, checked = true, classes = 'm_R10')}"></div>
+                                <div th:replace="~{base/form/radio :: basic(name = 'search-missing-epopatent-radio', label = #{object.registrationNumber}, value = ${applicationSearchType.REGISTRATION_NUMBER.code()})}"></div>
+                            </div>
+                        </div>
+                        <div class="row m_T5">
+                            <div class="col-12" th:id="missing-epopatent-input-wrapper">
+                                <div th:replace="~{:: input}"></div>
+                            </div>
+                        </div>
+                        <div class="row right-align m_T10">
+                            <div class="col-12">
+                                <a th:replace="~{base/form/button :: material-btn(label = #{btn.search}, dataAction = 'submit-missing-epopatent-search', dataUrl = @{/admin/missing-epo-patents/update-table}, icon = 'search', classes = 'm_R20')}"></a>
+                                <a th:replace="~{base/form/button :: material-btn(label = #{btn.clear}, dataAction = 'clear-missing-epopatent-search', icon = 'clear')}"></a>
+                            </div>
+                        </div>
+                        <div class="row m_T10" th:id="missing-epopatent-search-result-wrapper"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div th:fragment="input" th:remove="tag">
+    <div th:replace="~{base/form/input :: text(id = 'missing-epopatentInput',value = ${searchText}, label = #{object.filingNumber}, classes = 'default-focus')}"></div>
+</div>
+
+
+<footer class="page-footer" th:replace="base/footer"></footer>
+<div th:replace="base/template :: js-footer" th:remove="tag"></div>
+</body>
+</html>

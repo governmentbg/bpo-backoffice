@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="table(userdocRegNumberChangeLogList, userdocRegNumberChangeLogCount, userdocRegNumberChangeLogFilter)"
+     th:with="sorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.SorterUtils)},userdocRegNumberChangeLogSorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.UserdocRegNumberChangeLogSorterUtils)},
+     coreUtils=${T(com.duosoft.ipas.util.CoreUtils)}">
+
+    <div th:remove="tag" th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(userdocRegNumberChangeLogList)}">
+        <div th:remove="tag" th:case="true">
+            <div class="bg__light-blue p_10 m_B10 m_T10 center">
+                <span th:text="#{empty.list}"></span>
+            </div>
+        </div>
+        <div th:remove="tag" th:case="false">
+            <div class="row">
+                <div>
+                    <span th:text="#{total}"></span>
+                    <span th:text="${userdocRegNumberChangeLogCount}"></span>
+                </div>
+            </div>
+            <div class="m_T5">
+                <table class="simple bpo">
+                    <thead>
+                    <tr>
+                        <th style="width: 40px" th:text="'Номер'"></th>
+                        <th style="width: 140px" th:with="isSelected=${#strings.equalsIgnoreCase(userdocRegNumberChangeLogFilter.sortColumn,userdocRegNumberChangeLogSorterUtils.FILING_NUMBER)},dataSort=${userdocRegNumberChangeLogSorterUtils.FILING_NUMBER}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,userdocRegNumberChangeLogFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Входящ номер',${userdocRegNumberChangeLogFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th style="width: 180px" th:with="isSelected=${#strings.equalsIgnoreCase(userdocRegNumberChangeLogFilter.sortColumn,userdocRegNumberChangeLogSorterUtils.OLD_REGISTATION_NUMBER)},dataSort=${userdocRegNumberChangeLogSorterUtils.OLD_REGISTATION_NUMBER}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,userdocRegNumberChangeLogFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Стар регистров номер',${userdocRegNumberChangeLogFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th style="width: 180px" th:with="isSelected=${#strings.equalsIgnoreCase(userdocRegNumberChangeLogFilter.sortColumn,userdocRegNumberChangeLogSorterUtils.NEW_REGISTRATION_NUMBER)},dataSort=${userdocRegNumberChangeLogSorterUtils.NEW_REGISTRATION_NUMBER}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,userdocRegNumberChangeLogFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Нов регистров номер',${userdocRegNumberChangeLogFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th style="width: 200px" th:with="isSelected=${#strings.equalsIgnoreCase(userdocRegNumberChangeLogFilter.sortColumn,userdocRegNumberChangeLogSorterUtils.CHANGE_DATE)},dataSort=${userdocRegNumberChangeLogSorterUtils.CHANGE_DATE}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,userdocRegNumberChangeLogFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Дата и час на промяна',${userdocRegNumberChangeLogFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th style="width: 200px" th:with="isSelected=${#strings.equalsIgnoreCase(userdocRegNumberChangeLogFilter.sortColumn,userdocRegNumberChangeLogSorterUtils.RESPONSIBLE_USER)},dataSort=${userdocRegNumberChangeLogSorterUtils.RESPONSIBLE_USER}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,userdocRegNumberChangeLogFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{tableHeader.responsibleUser.label},${userdocRegNumberChangeLogFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="changedUserdoc : ${userdocRegNumberChangeLogList}"
+                        th:with="filingNumber=${coreUtils.createFilingNumber(changedUserdoc.docOri,changedUserdoc.docLog,changedUserdoc.docSer,changedUserdoc.docNbr,false)}">
+                        <td>
+                            <span th:text="${changedUserdocStat.count + ((userdocRegNumberChangeLogFilter.page - 1)*userdocRegNumberChangeLogFilter.pageSize)}"></span>
+                        </td>
+                        <td>
+                            <a th:text="${filingNumber}" th:href="@{/ipobject/view(userdocFilingNumber=${filingNumber})}"></a>
+                        </td>
+                        <td>
+                            <span th:text="${changedUserdoc.oldRegistrationNumber}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${changedUserdoc.newRegistrationNumber}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${#dates.format(changedUserdoc.date,T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT)}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${changedUserdoc.responsibleUser}"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div th:replace="base/paginator :: paginator(page=${userdocRegNumberChangeLogFilter.page},pageSize=${userdocRegNumberChangeLogFilter.pageSize},total=${userdocRegNumberChangeLogCount},baseUrl=@{admin/userdoc-reg-number-change-log/update-table},
+                        tableContainerDiv='userdoc-reg-number-change-log-table-wrapper',
+                        additionalParams='&tableCount='+${userdocRegNumberChangeLogCount}+
+                        '&sortOrder='+${userdocRegNumberChangeLogFilter.sortOrder}+ ${userdocRegNumberChangeLogFilter.sortColumn!=null ? '&sortColumn='+ userdocRegNumberChangeLogFilter.sortColumn:''}+
+                        ${userdocRegNumberChangeLogFilter.responsibleUser != null ? '&responsibleUser='+userdocRegNumberChangeLogFilter.responsibleUser : '' })">
+                </div>
+            </div>
+            <div>
+                <input th:type="hidden" class="form-ignore" th:id="userdoc-reg-number-change-log-page" th:value="${userdocRegNumberChangeLogFilter.page}">
+                <input th:type="hidden" class="form-ignore" th:id="table-count" th:value="'?tableCount='+${userdocRegNumberChangeLogCount}">
+                <input th:type="hidden" class="form-ignore" th:id="userdoc-reg-number-change-log-pageSize" th:value="${userdocRegNumberChangeLogFilter.pageSize}">
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

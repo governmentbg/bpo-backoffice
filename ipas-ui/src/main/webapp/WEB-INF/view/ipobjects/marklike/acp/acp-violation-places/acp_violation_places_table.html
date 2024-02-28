@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="table(violationPlaces)">
+
+    <div th:if="${!#lists.isEmpty(validationErrors)}" th:id="acp-violation-place-errors">
+        <div class="row m_B20">
+            <div class="col-12">
+                <div th:replace="base/validation :: validation-message(${validationErrors},'acp-violation-place-errors')"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12" th:if="${T(org.springframework.util.CollectionUtils).isEmpty(violationPlaces)}">
+        <div th:replace="base/message :: info(#{acp.violation.places.empty.list})"></div>
+    </div>
+
+    <div class="row m_B20" th:if="${!T(org.springframework.util.CollectionUtils).isEmpty(violationPlaces)}">
+        <div class="col-12">
+            <table class="simple" id="violation-places-table">
+                <thead>
+                <tr>
+                    <th th:text="#{Място на нарушение}"></th>
+                    <th class="hidden-element"></th>
+                </tr>
+
+                </thead>
+                <tbody>
+                <tr th:each="violationPlace : ${violationPlaces}">
+                    <td th:text="${violationPlace.description}"></td>
+                    <td class="hidden-element txtRight">
+                        <a style="border: 0" th:title="#{btn.delete}" href="javascript:void(0);"
+                           th:attr="data-action='acp-violation-place-delete',data-url=@{/acp/violation-places/delete-violation},data-id=${violationPlace.id},
+                               data-message=#{delete.violation.place.message}"
+                           class="txtLeft btn-floating ipas waves-effect waves-light action-button-top confirm">
+                            <i class="icon-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+    <div class="row hidden-element">
+        <div class="col-12">
+            <div th:replace="~{base/form/textarea :: basic(id = 'acp-violation-place-description', value = '', label = #{description})}"></div>
+        </div>
+    </div>
+
+    <div class="row hidden-element">
+        <div class="m_T20 col-12">
+            <button id="acp-violation-place-add-button" th:text="#{violation.place.button.add.label}"
+                    th:attr="data-action='acp-violation-place-add',data-url=@{/acp/violation-places/add-violation}"
+                    th:type="button"
+                    class="button sm-icn-add">
+            </button>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

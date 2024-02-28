@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="generate-report-button">
+    <div class="row">
+        <div class="m_T20 col-12">
+            <a th:replace="~{base/form/button :: material-btn(label = 'Разпечатване на справки',dataAction = 'open-reports-modal', dataUrl = @{/report/open-reports-modal}, icon = 'folder_open',classes = 'm_L10')}"></a>
+        </div>
+    </div>
+    <div th:id="reports-modal-div"></div>
+</div>
+</body>
+</html>

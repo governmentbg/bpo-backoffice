@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg">
+
+<head th:replace="base/template :: head(title=${#messages.msgOrNull('search.userdoc.title')})"></head>
+<body class="dark">
+
+<div class="app-body">
+    <header class="app-header" th:replace="base/header"></header>
+    <!-- ****************************************************** Left Side Nav -->
+    <div class="left-sidebar">
+        <div id="psb" class="ps--active-y">
+            <nav class="sidebar-nav">
+                <ul id="detail-list" class="nav DropDownMenu checkbox-list switcher simple at-right"
+                    th:attr="data-group=|userdoc-search|">
+                    <div th:replace="ipobjects/common/search/fragments ::menu('doc-type', 'doc-type', ${#messages.msgOrNull('search.userdoc.doc-type')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu('responsible-user-id', 'responsible-user-id', ${#messages.msgOrNull('search.userdoc.responsible-user-id')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu('file-type-group', 'file-type-group', ${#messages.msgOrNull('search.userdoc.file-type-group')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu('doc-number', 'doc-number', ${#messages.msgOrNull('search.userdoc.doc-number')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu('filing-date', 'filing-date', ${#messages.msgOrNull('search.userdoc.filing-date')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu('status-codes', 'status-codes', ${#messages.msgOrNull('search.userdoc.status-codes')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu('action-types', 'action-types', ${#messages.msgOrNull('search.userdoc.action-types')})"></div>
+                    <div th:replace="ipobjects/common/search/fragments ::menu('person', 'person', ${#messages.msgOrNull('search.userdoc.person')})"></div>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- ********************************************************** Main body -->
+    <main class="main">
+        <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+        <div class="inner">
+            <form id="search-form" th:action="@{/userdoc/search}" method="POST">
+                <div id="panel-container" class="panel">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="center">
+                                <h1 class="section-header"
+                                    th:text="${#messages.msgOrNull('search.userdoc.title')}"></h1>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:id="|panel-doc-type|" th:styleappend="|display: none|">
+                        <div class="row">
+                            <div>
+                                <div class="col-12">
+                                    <div class="search input-field select2-field">
+                                        <select th:id="|field-user-doc-type|" th:name="|user-doc-type|">
+                                            <option></option>
+                                            <option th:each="entry : ${userdocTypes}"
+                                                    th:value="${entry.key}"
+                                                    th:text="${entry.value}"
+                                                    th:selected="${#strings.equals(entry.key, searchParam.userDocType)}"/>
+                                        </select>
+                                        <label th:id="|label-doc-type|" th:for="|field-user-doc-type|"
+                                               th:text="${#messages.msgOrNull('search.userdoc.doc-type')}"
+                                               class=""></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:id="|panel-responsible-user-id|" th:styleappend="|display: none|">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="search input-field select2-field">
+                                    <select th:id="|field-responsible-user-id|" th:name="|responsible-user-id|" th:attr="data-search-url=@{/mark/search/user}, data-get-url=@{/mark/search/user-id}">
+                                    </select>
+                                    <label th:id="|label-responsible-user-id|" th:for="|field-responsible-user-id|"
+                                           th:text="${#messages.msgOrNull('search.userdoc.responsible-user-id')}">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:id="|panel-file-type-group|" th:styleappend="|display: none|">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="search input-field select2-field">
+                                    <select th:id="|field-file-type-group|"
+                                            th:name="file-type-group" >
+                                        <option></option>
+                                        <option th:each="entry : ${fileTypeGroups}"
+                                                th:value="${entry.key}"
+                                                th:text="${entry.value}"
+                                                th:selected="${#strings.equals(entry.key, searchParam.fileTypeGroup)}"/>
+                                    </select>
+                                    <label id="field-file-type-group-label"
+                                           th:text="${#messages.msgOrNull('search.userdoc.file-type-group')}"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:id="|panel-doc-number|" th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::input-field('doc-number', ${searchParam.docNumber}, ${#messages.msgOrNull('search.userdoc.doc-number')})"></div>
+                    </div>
+
+                    <div th:id="|panel-filing-date|"
+                         th:styleappend="|display: none|">
+                        <div th:replace="ipobjects/common/search/fragments ::range-date-field('filing-date', ${searchParam.fromFilingDate}, ${#messages.msgOrNull('search.userdoc.from-filing-date')}, ${searchParam.toFilingDate}, ${#messages.msgOrNull('search.userdoc.to-filing-date')})"></div>
+                    </div>
+
+                    <div th:id="|panel-status-codes|"
+                         th:styleappend="|display: none|">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="search input-field select2-field">
+                                    <select th:id="|field-status-codes|" th:name="|status-codes[]|"
+                                            multiple="multiple">
+                                        <option th:each="entry : ${statuses}" th:value="${entry.statusId.statusCode}"
+                                                th:text="${entry.statusName}"/>
+                                    </select>
+                                    <label th:id="|label-status-codes|" th:for="|field-status-codes|"
+                                           th:text="${#messages.msgOrNull('search.userdoc.status-codes')}"
+                                           class=""></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div th:replace="ipobjects/common/search/fragments ::range-date-field('status-date', ${searchParam.fromStatusDate}, ${#messages.msgOrNull('search.userdoc.status-codes.from-date')}, ${searchParam.toStatusDate}, ${#messages.msgOrNull('search.userdoc.status-codes.to-date')})"></div>
+                    </div>
+
+                    <div th:id="|panel-action-types|"
+                         th:styleappend="|display: none|">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="search input-field select2-field">
+                                    <select th:id="|field-action-types|" th:name="|action-types[]|"
+                                            multiple="multiple">
+                                    </select>
+                                    <label th:id="|label-action-types|" th:for="|field-action-types|"
+                                           th:text="${#messages.msgOrNull('search.userdoc.action-types')}">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div th:replace="ipobjects/common/search/fragments ::range-date-field('action-date', ${searchParam.fromActionDate}, ${#messages.msgOrNull('search.userdoc.action-type.from-date')}, ${searchParam.toActionDate}, ${#messages.msgOrNull('search.userdoc.action-type.to-date')})"></div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="search input-field select2-field">
+                                    <select th:id="|field-action-capture-user-id|" th:name="|action-capture-user-id|" th:attr="data-search-url=@{/mark/search/user}, data-get-url=@{/mark/search/user-id}">
+                                    </select>
+                                    <label th:id="|label-action-capture-user-id|" th:for="|field-action-capture-user-id|"
+                                           th:text="${#messages.msgOrNull('search.action-capture-user-id')}">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:id="|panel-person|"
+                         th:styleappend="|display: none|">
+                        <div class="row">
+                            <div th:id="|panel-person-name|">
+                                <div class="col-6">
+                                    <div class="input-field search">
+                                        <input th:id="|field-person-name|" type="text"
+                                               th:value="${searchParam.personName}">
+                                        <label th:for="|field-person-name|"
+                                               th:text="${#messages.msgOrNull('search.userdoc.person-name')}"></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div th:id="|panel-person-role|">
+                                <div class="col-6">
+                                    <div class="search input-field select2-field">
+                                        <select th:id="|field-role|"
+                                                th:name="role" >
+                                            <option></option>
+                                            <option th:each="entry : ${personRoles}"
+                                                    th:value="${entry.role}"
+                                                    th:text="${entry.name}"
+                                                    th:selected="${#strings.equals(entry.role, searchParam.role)}"/>
+                                        </select>
+                                        <label id="field-role-label"
+                                               th:text="${#messages.msgOrNull('search.userdoc.person.role')}"></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <label>
+                                    <input th:name="|field-person-name-search-type|" type="radio" class="with-gap"
+                                           th:value="${T(bg.duosoft.ipas.enums.search.PersonNameSearchType).EXACTLY}"
+                                           th:checked="${searchParam.personNameSearchType == null ? true : T(bg.duosoft.ipas.enums.search.PersonNameSearchType).EXACTLY == searchParam.personNameSearchType }"/>
+                                    <span style="color: #9e9e9e" th:text="${{#messages.msgOrNull('person.name.search.type.exactly')}}"></span>
+                                </label>
+                                <label>
+                                    <input th:name="|field-person-name-search-type|" type="radio" class="with-gap"
+                                           th:value="${T(bg.duosoft.ipas.enums.search.PersonNameSearchType).WHOLE_WORDS}"
+                                           th:checked="${searchParam.personNameSearchType == null ? false : T(bg.duosoft.ipas.enums.search.PersonNameSearchType).WHOLE_WORDS == searchParam.personNameSearchType }"/>
+                                    <span style="color: #9e9e9e" th:text="${{#messages.msgOrNull('person.name.search.type.whole.words')}}"></span>
+                                </label>
+                                <label>
+                                    <input th:name="|field-person-name-search-type|" type="radio" class="with-gap"
+                                           th:value="${T(bg.duosoft.ipas.enums.search.PersonNameSearchType).CONTAINS_WORDS}"
+                                           th:checked="${searchParam.personNameSearchType == null ? false : T(bg.duosoft.ipas.enums.search.PersonNameSearchType).CONTAINS_WORDS == searchParam.personNameSearchType }"/>
+                                    <span style="color: #9e9e9e" th:text="${{#messages.msgOrNull('person.name.search.type.contains.words')}}"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row right-align">
+                        <div class="col-12">
+                            <button th:id="submit-form" th:text="#{btn.search}" type="button" class="button sm-icn-save wmin_130"></button>
+                            <button th:id="clear-form" th:text="#{btn.clear}" type="button" class="button sm-icn-cross wmin_130"></button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div id="result">
+                <div th:if="${page != null}" th:remove="tag">
+                    <div th:replace="ipobjects/userdoc/search/list::result"></div>
+                </div>
+            </div>
+            <div id="dropdown-panel"></div>
+        </div>
+    </main>
+</div>
+<footer class="page-footer" th:replace="base/footer"></footer>
+<script>
+
+</script>
+<script th:replace="base/template :: js-footer" th:remove="tag"></script>
+
+<script th:inline="javascript">
+
+    $(document).ready(function () {
+
+        let cookie_name = $("#detail-list").attr("data-group");
+        let sess_json = getCookieAsJson(cookie_name);
+        let sort_col_field = 'sortColumn';
+        let sort_order_field = 'sortOrder';
+
+        let has_visible_col = false;
+        $.each(sess_json, function (i, obj) {
+            if (obj === true && !has_visible_col)
+                has_visible_col = true;
+        });
+        if (!has_visible_col) {
+            sess_json["doc-number"] = true;
+            setCookie(cookie_name, JSON.stringify(sess_json));
+        }
+
+        // global setting
+        $.fn.select2.defaults.set("theme", "material");
+
+        // doc type
+        $("#field-user-doc-type").select2({
+            dropdownParent: $('#dropdown-panel'),
+            placeholder: "",
+            allowClear: true
+        });
+        let userdoc_type_value = [[${searchParam.userDocType}]];
+
+        $("#field-user-doc-type").val(userdoc_type_value);
+
+        $('#field-user-doc-type').on('select2:open', function (e) {
+            $('#label-doc-type').addClass("active");
+        });
+        $('#field-user-doc-type').on('select2:close', function (e) {
+            if ($(this).find(':selected').val() == "") {
+                $('#label-doc-type').removeClass("active");
+                $('#panel-doc-type .select2-selection__rendered').removeAttr("title");
+            }
+        });
+
+        $('#field-user-doc-type').on('change', function (e) {
+            if ($(this).find(':selected').val() == "") {
+                $('#label-doc-type').removeClass("active");
+                $('#panel-doc-type .select2-selection__rendered').removeAttr("title");
+            } else {
+                $('#label-doc-type').addClass("active");
+            }
+        });if ([(${!#strings.isEmpty(searchParam.userDocType)})]) {
+            $('#label-doc-type').addClass("active");
+        }
+
+        // file type
+        Panel.init($("#panel-file-type-group"));
+        $('#field-file-type-group').on('change', function () {
+            let fileTypeGroup = $(this).val();
+            if (fileTypeGroup == "") {
+                $('#field-file-type-group-label').removeClass("active");
+            } else {
+                $('#field-file-type-group-label').addClass("active");
+            }
+        });
+        if ([(${!#strings.isEmpty(searchParam.fileTypeGroup)})]) {
+            $('#field-file-type-group-label').addClass("active");
+        }
+
+        Panel.init($("#panel-person"));
+        $('#field-role').on('change', function () {
+            let role = $(this).val();
+            if (role == "") {
+                $('#field-role-label').removeClass("active");
+            } else {
+                $('#field-role-label').addClass("active");
+            }
+        });
+        if ([(${!#strings.isEmpty(searchParam.role)})]) {
+            $('#field-role-label').addClass("active");
+        }
+
+
+        // status code
+        $("#field-status-codes").select2({
+            dropdownParent: $('#dropdown-panel')
+        });
+        let status_code_values = [[${searchParam.statusCodes}]];
+
+        $("#field-status-codes").val(status_code_values);
+        $('#field-status-codes').trigger('change');
+
+        $('#field-status-codes').on('select2:open', function (e) {
+            $('#label-status-codes').addClass("active");
+        });
+        $('#field-status-codes').on('select2:close', function (e) {
+            if ($(this).find(':selected').length === 0) {
+                $('#label-status-codes').removeClass("active");
+            }
+        });
+        if ($('#field-status-codes').find(':selected').length != 0) {
+            $('#label-status-codes').addClass("active");
+        }
+
+
+        // action type
+        $('#field-action-types').select2({
+            dropdownParent: $('#dropdown-panel'),
+            ajax: {
+                url: '[(@{/userdoc/search/action-types})]',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        actionName: params.term
+                    };
+                },
+                processResults: function (data, params) {
+                    // parse the results into the format expected by Select2
+                    // since we are using custom formatting functions we do not need to
+                    // alter the remote JSON data, except to indicate that infinite
+                    // scrolling can be used
+                    params.page = params.page || 1;
+
+
+                    let cJson = [];
+
+                    data.forEach(function (a) {
+                        let obj = {};
+
+                        obj['id'] = a.actionType;
+                        obj['text'] = a.actionName;
+
+                        cJson.push(obj);
+                    }, Object.create(null));
+
+                    return {
+                        results: cJson,
+                        pagination: {
+                            more: (params.page * 30) < data.total_count
+                        }
+                    };
+                },
+                cache: true
+            },
+            escapeMarkup: function (markup) {
+                return markup;
+            },
+            templateResult: function (repo) {
+                if (repo.loading) {
+                    return repo.text;
+                }
+                let markup = "<div class='select2-result-repository clearfix'>" +
+                    "<div style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>" + repo.text + "</div>" +
+                    "</div>";
+
+                return markup;
+            }
+        });
+
+        $('#field-action-types').on('select2:open', function (e) {
+            $('#label-action-types').addClass("active");
+        });
+        $('#field-action-types').on('select2:close', function (e) {
+            if ($(this).find(':selected').length === 0) {
+                $('#label-action-types').removeClass("active");
+            }
+        });
+        if ([(${!#arrays.isEmpty(searchParam.actionTypes)})]) {
+            $('#label-action-types').addClass("active");
+        }
+        // Fetch the preselected item, and add to the control
+        preselectedItemsWithAjax([[${searchParam.actionTypes}]],
+            $('#field-action-types'),
+            '[(@{/userdoc/search/action-type})]',
+            "actionType",
+            function (data) {
+                return data.actionName;
+            },
+            function (data) {
+                return data.actionType;
+            });
+
+            ///////////////////////////////////////
+
+        initSearchUserField('field-action-capture-user-id');
+        preselectUserField('field-action-capture-user-id', '[(${searchParam.actionCaptureUserId})]');
+
+        initSearchUserField('field-responsible-user-id');
+        preselectUserField('field-responsible-user-id', '[(${searchParam.responsibleUserId})]');
+
+        let panelContainer = $('#panel-container');
+        if (panelContainer.length > 0) {
+            initPanelContainer("panel-container");
+        }
+
+        // Initialization datepickers
+        let dateFileds = $("input[data-type='datepicker']");
+
+        for (i = 0; (elem = dateFileds[i]) != null; i++) {
+            let label = $(elem).siblings('label');
+            $(elem).datepicker({
+                beforeShow: function (textbox, instance) {
+                    if ($(textbox).hasClass("modal-date")) {
+                        setTimeout(function () {
+                            let newTop = $(textbox).offset().top - $(window).scrollTop() + $(textbox).height() + 2;
+                            instance.dpDiv.css({
+                                top: newTop + 'px',
+                            });
+                        }, 20);
+                    }
+                },
+                onSelect: function () {
+                    if (label.length > 0) {
+                        $(label[0]).addClass('active');
+                    }
+                }
+            });
+        }
+
+        // Initialization '.select-wrapper' with select
+        $(".select-wrapper").each(function () {
+            setupSelectWrapper($(this))
+        });
+
+        function setupSelectWrapper(wrapper) {
+            let select_field = wrapper.children("select");
+            let input_field = wrapper.children("input");
+
+            select_field.change(function () {
+                if ($(this).children('option:selected').val() === '') {
+                    input_field.css('color', '#9e9e9e');
+                } else {
+                    input_field.css('color', '');
+                }
+            });
+            if (select_field.children('option:selected').val() === '') {
+                input_field.css('color', '#9e9e9e');
+            }
+        }
+    });
+
+    $("button#submit-form[type=button]").on("click", function () {
+        let pageSize;
+
+        if (getSearchUrlParameter(location.search, 'pageSize')) {
+            pageSize = getSearchUrlParameter(location.search, 'pageSize')
+        } else if ($(".search-paginator").find("option:selected").val()) {
+            pageSize = $(".search-paginator").find("option:selected").val()
+        } else {
+            pageSize = 10;
+        }
+
+        sendForm(0, pageSize);
+    });
+
+    $("button#clear-form[type=button]").on("click", function () {
+        document.location.href = '[(@{/userdoc/search})]/clear';
+    });
+
+    $("#search-form").on("submit", function (e) {
+        e.preventDefault();
+        sendForm(0, 10);
+    });
+
+    document.addEventListener('keydown', event => {
+        let keycode = event.key;
+        if (keycode == 'Enter') {
+            $("#search-form").trigger("submit");
+        }
+    });
+
+    $("body").on("click", "a:not(.ui-no-block)", function (e) {
+        UIBlocker.block();
+    });
+
+
+    function sendForm(page, pageSize) {
+        let cJson = {};
+
+        let textInputs = $("#panel-container").find('input[id]');
+        textInputs.each(function (index, element) {
+            if ($(element).parent().is(":visible")) {
+                let id = $(element).attr("id");
+                let key = id.substr((id.indexOf('-') + 1)).replace(/([-_]\w)/g, function (x) {
+                    return x.replace(/[-_]/g, '').toUpperCase();
+                });
+                cJson[key] = $(element).val().trim();
+            }
+        });
+
+
+        textInputs = $("#panel-container").find('select[id]');
+        textInputs.each(function (index, element) {
+            if ($(element).parent().is(":visible")) {
+                let id = $(element).attr("id");
+                let key = id.substr((id.indexOf('-') + 1)).replace(/([-_]\w)/g, function (x) {
+                    return x.replace(/[-_]/g, '').toUpperCase();
+                });
+                cJson[key] = $(element).val();
+            }
+        });
+
+        textInputs = $("#panel-container").find('input[type="radio"]:checked');
+        textInputs.each(function (index, element) {
+            if ($(element).parent().is(":visible")) {
+                let id = $(element).attr("name");
+                let key = id.substr((id.indexOf('-') + 1)).replace(/([-_]\w)/g, function (x) {
+                    return x.replace(/[-_]/g, '').toUpperCase();
+                });
+                cJson[key] = $(element).val();
+            }
+        });
+
+        cJson['page'] = page;
+        cJson['pageSize'] = pageSize;
+
+        sorting(cJson);
+
+        req(cJson);
+    }
+
+    function sorting(cJson) {
+
+        let asc_col = $('#result-header > div > div.sorting_asc');
+        let desc_col = $('#result-header > div > div.sorting_desc');
+        let sort_col = 'docNumber';
+        let sort_order = 'asc';
+        if (asc_col.length || desc_col.length) {
+            sort_order = asc_col.length ? 'asc' : 'desc';
+            sort_col = asc_col.length ? asc_col.parent().attr('data-col') : desc_col.parent().attr('data-col');
+        }
+
+        cJson['sortColumn'] = sort_col;
+        cJson['sortOrder'] = sort_order;
+    }
+
+    function sortReq(cJson) {
+        mainReq(cJson, '[(@{/userdoc/search/sort})]');
+    }
+
+    function req(cJson) {
+        mainReq(cJson, '[(@{/userdoc/search})]');
+    }
+
+    function mainReq(cJson, cUrl) {
+
+        UIBlocker.block();
+        $.ajax({
+            url: cUrl,
+            type: 'post',
+            datatype: 'html',
+            data: {data: JSON.stringify(cJson)}
+        })
+            .done(function (cData) {
+                UIBlocker.unblock();
+
+                $('#result').html(cData);
+            })
+            .fail(function (xhr, ajaxOptions, thrownError) {
+                console.log(thrownError);
+            })
+            .always(function () {
+                UIBlocker.unblock();
+            });
+    }
+
+
+
+</script>
+</body>
+</html>

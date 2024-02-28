@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="process" type="bg.duosoft.ipas.core.model.process.CProcess"*/-->
+<div th:fragment="next-normal-special-select(nextProcessActions,process)" th:remove="tag"
+     th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)}, processUtils=${T(com.duosoft.ipas.util.ProcessUtils)},objectUtils=${T(java.util.Objects)}">
+
+    <div class="row m_B10" th:with="normalActions=${processUtils.selectNextNormalProcessActions(nextProcessActions)},specialActions=${processUtils.selectNextSpecialProcessActions(nextProcessActions)}">
+        <div th:remove="tag" th:switch="${collectionUtils.isEmpty(normalActions) && collectionUtils.isEmpty(specialActions)}">
+            <div th:remove="tag" th:case="true">
+                <div class="col-12">
+                    <div th:replace="base/message :: info('Процесът е в краен статус и няма следващи действия за изпълнение')"></div>
+                </div>
+            </div>
+            <div th:remove="tag" th:case="false">
+                <div class="col-11">
+                    <div class="input-field">
+                        <div th:remove="tag" th:with="id='next-process-action-select'">
+                            <select th:id="${id}">
+                                <optgroup th:if="${!collectionUtils.isEmpty(normalActions)}" th:label="'Нормални действия'">
+                                    <div th:remove="tag" th:each="normalAction : ${normalActions}">
+                                        <option th:value="${normalAction.actionType}"
+                                                th:text="${normalAction.actionTypeName + ' - ' +normalAction.statusName}"
+                                                th:attr="data-type=${normalAction.processActionType.name()}"
+                                                th:attrappend="data-icon=${objectUtils.nonNull(normalAction.automaticActionWcode)} ? @{/img/auto-icon.png}">
+                                        </option>
+                                    </div>
+                                </optgroup>
+                                <optgroup th:if="${!collectionUtils.isEmpty(specialActions)}" th:label="'Специални действия'">
+                                    <div th:remove="tag" th:each="specialAction : ${specialActions}">
+                                        <option th:if="${not ((#strings.equalsIgnoreCase(process.status.statusId.statusCode,specialAction.statusCode)) && (#strings.equalsIgnoreCase(process.status.statusName,specialAction.statusName)))}"
+                                                th:value="${specialAction.actionType}"
+                                                th:text="${specialAction.actionTypeName + ' - ' + (#strings.isEmpty(specialAction.statusName) ? 'Произволен статус' : specialAction.statusName)}"
+                                                th:attr="data-type=${specialAction.processActionType.name()}">
+                                        </option>
+                                    </div>
+                                </optgroup>
+                            </select>
+                            <label th:for="${id}" th:text="'Следващо нормално/специално действие'"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-1 m_T10">
+                    <div th:replace=" :: insert-next-action-btn(${process})"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="next-notification-select(nextProcessActions,process)"
+     th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)}, processUtils=${T(com.duosoft.ipas.util.ProcessUtils)}">
+    <div class="row m_B10" th:with="noteActions=${processUtils.selectNextNotificationProcessActions(nextProcessActions)}">
+        <div th:remove="tag" th:switch="${collectionUtils.isEmpty(noteActions)}">
+            <div th:remove="tag" th:case="true">
+                <div class="col-12">
+                    <div th:replace="base/message :: info('За този процес няма дефинирани информативни действия')"></div>
+                </div>
+            </div>
+            <div th:remove="tag" th:case="false">
+                <div class="col-11">
+                    <div th:replace="~{base/form/select :: object(id = 'next-process-action-select', label = 'Следващо информативно действие', objects = ${noteActions}, valuePointer = 'actionType', textPointer = 'actionTypeName', optionDataTypePointer = 'processActionType.name()')}"> </div>
+                </div>
+                <div class="col-1 m_T10">
+                    <div th:replace=" :: insert-next-action-btn(${process})"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="insert-next-action-btn(process)" th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)},
+                                                                                               processUtils=${T(com.duosoft.ipas.util.ProcessUtils)}">
+    <a th:title="'Изпълни следващо действие'" class="hidden-element btn-floating ipas waves-effect waves-light action-button-top"
+       th:attr="data-action='insert-next-action',
+                data-process=|${process.processId.processType}-${process.processId.processNbr}|,
+                data-url=@{/process/insert-action},
+                data-modal-check-url=@{/process/insert-action/open-modal-check},
+                data-modal-url=@{/process/insert-action/open-modal}"
+    >
+        <i class="material-icons">arrow_forward</i>
+    </a>
+</div>
+
+<div th:remove="tag" th:fragment="msprocess-select(msprocessTypes,process)"
+     th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)}, processUtils=${T(com.duosoft.ipas.util.ProcessUtils)}">
+    <div class="row m_B10" th:with="noteActions=${processUtils.selectNextNotificationProcessActions(nextProcessActions)}">
+        <div th:remove="tag" th:switch="${collectionUtils.isEmpty(msprocessTypes)}">
+            <div th:remove="tag" th:case="true">
+                <div class="col-12">
+                    <div th:replace="base/message :: info('За този процес няма дефинирани ръчни под-процеси')"></div>
+                </div>
+            </div>
+            <div th:remove="tag" th:case="false">
+                <div class="col-11">
+                    <div th:replace="~{base/form/select :: object(id = 'msprocess-select', label = 'Ръчни под-процеси', objects = ${msprocessTypes}, valuePointer = 'procTyp', textPointer = 'procTypeName')}"> </div>
+                </div>
+                <div class="col-1 m_T10">
+                    <a th:title="'Създай ръчен под-процес'" class="hidden-element btn-floating ipas waves-effect waves-light action-button-top confirm"
+                       th:attr="data-action='create-manual-sub-process',
+                                data-process=|${process.processId.processType}-${process.processId.processNbr}|,
+                                data-url=@{/msprocess/create}">
+                        <i class="material-icons">arrow_forward</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

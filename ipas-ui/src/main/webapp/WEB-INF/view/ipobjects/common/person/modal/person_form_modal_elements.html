@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:remove="tag" th:fragment="city-input(residenceCountryCode,cityName,validationErrors)">
+    <div th:switch="${#strings.equalsIgnoreCase(T(bg.duosoft.ipas.util.DefaultValue).BULGARIA_CODE,residenceCountryCode)}">
+        <div th:case="true" class="input-field" th:with="id='person-cityName'">
+            <input th:id="${id}" type="text" th:value="${cityName}" th:attr="data-url=@{/person/settlement-autocomplete},data-type='native'">
+            <label th:for="${id}" th:text="#{person.city}"></label>
+            <div th:replace="~{base/validation :: validation-message(${validationErrors},${id})}"></div>
+        </div>
+        <div th:case="false" class="input-field" th:with="id='person-cityName'" >
+            <input th:id="${id}" type="text" th:value="${cityName}" th:attr="data-url=@{/person/foreign-settlement-autocomplete},data-country=${residenceCountryCode},data-type='foreign'">
+            <label th:for="${id}" th:text="#{person.city}"></label>
+            <div th:replace="~{base/validation :: validation-message(${validationErrors},${id})}"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="individualIdType-input(person, validationErrors)">
+    <div th:with="personUtils = ${T(com.duosoft.ipas.util.PersonUtils)}, personIdTypeEnum = ${T(bg.duosoft.ipas.enums.PersonIdType)}">
+        <div th:remove="tag" th:if="${!(person.isCompany() && person.isForeigner())} ">
+            <div th:replace="~{base/form/input :: text(id = 'person-individualIdTxt', label = ${T(com.duosoft.ipas.util.PersonUtils).getIndividualTypeLabelForPersonFrom(@messageSource, person)}, value = ${person.individualIdTxt})}"></div>
+        </div>
+        <div th:if="${not person.isCompany()}">
+            <div th:if="${!person.isForeigner()}">
+                <div th:replace="~{base/form/radio :: basic(name = 'person-individualIdType', classes= 'none', label = #{person.egn}, value = ${personIdTypeEnum.EGN.name()}, checked = (${(person.individualIdType == null) or (personIdTypeEnum.EGN.name() == person.individualIdType)}))}"></div>
+            </div>
+            <div th:if="${person.isForeigner()}">
+                <div th:replace="~{base/form/radio :: basic(name = 'person-individualIdType', classes= 'none', label = #{person.lnch}, value = ${personIdTypeEnum.LNCH.name()}, checked = (${(person.individualIdType == null) or (personIdTypeEnum.LNCH.name() == person.individualIdType)}))}"></div>
+            </div>
+        </div>
+        <div th:if="${person.isCompany()}">
+            <div th:replace="~{base/form/radio :: basic(name = 'person-individualIdType', classes= 'none', label = #{person.eik}, value = ${personIdTypeEnum.EIK.name()}, checked = (${((person.individualIdType == null)) or (personIdTypeEnum.EIK.name() == person.individualIdType)}))}"></div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

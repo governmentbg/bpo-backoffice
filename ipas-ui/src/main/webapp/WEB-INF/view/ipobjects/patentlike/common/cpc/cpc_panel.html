@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="patent-cpc(cpcList)"
+     th:with="configParamUtils=${T(com.duosoft.ipas.util.ConfigParamUtils)},latestCpcVersion=${configParamUtils.getLastCpcVersion(@configParamServiceImpl)}">
+
+    <div class="row m_B20" th:if="${!T(org.springframework.util.CollectionUtils).isEmpty(cpcList)}">
+        <div class="col-12">
+            <table class="simple">
+                <thead>
+                <tr>
+                    <th th:text="#{number}"></th>
+                    <th th:text="#{cpc.edition.code.label}"></th>
+                    <th th:text="#{cpc.classes.label}"></th>
+                    <th style="width: 15%;"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="cpc : ${cpcList}" th:with="validVersion = ${cpc.cpcVersionCalculated == latestCpcVersion}">
+                    <td th:style="${!validVersion ? 'color:red':''}" th:text="${cpc.cpcQualification}"></td>
+                    <td th:style="${!validVersion ? 'color:red':''}" th:text="${cpc.cpcEdition}"></td>
+                    <td th:style="${!validVersion ? 'color:red':''}" th:text="${#strings.concat(cpc.cpcSection,cpc.cpcClass,cpc.cpcSubclass,cpc.cpcGroup,cpc.cpcSubgroup,' - ',cpc.cpcName)}"
+                        th:title="${cpc.cpcName}"></td>
+                    <td class="txtRight">
+
+                        <a th:if="${!validVersion}" style="border: 0" th:title="#{btn.info}" href="javascript:void(0);"
+                           th:attr="data-action='get-valid-cpcs',data-url=@{/patent-like/cpc/valid-cpcs},data-edition=${cpc.cpcEdition},
+                               data-section=${cpc.cpcSection}, data-class=${cpc.cpcClass},data-subclass=${cpc.cpcSubclass},
+                               data-group=${cpc.cpcGroup},data-subgroup=${cpc.cpcSubgroup},
+                               data-message=#{cpc.class.delete.confirmation.message}"
+                           class="txtLeft btn-floating ipas waves-effect waves-light action-button-top confirm">
+                            <i class="icon-info"></i>
+                        </a>
+
+                        <a style="border: 0" th:title="#{btn.delete}" href="javascript:void(0);"
+                           th:attr="data-action='delete-specific-cpc',data-url=@{/patent-like/cpc/delete},data-edition=${cpc.cpcEdition},
+                               data-section=${cpc.cpcSection}, data-class=${cpc.cpcClass},data-subclass=${cpc.cpcSubclass},
+                                data-group=${cpc.cpcGroup},data-subgroup=${cpc.cpcSubgroup},
+                               data-message=#{cpc.class.delete.confirmation.message}"
+                           class="txtLeft btn-floating ipas waves-effect waves-light action-button-top confirm hidden-element">
+                            <i class="icon-trash"></i>
+                        </a>
+
+                        <a th:if="${T(com.duosoft.ipas.util.PatentCpcsUtils).cpcSwapPositionsValidation(cpcList[cpcList.size()-1],cpc)}"
+                           th:attr="data-action='swap-cpc-position',data-url=@{/patent-like/cpc/swap-position},data-higher-position=true
+                               ,data-edition=${cpc.cpcEdition},data-section=${cpc.cpcSection}, data-class=${cpc.cpcClass},data-subclass=${cpc.cpcSubclass},
+                                data-group=${cpc.cpcGroup},data-subgroup=${cpc.cpcSubgroup},data-qualif=${cpc.cpcQualification}"
+                           href="javascript:void(0);"
+                           class="btn-floating ipas waves-effect waves-light action-button-top confirm hidden-element">
+                            <i class="material-icons">arrow_downward</i>
+                        </a>
+
+                        <a th:if="${T(com.duosoft.ipas.util.PatentCpcsUtils).cpcSwapPositionsValidation(cpcList[0],cpc)}"
+                           th:attr="data-action='swap-cpc-position',data-url=@{/patent-like/cpc/swap-position},data-higher-position=false
+                               ,data-edition=${cpc.cpcEdition},data-section=${cpc.cpcSection}, data-class=${cpc.cpcClass},data-subclass=${cpc.cpcSubclass},
+                                data-group=${cpc.cpcGroup},data-subgroup=${cpc.cpcSubgroup},data-qualif=${cpc.cpcQualification}"
+                           href="javascript:void(0);"
+                           class="btn-floating ipas waves-effect waves-light action-button-top confirm hidden-element">
+                            <i class="material-icons">arrow_upward</i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="row hidden-element">
+        <div class="col-10">
+            <div class="input-field">
+                <input id="cpcNumberAutocomplete" type="text" class="autocomplete form-ignore"
+                       th:placeholder="#{cpc.to.search.text}"
+                       th:attr="data-url=@{/patent-like/cpc/autocomplete}">
+            </div>
+        </div>
+        <div>
+            <button id="cpc-add-button" style="display: none;" th:text="#{add.cpc.class.button}"
+                    th:attr="data-action='add-patent-cpc',data-url=@{/patent-like/cpc/add}" th:type="button"
+                    class="button sm-icn-add m_T10">
+            </button>
+        </div>
+
+    </div>
+    <div class="row hidden-element">
+        <div class="m_T5">
+                <span class="orange"
+                      th:text="#{choose.cpc.class.warning.message}"></span>
+        </div>
+    </div>
+    <div class="row hidden-element">
+        <div class="m_T5" th:id="cpcs-errors-div">
+
+        </div>
+    </div>
+
+    <div id="new-cpc-hidden-fields">
+        <div>
+            <input type="text" th:id="new-cpcEdition" th:type="hidden" th:value="''">
+        </div>
+        <div>
+            <input type="text" th:id="new-cpcSection" th:type="hidden" th:value="''">
+        </div>
+        <div>
+            <input type="text" th:id="new-cpcClass" th:type="hidden" th:value="''">
+        </div>
+        <div>
+            <input type="text" th:id="new-cpcSubclass" th:type="hidden" th:value="''">
+        </div>
+        <div>
+            <input type="text" th:id="new-cpcGroup" th:type="hidden" th:value="''">
+        </div>
+        <div>
+            <input type="text" th:id="new-cpcSubgroup" th:type="hidden" th:value="''">
+        </div>
+        <div>
+            <input type="text" th:id="new-cpcName" th:type="hidden" th:value="''">
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

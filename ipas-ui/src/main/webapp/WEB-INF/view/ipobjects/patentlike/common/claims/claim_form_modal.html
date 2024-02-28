@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="patent-claim-form-modal(claim,isNewClaim)">
+    <div th:id="patent-claim-form-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="${isNewClaim} ? #{create.claim.title} : #{edit.claim.title}"></h4>
+            </div>
+            <input th:id="old-claimnbr" type="hidden" th:value="${oldClaimNbr}">
+            <div class="row">
+                <div class="col-4">
+                    <div th:replace="~{base/form/input :: text(id = 'patent-claim-nbr', label = #{claimNbr.label}, value = ${claim.claimNbr}, classes = 'number')}"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div th:replace="~{base/form/textarea :: basic(id = 'patent-claim-bg-description', label = #{claim.bg.label}, value = ${claim.claimDescription}, unescaped = true)}"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div th:replace="~{base/form/textarea :: basic(id = 'patent-claim-en-description', label = #{claim.en.label}, value = ${claim.claimEnglishDescription}, unescaped = true)}"></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer row">
+            <div class="col-12">
+                <button th:attr="data-action='edit-claims-list',data-url=@{/patent-like/claim/edit-list}, data-validation-block='#patent-claim-form-modal'"
+                        th:text="#{btn.save}" class="button sm-icn-save wmin_130">
+                </button>
+                <button th:text="#{btn.cancel}" th:type="button" class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

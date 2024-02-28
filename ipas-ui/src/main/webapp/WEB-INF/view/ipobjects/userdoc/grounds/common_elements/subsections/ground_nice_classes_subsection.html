@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="ground-nice-classes(rootGround)">
+
+    <div class="row m_T20">
+        <div class="col-12">
+            <h4 style="display: inline-block" th:text="#{goods.and.services.title}"></h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12" th:with="id='userdoc-ground-niceClassesInd'">
+            <div class="m_B10" th:id="${id}">
+                <div th:replace="~{base/form/radio :: basic(name = 'niceClassesInd-all', label = #{goods.and.services.option.all.title}, value = true, checked = ${rootGround.markGroundData?.niceClassesInd == true})}"></div>
+                <div th:replace="~{base/form/radio :: basic(name = 'niceClassesInd-partially', label = #{goods.and.services.option.partially.title}, value = false, checked = ${rootGround.markGroundData?.niceClassesInd == false})}"></div>
+                <div th:replace="base/validation :: validation-message(${validationErrors},${id})"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="ground-nice-classes-table" th:style="${rootGround.markGroundData?.niceClassesInd == false ? '': 'display:none'}"  class="m_B20">
+        <div th:replace="~{ :: ground-nice-classes-table(${rootGround.markGroundData?.niceClasses})}"></div>
+    </div>
+
+</div>
+
+
+<div th:fragment="ground-nice-classes-table(niceClasses)">
+
+    <th:block th:if="${!T(org.springframework.util.CollectionUtils).isEmpty(niceClasses)}">
+        <table class="simple">
+            <thead>
+            <th th:text="#{goods.and.services.class.title}"></th>
+            <th th:text="#{goods.and.services.description.title}"></th>
+            </thead>
+            <tbody>
+            <tr th:each="niceClass,iter : ${niceClasses}">
+                <td th:id="${iter.index}+'-ground-nice-code'" th:attr="data-ground-nice-description-id=${iter.index}+'-ground-nice-description'"
+                    th:text="${niceClass.niceClassCode}">
+                </td>
+                <td class="tc-base-ground">
+                    <span th:id="${iter.index}+'-ground-nice-description'" th:text="${niceClass.niceClassDescription}"></span>
+                    <a style="border: 0" th:title="#{btn.delete}" href="javascript:void(0);"
+                       th:attr="data-action='delete-ground-nice-class',data-url=@{/ground/nice-class/delete},
+                       data-nice-class-id=${iter.index}+'-ground-nice-code'"><i>X</i></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </th:block>
+
+    <div class="row col-2">
+        <div th:replace="~{base/form/input :: text(id = 'root-ground-new-nice-code', label = #{goods.and.services.class.title}, value = '', classes = 'number form-ignore')}"></div>
+    </div>
+
+    <div class="col-12">
+        <div th:replace="~{base/form/textarea :: basic(id = 'root-ground-new-nice-description', value = '', label = #{goods.and.services.description.title},classes = 'form-ignore')}"></div>
+    </div>
+
+    <div class="m_B40">
+        <button id="ground-nice-add-button" th:text="#{btn.add}" th:type="button" class="button sm-icn-add m_L0-i"
+                th:attr="data-action='add-ground-nice-class',data-url=@{/ground/nice-class/add}">
+        </button>
+        <div th:if="${!#lists.isEmpty(validationErrors)}" th:id="ground-nice-classes-table-errors">
+            <div th:replace="base/validation :: validation-message(${validationErrors},'ground-nice-classes-table-errors')"></div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

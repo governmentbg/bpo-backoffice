@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg"
+      th:with="title=${#messages.msg('userdoc.type.edit.title')}">
+<head th:replace="base/template :: head(title=${title})"></head>
+<body class="dark">
+
+<header class="app-header" th:replace="base/header"></header>
+
+<div class="app-body">
+    <div class="left-sidebar">
+        <div id="psb" class="ps--active-y">
+            <nav class="sidebar-nav">
+                <ul class="nav DropDownMenu">
+                    <li th:each="url : ${T(com.duosoft.ipas.util.UrlMap).ADMIN_PANEL_URLS}">
+                        <a th:href="@{${url.url}}" th:title="${#messages.msgOrNull(url.text)}"
+                           th:text="${#messages.msgOrNull(url.shortText)}"></a>
+                    </li>
+                </ul>
+            </nav>
+        </div><!-- #psb -->
+    </div><!-- .left-sidebar -->
+
+    <main class="main">
+        <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+        <div class="inner" id="userdoc-type-page-wrapper">
+            <div th:id="userdoc-type-edit-panel-container" class="row">
+
+                <div th:id="userdoc-main-data-panel">
+                    <div th:replace="admin/userdoc/userdoc_administration/userdoc_type_edit_panels :: main-userdoc-type-data"></div>
+                </div>
+
+                <div th:id="userdoc-type-configurations-panel">
+                    <div th:replace="admin/userdoc/userdoc_administration/userdoc_type_edit_panels :: userdoc-type-configurations"></div>
+                </div>
+
+                <div th:id="abdocs-document-panel">
+                    <div th:replace="admin/userdoc/userdoc_administration/userdoc_type_edit_panels :: userdoc-abdocs-document-data"></div>
+                </div>
+
+                <div th:id="invalidated-userdoc-types-panel">
+                    <div th:replace="admin/userdoc/userdoc_administration/userdoc_type_edit_panels :: invalidated-userdoc-types-data"></div>
+                </div>
+
+                <div th:id="userdoc-panels-panel">
+                    <div th:replace="admin/userdoc/userdoc_administration/userdoc_type_edit_panels :: userdoc-panels-data"></div>
+                </div>
+
+                <div th:id="person-roles-panel">
+                    <div th:replace="admin/userdoc/userdoc_administration/userdoc_type_edit_panels :: userdoc-person-roles-data"></div>
+                </div>
+
+                <div th:id="reception-relation-panel">
+                    <div th:replace="admin/userdoc/userdoc_administration/userdoc_type_edit_panels :: userdoc-reception-relation-data"></div>
+                </div>
+
+                <input type="hidden" id="userdoc" th:attr="data-userdoc-type=${userdocType.userdocType}">
+            </div>
+        </div>
+
+        <div class=" row">
+            <div class="col-12">
+                <a href="javascript:void(0);" class="button sm-icn-back m_L80"
+                   th:text="#{btn.back}" th:attr="data-action='userdoc-types-back',data-url=@{/admin/userdoc-types/list}">
+                </a>
+            </div>
+        </div>
+        <div th:replace="~{admin/userdoc/userdoc_administration/userdoc_types_table :: filter-params(${userdocTypesFilter})}"></div>
+
+    </main>
+</div>
+<div th:replace=":: modals" th:remove="tag"></div>
+<!-- JQuery files -->
+<footer class="page-footer" th:replace="base/footer"></footer>
+<div th:replace="base/template :: js-footer" th:remove="tag"></div>
+<div th:remove="tag" th:fragment="modals">
+    <div th:if="${!#lists.isEmpty(validationErrors)}"
+         th:replace="base/modal/validation_errors::errors(${validationErrors})" th:remove="tag"></div>
+</div>
+</div>
+</body>
+</html>

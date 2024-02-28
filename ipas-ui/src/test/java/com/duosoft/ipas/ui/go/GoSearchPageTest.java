@@ -1,0 +1,62 @@
+package com.duosoft.ipas.ui.go;
+
+import com.duosoft.ipas.config.ConfigurationUiTest;
+import org.hamcrest.CoreMatchers;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.openqa.selenium.By;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import static org.junit.Assert.*;
+
+@RunWith(SpringRunner.class)
+@Ignore
+public class GoSearchPageTest extends ConfigurationUiTest {
+
+    @Test
+    public void testUntitledTestCase() {
+
+        driver.get(baseUrl + "/geographical_indications/search");
+        authorization();
+
+        // Title
+        assertEquals("Търсене на географско означение", driver.getTitle());
+
+        // breadcrumbs
+        assertEquals("Начало", driver.findElement(By.xpath("//*[@id=\"breadcrumbs\"]/ol/li[1]/a")).getText());
+        assertEquals(baseUrl + "/home", driver.findElement(By.xpath("//*[@id=\"breadcrumbs\"]/ol/li[1]/a")).getAttribute("href"));
+        assertEquals("Търсене на географско означение", driver.findElement(By.xpath("//*[@id=\"breadcrumbs\"]/ol/li[2]/span")).getText() );
+
+        // left side panel
+        if (driver.findElement(By.xpath("/html/body")).getAttribute("class").equals("dark")) {
+            driver.findElement(By.xpath("//*[@id=\"btn-menu\"]")).click();
+        }
+
+        assertEquals("Наименование", driver.findElement(By.xpath("//*[@id=\"detail-list\"]/li[1]/span")).getText());
+        if (!driver.findElement(By.xpath("//*[@id=\"title\"]")).isEnabled()) {
+            driver.findElement(By.xpath("//*[@id=\"detail-list\"]/li[1]/label")).click();
+        }
+        assertEquals("Заявителски номер", driver.findElement(By.xpath("//*[@id=\"detail-list\"]/li[2]/span")).getText());
+        assertEquals("Дата на заявяване", driver.findElement(By.xpath("//*[@id=\"detail-list\"]/li[3]/span")).getText());
+        assertEquals("Регистров номер", driver.findElement(By.xpath("//*[@id=\"detail-list\"]/li[4]/span")).getText());
+        assertEquals("Дата на регистрация", driver.findElement(By.xpath("//*[@id=\"detail-list\"]/li[5]/span")).getText());
+        assertEquals("Начало на закрила", driver.findElement(By.xpath("//*[@id=\"detail-list\"]/li[6]/span")).getText());
+        assertEquals("Срок на закрила", driver.findElement(By.xpath("//*[@id=\"detail-list\"]/li[7]/span")).getText());
+        assertEquals("Заявител/притежател", driver.findElement(By.xpath("//*[@id=\"detail-list\"]/li[8]/span")).getText());
+        assertEquals("ПИС", driver.findElement(By.xpath("//*[@id=\"detail-list\"]/li[9]/span")).getText());
+        assertEquals("Статус", driver.findElement(By.xpath("//*[@id=\"detail-list\"]/li[10]/span")).getText());
+        assertEquals("Действия", driver.findElement(By.xpath("//*[@id=\"detail-list\"]/li[11]/span")).getText());
+        assertEquals("Данни за публикации", driver.findElement(By.xpath("//*[@id=\"detail-list\"]/li[12]/span")).getText());
+        assertEquals("Ница класове", driver.findElement(By.xpath("//*[@id=\"detail-list\"]/li[13]/span")).getText());
+        assertEquals("Виена класове", driver.findElement(By.xpath("//*[@id=\"detail-list\"]/li[14]/span")).getText());
+
+        // main block
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"result\"]")).getText().equals(""));
+        // searching
+        driver.findElement(By.xpath("//*[@id=\"submit-form\"]")).click();
+        // result panel
+        assertThat( driver.findElement(By.xpath("//*[@id=\"result\"]/div/div[1]/div/span")).getText(), CoreMatchers.containsString("Общ брой: "));
+
+    }
+}

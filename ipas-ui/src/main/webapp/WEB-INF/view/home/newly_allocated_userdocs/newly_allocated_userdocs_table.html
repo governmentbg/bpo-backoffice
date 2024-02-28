@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="table(newlyAllocatedUserdocs,newlyAllocatedUserdocsCount,newlyAllocatedUserdocsFilter)"
+     th:with="sorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.SorterUtils)},
+              basicUtils=${T(bg.duosoft.ipas.util.general.BasicUtils)},
+              securityRoles=${T( bg.duosoft.ipas.enums.security.SecurityRole)},
+              securityUtils=${T(bg.duosoft.ipas.util.security.SecurityUtils)},
+              dateUtils=${T(bg.duosoft.ipas.util.date.DateUtils)},
+              coreUtils=${T(com.duosoft.ipas.util.CoreUtils)},
+              newlyAllocatedUserdocSorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.NewlyAllocatedUserdocSorterUtils)}">
+
+    <div th:remove="tag" th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(newlyAllocatedUserdocs)}">
+        <div th:remove="tag" th:case="true">
+            <div th:replace="base/message :: info(#{empty.list})"></div>
+        </div>
+        <div th:remove="tag" th:case="false">
+            <div class="row">
+                <div>
+                    <span th:text="#{total}"></span>
+                    <span th:text="${newlyAllocatedUserdocsCount}"></span>
+                </div>
+            </div>          <div class="m_T5">
+            <table class="simple bpo">
+                <thead>
+                <tr>
+                    <th th:text="#{number}"></th>
+                    <th th:with="isSelected=${#strings.equalsIgnoreCase(newlyAllocatedUserdocsFilter.sortColumn,newlyAllocatedUserdocSorterUtils.USERDOC_FILING_DATE)},dataSort=${newlyAllocatedUserdocSorterUtils.USERDOC_FILING_DATE}"
+                        th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,newlyAllocatedUserdocsFilter.sortOrder)}">
+                        <div th:replace="base/table_sorter :: sorter(#{newly.allocated.userdoc.table.filingDate},${newlyAllocatedUserdocsFilter.sortOrder},${isSelected})"></div>
+                    </th>
+                    <th th:with="isSelected=${#strings.equalsIgnoreCase(newlyAllocatedUserdocsFilter.sortColumn,newlyAllocatedUserdocSorterUtils.USERDOC_EXTERNAL_SYSTEM_ID)},dataSort=${newlyAllocatedUserdocSorterUtils.USERDOC_EXTERNAL_SYSTEM_ID}"
+                        th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,newlyAllocatedUserdocsFilter.sortOrder)}">
+                        <div th:replace="base/table_sorter :: sorter(#{newly.allocated.userdoc.table.filingNumber},${newlyAllocatedUserdocsFilter.sortOrder},${isSelected})"></div>
+                    </th>
+                    <th style="width: 200px" th:with="isSelected=${#strings.equalsIgnoreCase(newlyAllocatedUserdocsFilter.sortColumn,newlyAllocatedUserdocSorterUtils.USERDOC_TYPE_NAME)},dataSort=${newlyAllocatedUserdocSorterUtils.USERDOC_TYPE_NAME}"
+                        th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,newlyAllocatedUserdocsFilter.sortOrder)}">
+                        <div th:replace="base/table_sorter :: sorter(#{newly.allocated.userdoc.table.type},${newlyAllocatedUserdocsFilter.sortOrder},${isSelected})"></div>
+                    </th>
+                    <th style="width: 300px" th:text="#{newly.allocated.userdoc.table.object}"></th>
+                    <th th:with="isSelected=${#strings.equalsIgnoreCase(newlyAllocatedUserdocsFilter.sortColumn,newlyAllocatedUserdocSorterUtils.USERDOC_DATE_CHANGED)},dataSort=${newlyAllocatedUserdocSorterUtils.USERDOC_DATE_CHANGED}"
+                        th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,newlyAllocatedUserdocsFilter.sortOrder)}">
+                        <div th:replace="base/table_sorter :: sorter(#{newly.allocated.userdoc.table.dateChanged},${newlyAllocatedUserdocsFilter.sortOrder},${isSelected})"></div>
+                    </th>
+                    <th th:if="${securityUtils.hasRights(securityRoles.IpObjectsSearchForeignObjectsData)}" th:with="isSelected=${#strings.equalsIgnoreCase(newlyAllocatedUserdocsFilter.sortColumn,newlyAllocatedUserdocSorterUtils.USER_NAME)},dataSort=${newlyAllocatedUserdocSorterUtils.USER_NAME}"
+                        th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,newlyAllocatedUserdocsFilter.sortOrder)}">
+                        <div th:replace="base/table_sorter :: sorter(#{tableHeader.responsibleUser.label},${newlyAllocatedUserdocsFilter.sortOrder},${isSelected})"></div>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="userdoc,userdocStat : ${newlyAllocatedUserdocs}"
+                    th:with="filingNumber=${userdoc.documentId.createFilingNumber()}">
+                    <td>
+                        <span th:text="${userdocStat.count + ((newlyAllocatedUserdocsFilter.page - 1)*newlyAllocatedUserdocsFilter.pageSize)}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${#dates.format(userdoc.filingDate,T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}"></span>
+                    </td>
+                    <td>
+                        <a th:text="${userdoc.externalSystemId}" th:href="@{/ipobject/view(userdocFilingNumber=${filingNumber})}"></a>
+                    </td>
+                    <td>
+                        <span th:text="${userdoc.userdocTypeName}"></span>
+                    </td>
+
+                    <td th:with="responsibleUserLabel=#{userdoc.object.responsible.user.title},responsibleUserText=${!T(java.util.Objects).isNull(userdoc.userdocIpObject.responsibleUserName)}?${#strings.concat(',</br>',userdoc.userdocIpObject.responsibleUserName)}
+                                     ,regNumLabel=#{my.userdocs.reg.nbr.title},objectFilingNumber=${userdoc.userdocIpObject.cFileId.createFilingNumber()},regNumText=${!T(java.util.Objects).isNull(userdoc.userdocIpObject.registrationNbr)}?${#strings.concat(',</br>',regNumLabel,userdoc.userdocIpObject.registrationNbr)}
+                                     ,objectStatusName= ${#strings.concat('; ',userdoc.userdocIpObject.objectStatusName)},titleText=${!T(java.util.Objects).isNull(userdoc.userdocIpObject.title) && #strings.length(userdoc.userdocIpObject.title) > coreUtils.HOME_PANEL_MAX_TEXT_LENGTH_50}?${',</br> '.concat(#strings.substring(userdoc.userdocIpObject.title,0,coreUtils.HOME_PANEL_MAX_TEXT_LENGTH_50).concat('...'))}:(${!T(java.util.Objects).isNull(userdoc.userdocIpObject.title)}?${#strings.concat(',</br> ',userdoc.userdocIpObject.title)})">
+                        <a th:utext="${#strings.concat(objectFilingNumber,responsibleUserText,regNumText,titleText,objectStatusName)}" th:href="@{/ipobject/view(filingNumber=${objectFilingNumber})}"></a>
+                    </td>
+                    <td>
+                        <span th:text="${#dates.format(userdoc.dateChanged,T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT)}"></span>
+                    </td>
+                    <td th:if="${securityUtils.hasRights(securityRoles.IpObjectsSearchForeignObjectsData)}">
+                        <span th:text="${userdoc.responsibleUserName}"></span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="home-panel-paginator">
+                <div th:replace="base/paginator :: paginator(page=${newlyAllocatedUserdocsFilter.page},pageSize=${newlyAllocatedUserdocsFilter.pageSize},total=${newlyAllocatedUserdocsCount},baseUrl=@{newly-allocated-userdocs/update-table},
+                            tableContainerDiv='newly-allocated-userdoc-table-wrapper',additionalParams='&tableCount='+${newlyAllocatedUserdocsCount}+
+                            ${newlyAllocatedUserdocsFilter.objectFileNbr != null ? '&objectFileNbr='+newlyAllocatedUserdocsFilter.objectFileNbr : '' }+
+                            ${newlyAllocatedUserdocsFilter.userdocFilingDateFrom != null ? '&userdocFilingDateFrom='+newlyAllocatedUserdocsFilter.userdocFilingDateFrom : '' }+
+                            ${newlyAllocatedUserdocsFilter.userdocFilingDateTo != null ? '&userdocFilingDateTo='+newlyAllocatedUserdocsFilter.userdocFilingDateTo : '' }+
+                            ${newlyAllocatedUserdocsFilter.userdocFilingNumber != null ? '&userdocFilingNumber='+newlyAllocatedUserdocsFilter.userdocFilingNumber : '' }+
+                            ${newlyAllocatedUserdocsFilter.objectFileTyp != null ? '&objectFileTyp='+newlyAllocatedUserdocsFilter.objectFileTyp : '' }+
+                            ${newlyAllocatedUserdocsFilter.userdocType != null ? '&userdocType='+newlyAllocatedUserdocsFilter.userdocType : '' }+
+                            ${newlyAllocatedUserdocsFilter.responsibleUser != null ? '&responsibleUser='+newlyAllocatedUserdocsFilter.responsibleUser : '' }+
+                            '&onlyActiveUsers='+${newlyAllocatedUserdocsFilter.onlyActiveUsers}+
+                            '&sortOrder='+${newlyAllocatedUserdocsFilter.sortOrder}+'&sortColumn='+${newlyAllocatedUserdocsFilter.sortColumn})"></div>
+            </div>
+        </div>
+            <div>
+                <input th:type="hidden" class="form-ignore" th:id="newly-allocated-userdoc-page" th:value="${newlyAllocatedUserdocsFilter.page}">
+                <input th:type="hidden" class="form-ignore" th:id="table-count" th:value="'?tableCount='+${newlyAllocatedUserdocsCount}">
+                <input th:type="hidden" class="form-ignore" th:id="newly-allocated-userdoc-pageSize" th:value="${newlyAllocatedUserdocsFilter.pageSize}">
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

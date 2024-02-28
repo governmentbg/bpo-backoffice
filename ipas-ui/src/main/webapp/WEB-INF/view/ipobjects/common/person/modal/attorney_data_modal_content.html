@@ -1,0 +1,63 @@
+<div th:fragment="attorney-data-content(validationErrors,attorneyInitialData, isEditMode)"
+     th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+    <div class="modal-content">
+        <div class="center">
+            <h4 th:text="#{person.agent.power.of.attorney.init.title}"></h4>
+        </div>
+        <div class="validation-wrapper">
+            <div th:replace="base/validation :: validation-message(${validationErrors},'agent-attorney-data-errors')"></div>
+        </div>
+
+        <div class="row" style="margin-bottom: 20px; margin-left:3px">
+            <div class="col-3">
+                <div th:replace="~{base/form/input :: datepicker(id = 'agent-data-attorney-power-term',value = ${null != attorneyInitialData.attorneyPowerTerm ? #dates.format(attorneyInitialData.attorneyPowerTerm, dateFormatDot) : ''}, label = #{agent.attorney.power.term.label})}"></div>
+            </div>
+            <div class="col-9">
+                <div th:replace="~{base/form/checkbox :: basic(id = 'agent-data-attorney-power-term-indefinite', label = #{agent.attorney.power.term.indefinite.label}, isChecked = ${attorneyInitialData.attorneyPowerTermIndefinite})}"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                <div th:replace="~{base/form/radio :: basic(name = 'agent-reauthorizationRight', label = #{agent.reauthorization.right.yes.label}, value = true, checked=${attorneyInitialData.reauthorizationRight==true})}"></div>
+            </div>
+            <div class="col-6">
+                <div th:replace="~{base/form/radio :: basic(name = 'agent-reauthorizationRight', label = #{agent.reauthorization.right.no.label}, value = false,checked=${attorneyInitialData.reauthorizationRight ==false})}"></div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 20px; margin-left:3px">
+            <div class="col-12">
+                <div th:replace="~{base/form/checkbox :: basic(id = 'agent-data-prior-reprs-revocation', label = #{agent.prior.reprs.revocation.label}, isChecked = ${attorneyInitialData.priorReprsRevocation})}"></div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 10px; margin-left:3px">
+            <div class="col-12">
+                <div th:replace="~{base/form/textarea :: basic(id = 'agent-data-authorization-condition',value=${attorneyInitialData.authorizationCondition}, label = #{agent.authorization.condition.label})}"></div>
+            </div>
+        </div>
+
+    </div>
+    <th:block th:if="${isEditMode == false}">
+        <div class="modal-footer row">
+            <div class="col-12">
+                <button th:attr="data-action='edit-power-of-attorney-initial-data',data-url=@{/representative/power-of-attorney-data/initial-representative-data/edit}, data-validation-block='#agent-form-modal'"
+                        th:text="#{btn.continue}" class="button sm-icn-save wmin_130">
+                </button>
+                <button th:text="#{btn.cancel}" th:type="button"
+                        class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+    </th:block>
+    <th:block th:if="${isEditMode == true}">
+        <div class="modal-footer row">
+            <div class="col-12">
+                <button th:attr="data-action='edit-power-of-attorney-data',data-url=@{/representative/power-of-attorney-data/edit}, data-validation-block='#agent-power-of-attorney-form-modal'"
+                        th:text="#{btn.save}" class="button sm-icn-save wmin_130">
+                </button>
+                <button th:text="#{btn.cancel}" th:type="button"
+                        class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+    </th:block>
+</div>

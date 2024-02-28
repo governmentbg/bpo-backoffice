@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="extraDataUtils" type="bg.duosoft.ipas.util.userdoc.UserdocExtraDataUtils"*/-->
+<div th:remove="tag" th:fragment="dataDate(type, value, classes, allowedTypes)">
+    <div th:remove="tag" th:with="dataType = ${extraDataUtils.selectType(allowedTypes, type)}">
+        <div th:remove="tag" th:if="${dataType != null && dataType.isDate}" >
+
+            <div th:class="${classes}" th:classappend="(${#strings.isEmpty(value)}?none)">
+                <div class="input-field" th:with="id='object-userdoc-extraData-'+${type}">
+                    <input th:id="${id}" type="text" data-type="datepicker"
+                           th:value="${#dates.format(value,T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}">
+                    <label th:for="${id}" th:text="${label != null} ? ${label} : ${dataType.title}"></label>
+                    <div th:replace="base/validation :: validation-message(${validationErrors},${id})"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="dataText(type, value, classes, allowedTypes)">
+    <div th:remove="tag" th:with="dataType = ${extraDataUtils.selectType(allowedTypes, type)}">
+        <div th:remove="tag" th:if="${dataType != null && dataType.isText}" >
+            <div th:class="${classes}" th:classappend="(${#strings.isEmpty(value)}?none)">
+                <div class="input-field" th:with="id='object-userdoc-extraData-'+${type}">
+                    <input th:id="${id}" type="text" th:value="${value}">
+                    <label th:for="${id}" th:text="${label != null} ? ${label} : ${dataType.title}"></label>
+                    <div th:replace="base/validation :: validation-message(${validationErrors},${id})"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="dataText-autocomplete(type, value, classes, allowedTypes,autocomplete, url, visibleOnEmpty)">
+    <div th:remove="tag" th:with="dataType = ${extraDataUtils.selectType(allowedTypes, type)}">
+        <div th:remove="tag" th:if="${dataType != null && dataType.isText}" >
+            <div th:class="${classes}" th:classappend="(${#strings.isEmpty(value) && visibleOnEmpty==false}?none)">
+                <div class="input-field" th:with="id='object-userdoc-extraData-'+${type}">
+                    <input th:attrappend="data-autocomplete=${autocomplete != null}?${autocomplete},data-url=${url != null}?${url}" th:id="${id}" type="text" th:value="${value}">
+                    <label th:for="${id}" th:text="${label != null} ? ${label} : ${dataType.title}"></label>
+                    <div th:replace="base/validation :: validation-message(${validationErrors},${id})"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="dataNumber(type, value, classes, allowedTypes)">
+    <div th:remove="tag" th:with="dataType = ${extraDataUtils.selectType(allowedTypes, type)}">
+        <div th:remove="tag" th:if="${dataType != null && dataType.isNumber}" >
+            <div th:class="${classes}" th:classappend="(${#strings.isEmpty(value)}?none)">
+                <div class="input-field" th:with="id='object-userdoc-extraData-'+${type}">
+                    <input th:id="${id}" type="text" th:value="${value}" class="number">
+                    <label th:for="${id}" th:text="${label != null} ? ${label} : ${dataType.title}"></label>
+                    <div th:replace="base/validation :: validation-message(${validationErrors},${id})"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="dataFlag(type, value, classes, allowedTypes)">
+    <div th:remove="tag" th:with="dataType = ${extraDataUtils.selectType(allowedTypes, type)}">
+        <div th:remove="tag" th:if="${dataType != null && dataType.isBoolean}" >
+            <div th:class="${classes}">
+                <div class="input-field" th:with="id='object-userdoc-extraData-'+${type}">
+                    <div>
+                        <label>
+                            <input th:id="${id}" th:type="checkbox" th:checked="${value}" />
+                            <span th:text="${label != null} ? ${label} : ${dataType.title}"></span>
+                        </label>
+                        <div class="m_T5">
+                            <div class="m_T5" th:replace="base/validation :: validation-message(${validationErrors},${id})"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="dataFlag-radio(type, value, classes, allowedTypes, label, checked)">
+    <div th:remove="tag" th:with="dataType = ${extraDataUtils.selectType(allowedTypes, type)}">
+        <div th:remove="tag" th:if="${dataType != null && dataType.isBoolean}" >
+            <div class="input-field m_0" th:with="id='object-userdoc-extraData-'+${type}">
+                <div>
+                    <label class="m_R10" th:with="name='object-userdoc-extraData-'+${type}">
+                        <input th:class="${classes}" th:name="${name}" th:value="${value}" th:type="radio"
+                               th:checked="${checked}"/>
+                        <span th:text="${label}"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="dataText-textarea(type, value, wrapperClasses, allowedTypes, textareaClasses)">
+    <div th:remove="tag" th:with="dataType = ${extraDataUtils.selectType(allowedTypes, type)}">
+        <div th:remove="tag" th:if="${dataType != null && dataType.isText}" >
+
+            <div th:class="${wrapperClasses}" th:classappend="(${#strings.isEmpty(value)}?none)">
+                <div class="input-field" th:with="id='object-userdoc-extraData-'+${type}">
+                    <textarea th:id="${id}" class="materialize-textarea" th:text="${value}" th:classappend="${true}? ${textareaClasses}"></textarea>
+                    <label th:for="${id}" th:text="${label != null} ? ${label} : ${dataType.title}"></label>
+                    <div th:replace="base/validation :: validation-message(${validationErrors},${id})"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="approvedData-radio(field, value, classes, label, checked)">
+    <div class="input-field m_0" th:with="id='object-approvedData-'+${field}">
+        <div>
+            <label class="m_R10" th:with="name='object-approvedData-'+${field}">
+                <input th:class="${classes}" th:name="${name}" th:value="${value}" th:type="radio"
+                       th:checked="${checked}"/>
+                <span th:text="${label}"></span>
+            </label>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

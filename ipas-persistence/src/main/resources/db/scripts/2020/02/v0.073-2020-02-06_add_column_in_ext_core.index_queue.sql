@@ -1,0 +1,4 @@
+ALTER TABLE [EXT_CORE].[INDEX_QUEUE]
+ADD ADDR_NBR numeric(4, 0);
+
+

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg">
+
+<head th:replace="~{base/template :: head(title = #{admin.person.merge.title})}"></head>
+<body class="dark left-sidebar-show">
+<header class="app-header" th:replace="base/header"></header>
+
+<div class="app-body">
+    <div class="left-sidebar">
+        <div id="psb" class="ps--active-y">
+            <nav class="sidebar-nav">
+                <ul class="nav DropDownMenu">
+                    <li th:each="url : ${T(com.duosoft.ipas.util.UrlMap).ADMIN_PERSON_URLS}">
+                        <a th:href="@{${url.url}}" th:title="${#messages.msgOrNull(url.text)}"
+                           th:text="${#messages.msgOrNull(url.shortText)}"></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <main class="main">
+        <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+        <div class="inner continer">
+            <div th:replace="base/toast/message :: info(message=#{merge.persons.info.msg},removeCloseButton = true)"></div>
+
+            <div class="row">
+                <div th:replace="base/toast/message :: error(message = ${errorMessage},unescaped = true)"></div>
+                <div th:replace="base/toast/message :: success(message = ${successMessage},unescaped = true)"></div>
+            </div>
+
+            <div class="panel">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="center">
+                            <h1 class="section-header" th:text="#{admin.person.merge.title}"></h1>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-filter-wrapper m_T10">
+
+                    <div class="row m_T10">
+                        <div class="col-6">
+                            <div th:replace="~{base/form/input :: text(id = 'personName-filter', label = #{person.name.label}, value = (${mergePersonFilter.personName}))}"></div>
+                        </div>
+                        <div class="col-6">
+                            <div th:replace="~{base/form/input :: text(id = 'personAddress-filter', label = #{person.address.label}, value = (${mergePersonFilter.personAddress}))}"></div>
+                        </div>
+                    </div>
+
+                    <div class="row m_B15">
+                        <div class="col-6">
+                            <div class="left-align">
+                                <a th:replace="~{base/form/button :: material-btn(label = #{btn.sync}, dataAction = 'update-duplicate-persons', dataUrl = @{/admin/person/merge/update-map},btnStyle = 'width: 200px;', icon = 'sync')}"></a>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="right-align">
+                                <a th:replace="~{base/form/button :: material-btn(label = #{btn.search}, dataAction = 'submit-merge-person-search', dataUrl = @{/admin/person/merge/search},btnStyle = 'width: 200px;', icon = 'search', classes = 'm_R20')}"></a>
+                                <a th:replace="~{base/form/button :: material-btn(label = #{btn.clear}, dataAction = 'clear-merge-person-search', dataUrl = @{/admin/person/merge/search},btnStyle = 'width: 200px;', icon = 'clear')}"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:id="merge-person-search-result-wrapper" th:attr="data-url=@{/admin/person/merge/load-merge-persons}">
+                    <div th:if="${T(org.springframework.util.CollectionUtils).isEmpty(mergePersonList)}">
+                        <div th:replace="base/loader :: local-loader"></div>
+                    </div>
+                    <div th:if="${!T(org.springframework.util.CollectionUtils).isEmpty(mergePersonList)}">
+                        <div th:replace="admin/person/merge/merge_table :: table(mergePersonList=${mergePersonList},mergePersonCount=${mergePersonCount},mergePersonFilter=${mergePersonFilter})"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+</div>
+
+<footer class="page-footer" th:replace="base/footer"></footer>
+<div th:replace="base/template :: js-footer" th:remove="tag"></div>
+</body>
+</html>

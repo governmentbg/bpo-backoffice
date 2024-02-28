@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="simple-header">
+    <div class="col-12">
+        <h3 class="inline-block" th:text="#{panel.title.decisions}"></h3>
+    </div>
+</div>
+
+<div th:fragment="loader">
+    <div th:replace=":: simple-header"></div>
+    <div th:replace="base/loader :: local-loader"></div>
+</div>
+
+<div th:fragment="decisions_panel(templates, contexts, draftingEditorAppUrl)" th:remove="tag" th:with="panelName=${T(com.duosoft.ipas.enums.OffidocPanel).Decisions.code()}">
+
+    <div id="successfulExport" style="display: none" th:text="#{decision.success.export}"/>
+    <div id="exportFailed" style="display: none" th:text="#{decision.fail.export}"/>
+
+    <div class="row">
+        <div class="col-10">
+            <h3 class="inline-block" th:text="#{panel.title.decisions}"></h3>
+            <div class="inline-block">
+                <span class="sign bg__dark-red edit none" th:text="#{panel.header.edit}"></span>
+            </div>
+        </div>
+        <div class="col-2 txtRight">
+            <a class="small sm-icn-edit m_T10 m_B10" th:attr="data-action='edit'" th:title="#{btn.change}"></a>
+            <a class="small sm-icn-cross m_T10 m_B10 none" th:attr="data-action='cancel'" th:title="#{btn.cancel}"></a>
+        </div>
+    </div>
+
+    <div class="row hidden-element">
+        <div class="col-12">
+            <form th:action="@{/offidoc/decisions/create-context}" method="POST" >
+                <input type="hidden" name="sessionIdentifier" th:value="${sessionIdentifier}"/>
+                <div id="templateEmptyWarn" style="display: none" th:text="#{decision.select.template}"/>
+                <div class="row" >
+                    <div class="col-8">
+                        <select name="templateId" id="templateId">
+                            <option value="" th:text="'Моля изберете'" selected></option>
+                            <option th:each="template: ${templates}" th:text="${template.name}" th:value="${template.id}"/>
+                        </select>
+                        <input type="hidden" value="" name="templateName" id="templateName"/>
+                    </div>
+                    <div class="col-4">
+                        <button th:id="createDecision" th:text="#{btn.createDecision}" th:type="button" class="button sm-icn-save m_T5"></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="decisions-table-wrapper">
+        <div th:replace=":: decisions_table(${contexts})"/>
+    </div>
+
+</div>
+
+<div th:fragment="decisions_table(contexts)">
+    <div class="row">
+        <div class="col-12">
+            <table class="simple" th:if="${!T(org.springframework.util.CollectionUtils).isEmpty(contexts)}">
+                <thead>
+                <tr>
+                    <th th:text="#{decision.templateName}">Context</th>
+                    <th th:text="#{decision.creator}">Context</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="context : ${contexts}">
+                    <td th:text="${context.templateName}">Template 1</td>
+                    <td th:text="${context.creator}">Context 1</td>
+                    <td class="inline-block">
+                        <div class="row">
+                            <div class="col-11"></div>
+                            <div class="col-1 right-align action-menu-wrapper hidden-element" th:with="menuId=|decisions-menu-${context.id}|">
+                                <i th:title="'Меню'" th:attr="data-action='toggle-menu',data-id=${menuId}" class="zmdi zmdi-menu"></i>
+                                <div th:id="${menuId}" class="action-menu none m_L25-i">
+                                <span>
+                                    <i class="material-icons">edit</i>
+                                    <a class="b0" th:title="#{decisions.edit}" href="javascript:void(0);"  th:text="#{decisions.edit}"
+                                    th:attr="data-action='edit-decision',data-url=@{${draftingEditorAppUrl}+'/'+${context.id}}">
+                                    </a>
+                                </span>
+                                <span>
+                                    <i class="material-icons">archive</i>
+                                    <a class="b0" th:title="#{decisions.export.docx}" href="javascript:void(0);" th:text="#{decisions.export.docx}"
+                                       th:attr="data-action='export-decision-file',data-name=${context.templateName},data-context=${context.id},data-url=@{/offidoc/decisions/export-file/{fileType}(fileType='docx')}">
+                                    </a>
+                                </span>
+                                <span>
+                                    <i class="material-icons">archive</i>
+                                    <a class="b0" th:title="#{decisions.export.pdf}" href="javascript:void(0);" th:text="#{decisions.export.pdf}"
+                                       th:attr="data-action='export-decision-file',data-name=${context.templateName},data-context=${context.id},data-url=@{/offidoc/decisions/export-file/{fileType}(fileType='pdf')}">
+                                    </a>
+                                </span>
+
+                                    <span>
+                                    <i class="icon-trash"></i>
+                                    <a class="b0 confirm" th:title="#{decisions.delete}" href="javascript:void(0);"
+                                       th:attr="data-action='delete-decision',
+                                                data-url=@{/offidoc/decisions/delete-context},
+                                                data-context=${context.id},
+                                                data-message=#{decision.on.deleting.message}"
+                                       th:text="#{decisions.delete}">
+                                    </a>
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

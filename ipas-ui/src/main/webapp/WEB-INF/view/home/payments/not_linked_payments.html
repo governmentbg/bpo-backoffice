@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg">
+
+<head th:replace="base/template :: head(title=#{not.linked.payments.title})"></head>
+
+<body class="dark left-sidebar-show">
+
+<header class="app-header" th:replace="base/header"></header>
+
+<div class="app-body" th:with="securityUtils=${T(bg.duosoft.ipas.util.security.SecurityUtils)}, securityRoles=${T( bg.duosoft.ipas.enums.security.SecurityRole)},dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+    <div th:replace="base/left-sidebars :: list(urls = ${T(com.duosoft.ipas.util.UrlMap).getHomeUrlsFiltered()})"></div>
+
+    <main class="main">
+        <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+        <div class="inner continer">
+            <div class="row">
+                <div class="col-12">
+                    <div class="panel">
+                        <div class="center">
+                            <h1 class="section-header" th:text="#{not.linked.payments.title}"></h1>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <div th:replace="~{base/form/input :: datepicker(id = 'not-linked-payments-date-from-filter', label = #{not.linked.payments.filter.date.from}, value = ${#dates.format(notLinkedPaymentsFilter.dateFrom,dateFormatDot)})}"></div>
+                            </div>
+                            <div class="col-6">
+                                <div th:replace="~{base/form/input :: datepicker(id = 'not-linked-payments-date-to-filter', label = #{not.linked.payments.filter.date.to}, value = ${#dates.format(notLinkedPaymentsFilter.dateTo,dateFormatDot)})}"></div>
+                            </div>
+                        </div>
+                        <div class="row right-align">
+                            <div class="col-12">
+                                <a th:replace="~{base/form/button :: material-btn(label = #{btn.search}, idBtn = 'search-not-linked-payments-btn', dataUrl = @{/not-linked-payments/search} , icon = 'search', classes = 'm_R20 m_T5')}"></a>
+                                <a th:replace="~{base/form/button :: material-btn(label = #{btn.clear}, idBtn = 'clear-not-linked-payments-btn',href=@{/not-linked-payments/list}, icon = 'clear', classes = 'm_T5')}"></a>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-12" th:id="not-linked-payments-table-wrapper" th:attr="data-url=@{/not-linked-payments/update-table}">
+                                <div th:replace="home/payments/not_linked_payments_table :: table(notLinkedPaymentsList=${notLinkedPaymentsList},notLinkedPaymentsCount=${notLinkedPaymentsCount}, notLinkedPaymentsFilter=${notLinkedPaymentsFilter})"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<footer class="page-footer" th:replace="base/footer"></footer>
+<div th:replace="base/template :: js-footer" th:remove="tag"></div>
+</body>
+</html>

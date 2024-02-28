@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="errorLog" type="bg.duosoft.ipas.core.model.error.CErrorLog"*/-->
+<div th:fragment="modal(errorLog)" th:with="objectUtils=${T(java.util.Objects)}, dateTimeFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT}, dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+    <div th:id="resolve-error-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <div>
+                    <h3 th:text="#{error.log.modal.title}"></h3>
+                </div>
+            </div>
+            <div>
+                <div class="row">
+                    <div class="col-12">
+                        <div th:replace="~{base/form/input :: text(id = 'error-log-resolveComment', label = #{error.log.modal.comment})}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer row">
+            <div class="col-12">
+                <button th:attr="data-action='resolve-error-submit', data-id=${errorLog.id}, data-url=@{/admin/error-log/mark-as-resolved}" th:text="#{btn.save}" class="button sm-icn-save wmin_130"> </button>
+                <button th:text="#{btn.cancel}" type="button" class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="table(mergePersonList,mergePersonCount,mergePersonFilter)">
+
+    <div th:remove="tag" th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(mergePersonList)}">
+        <div th:remove="tag" th:case="true">
+            <div class="p_T20_B20">
+                <div class="bg__light-blue p_10 m_B10 m_T10 center">
+                    <span th:text="#{empty.list}"></span>
+                </div>
+            </div>
+        </div>
+        <div th:remove="tag" th:case="false">
+            <div class="row">
+                <div class="col-12">
+                    <span th:text="#{total}"></span>
+                    <span th:text="${mergePersonCount}"></span>
+                </div>
+            </div>
+            <div class="row m_T5">
+                <div class="col-12">
+                    <table class="simple bpo long-data-break">
+                        <thead>
+                        <tr>
+                            <th th:text="#{number}"></th>
+                            <th th:text="#{merge.person.template}"></th>
+                            <th th:text="#{person.name.label}"></th>
+                            <th th:text="#{person.address.label}"></th>
+                            <th th:text="#{options.label}"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="mergePerson,mergePersonStat : ${mergePersonList}">
+                            <td>
+                                <span th:text="${mergePersonStat.count + ((page-1) * pageSize)}"></span>
+                            </td>
+                            <td>
+                                <span th:text="${mergePerson.checkText}"></span>
+                            </td>
+                            <td>
+                                <span th:text="${mergePerson.personName}"></span>
+                            </td>
+                            <td>
+                                <span th:text="${mergePerson.addressStreet}"></span>
+                            </td>
+                            <td class="p_0 center">
+                                <a th:replace="~{base/form/button :: material-table-btn(title = #{btn.merge.duplicate}, href = @{/admin/person/merge/edit/{checkText}(checkText=${mergePerson.checkText})} , icon = 'control_point_duplicate')}"></a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div th:replace="base/paginator :: paginator(page=${page},pageSize=${pageSize},total=${mergePersonCount},baseUrl=@{admin/person/merge/update-table},
+                        tableContainerDiv='merge-person-search-result-wrapper',
+                        additionalParams='&tableCount='+${mergePersonCount}+${mergePersonFilter.personName != null ? '&personName='+mergePersonFilter.personName : '' }+
+                        ${mergePersonFilter.personAddress != null ? '&personAddress='+mergePersonFilter.personAddress : '' })"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

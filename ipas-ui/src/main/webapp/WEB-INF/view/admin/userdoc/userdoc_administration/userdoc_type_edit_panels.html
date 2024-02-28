@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:remove="tag" th:fragment="userdoc-type-configurations">
+    <div th:replace="base/toast/message :: success(message = ${successMessage},unescaped = true)"></div>
+    <div id="userdoc-type-configurations-panel-content" class="panel"
+         th:with="userdocTypesUtils=${T(bg.duosoft.ipas.util.userdoc_types.UserdocTypesUtils)}">
+
+        <div class="row m_B10">
+            <div class="col-12">
+                <h3 class="panel-title ui-sortable-handle inline-block"
+                    th:text="#{userdoc.type.configurations.title}"></h3>
+            </div>
+        </div>
+
+        <div class="row m_T10">
+            <div class="col-4">
+                <div th:replace="~{base/form/select :: map(id = 'registerToProcess', label = #{userdoc.type.register.to.process.label}, map = ${userdocTypesUtils.generateRegisterToProcessTypes()}, selected = ${userdocType?.userdocTypeConfig?.registerToProcess})}"></div>
+            </div>
+            <div class="col-4">
+                <div th:replace="~{base/form/select :: map(id = 'markInheritResponsibleUser', label = #{userdoc.type.mark.inherit.responsible.user.label}, map = ${userdocTypesUtils.generateInheritResponsibleUserType()}, selected = ${userdocType?.userdocTypeConfig?.markInheritResponsibleUser})}"></div>
+            </div>
+            <div class="col-4">
+                <div th:replace="~{base/form/select :: map(id = 'inheritResponsibleUser', label = #{userdoc.type.other.inherit.responsible.user.label}, map = ${userdocTypesUtils.generateInheritResponsibleUserType()}, selected = ${userdocType?.userdocTypeConfig?.inheritResponsibleUser})}"></div>
+            </div>
+        </div>
+
+        <div class="row m_T10">
+            <div class="col-6">
+                <div th:replace="~{base/form/input :: text(id = 'abdocsUserTargetingOnRegistration', label = #{userdoc.type.user.targeting.label},dataId = (${userTargetingOnRegistration?.userId}),value = (${userTargetingOnRegistration?.userName}),  url = @{/user/users-autocomplete}, classes = 'autocomplete-user')}"></div>
+            </div>
+            <div class="col-6 m_T10-i">
+                <div th:replace="~{base/form/checkbox :: basic(id = 'abdocsUserTargetingOnResponsibleUserChange', label = #{userdoc.type.user.targeting.on.change.label}, isChecked = ${userdocType?.userdocTypeConfig?.abdocsUserTargetingOnResponsibleUserChange})}"></div>
+            </div>
+        </div>
+
+
+        <div class="m_T20">
+            <h4 class="m_L12" th:text="#{userdoc.type.departments.label}"></h4>
+        </div>
+
+        <div>
+            <div class="row m_T5">
+                <div class="col-12">
+                    <table class="simple">
+                        <tbody>
+                        <tr th:each="department : ${userdocTypeDepartments}">
+                            <td th:text="${department.name}"></td>
+                            <td class="right-align">
+                                <div th:replace="~{base/form/checkbox :: basic(id =${department.officeStructureId.getFullDepartmentCode()}, label = '', isChecked = ${userdocTypesUtils.userdocTypeDepartmentSelected(department.officeStructureId.getFullDepartmentCode(),userdocType?.userdocTypeConfig?.departments)},classes='userdoc-type-department-checkbox')}"></div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-12">
+                <div th:replace="~{base/form/checkbox :: basic(id = 'hasPublicLiabilities', label = #{userdoc.public.liabilities.label}, isChecked = ${userdocType?.userdocTypeConfig?.hasPublicLiabilities})}"></div>
+            </div>
+        </div>
+
+        <div class="row m_T10">
+            <div>
+                <a class="button sm-icn-save right"
+                   th:attr="data-url = @{/admin/userdoc-types/save-configuration-data}, data-action='save-configuration-data'"
+                   th:text="#{btn.save}"></a>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<div th:remove="tag" th:fragment="main-userdoc-type-data">
+    <div th:replace="base/toast/message :: success(message = ${successMessage},unescaped = true)"></div>
+
+    <div id="userdoc-type-main-panel" class="panel"
+         th:with="userdocTypesUtils=${T(bg.duosoft.ipas.util.userdoc_types.UserdocTypesUtils)}">
+
+        <div class="row m_B10">
+            <div class="col-12">
+                <h3 class="panel-title ui-sortable-handle inline-block" th:text="#{userdoc.main.data.title}"></h3>
+            </div>
+        </div>
+        <div id="content-main-data">
+
+            <div class="row">
+                <div class="col-12">
+                    <div th:replace="~{base/form/input :: readonly(id='userdocType-readonly', label = #{userdoc.type.label}, value = ${userdocType.userdocType})}"></div>
+                </div>
+            </div>
+            <div class="row m_B15">
+                <div class="col-9">
+                    <div th:replace="~{base/form/input :: text(id = 'userdocName', label = #{userdoc.name.label}, value = (${userdocType?.userdocName}), classes='required')}"></div>
+                </div>
+                <div class="col-3">
+                    <div th:replace="~{base/form/select :: map(id = 'userdocGroup', label = #{userdoc.group}, map = ${userdocTypesUtils.generateGroupSelectOptions()}, selected = ${userdocType.userdocGroup})}"></div>
+                </div>
+            </div>
+            <div class="row m_B15">
+                <div class="col-12">
+                    <div th:replace="~{base/form/select :: map(id = 'generateProcType', label = #{userdoc.proc.type.label}, map = ${processTypeMap}, selected = ${userdocType.generateProcTyp}, classes='search-box')}"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div th:replace="~{base/form/checkbox :: basic(id = 'indInactive', label = #{status.active}, isChecked = ${ null != userdocType.indInactive ? !userdocType.indInactive : true }, additionalArgs='data-revert=true')}"></div>
+                </div>
+            </div>
+            <hr/>
+            <div>
+                <div class="row">
+                    <div class="col-12">
+                        <h4 th:text="#{userdoc.ind.checkboxes.label}"></h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <div th:replace="~{base/form/checkbox :: basic(id = 'indChangesOwner', label = #{userdoc.ind.changes.owner}, isChecked = ${userdocType.indChangesOwner}, isDisabled = true, classes='form-ignore')}"></div>
+                    </div>
+                    <div class="col-4">
+                        <div th:replace="~{base/form/checkbox :: basic(id = 'indChangesRepres', label = #{userdoc.ind.changes.reprs}, isChecked = ${userdocType.indChangesRepres}, isDisabled = true, classes='form-ignore')}"></div>
+                    </div>
+                    <div class="col-4">
+                        <div th:replace="~{base/form/checkbox :: basic(id = 'indRenewal', label = #{userdoc.ind.renewal}, isChecked = ${userdocType.indRenewal}, isDisabled = true, classes='form-ignore')}"></div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row m_T10">
+                    <div>
+                        <a class="button sm-icn-save right"
+                           th:attr="data-url = @{/admin/userdoc-types/save-main-panel-data}, data-action='main-panel-save'"
+                           th:text="#{btn.save}"></a>
+                    </div>
+                </div>
+
+            </div>
+            <input type="hidden" id="userdocType" th:value="${userdocType?.userdocType}">
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="invalidated-userdoc-types-data">
+    <div id="userdoc-type-invalidated-panel" class="panel">
+        <div class="row m_B10">
+            <div class="col-12">
+                <h3 class="panel-title ui-sortable-handle inline-block"
+                    th:text="#{userdoc.invalidation.relation.title}"></h3>
+            </div>
+        </div>
+        <div id="content-invalidated-data">
+
+            <div class="row m_T10">
+                <div class="hidden-element">
+                    <div class="col-11">
+                        <div th:replace="~{base/form/input :: text(id = 'userdoc-types-autocomplete', label = #{userdoc.invalidation.relation.add}, value = '', url = @{/admin/userdoc-types/invalidate-userdoc-type-autocomplete}, data-id='${userdocType.userdocType}', classes = 'autocomplete form-ignore')}"></div>
+                    </div>
+                </div>
+                <div class="col-1 m_T10">
+                    <a class="hidden-element btn-floating ipas waves-effect waves-light action-button-top confirm"
+                       th:attr="data-action='add-invalidated-userdoc-type',data-url=@{/admin/userdoc-types/add-invalidated-userdoc-type}"
+                       href="javascript:void(0);" th:title="#{userdoc.invalidation.relation.add}">
+                        <i class="material-icons">arrow_forward</i>
+                    </a>
+                </div>
+            </div>
+
+            <div th:remove="tag"
+                 th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(invalidatedUserdocNames)}">
+                <div th:remove="tag" th:case="true">
+                    <div class="row">
+                        <div class="col-12 p_T20_B20">
+                            <div class="bg__light-blue p_10 m_B10 m_T10 center">
+                                <span th:text="#{userdoc.empty.invalidation.list}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div th:remove="tag" th:case="false">
+                    <div class="row m_T5">
+                        <div class="col-12">
+                            <table class="simple">
+                                <tbody>
+                                <tr th:each="invalidatedUserdoc : ${invalidatedUserdocNames}">
+                                    <td th:text="${invalidatedUserdoc.value}"></td>
+                                    <td class="right-align">
+                                        <a class="b0 confirm"
+                                           th:attr="data-action='delete-invalidated-userdoc-type',data-url=@{/admin/userdoc-types/delete-invalidated-userdoc-type}, data-id=${invalidatedUserdoc.key}"
+                                           href="javascript:void(0);" th:title="#{btn.delete}">
+                                            <i class="icon-trash bpo-blue-color fs_17px"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row"
+                 th:if="${!T(org.springframework.util.CollectionUtils).isEmpty(userdocsInvalidatingCurrentUserdoc)}">
+                <hr>
+                <div class="col-11">
+                    <h4 th:text="#{userdoc.invalidated.by.label}"></h4>
+                    <div th:each="invalidatingUserdoc : ${userdocsInvalidatingCurrentUserdoc}">
+                        <div th:text="${invalidatingUserdoc}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div th:remove="tag" th:fragment="userdoc-abdocs-document-data">
+    <div th:replace="base/toast/message :: success(message = ${successMessage},unescaped = true)"></div>
+
+    <div id="userdoc-abdocs-document-panel" class="panel"
+         th:with="userdocTypesUtils=${T(bg.duosoft.ipas.util.userdoc_types.UserdocTypesUtils)}">
+        <div class="row m_B10">
+            <div class="col-12">
+                <h3 class="panel-title ui-sortable-handle inline-block"
+                    th:text="#{userdoc.abdocs.document.panel.title}"></h3>
+            </div>
+        </div>
+        <div id="content-abdocs-documents-panel">
+
+            <div class="row m_T10">
+                <div class="hidden-element">
+                    <div class="col-12">
+                        <div th:replace="~{base/form/select :: object(id = 'selectAbdocsDocument', label = #{abdocs.document.label}, objects = ${abdocsDocuments},
+                         valuePointer = 'nomValueId', textPointer = 'name', selected = ${currentAbdocsDoc != null ? currentAbdocsDoc.abdocsDocTypeId : null},
+                          emptySelectOption= #{default.select.option}, classes = 'search-box')}"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row m_T5">
+                <div class="col-12">
+                    <div th:replace="~{base/form/select :: map(id = 'selectRegistrationType', label = #{abdocs.registration.type.label},
+                     map = ${userdocTypesUtils.generateRegistrationTypeOptions(@messageSource)}, selected = ${currentAbdocsDoc != null ? currentAbdocsDoc.docRegistrationType : null},
+                      emptySelectOption = #{default.select.option})}"></div>
+                </div>
+            </div>
+
+            <hr>
+            <div class="row m_T10">
+                <div>
+                    <a class="button sm-icn-save right"
+                       th:attr="data-url = @{/admin/userdoc-types/save-userdoc-abdocs-document}, data-action='save-abdocs-document'"
+                       th:text="#{btn.save}"></a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="userdoc-panels-data">
+    <div id="detail-page-userdoc-panels-panel" class="panel">
+        <div class="row m_B10">
+            <div class="col-12">
+                <h3 class="panel-title ui-sortable-handle inline-block" th:text="#{userdoc.panels.title}"></h3>
+            </div>
+        </div>
+        <div id="content-detail-page-panels">
+            <div class="row m_T10">
+                <div class="hidden-element">
+                    <div class="col-11">
+                        <div th:replace="~{base/form/select :: map(id = 'selectPanels', label = #{userdoc.panels}, map = ${userdocPanelsMap}, classes = 'search-box', emptySelectOption = #{default.select.option})}"></div>
+                    </div>
+                </div>
+                <div class="col-1 m_T10">
+                    <a class="hidden-element btn-floating ipas waves-effect waves-light action-button-top confirm"
+                       th:attr="data-action='add-panel-for-userdoc-type',data-url=@{/admin/userdoc-types/add-panel-for-userdoc-type}"
+                       href="javascript:void(0);" th:title="#{userdoc.panel.add}">
+                        <i class="material-icons">arrow_forward</i>
+                    </a>
+                </div>
+            </div>
+            <div th:remove="tag"
+                 th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(userdocType.panels)}">
+                <div th:remove="tag" th:case="true">
+                    <div class="row">
+                        <div class="col-12 p_T20_B20">
+                            <div class="bg__light-blue p_10 m_B10 m_T10 center">
+                                <span th:text="#{userdoc.empty.panels.list}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div th:remove="tag" th:case="false">
+                    <div class="row m_T5">
+                        <div class="col-12">
+                            <table class="simple">
+                                <tbody>
+                                <tr th:each="panel : ${userdocType.panels}">
+                                    <td th:text="${panel.name}"></td>
+                                    <td class="right-align">
+                                        <a class="b0 confirm"
+                                           th:attr="data-action='delete-panel-for-userdoc-type',data-url=@{/admin/userdoc-types/delete-panel-for-userdoc-type}, data-id=${panel.panel}"
+                                           href="javascript:void(0);" th:title="#{btn.delete}">
+                                            <i class="icon-trash bpo-blue-color fs_17px"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="userdoc-person-roles-data">
+    <div id="userdoc-person-roles-panel" class="panel">
+        <div class="row m_B10">
+            <div class="col-12">
+                <h3 class="panel-title ui-sortable-handle inline-block"
+                    th:text="#{userdoc.person.roles.panel.title}"></h3>
+            </div>
+        </div>
+        <div id="content-person-roles-panel">
+
+            <div class="row m_T10">
+                <div class="hidden-element">
+                    <div class="col-11">
+                        <div th:replace="~{base/form/select :: map(id = 'selectPersonRoles', label = #{userdoc.person.roles.label}, map = ${personRolesMap},classes = 'search-box', emptySelectOption = #{default.select.option})}"></div>
+                    </div>
+                </div>
+                <div class="col-1 m_T10">
+                    <a class="hidden-element btn-floating ipas waves-effect waves-light action-button-top confirm"
+                       th:attr="data-action='add-userdoc-role',data-url=@{/admin/userdoc-types/add-userdoc-person-role}"
+                       href="javascript:void(0);" th:title="#{userdoc.person.role.add}">
+                        <i class="material-icons">arrow_forward</i>
+                    </a>
+                </div>
+            </div>
+
+            <div th:remove="tag"
+                 th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(userdocType.roles)}">
+                <div th:remove="tag" th:case="true">
+                    <div class="row">
+                        <div class="col-12 p_T20_B20">
+                            <div class="bg__light-blue p_10 m_B10 m_T10 center">
+                                <span th:text="#{userdoc.empty.person.roles.list}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div th:remove="tag" th:case="false">
+                    <div class="row m_T5">
+                        <div class="col-12">
+                            <table class="simple">
+                                <tbody>
+                                <tr th:each="role : ${userdocType.roles}">
+                                    <td th:text="${role.name}"></td>
+                                    <td class="right-align">
+                                        <a class="b0 confirm"
+                                           th:attr="data-action='delete-userdoc-role',data-url=@{/admin/userdoc-types/delete-userdoc-person-role}, data-id=${role.role}"
+                                           href="javascript:void(0);" th:title="#{btn.delete}">
+                                            <i class="icon-trash bpo-blue-color fs_17px"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="userdoc-reception-relation-data">
+    <div id="userdoc-reception-relation-panel" class="panel">
+        <div class="row m_B10">
+            <div class="col-12">
+                <h3 class="panel-title ui-sortable-handle inline-block"
+                    th:text="#{userdoc.reception.relation.title}"></h3>
+            </div>
+        </div>
+        <div id="content-reception-relation-panel">
+
+            <div class="row m_T10">
+                <div class="hidden-element">
+                    <div class="col-9 m_T20">
+                        <div th:replace="~{base/form/select :: map(id = 'mainTypesSelect', label = #{userdoc.main.type.label}, map = ${mainTypesMap}, classes = 'search-box', emptySelectOption = #{default.select.option})}"></div>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div style="font-size: 0.8em; color: #9e9e9e">
+                        <label th:text="#{userdoc.reception.relation.is.visible.short}"></label>
+                    </div>
+                    <div th:replace="~{base/form/radio :: basic(name = 'relation-isVisible', label = #{yes}, value = true, checked = true)}"></div>
+                    <div th:replace="~{base/form/radio :: basic(name = 'relation-isVisible', label = #{no}, value = false)}"></div>
+                </div>
+                <div class="col-1 m_T10">
+                    <a class="hidden-element btn-floating ipas waves-effect waves-light action-button-top confirm"
+                       th:attr="data-action='add-reception-relation',data-url=@{/admin/userdoc-types/add-reception-relation}"
+                       href="javascript:void(0);" th:title="#{userdoc.reception.relation.add}">
+                        <i class="material-icons">arrow_forward</i>
+                    </a>
+                </div>
+            </div>
+
+            <div th:remove="tag"
+                 th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(mainTypesByUserdocType)}">
+                <div th:remove="tag" th:case="true">
+                    <div class="row">
+                        <div class="col-12 p_T20_B20">
+                            <div class="bg__light-blue p_10 m_B10 m_T10 center">
+                                <span th:text="#{userdoc.empty.reception.relation.list}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div th:remove="tag" th:case="false">
+                    <div class="row m_T5">
+                        <div class="col-12">
+                            <table class="simple">
+                                <tbody>
+                                <tr th:each="type : ${mainTypesByUserdocType}">
+                                    <td class="w_650px" th:text="${type.mainTypeName}"></td>
+                                    <td class="minw_300" th:switch="${type.isVisible}">
+                                        <i class="material-icons m_R5"
+                                           th:classappend="${type.isVisible} ? 'm-green-text' : 'm-orange-text text-darken-4'">brightness_1</i>
+                                        <span th:case="true" th:text="#{userdoc.type.relation.is.visible.true}"></span>
+                                        <span th:case="false"
+                                              th:text="#{userdoc.type.relation.is.visible.false}"></span>
+                                    </td>
+                                    <td class="right-align minw_50">
+                                        <a class="b0"
+                                           th:attr="data-action='open-reception-relation-modal',data-url=@{/admin/userdoc-types/open-reception-relation-modal}, data-id=${type.mainType}"
+                                           href="javascript:void(0);" th:title="#{btn.edit}">
+                                            <i class="icon-pencil bpo-blue-color fs_17px"></i>
+                                        </a>
+                                        <a class="b0 confirm"
+                                           th:attr="data-action='delete-reception-relation',data-url=@{/admin/userdoc-types/delete-reception-relation}, data-id=${type.mainType}"
+                                           href="javascript:void(0);" th:title="#{btn.delete}">
+                                            <i class="icon-trash bpo-blue-color fs_17px"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:id="reception-relation-edit-modal-wrapper"></div>
+</div>
+
+</body>
+</html>

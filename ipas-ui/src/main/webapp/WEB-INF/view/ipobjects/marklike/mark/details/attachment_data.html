@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="mark" type="bg.duosoft.ipas.core.model.mark.CMark"*/-->
+<div th:fragment="attachments(mark,sessionObjectIdentifier)"
+     th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)},
+              markSignDataAttachmentUtils=${T(bg.duosoft.ipas.util.mark.MarkSignDataAttachmentUtils)},
+              markSignTypeUtils=${T(bg.duosoft.ipas.util.mark.MarkSignTypeUtils)}">
+
+    <div th:with="signData=${mark.signData},attachments=${mark.signData.attachments}">
+        <div class="row" th:if="${markSignTypeUtils.isMarkContainImages(signData.signType)}">
+            <div class="col-12" style="margin-left: 0;margin-right: 0">
+                <div th:id="mark-images-wrapper"
+                     th:with="imageAttachments=${markSignDataAttachmentUtils.selectImagesFromAttachments(attachments)}">
+                    <div th:remove="tag" th:if="${!(markSignTypeUtils.isMarkContainOneImage(signData.signType) && !collectionUtils.isEmpty(imageAttachments))}">
+                        <div class="hidden-element">
+                            <a th:replace="~{base/form/button :: material-btn(label = 'Добави ново изображение', dataAction = 'add-new-mark-attachment', dataUrl = @{/mark/add-attachment}, icon = 'collections', classes = 'm_L10',additionalArgs = 'data-type=${T(bg.duosoft.ipas.enums.AttachmentType).IMAGE.name()}')}"></a>
+                        </div>
+                        <div th:id="'mark-singleImage-error'"></div>
+                        <div class="hidden-element m_T10 m_L10" th:id="add-new-mark-image-errors-wrapper">
+                            <div th:replace="~{base/validation :: validation-message(${validationErrors},'mark-singleImage-error')}"></div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${!collectionUtils.isEmpty(imageAttachments)}">
+                        <div th:remove="tag" th:each="attachment,attachmentStat : ${imageAttachments}">
+                            <div th:replace="~{ipobjects/marklike/mark/details/image/mark_image :: image(mark = ${mark},sessionObjectIdentifier = ${sessionObjectIdentifier}, attachmentIndex = ${attachmentStat.index},attachment = ${attachment})}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" th:if="${markSignTypeUtils.isMarkContainAudio(signData.signType)}">
+            <div class="col-12" style="margin-left: 0;margin-right: 0">
+                <div th:id="mark-audio-wrapper" th:with="audioAttachments=${markSignDataAttachmentUtils.selectAudiosFromAttachments(attachments)}">
+                    <div th:remove="tag" th:if="${collectionUtils.isEmpty(audioAttachments)}">
+                        <div class="hidden-element">
+                            <a th:replace="~{base/form/button :: material-btn(label = 'Добави нов аудио файл', dataAction = 'add-new-mark-attachment', dataUrl = @{/mark/add-attachment}, icon = 'audiotrack', classes = 'm_L10',additionalArgs = 'data-type=${T(bg.duosoft.ipas.enums.AttachmentType).AUDIO.name()}')}"></a>
+                        </div>
+                        <div th:id="'mark-singleAudio-error'"></div>
+                        <div class="hidden-element m_T10 m_L10" th:id="add-new-mark-audio-errors-wrapper">
+                            <div th:replace="~{base/validation :: validation-message(${validationErrors},'mark-singleAudio-error')}"></div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${!collectionUtils.isEmpty(audioAttachments)}">
+                        <div th:remove="tag" th:each="attachment,attachmentStat : ${audioAttachments}">
+                            <div th:replace="~{ipobjects/marklike/mark/details/audio/mark_audio :: audio(mark = ${mark},sessionObjectIdentifier = ${sessionObjectIdentifier}, attachmentIndex = ${attachmentStat.index},attachment = ${attachment})}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" th:if="${markSignTypeUtils.isMarkContainVideo(signData.signType)}">
+            <div class="col-12" style="margin-left: 0;margin-right: 0">
+                <div th:id="mark-video-wrapper" th:with="videoAttachments=${markSignDataAttachmentUtils.selectVideosFromAttachments(attachments)}">
+                    <div th:remove="tag" th:if="${collectionUtils.isEmpty(videoAttachments)}">
+                        <div class="hidden-element">
+                            <a th:replace="~{base/form/button :: material-btn(label = 'Добави нов видео файл', dataAction = 'add-new-mark-attachment', dataUrl = @{/mark/add-attachment}, icon = 'video_call', classes = 'm_L10',additionalArgs = 'data-type=${T(bg.duosoft.ipas.enums.AttachmentType).VIDEO.name()}')}"></a>
+                        </div>
+                        <div th:id="'mark-singleVideo-error'"></div>
+                        <div class="hidden-element m_T10 m_L10" th:id="add-new-mark-video-errors-wrapper">
+                            <div th:replace="~{base/validation :: validation-message(${validationErrors},'mark-singleVideo-error')}"></div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:if="${!collectionUtils.isEmpty(videoAttachments)}">
+                        <div th:remove="tag" th:each="attachment,attachmentStat : ${videoAttachments}">
+                            <div th:replace="~{ipobjects/marklike/mark/details/video/mark_video :: video(mark = ${mark},sessionObjectIdentifier = ${sessionObjectIdentifier}, attachmentIndex = ${attachmentStat.index},attachment = ${attachment})}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

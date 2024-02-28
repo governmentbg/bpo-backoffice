@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg"
+      th:with="title=${#messages.msg('admin.person.merge.details.title')}">
+<head th:replace="base/template :: head(title=${title})"></head>
+<body class="dark left-sidebar-show">
+<header class="app-header" th:replace="base/header"></header>
+
+<div class="app-body">
+    <div class="left-sidebar">
+        <div id="psb" class="ps--active-y">
+            <nav class="sidebar-nav">
+                <ul class="nav DropDownMenu">
+                    <li th:each="url : ${T(com.duosoft.ipas.util.UrlMap).ADMIN_PERSON_URLS}">
+                        <a th:href="@{${url.url}}" th:title="${#messages.msgOrNull(url.text)}"
+                           th:text="${#messages.msgOrNull(url.shortText)}"></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- ********************************************************** Main body -->
+    <main class="main">
+        <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+        <div class="inner">
+            <div class="panel">
+                <div class="center">
+                    <h2 class="inline-block" th:text="${title}"></h2>
+                </div>
+
+                <div id="content">
+
+                    <div th:remove="tag"
+                         th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(mergePersonList)}">
+                        <div th:remove="tag" th:case="true">
+                            <div class="p_T20_B20">
+                                <div class="bg__light-blue p_10 m_B10 m_T10 center">
+                                    <span th:text="#{empty.list}"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div th:remove="tag" th:case="false">
+                            <div class="row m_T30">
+                                <div class="col-12">
+                                    <table class="simple bpo">
+                                        <thead>
+                                        <tr>
+                                            <th style="width: 50px" th:text="#{number}"></th>
+                                            <th th:text="#{merge.person.main.data}"></th>
+                                            <th style="width: 100px" th:text="#{options.label}"></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="person : ${mergePersonList}">
+                                            <td th:text="${personStat.count}"></td>
+                                            <td>
+                                                <div>
+                                                    <span th:remove="tag"
+                                                          th:if="${!#strings.isEmpty(person.personName)}"
+                                                          th:text="${person.personName}"></span>
+                                                    <span th:remove="tag"
+                                                          th:if="${!#strings.isEmpty(person.addressStreet)}"
+                                                          th:text="|, ${person.addressStreet}|"></span>
+                                                    <span th:remove="tag" th:if="${!#strings.isEmpty(person.cityName)}"
+                                                          th:text="|, ${person.cityName}|"></span>
+                                                    <span th:remove="tag" th:if="${!#strings.isEmpty(person.zipCode)}"
+                                                          th:text="|, ${person.zipCode}|"></span>
+                                                    <span th:remove="tag" th:if="${!#strings.isEmpty(person.stateName)}"
+                                                          th:text="|, ${person.stateName}|"></span>
+                                                    <span th:remove="tag" th:if="${!#strings.isEmpty(person.stateCode)}"
+                                                          th:text="|, ${person.stateCode}|"></span>
+                                                    <span th:remove="tag"
+                                                          th:if="${!#strings.isEmpty(person.nationalityCountryCode)}"
+                                                          th:text="|, ${person.nationalityCountryCode}|"></span>
+                                                </div>
+                                                <div>
+
+                                                </div>
+                                                <div>
+                                                <span th:remove="tag" th:if="${!#strings.isEmpty(person.telephone)}">
+                                                    <i class="small material-icons bpo-blue-color">local_phone</i>
+                                                    <span th:remove="tag" th:text="${person.telephone}"></span>
+                                                </span>
+                                                    <span th:remove="tag" th:if="${!#strings.isEmpty(person.email)}">
+                                                    <i class="small material-icons bpo-blue-color">email</i>
+                                                    <span th:remove="tag" th:text="${person.email}"></span>
+                                                </span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <a th:replace="~{base/form/button :: material-table-btn(title = #{btn.info}, dataUrl = @{/admin/person/merge/merge-info} , dataAction = 'person-merge-info-modal',
+                                                 icon = 'info_outline', additionalArgs = 'data-person=${person.personNbr}, data-address=${person.addressNbr}')}"></a>
+                                                <a th:replace="~{base/form/button :: material-table-btn(title = #{btn.merge.duplicate.main}, dataUrl = @{/admin/person/merge/execute-merge} , dataAction='execute-person-merge',
+                                                 icon = 'person_outline', additionalArgs = 'data-main-person=${person.personNbr}, data-main-address=${person.addressNbr}')}"></a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div th:id="person-merge-info-modal-wrapper"></div>
+    <input th:id="merge-person-check" th:type="hidden" th:value="${checkText}">
+</div>
+
+<footer class="page-footer" th:replace="base/footer"></footer>
+<div th:replace="base/template :: js-footer" th:remove="tag"></div>
+</body>
+</html>

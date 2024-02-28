@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="userdoc" type="bg.duosoft.ipas.core.model.userdoc.CUserdoc"*/-->
+<!--/*@thymesVar id="receptionUserdocRequest" type="bg.duosoft.ipas.core.model.reception.CReceptionUserdocRequest"*/-->
+<!--/*@thymesVar id="userdocParentData" type="bg.duosoft.ipas.core.model.process.CProcessParentData"*/-->
+<div th:fragment="panel(userdoc)">
+    <div th:with="objectUtils=${T(java.util.Objects)}, dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT},dateTimeFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT}">
+        <div class="row">
+            <div class="col-4" th:if="${objectUtils.nonNull(receptionUserdocRequest)}">
+                <div th:replace="~{base/form/input :: readonly(label = 'Начин на получаване', value = ${receptionUserdocRequest.submissionType.name})}"></div>
+            </div>
+            <div class="col-4">
+                <div th:replace="~{base/form/input :: readonly(label = 'Номер', value = ${#strings.isEmpty(userdoc.document.externalSystemId)} ? #{not.registered} : ${userdoc.document.externalSystemId})}"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4" th:classappend="${#strings.isEmpty(filingDate)}?none" th:with="filingDate=${userdoc.document.filingDate}">
+                <div th:replace="~{base/form/input :: datepicker(id = 'object-userdoc-document-filingDate', label = 'Дата на подаване', value = ${#dates.format(filingDate,dateFormatDot)})}"></div>
+            </div>
+            <div class="col-4">
+                <div th:replace="~{base/form/input :: link(label = 'Прикачени файлове', text = #{process.tree.open.in.abdocs}, dataUrl = @{/process/document/open-user-document},
+                     dataAction = 'abdocs-userdoc-redirect', dataDocument = ${userdoc.documentId.createFilingNumber()}, dataProcess = |${userdoc.processSimpleData.processId.processType}-${userdoc.processSimpleData.processId.processNbr}| )}"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div th:replace="~{base/form/textarea :: basic(id = 'object-userdoc-notes', label = 'Бележки', value = ${userdoc.notes})}"></div>
+            </div>
+        </div>
+        <div th:if="${objectUtils.nonNull(userdoc.userdocParentData)}">
+            <div class="row">
+                <div class="col-12">
+                    <div th:replace="~{base/form/label :: active(title = 'Към обект/документ')}"></div>
+                </div>
+            </div>
+            <div class="row m_T5">
+                <div class="col-12">
+                    <div class="m_B10">
+                        <div th:id="userdoc-parent-wrapper">
+                            <div th:replace="~{ :: userdoc-parent(${userdoc.userdocParentData})}"></div>
+                        </div>
+                    </div>
+                    <div class="hidden-element">
+                        <a th:replace="~{base/form/button :: material-btn(label = #{btn.change.userdoc.position}, dataAction = 'open-change-position-search-modal',dataUrl = @{/userdoc/main-data/open-search-objects-modal}, icon = 'swap_vert')}"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div th:replace="~{ipobjects/common/efiling/efiling_data_panel ::efiling-data(${userdoc.userdocEFilingData})}"></div>
+        </div>
+        <div th:if="${objectUtils.nonNull(userdoc.document.indFaxReception)}">
+            <hr>
+            <div class="row">
+                <div class="col-4" >
+                    <div th:replace="~{base/form/checkbox :: basic(id = 'object-userdoc-document-indFaxReception', label = 'Получен оригинал', isChecked = ${!(userdoc.document.indFaxReception)}, additionalArgs='data-revert=true')}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{ipobjects/common/report/generate_report_button ::generate-report-button}"></div>
+</div>
+
+<div th:remove="tag" th:fragment="userdoc-parent(userdocParentData)" th:with="objectUtils=${T(java.util.Objects)}, stringUtils=${T(org.springframework.util.StringUtils)}">
+    <div th:remove="tag" th:if="${objectUtils.nonNull(userdocParentData.fileId)}">
+        <span class="inline-block">
+            <a class="b0 p_0" th:href="@{/ipobject/view(filingNumber=${userdocParentData.fileId.createFilingNumber()})}" th:text="${userdocParentData.fileId.createFilingNumber()}"></a>
+        </span>
+        <div th:remove="tag" th:if="${userdocParentData.isTopProcessFile()}" th:with="title=${userdocParentData.topProcessFileData.title}">
+            <span th:text="'('"></span>
+            <span th:if="${!stringUtils.isEmpty(title)}" th:text="${title}+' - '"></span>
+            <span th:text="${userdocParentData.topProcessFileData.statusName}"></span>
+            <span th:text="')'"></span>
+        </div>
+    </div>
+    <div th:remove="tag" th:if="${objectUtils.nonNull(userdocParentData.userdocId)}">
+        <span class="inline-block">
+            <a class="b0 p_0" th:href="@{/ipobject/view(userdocFilingNumber=${userdocParentData.userdocId.createFilingNumber()})}" th:text="${userdocParentData.userdocRegistrationNumber}"></a>
+        </span>
+        <span class="m_L5 m_R5" th:text="'към'"></span>
+        <div th:if="${objectUtils.nonNull(userdocParentData.parent)}" th:replace="~{ :: userdoc-parent(${userdocParentData.parent})}"></div>
+    </div>
+</div>
+</body>
+</html>

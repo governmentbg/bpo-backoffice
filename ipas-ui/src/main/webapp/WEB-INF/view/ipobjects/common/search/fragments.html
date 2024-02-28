@@ -1,0 +1,247 @@
+
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<body>
+<div th:fragment="input-field(panelName, fieldTitle, fieldLabel)" th:remove="tag">
+    <div class="row">
+        <div class="col-12">
+            <div class="input-field search">
+                <input th:id="|field-${panelName}|" type="text" th:value="${fieldTitle}">
+                <label th:for="|field-${panelName}|" th:text="${fieldLabel}"></label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="range-input-field(panelName, fromFieldTitle, fromFieldLabel, toFieldTitle, toFieldLabel)" th:remove="tag">
+    <div class="row">
+        <div  class="col-6">
+            <div class="input-field search">
+                <input th:id="|field-from-${panelName}|" type="text" th:value="${fromFieldTitle}">
+                <label th:id="|label-from-${panelName}|" th:for="|field-from-${panelName}|" th:text="${fromFieldLabel}"></label>
+            </div>
+        </div>
+        <div  class="col-6">
+            <div class="input-field search">
+                <input th:id="|field-to-${panelName}|" type="text" th:value="${toFieldTitle}">
+                <label th:id="|label-to-${panelName}|" th:for="|field-to-${panelName}|" th:text="${toFieldLabel}"></label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="date-field(panelName, fieldTitle, fieldLabel)" th:remove="tag">
+    <div class="row">
+        <div class="col-12">
+            <div class="input-field search">
+                <input th:id="|field-${panelName}|" type="text" data-type="datepicker" th:value="${#dates.format(fieldTitle, T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}">
+                <label th:for="|field-${panelName}|" th:text="${fieldLabel}"></label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="range-date-field(panelName, fromFieldTitle, fromFieldLabel, toFieldTitle, toFieldLabel)" th:remove="tag">
+    <div class="row">
+        <div  class="col-6">
+            <div class="input-field search">
+                <input th:id="|field-from-${panelName}|" type="text" data-type="datepicker" th:value="${#dates.format(fromFieldTitle, T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}">
+                <label th:for="|field-from-${panelName}|" th:text="${fromFieldLabel}"></label>
+            </div>
+        </div>
+        <div  class="col-6">
+            <div class="input-field search">
+                <input th:id="|field-to-${panelName}|" type="text" data-type="datepicker" th:value="${#dates.format(toFieldTitle, T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}">
+                <label th:for="|field-to-${panelName}|" th:text="${toFieldLabel}"></label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="publication(firstOption, fieldTitle, fieldLabel, options, selectedOption)" th:remove="tag">
+    <div th:id="|block-${fieldTitle}|" class="input-field search">
+        <select th:id="|field-${fieldTitle}|" th:name="${fieldTitle}" >
+            <option value=""
+                    th:selected="${#strings.equals(selectedOption, null)}"></option>
+            <option th:each="entry : ${options}"
+                    th:value="${entry}"
+                    th:selected="${#strings.equals(entry, selectedOption)}"
+                    th:text="${entry}"/>
+        </select>
+        <label th:id="|label-${fieldTitle}|" th:for="|field-${fieldTitle}|" th:text="${#messages.msgOrNull(fieldLabel)}"></label>
+    </div>
+</div>
+
+<div th:fragment="publication-year(ipoObjectType, options, selectedOption)" th:remove="tag">
+    <div th:replace="ipobjects/common/search/fragments ::publication('search.' + ${ipoObjectType} + '.publication.year', 'publication-year', 'search.' + ${ipoObjectType} + '.publication.year.label', ${options}, ${selectedOption})"></div>
+</div>
+
+<div th:fragment="publication-bulletin(ipoObjectType, options, selectedOption)" th:remove="tag">
+    <div th:replace="ipobjects/common/search/fragments ::publication('search.' + ${ipoObjectType} + '.publication.bulletin', 'publication-bulletin', 'search.' + ${ipoObjectType} + '.publication.bulletin.label', ${options}, ${selectedOption})"></div>
+</div>
+
+<div th:fragment="publication-sect(ipoObjectType, options, selectedOption)" th:remove="tag">
+    <div th:id="block-publication-sect" class="input-field search">
+        <select th:id="field-publication-sect" th:name="publication-sect" >
+            <option value=""
+                    th:selected="${#strings.equals(selectedOption, null)}"></option>
+            <option th:each="entry : ${options}"
+                    th:value="${entry.sect}"
+                    th:text="${entry.sectDef}"
+                    th:selected="${#strings.equals(entry.sect, selectedOption)}"/>
+        </select>
+        <label th:id="|label-publication-sect|" th:for="|field-publication-sect|" th:text="${#messages.msgOrNull('search.' + ipoObjectType + '.publication.sect.label')}"></label>
+    </div>
+</div>
+
+<div th:fragment="radio-buttons(fieldTitle, fieldValue)">
+    <label th:each="searchOperatorType : ${T(bg.duosoft.ipas.enums.search.SearchOperatorType).values()}">
+        <input th:name="|field-${fieldTitle}|" type="radio" class="with-gap"
+               th:value="${{searchOperatorType}}"
+               th:checked="${searchOperatorType == fieldValue}"/>
+        <span style="color: #9e9e9e" th:text="${{#messages.msgOrNull('search.' + searchOperatorType)}}"></span>
+    </label>
+</div>
+
+<div th:fragment="menu(panelName, fieldTitle, fieldLabel)" th:remove="tag">
+    <li
+            th:if="${fieldTitle}"
+            th:attr="data-group=${panelName},data-type=select2" >
+        <span th:text="${fieldLabel}"></span>
+        <input type="checkbox" class="sb-ckb" th:id="${panelName}" autocomplete="off" />
+        <label class="empty" th:for="${panelName}"></label>
+    </li>
+</div>
+
+<div th:fragment="paginator(page,pageSize,total,tableContainerDiv)" class="search-paginator">
+
+    <div class="ui-paginator" role="navigation"
+         th:with="totalPages= ${total%pageSize == 0 ? (total/pageSize)-1 : (total/pageSize)}">
+        <span class="nav-page-size">
+            <span th:text="#{paginator.current.page.size}"></span>
+            <select id="pageSize" class="page-size browser-default"
+                    th:with="pageSizeList= ${T(java.util.Arrays).asList(5,10,20,50,100)}">
+                <option th:each="pageSizeValue : ${pageSizeList}"
+                        th:value="${pageSizeValue}"
+                        th:selected="(${pageSize == pageSizeValue})"
+                        th:data-div="${tableContainerDiv}">
+                            <span th:text="${pageSizeValue}"></span>
+                </option>
+            </select>
+        </span>
+
+        <span id="pageInfo" style="margin-right: 1%;margin-left: 1%" th:text="|(${page + 1} #{paginator.of.total} ${totalPages+1})|"></span>
+
+        <ul style="display: inline-block" class="">
+            <li class="paginator-page paginatorHref first-paginator-page"
+                th:classappend="${page == 0}? 'ui-state-disabled paginator-href-disabled'"
+                th:data-page="0">
+                <span th:text="#{paginator.first}"></span>
+            </li>
+            <li class="paginator-page paginatorHref"
+                th:classappend="${page == 0}? 'ui-state-disabled paginator-href-disabled'"
+                th:title="#{paginator.previous}"
+                th:data-page="${page - 1}">
+                <span>
+                    <i class="icon-arrow-left"></i>
+                </span>
+            </li>
+            <li th:each="p,iterStat : ${#numbers.sequence( (page <= 4)?0:( (page <= totalPages - 4)?(page - 4):(totalPages < 9 ? 0:totalPages - 8) ), ( (page >= totalPages - 4)?(totalPages):( (page <= 4)?(totalPages - 8 > 0?8:totalPages):(page + 4) ) ))}"
+                class="paginator-page paginatorHref"
+                th:classappend="${page == p}? 'active-page paginator-href-disabled'"
+                th:text="${p+1}"
+                th:data-page="${p}">
+            </li>
+            <li class="paginator-page paginatorHref"
+                th:classappend="${page == totalPages}? 'ui-state-disabled paginator-href-disabled'"
+                th:title="#{paginator.next}"
+                th:data-page="${page + 1}">
+                <span>
+                    <i class="icon-arrow-right"></i>
+                </span>
+            </li>
+            <li class="paginator-page paginatorHref last-paginator-page"
+                th:classappend="${page == totalPages}? 'ui-state-disabled paginator-href-disabled'"
+                th:title="#{paginator.last}"
+                th:data-page="${totalPages}">
+                <span th:text="#{paginator.last}"></span>
+            </li>
+        </ul>
+    </div>
+    <script>
+        $(".search-paginator").change(function(){
+            let pageSize = $(".search-paginator").find("option:selected").val()?$(".search-paginator").find("option:selected").val():10;
+            sendForm(0, pageSize);
+        })
+        $(".search-paginator .paginator-page.paginatorHref").click(function (e) {
+            e.preventDefault();
+            let pageSize =  $(".search-paginator").find("option:selected").val()?$(".search-paginator").find("option:selected").val():10;
+            let page = $(this).attr('data-page')?$(this).attr('data-page'):0;
+
+            sendForm(page, pageSize);
+        });
+    </script>
+</div>
+
+
+<div th:fragment="index-li-header" th:remove="tag">
+    <div id="result-header" class="row bld sortable">
+        <div class="col-3">
+        </div>
+        <div class="col-2">
+            <span th:text="|брой записи в БД|"></span>
+        </div>
+        <div class="col-2">
+            <span th:text="|брой идексирани записи|"></span>
+        </div>
+        <div class="col-2">
+            <span th:text="|индексиране|"></span>
+        </div>
+
+        <!--<div class="col-2">
+            <span th:text="|липсващи|"></span>
+        </div>-->
+        <div class="col-1">
+            <span th:text="|изтриване|"></span>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="index-li(title, dbCountRecords, indexCountRecords, indexUrl, indexMissingUrl, indexDeleteUrl, isStartedIndexing)" th:remove="tag">
+    <div class="row">
+        <div class="col-3">
+            <span th:text="${title}"></span>
+        </div>
+        <div class="col-2">
+            <span th:text="${dbCountRecords}"></span>
+        </div>
+        <div class="col-2">
+            <span th:text="${indexCountRecords}"></span>
+        </div>
+        <div class="col-2">
+            <a th:href="${indexUrl}" th:text="|старт|" th:if="${!isStartedIndexing}" data-blockui="true"></a>
+            <span th:text="|индексиране|" th:if="${isStartedIndexing}"></span>
+        </div>
+        <!--<div class="col-2">
+            <a th:href="${indexMissingUrl}" th:text="|старт|" th:if="${!isStartedIndexing && !#strings.isEmpty(indexMissingUrl)}" data-blockui="true"></a>
+            <span th:text="|индексиране|" th:if="${isStartedIndexing && !#strings.isEmpty(indexMissingUrl)}"></span>
+        </div>-->
+        <div class="col-1">
+            <a th:href="${indexDeleteUrl}" th:text="|старт|" th:if="${!isStartedIndexing && !#strings.isEmpty(indexDeleteUrl)}" onclick="return confirmIndexDeletion();"></a>
+            <span th:text="|индексиране|" th:if="${isStartedIndexing && !#strings.isEmpty(indexDeleteUrl)}"></span>
+        </div>
+    </div>
+</div>
+
+
+<div th:fragment="applSubType(applSubTypes, selectedApplSubTyp)" th:remove="tag">
+    <option value=""
+            th:selected="${#strings.equals(selectedApplSubTyp, null)}"></option>
+    <option th:each="applSubType : ${applSubTypes}"
+            th:value="${applSubType.applicationSubType}"
+            th:selected="${#strings.equals(applSubType.applicationSubType,selectedApplSubTyp)}"
+            th:text="${applSubType.applicationSubTypeName}"></option>
+</div>
+
+
+</body>
+</html>

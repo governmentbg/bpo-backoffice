@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="receptionForm" type="com.duosoft.ipas.webmodel.ReceptionForm"*/-->
+<!--/*@thymesVar id="fileTypeGroup" type=" bg.duosoft.ipas.core.model.CFileTypeGroup"*/-->
+<div th:fragment="modal(fileTypeGroup)"
+     th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)},
+     objectsUtils=${T(java.util.Objects)}">
+
+    <div th:id="search-userdoc-related-object-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="|#{reception.search.prefix} ${fileTypeGroup.groupName}|"></h4>
+            </div>
+            <div class="m_T10">
+                <div class="row m_B10">
+                    <div class="col-12" th:with="applicationSearchType=${T(bg.duosoft.ipas.enums.ApplicationSearchType)}">
+                        <div th:replace="~{base/form/radio :: basic(name = 'search-userdoc-related-object-radio', label = #{object.filingNumber}, value = ${applicationSearchType.FILE_NUMBER.code()}, checked = ${#strings.equalsIgnoreCase(applicationSearchType.FILE_NUMBER.code(),checkedSearchTypeRadio)}, classes = 'm_R10')}"></div>
+                        <div th:replace="~{base/form/radio :: basic(name = 'search-userdoc-related-object-radio', label = #{object.registrationNumber}, value = ${applicationSearchType.REGISTRATION_NUMBER.code()}, checked = ${#strings.equalsIgnoreCase(applicationSearchType.REGISTRATION_NUMBER.code(),checkedSearchTypeRadio)})}"></div>
+                    </div>
+                </div>
+                <div class="row m_T5">
+                    <div class="col-12">
+                        <div th:replace="~{base/form/input :: text(id = 'reception-relatedObjectSearchInput', label = #{object.filingNumber}, classes = 'default-focus')}"></div>
+                    </div>
+                </div>
+                <div class="row right-align m_T10">
+                    <div class="col-12">
+                        <a th:replace="~{base/form/button :: material-btn(label = #{btn.search}, dataAction = 'submit-userdoc-related-object-search', additionalArgs = 'data-file-type-group=${fileTypeGroup.groupCode}', dataUrl = @{/reception/create/search-userdoc-related-object}, icon = 'search', classes = 'm_R20')}"></a>
+                        <a th:replace="~{base/form/button :: material-btn(label = #{btn.clear}, dataAction = 'clear-userdoc-related-object-search', icon = 'clear')}"></a>
+                    </div>
+                </div>
+                <div class="row m_T10" th:id="related-userdoc-result-wrapper"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!--/*@thymesVar id="result" type="bg.duosoft.ipas.core.model.IpasApplicationSearchResult"*/-->
+<div th:fragment="search-result(resultList)"
+     th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)},
+     objectsUtils=${T(java.util.Objects)}" class="m_T10">
+
+    <div th:remove="tag" th:switch="${collectionUtils.isEmpty(resultList)}">
+        <div class="row" th:case="true">
+            <div class="col-12">
+                <div th:replace="base/message :: warning(#{no.records.found})"></div>
+            </div>
+        </div>
+        <div th:case="*">
+            <table class="simple">
+                <thead>
+                <tr>
+                    <th style="width: 150px" th:text="#{search.result.number}"></th>
+                    <th th:text="#{search.result.date}"></th>
+                    <th th:text="#{search.result.registrationNumber}"></th>
+                    <th th:text="#{search.result.description}"></th>
+                    <th th:text="#{search.result.status}"></th>
+                    <th th:text="#{search.result.owners}"></th>
+                    <th th:text="#{search.result.representatives}"></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="result : ${resultList}" th:classappend="${result.patentInSecretStatus} ? 'patent-secret-status'">
+                    <td>
+                        <span th:text="${T(com.duosoft.ipas.util.CoreUtils).createFilingNumber(result.fileId,false)}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${#dates.format(result.filingDate,T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${T(com.duosoft.ipas.util.CoreUtils).createFullRegistrationNumber(result.registrationData?.registrationId?.registrationNbr,result.registrationData?.registrationId?.registrationDup,result.fileId?.fileType)}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${result.description}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${result.status}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${T(com.duosoft.ipas.util.PersonUtils).concatenatePersonNames(result.owners)}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${T(com.duosoft.ipas.util.PersonUtils).concatenatePersonNames(result.getRepresentativePersons())}"></span>
+                    </td>
+                    <td style="vertical-align: middle">
+                        <a class="button m-blue darken-3 white-text btn-sm result-btn m_0"
+                           th:text="#{btn.select.small}"
+                           th:attr="data-action='add-userdoc-related-object',
+                                    data-process=|${result.processId.processType}-${result.processId.processNbr}|,
+                                    data-number=${T(com.duosoft.ipas.util.CoreUtils).createFilingNumber(result.fileId,false)},
+                                    data-url=@{/reception/create/add-userdoc-related-object}">
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="position-relative m_T20" style="padding-bottom: 10px">
+            <div class="position-absolute left">
+                <span style="border: 1px solid #ffffff; padding-left:30px;background: crimson" class="m_R10"></span>
+                <span style="font-size: 12px" th:text="'Обект в секретен статус'"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

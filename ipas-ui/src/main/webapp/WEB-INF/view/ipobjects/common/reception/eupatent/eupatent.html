@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="receptionForm" type="com.duosoft.ipas.webmodel.ReceptionForm"*/-->
+<div th:fragment="object(receptionForm)"
+     th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)},
+     objectsUtils=${T(java.util.Objects)},receptionTypeEnum=${T(bg.duosoft.ipas.enums.ReceptionType)}">
+
+    <div th:remove="tag" th:switch="${objectsUtils.nonNull(receptionForm.euPatent.objectNumber)}">
+        <div th:case="true">
+            <div class="row">
+                <div class="col-12">
+                    <div class="inline-block">
+                        <div th:replace="~{base/form/input :: text(id = 'reception-euPatentNumber', isDisabled = true, label = #{reception.eu.patent}, value = ${receptionForm.euPatent.objectNumber})}"></div>
+                        <div th:replace="~{base/form/input :: hidden(id = '', value = ${receptionForm.euPatent.objectNumber}, name = 'euPatent.objectNumber')}"></div>
+                    </div>
+                    <div class="inline-block">
+                        <a class="btn-floating ipas small waves-effect action-button-bot waves-light" th:title="#{btn.remove}"
+                           th:attr="data-action='delete-reception-eupatent',data-url=@{/reception/create/eupatent/delete}">
+                            <i class="material-icons">close</i>
+                        </a>
+                    </div>
+                    <div th:replace="base/validation :: validation-message(${validationErrors},'reception-receptionEuPatentNumber')"></div>
+                </div>
+            </div>
+        </div>
+        <div th:case="false">
+            <div class="row" >
+                <div class="col-12">
+                    <div>
+                        <div class="inline-block">
+                            <div>
+                                <h4 class="inline-block" th:text="#{reception.eu.patent}"></h4>
+                            </div>
+                        </div>
+                        <div class="inline-block">
+                            <a class="btn-floating ipas small waves-effect action-button-bot waves-light" th:title="#{btn.add}"
+                               th:attr="data-action='open-eupatent-search-modal',data-url=@{/reception/create/eupatent/open-search-modal}">
+                                <i class="material-icons">add</i>
+                            </a>
+                        </div>
+                    </div>
+                    <div th:replace="base/message :: info(#{object.not.selected})"></div>
+                    <div th:replace="base/validation :: validation-message(${validationErrors},'reception-receptionEuPatentNumber')"></div>
+                </div>
+            </div>
+            <div th:id="search-eupatent-modal-wrapper"></div>
+        </div>
+    </div>
+
+</div>
+
+
+</body>
+</html>

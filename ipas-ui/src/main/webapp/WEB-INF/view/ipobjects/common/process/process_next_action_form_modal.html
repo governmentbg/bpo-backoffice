@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="actionType" type="bg.duosoft.ipas.core.model.action.CActionType"*/-->
+<!--/*@thymesVar id="nextProcessAction" type="bg.duosoft.ipas.core.model.process.CNextProcessAction"*/-->
+<!--/*@thymesVar id="offidocTypeObject" type="bg.duosoft.ipas.core.model.offidoc.COffidocType"*/-->
+<!--/*@thymesVar id="formData" type="com.duosoft.ipas.util.json.ProcessActionFormData"*/-->
+<div th:fragment="process-action-form(actionType,nextProcessAction,process,validationErrors,statusList,offidocTypeObject)"
+     th:with="objectUtils=${T(java.util.Objects)},dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+    <div style="overflow: visible" th:id="process-action-form-modal" class="modal">
+        <div class="modal-content">
+            <div class="center m_B10">
+                <div>
+                    <h3 th:text="|#{insert.action.modal.title.prefix} ${nextProcessAction.actionTypeName}|"></h3>
+                </div>
+            </div>
+
+            <div th:if="${actionCauseIpObjectSplitting}">
+                <div th:replace="base/message :: warning-attention(#{ipobject.split.warning.message})"></div>
+            </div>
+            <div th:replace="base/message :: warning-attention(${recordalInfoMessage})"></div>
+
+            <div class="row m_B10" th:if="${!T(org.springframework.util.CollectionUtils).isEmpty(processFreezingList)}">
+                <div th:replace="base/message :: warning-attention(#{insert.action.fp.unblock.warning})"></div>
+            </div>
+
+            <div class="row" th:if="${!T(org.springframework.util.CollectionUtils).isEmpty(statusList)}">
+                <div class="col-12">
+                    <div th:replace="~{base/form/select :: object(
+                            id = 'process-action-statusCode', label = #{insert.action.modal.label.status.code},
+                            classes = 'search-box', objects = ${statusList},
+                            valuePointer = 'statusId.statusCode', textPointer = 'statusName',
+                            selected = ${null != formData ? formData.specialFinalStatus : null})}">
+                    </div>
+                </div>
+            </div>
+            <div th:if="${nextProcessAction.containNotes}">
+                <div class="row" th:if="${objectUtils.nonNull(actionType.notes1Prompt)}">
+                    <div class="col-12">
+                        <div th:replace="~{base/form/textarea :: basic(id = 'process-action-notes1', label = ${actionType.notes1Prompt}, value = ${null != formData ? formData.notes1 : ''})}"></div>
+                    </div>
+                </div>
+                <div class="row" th:if="${objectUtils.nonNull(actionType.notes2Prompt)}">
+                    <div class="col-12">
+                        <div th:replace="~{base/form/textarea :: basic(id = 'process-action-notes2', label = ${actionType.notes2Prompt}, value = ${null != formData ? formData.notes2 : ''})}"></div>
+                    </div>
+                </div>
+                <div class="row" th:if="${objectUtils.nonNull(actionType.notes3Prompt)}">
+                    <div class="col-12">
+                        <div th:replace="~{base/form/textarea :: basic(id = 'process-action-notes3', label = ${actionType.notes3Prompt}, value = ${null != formData ? formData.notes3 : ''})}"></div>
+                    </div>
+                </div>
+                <div class="row" th:if="${objectUtils.nonNull(actionType.notes4Prompt)}">
+                    <div class="col-12">
+                        <div th:replace="~{base/form/textarea :: basic(id = 'process-action-notes4', label = ${actionType.notes4Prompt}, value = ${null != formData ? formData.notes4 : ''})}"></div>
+                    </div>
+                </div>
+                <div class="row" th:if="${objectUtils.nonNull(actionType.notes5Prompt)}">
+                    <div class="col-12">
+                        <div th:replace="~{base/form/textarea :: basic(id = 'process-action-notes5', label = ${actionType.notes5Prompt}, value = ${null != formData ? formData.notes5 : ''})}"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" th:if="${nextProcessAction.containManualDueDate}">
+                <div class="col-4">
+                    <div th:replace="~{base/form/input :: datepicker(id = 'process-action-manualDueDate', label = #{insert.action.modal.label.expiration.date}, classes = 'modal-date', value = ${null != formData ? #dates.format(formData.manualDueDate, dateFormatDot) : ''})}"></div>
+                </div>
+            </div>
+            <div class="row" th:if="${nextProcessAction.calculateTermFromActionDate}">
+                <div class="col-4">
+                    <div th:replace="~{base/form/input :: datepicker(id = 'process-action-actionDate', label = #{insert.action.modal.label.action.date}, classes = 'modal-date', dataMaxDate = 0, value = ${null != formData ? #dates.format(formData.actionDate, dateFormatDot) : ''})}"></div>
+                </div>
+            </div>
+            <div th:if="${isRecordalUserdoc}">
+                <div class="row">
+                    <div class="col-12">
+                        <div th:replace="~{base/form/input :: datepicker(id = 'process-action-recordalDate', label = #{insert.action.modal.label.recordal.date}, classes = 'modal-date', value = ${null != formData ? #dates.format(formData.recordalDate, dateFormatDot) : ''})}"></div>
+                    </div>
+                </div>
+                <div th:remove="tag" th:if="${showTransferCARadioButtons}">
+                    <div class="row m_T20">
+                        <div class="col-12">
+                            <div style="color: #9e9e9e">
+                                <label th:text="#{insert.action.modal.transferCorrespondenceAddress}"></label>
+                            </div>
+                            <div th:replace="~{base/form/radio :: basic(name = 'process-action-transferCorrespondenceAddress', label = #{yes}, value = true, checked = ${null != formData?.transferCorrespondenceAddress ? formData.transferCorrespondenceAddress : true})}"></div>
+                            <div th:replace="~{base/form/radio :: basic(name = 'process-action-transferCorrespondenceAddress', label = #{no}, value = false, checked = ${null != formData?.transferCorrespondenceAddress ? !formData.transferCorrespondenceAddress : false})}"></div>
+                            <div th:replace="base/validation :: validation-message(${validationErrors},'process-action-transferCorrespondenceAddress')"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${isRecordalInvalidationUserdoc}">
+                <div class="row">
+                    <div class="col-12">
+                        <div th:replace="~{base/form/input :: datepicker(id = 'process-action-invalidationDate', label = #{insert.action.modal.label.invalidation.date}, classes = 'modal-date', value = ${null != formData ? #dates.format(formData.invalidationDate, dateFormatDot) : ''})}"></div>
+                        <div th:replace="base/validation :: validation-message(${validationErrors},'process-action-emptyRecordalRecord')"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${actionCauseIpObjectSplitting}">
+                <div class="row">
+                    <div class="col-12">
+                        <div th:replace="~{base/form/input :: text(id = 'process-action-executionConfirmationText', label = 'Потвърждение', value = ${null != formData ? formData.executionConfirmationText : ''})}"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${objectUtils.nonNull(offidocTypeObject)}" class="m_T20">
+                <div class="row">
+                    <div class="col-12">
+                        <h4 th:text="|#{insert.action.modal.generated.offidoc.title.prefix} ${offidocTypeObject.offidocName}|"></h4>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <h5 th:text="#{insert.action.modal.choose.template}"></h5>
+                    </div>
+                    <div class="col-12 m_T5-i">
+                        <div th:each="template,templateStat : ${offidocTypeObject.templates}">
+                            <div th:if="${#strings.equalsIgnoreCase(template.nameWFile,offidocTypeObject.defaultTemplate)}">
+                                <div th:replace="~{base/form/checkbox :: simple(id = '', label = ${template.nameWFile}, value = ${template.nameWFile}, name = 'offidoc-template-default', dataType = 'office-document-template-checkbox',
+                                                isDisabled = ${#lists.size(offidocTypeObject.templates) == 1},
+                                                checked = ${(null != formData && null != formData.offidocTemplates) ? #lists.contains(formData.offidocTemplates,template.nameWFile) : true} )}"></div>
+                            </div>
+                        </div>
+                        <div class="m_T5" th:each="template,templateStat : ${offidocTypeObject.templates}">
+                            <div th:if="${!#strings.equalsIgnoreCase(template.nameWFile,offidocTypeObject.defaultTemplate)}">
+                                <div th:replace="~{base/form/checkbox :: simple(id = '', label = ${template.nameWFile}, value = ${template.nameWFile}, name = (|offidoc-template-${templateStat.index}|), dataType = 'office-document-template-checkbox',
+                                                checked = ${(null != formData && null != formData.offidocTemplates) ? #lists.contains(formData.offidocTemplates,template.nameWFile) : false} )}"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12" style="margin-top: 10px">
+                        <div th:replace="base/validation :: validation-message(${validationErrors},'offidoc-action-offidocTemplates')"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer row">
+            <div class="col-12">
+                <button th:attr="data-action='save-process-action', data-validation-block='#process-action-form-modal', data-process=${process},
+                             data-action-type=${actionType.actionType}, data-validation-url=@{/process/insert-action/validate-form},
+                             data-url=@{/process/insert-action}"
+                        th:text="#{btn.save}" type="button" class="button sm-icn-save wmin_130">
+                </button>
+                <button th:text="#{btn.cancel}" th:type="button" class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

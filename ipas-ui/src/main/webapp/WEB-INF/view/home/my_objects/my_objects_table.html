@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="table(myObjectsList,myObjectsCount,myObjectsFilter,myObjectsParentUrl)"
+     th:with="sorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.SorterUtils)},myObjectsSorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.MyObjectsSorterUtils)},securityUtils=${T(bg.duosoft.ipas.util.security.SecurityUtils)}, securityRoles=${T( bg.duosoft.ipas.enums.security.SecurityRole)}">
+
+    <div th:remove="tag" th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(myObjectsList)}">
+        <div th:remove="tag" th:case="true">
+            <div class="bg__light-blue p_10 m_B10 m_T10 center">
+                <span th:text="'Списъкът е празен !'"></span>
+            </div>
+        </div>
+        <div th:remove="tag" th:case="false">
+            <div class="row">
+                <div>
+                    <span th:text="'Общ брой: '"></span>
+                    <span th:text="${myObjectsCount}"></span>
+                </div>
+            </div>
+            <div class="m_T5">
+                <table class="simple bpo">
+                    <thead>
+                    <tr>
+                        <th style="width: 40px" th:text="'Номер'"></th>
+                        <th style="width: 30px"></th>
+                        <th th:with="isSelected=${#strings.equalsIgnoreCase(myObjectsFilter.sortColumn,myObjectsSorterUtils.FILING_NUMBER)},dataSort=${myObjectsSorterUtils.FILING_NUMBER}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,myObjectsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Входящ номер',${myObjectsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th  th:text="'Регистров номер'"></th>
+                        <th  th:text="'Наименование'"></th>
+                        <th th:with="isSelected=${#strings.equalsIgnoreCase(myObjectsFilter.sortColumn,myObjectsSorterUtils.STATUS)},dataSort=${myObjectsSorterUtils.STATUS}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,myObjectsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Статус',${myObjectsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th  th:with="isSelected=${#strings.equalsIgnoreCase(myObjectsFilter.sortColumn,myObjectsSorterUtils.STATUS_DATE)},dataSort=${myObjectsSorterUtils.STATUS_DATE}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,myObjectsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Дата на статуса',${myObjectsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+
+                        <th th:if="${iMarkMyObjects} != null" th:with="isSelected=${#strings.equalsIgnoreCase(myObjectsFilter.sortColumn,myObjectsSorterUtils.BORDERO)},dataSort=${myObjectsSorterUtils.BORDERO}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,myObjectsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{'Бордеро'},${myObjectsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+
+                        <th th:if="${iMarkMyObjects} != null" th:with="isSelected=${#strings.equalsIgnoreCase(myObjectsFilter.sortColumn,myObjectsSorterUtils.JOURNAL_CODE)},dataSort=${myObjectsSorterUtils.JOURNAL_CODE}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,myObjectsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{'Бюлетин'},${myObjectsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+
+                        <th th:with="isSelected=${#strings.equalsIgnoreCase(myObjectsFilter.sortColumn,myObjectsSorterUtils.USER_NAME)},dataSort=${myObjectsSorterUtils.USER_NAME}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,myObjectsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{tableHeader.responsibleUser.label},${myObjectsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="myObject,myObjectStat : ${myObjectsList}" th:classappend="${T(java.util.Objects).nonNull(myObject.newlyAllocated)} ? 'newly-allocated-process-status'">
+                        <td>
+                            <span th:text="${myObjectStat.count + ((myObjectsFilter.page - 1)*myObjectsFilter.pageSize)}">
+                            </span>
+                        </td>
+                        <td>
+                            <img th:if="${T(java.util.Objects).nonNull(myObject.priorityRequest)}" th:src="@{/img/flash_on_small.png}" th:title="#{efiling.priorityRequest.label}"/></td>
+                        <td>
+                            <a th:text="${myObject.filingNumber}" th:href="@{/ipobject/view(filingNumber=${myObject.filingNumber})}"></a>
+                        </td>
+                        <td>
+                            <span th:text="${myObject.registrationNumber}">
+                            </span>
+                        </td>
+                        <td>
+                           <span th:text="${myObject.title}">
+                            </span>
+                        </td>
+                        <td>
+                            <span th:text="${myObject.statusName}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${#dates.format(myObject.statusDate,T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}"></span>
+                        </td>
+                        <td th:if="${iMarkMyObjects} != null">
+                            <span th:text="${myObject.bordero}"></span>
+                        </td>
+                        <td th:if="${iMarkMyObjects} != null">
+                            <span th:text="${myObject.journalCode}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${myObject.responsibleUserName}"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="home-panel-paginator" th:with="paginatorBaseUrl=${myObjectsParentUrl =='imark-my-objects'} ? @{imark-my-objects/update-table} : @{my-objects/update-table}">
+                    <div th:replace="base/paginator :: paginator(page=${myObjectsFilter.page},pageSize=${myObjectsFilter.pageSize},total=${myObjectsCount},baseUrl=@{${paginatorBaseUrl}},
+                        tableContainerDiv='my-objects-table-wrapper',
+                        additionalParams='&tableCount='+${myObjectsCount}+${myObjectsFilter.statusCode != null ? '&statusCode='+myObjectsFilter.statusCode : '' }+'&newlyAllocated='+${myObjectsFilter.newlyAllocated}+'&priorityRequest='+${myObjectsFilter.priorityRequest}+
+                        '&sortOrder='+${myObjectsFilter.sortOrder}+
+                                         '&sortColumn='+${myObjectsFilter.sortColumn}+
+                                         ${myObjectsFilter.responsibleUser != null ? '&responsibleUser='+myObjectsFilter.responsibleUser : '' })">
+                    </div>
+                </div>
+            </div>
+            <div>
+                <input th:type="hidden" class="form-ignore" th:id="my-objects-page" th:value="${myObjectsFilter.page}">
+                <input th:type="hidden" class="form-ignore" th:id="table-count" th:value="'?tableCount='+${myObjectsCount}">
+                <input th:type="hidden" class="form-ignore" th:id="my-objects-pageSize" th:value="${myObjectsFilter.pageSize}">
+            </div>
+        </div>
+
+        <div class="position-relative m_T20" style="padding-bottom: 10px">
+            <div class="position-absolute left">
+                <span style="border: 1px solid #ffffff; padding-left:30px;background: lightgray" class="m_R10"></span>
+                <span style="font-size: 12px" th:text="'Новоразпределени заявки'"></span>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

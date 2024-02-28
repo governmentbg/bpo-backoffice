@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="directors" type="java.util.List<bg.duosoft.ipas.core.model.structure.User>"*/-->
+<!--/*@thymesVar id="selectedDirectorId" type="java.lang.Integer"*/-->
+<div th:fragment="select-director(isActive, selectedDirectorId, directors)" th:remove="tag">
+    <div th:replace="~{base/form/select :: object(
+                     id = 'director-select',
+                     label = #{user.director},
+                     classes = 'search-box',
+                     name = 'signatureUser.userId',
+                     isDisabled = ${!isActive},
+                     objects = ${directors},
+                     valuePointer = 'userId',
+                     textPointer = 'userName',
+                     emptySelectOption= #{default.select.option},
+                     selected = ${selectedDirectorId})}">
+    </div>
+    <br>
+    <br>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="geographical-indications-earlier-right-type-subsection(rootGround)"  th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+
+    <div class="m_T30 m_B10 ground-subsection-div-title">
+            <h4 style="display: inline-block" th:text="#{ground.go.section.title}"></h4>
+    </div>
+
+    <div class="row m_T5">
+        <div class="col-6 m_L0-i">
+            <div th:replace="~{base/form/input :: text(id = 'root-ground-registration-nbr', label = #{ground.registration.nbr}, value = ${rootGround.markGroundData?.registrationNbr})}"></div>
+        </div>
+        <div class="col-6">
+            <div th:replace="~{base/form/input :: datepicker(id = 'root-ground-registration-date', label = #{ground.registration.date}, value = ${rootGround != null and rootGround.markGroundData != null and rootGround.markGroundData.registrationDate != null ? #dates.format(rootGround.markGroundData.registrationDate, dateFormatDot): ''})}"></div>
+        </div>
+        <div class="col-6 m_L0-i">
+            <div th:replace="~{base/form/select :: map(id = 'root-ground-countryCode', label = #{ground.country}, map = ${countryMap}, selected = ${rootGround.markGroundData?.countryCode}, classes = 'search-box')}"></div>
+        </div>
+        <div class="col-6">
+            <div th:replace="~{base/form/select :: object(
+                            id = 'root-ground-geographicalIndTyp', label = #{ground.gi.type.label},
+                            name = 'rootGround.geographicalIndTyp', emptySelectOption = #{default.select.option},
+                            objects = ${geographicalIndTypes},
+                            valuePointer = 'applicationSubType', textPointer = 'applicationSubTypeName',
+                            selected = ${rootGround.markGroundData?.geographicalIndTyp})}">
+            </div>
+        </div>
+    </div>
+    <div class="col-12 m_T5">
+        <div th:replace="~{base/form/textarea :: basic(id = 'root-ground-common-text', value = ${rootGround.groundCommonText}, label = #{ground.description})}"></div>
+    </div>
+
+    <div th:replace="~{ipobjects/userdoc/grounds/common_elements/subsections/ground_nice_classes_subsection  :: ground-nice-classes(${rootGround})}"></div>
+</div>
+</body>
+</html>

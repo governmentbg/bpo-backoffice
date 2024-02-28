@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="mark" type="bg.duosoft.ipas.core.model.mark.CMark"*/-->
+<div th:fragment="content(panelsList,panelPrefix)" th:with="securityUtils=${T(bg.duosoft.ipas.util.security.SecurityUtils)},
+                                                            markPanelEnum=${T(com.duosoft.ipas.enums.MarkPanel)},
+                                                            collectionUtils=${T(org.springframework.util.CollectionUtils)},
+                                                            securityRoles=${T( bg.duosoft.ipas.enums.security.SecurityRole)},
+                                                            ipObjectPrefix =${T(bg.duosoft.ipas.enums.FileType).ACP.code() == mark.file.fileId.fileType} ? 'acp': 'mark',
+                                                            editEnabled=${securityUtils.isIntellectualPropertyObjectEditEnabled(ipObjectPrefix, mark.file,@processServiceImpl,@userServiceImpl)}"
+>
+
+    <div class="app-body">
+        <header class="app-header" th:replace="base/header"></header>
+
+        <div th:replace="ipobjects/marklike/common/viewpage/mark_view_left_sidebar :: sidebar(${panelsList},${panelPrefix})"></div>
+
+        <main class="main">
+            <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+            <div class="inner" th:with="objectUtils=${T(java.util.Objects)},
+                                        stringUtils=${T(org.springframework.util.StringUtils)}">
+
+                <div th:remove="tag" th:if="${mark.reception}">
+                    <div class="right-message-panel-wrapper">
+                        <div class="right-message-panel">
+                            <div class="right-message-panel-fixed">
+                                <div class="w_97p p_0">
+                                    <div th:replace="base/toast/message :: warning(message = #{right.panel.message.message.reception},toastTitle = #{right.panel.message.title.reception},removeCloseButton = true)"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div th:replace="base/toast/message :: error(message = ${errorMessage},unescaped = true)"></div>
+                    <div th:replace="base/toast/message :: success(message = ${successMessage},unescaped = true)"></div>
+                    <div th:replace="base/toast/message :: validation-errors(validationErrors = ${validationErrors})"></div>
+                    <div th:replace="base/toast/message :: warning(message = ${warningMessage},unescaped = true)"></div>
+                </div>
+
+                <div th:id="panel-container-mark" class="row panel-container-padding">
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,markPanelEnum.IdentityData.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasMarkIdentityPanelRights(mark.file.fileId)}">
+                            <div th:replace="ipobjects/marklike/common/viewpage/mark_view_panels :: identity-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag"
+                         th:if="${#lists.contains(panelsList,markPanelEnum.AcpAffectedObjectsData.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.AcpAffectedObjectsData)}">
+                            <div th:replace="ipobjects/marklike/common/viewpage/mark_view_panels :: acp-affected-objects-data"></div>
+                        </div>
+                    </div>
+
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,markPanelEnum.MainData.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.MarkMainData)}">
+                            <div th:replace="ipobjects/marklike/common/viewpage/mark_view_panels :: mark-main-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,markPanelEnum.InternationalData.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.MarkInternationalData)}">
+                            <div th:replace="ipobjects/marklike/common/viewpage/mark_view_panels :: mark-international-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,markPanelEnum.NiceClasses.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.MarkNiceClasses)}">
+                            <div th:replace="ipobjects/marklike/common/viewpage/mark_view_panels :: nice-classes-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag"
+                         th:if="${#lists.contains(panelsList,markPanelEnum.InternationalNiceClassesRestrictions.code())}">
+                        <div th:remove="tag"
+                             th:if="${securityUtils.hasRights(securityRoles.MarkInternationalNiceClasses)}">
+                            <div th:replace="ipobjects/marklike/common/viewpage/mark_view_panels :: international-nice-classes-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,markPanelEnum.Persons.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasMarkPersonsPanelRights(mark.file.fileId)}">
+                            <div th:replace="ipobjects/marklike/common/viewpage/mark_view_panels :: person-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag"
+                         th:if="${#lists.contains(panelsList,markPanelEnum.AcpViolationPlacesData.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.AcpViolationPlacesData)}">
+                            <div th:replace="ipobjects/marklike/common/viewpage/mark_view_panels :: acp-violation-places-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag"
+                         th:if="${#lists.contains(panelsList,markPanelEnum.AcpCheckData.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.AcpCheckData)}">
+                            <div th:replace="ipobjects/marklike/common/viewpage/mark_view_panels :: acp-check-data"></div>
+                        </div>
+                    </div>
+
+
+                    <div th:remove="tag"
+                         th:if="${#lists.contains(panelsList,markPanelEnum.AcpAdministrativePenaltyData.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.AcpAdministrativePenaltyData)}">
+                            <div th:replace="ipobjects/marklike/common/viewpage/mark_view_panels :: acp-administrative-penalty-data"></div>
+                        </div>
+                    </div>
+
+
+                    <div th:remove="tag"
+                         th:if="${#lists.contains(panelsList,markPanelEnum.AcpTakenItemsData.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.AcpTakenItemsData)}">
+                            <div th:replace="ipobjects/marklike/common/viewpage/mark_view_panels :: acp-taken-items-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,markPanelEnum.Claims.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.MarkClaims)}">
+                            <div th:replace="ipobjects/marklike/common/viewpage/mark_view_panels :: claims-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,markPanelEnum.Publication.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.MarkPublication)}">
+                            <div th:replace="ipobjects/marklike/common/viewpage/mark_view_panels :: publications-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,markPanelEnum.Recordals.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.MarkRecordals)}">
+                            <div th:replace="ipobjects/marklike/common/viewpage/mark_view_panels :: recordals-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,markPanelEnum.Process.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasMarkProcessPanelRights(mark.file.fileId)}">
+                            <div th:replace="ipobjects/marklike/common/viewpage/mark_view_panels :: process-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,markPanelEnum.Payments.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.MarkPayments)}">
+                            <div th:replace="ipobjects/marklike/common/viewpage/mark_view_panels :: payments-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,markPanelEnum.History.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.IpObjectsHistory)}">
+                            <div th:replace="ipobjects/marklike/common/viewpage/mark_view_panels :: history-data"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div th:replace=":: submit-panel" th:remove="tag"></div>
+        </main>
+    </div>
+
+    <div th:replace=":: modals" th:remove="tag"></div>
+    <div th:replace=":: hidden-fields" th:remove="tag"></div>
+    <footer class="page-footer" th:replace="base/footer"></footer>
+    <div th:replace="base/template :: js-footer" th:remove="tag"></div>
+</div>
+
+<div th:remove="tag" th:fragment="modals">
+    <div th:if="${!#lists.isEmpty(validationErrors)}"
+         th:replace="base/modal/validation_errors::errors(${validationErrors})" th:remove="tag"></div>
+    <div th:id="nice-class-modal-wrapper"></div>
+    <div th:id="nice-class-terms-text-modal-wrapper"></div>
+    <div th:id="nice-class-terms-choose-modal-wrapper"></div>
+    <div th:id="nice-class-class-choose-modal-wrapper"></div>
+    <div th:id="person-modal-content"></div>
+    <div th:id="person-search-modal-wrapper"></div>
+    <div th:id="person-info-modal-wrapper"></div>
+    <div th:id="agent-modal-content"></div>
+    <div th:id="vienna-modal-content"></div>
+    <div th:id="priority-modal-content"></div>
+    <div th:id="international-nice-terms-text-modal-wrapper"></div>
+    <div th:id="acp-taken-item-modal-content"></div>
+    <div th:id="agent-power-of-attorney-modal-content"></div>
+    <div th:id="agent-power-of-attorney-info-modal-content"></div>
+</div>
+
+<div th:remove="tag" th:fragment="hidden-fields">
+    <input th:id="session-object-identifier" th:type="hidden" class="form-ignore" th:value="${sessionObjectIdentifier}">
+    <input th:if="${!#lists.isEmpty(validationErrors)}" type="hidden" th:id="mark-validation-errors"
+           th:attr="data-size=${#lists.size(validationErrors)}">
+    <div th:if="${null != scrollToPanel}" class="none">
+        <input th:id="scroll-to-panel" th:type="hidden" class="form-ignore" th:value="${scrollToPanel}">
+    </div>
+
+
+    <div class="none" th:if="${!collectionUtils.isEmpty(editedPanels)}">
+        <div th:remove="tag" th:each="editePanel : ${editedPanels}">
+            <span class="edited-panel" th:attr="data-value=${editePanel}"></span>
+        </div>
+    </div>
+
+</div>
+
+<div th:remove="tag" th:fragment="submit-panel">
+    <div id="submitPanel" class="panel submit-panel">
+        <div class="row">
+            <button th:attr="data-action='save-ipobject',
+                             data-container='panel-container-mark',
+                             data-url=@{/mark/save-mark}"
+                    th:text="#{btn.save}" class="button submit-panel-btn sm-icn-save m_T5 pulse green">
+            </button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

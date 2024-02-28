@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="mark" type="bg.duosoft.ipas.core.model.mark.CMark"*/-->
+<div th:fragment="nice-classes(mark)" th:with="config=${T(com.duosoft.ipas.util.factory.NiceConfigFactory).get(T(com.duosoft.ipas.webmodel.NiceListType).OBJECT_LIST, mark.file.fileId.fileType, null)},allowEdit=${config.hasEdit}">
+    <div class="col-12">
+        <div th:id="|nice-classes-table-${config.niceListType}|" class="nice-classes-table">
+            <div  th:if="${mark.protectionData != null and mark.protectionData.niceClassList != null}">
+                <div th:replace="ipobjects/common/nice_class/nice_classes_table :: nice-classes-table(niceClassList=${mark.protectionData.niceClassList},niceConfig=${config},allowEdit=${allowEdit})"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12" th:if="${!#lists.isEmpty(validationErrors)}" th:id="mark-protectionData-niceClassList">
+        <div th:replace="base/validation :: validation-message(${validationErrors},'mark-protectionData-niceClassList')"></div>
+    </div>
+    <div class="col-12">
+        <th:block th:if="${config.hasAddition}">
+            <a th:replace="~{base/form/button :: material-btn(label = #{btn.add}, dataAction = 'open-nice-class-modal', dataUrl = @{/nice-class/{niceListType}/open-modal(niceListType=${config.niceListType})}, icon='add', classes = 'right hidden-element')}"></a>
+        </th:block>
+    </div>
+</div>
+</body>
+</html>

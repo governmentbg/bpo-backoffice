@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="valid-cpcs-form-modal(cpcList)">
+    <div th:id="valid-cpcs-form-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="#{valid.cpc.list.title}"></h4>
+            </div>
+            <div class="row m_B20" th:if="${!T(org.springframework.util.CollectionUtils).isEmpty(cpcList)}">
+                <div class="col-12">
+                    <table class="simple">
+                        <thead>
+                        <tr>
+                            <th th:text="#{cpc.edition.code.label}"></th>
+                            <th th:text="#{cpc.classes.label}"></th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="cpc : ${cpcList}">
+                            <td th:text="${cpc.cpcEdition}"></td>
+                            <td th:text="${#strings.concat(cpc.cpcSection,cpc.cpcClass,cpc.cpcSubclass,cpc.cpcGroup,cpc.cpcSubgroup,' - ',cpc.cpcName)}"
+                                th:title="${cpc.cpcName}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row m_B20" th:if="${T(org.springframework.util.CollectionUtils).isEmpty(cpcList)}">
+                <div th:replace="~{base/message :: warning(#{not.valid.cpcs.warning.message })}"></div>
+            </div>
+        </div>
+        <div class="modal-footer row">
+            <div class="col-12">
+                <button th:text="#{btn.cancel}" th:type="button" class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

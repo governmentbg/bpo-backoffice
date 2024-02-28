@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="modal(workingDate)" th:remove="tag"
+     th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)}, dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}, objectsUtils=${T(java.util.Objects)}">
+    <div th:id="change-ipas-working-date-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="#{reception.workingDate.title}"></h4>
+            </div>
+            <div class="row m_T10 left-align">
+                <div class="col-12" th:with="workingDateValue = ${#dates.format(workingDate, dateFormatDot)}">
+                    <div th:replace="~{base/form/input :: datepicker(id = 'input-receptionWorkingDate', label = #{reception.workingDate.new.label}, classes = 'form-ignore',
+                     value = ${workingDateValue}, dataMaxDate = '0', dataMinDate = ${workingDateValue})}"></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer row">
+            <div class="col-12">
+                <button th:attr="data-action='change-ipas-working-date',
+                                 data-message=#{reception.workingDate.warning.message},
+                                 data-validation-block='#change-ipas-working-date-modal',
+                                 data-validation-url=@{/reception/create/ipas-working-date/validate},
+                                 data-url=@{/reception/create/ipas-working-date/change}"
+                        th:text="#{btn.save}" type="button" class="button sm-icn-save confirm wmin_130">
+                </button>
+                <button th:text="#{btn.cancel}" type="button" class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

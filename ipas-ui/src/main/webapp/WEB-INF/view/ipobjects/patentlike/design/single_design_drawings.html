@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="single_design_drawings(drawingList,filingNumber,sessionObjectIdentifier)">
+
+    <div class="col-12" th:attr="data-single-design-drawing-errors-div=${filingNumber}"></div>
+
+    <div th:each="singleDesignDrawingParent,parentIterator : ${drawingList}" th:if="${parentIterator.index % 2 == 0}">
+
+        <div class="row">
+            <div th:each="singleDesignDrawing,iter2 : ${drawingList}" th:id="'single-design-drawing-area-'+${iter2.index}+${filingNumber}" th:if="${iter2.index==parentIterator.index|| (iter2.index-1)==parentIterator.index}">
+                <div class="col-3">
+                    <input type="text" th:id="'drawingNbr-'+${iter2.index}+${filingNumber}" th:type="hidden" th:value="${singleDesignDrawing.drawingNbr}">
+                    <div class="m_B20"><span th:id="'dr-number-'+${iter2.index}+${filingNumber}" th:text="#{single.design.drawing.nbr.label}+': '+${singleDesignDrawing.drawingNbr}"/></div>
+                    <div th:replace="~{base/form/select :: object(id = 'viewType-'+${iter2.index}+${filingNumber}, label = #{drawing.view.type.label}, objects = ${imageViewTypeList}, valuePointer = 'viewTypeId', textPointer = 'viewTypeName',selected = ${singleDesignDrawing.singleDesignExtended.imageViewType.viewTypeId})}"> </div>
+                    <div th:replace="~{base/form/checkbox :: basic(id ='imagePublished-'+${iter2.index}+${filingNumber}, label = #{drawing.published.label}, isChecked = ${singleDesignDrawing.singleDesignExtended.imagePublished})}"></div>
+                    <div th:replace="~{base/form/checkbox :: basic(id ='imageRefused-'+${iter2.index}+${filingNumber}, label = #{drawing.refused.label}, isChecked = ${singleDesignDrawing.singleDesignExtended.imageRefused})}"></div>
+                </div>
+                <div th:class="col-3" th:styleappend="${iter2.index % 2 == 1}?'margin-bottom: 10px'">
+                    <div class="m_B10">
+                        <a th:attr="data-drawingnbr=${singleDesignDrawing.drawingNbr}, data-filingnumber=${filingNumber}, data-message=#{drawing.delete.confirmation.message}, data-action='single-design-delete-drawing',data-url=@{/design/drawing/delete}"
+                           style="border: 0" th:title="#{btn.delete}" href="javascript:void(0);"
+                           class="hidden-element btn-floating ipas waves-effect waves-light action-button-top confirm">
+                            <i class="icon-trash"></i>
+                        </a>
+                        <a th:if="${drawingList[0].drawingNbr ne singleDesignDrawing.drawingNbr}"
+                           th:attr="data-action='single-design-swap-drawing-position',data-url=@{/design/drawing/swap-position},data-higher-position=false, data-drawingnbr=${singleDesignDrawing.drawingNbr}, data-filingnumber=${filingNumber}"
+                           href="javascript:void(0);"
+                           class="hidden-element btn-floating ipas waves-effect waves-light action-button-top">
+                            <i class="material-icons">arrow_back</i>
+                        </a>
+                        <a th:if="${drawingList[drawingList.size()-1].drawingNbr ne singleDesignDrawing.drawingNbr}"
+                           th:attr="data-action='single-design-swap-drawing-position',data-url=@{/design/drawing/swap-position},data-higher-position=true, data-drawingnbr=${singleDesignDrawing.drawingNbr}, data-filingnumber=${filingNumber}"
+                           href="javascript:void(0);"
+                           class="hidden-element btn-floating ipas waves-effect waves-light action-button-top">
+                            <i class="material-icons">arrow_forward</i>
+                        </a>
+                    </div>
+
+                    <img class="materialboxed" th:attr="data-lazysrc = @{'/design/drawing/content?sessionIdentifier=' + ${sessionObjectIdentifier}+'&drawingn='+${singleDesignDrawing.drawingNbr}+
+                                             '&filingNumber='+${filingNumber}+'&time='+ ${#dates.format(#dates.createNow(),'HH:mm:ss.SSS')}}" >
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="hidden-element">
+        <div th:if="${drawingList.size() >= 2}" class="col-12">
+            <input type="number" class="form-ignore" style="width:6%" th:value="${drawingList[0].drawingNbr}" th:attr="number-change-position-first=${filingNumber}">
+            <input type="number" class="form-ignore" style="width:6%" th:value="${drawingList[drawingList.size()-1].drawingNbr}" th:attr="number-change-position-second=${filingNumber}">
+            <button th:text="#{drawing.swap.positions.button}" th:type="button" class="button m_T10"
+                    th:attr="data-action='single-design-global-swap-drawing-position',data-url=@{/design/drawing/swap-position-global},data-filingnumber=${filingNumber}">
+            </button>
+        </div>
+    </div>
+</div>
+</body>
+</html>

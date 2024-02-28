@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg">
+
+<head th:replace="~{base/template :: head(title = #{admin.person.remove.title})}"></head>
+<body class="dark left-sidebar-show">
+<header class="app-header" th:replace="base/header"></header>
+
+<div class="app-body">
+    <div class="left-sidebar">
+        <div id="psb" class="ps--active-y">
+            <nav class="sidebar-nav">
+                <ul class="nav DropDownMenu">
+                    <li th:each="url : ${T(com.duosoft.ipas.util.UrlMap).ADMIN_PERSON_URLS}">
+                        <a th:href="@{${url.url}}" th:title="${#messages.msgOrNull(url.text)}" th:text="${#messages.msgOrNull(url.shortText)}"></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <main class="main">
+        <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+        <div class="inner continer">
+            <div th:replace="base/toast/message :: info(message=#{remove.persons.info.msg},removeCloseButton = true)"></div>
+
+            <div class="panel">
+                <div class="center">
+                    <h1 class="section-header" th:text="#{admin.person.remove.title}"></h1>
+                </div>
+                <div>
+                    <div class="row m_B5">
+                        <div class="col-12">
+                            <h4 class="progressbar-info" th:text="${progressBar.inProgress} ? #{process.started} : #{process.not.started}"></h4>
+                        </div>
+                    </div>
+                    <div class="modded row w_100p p_0" th:id="remove-person-progressbar" th:attr="data-url=@{/admin/person/remove-not-used/select-progressbar-info}">
+                        <div class="col-12">
+                            <ul class="collapsible m_L0-i w_100p p_0">
+                                <li>
+                                    <div class="collapsible-header m_L0-i w_100p">
+                                        <div class="progress blue lighten-4" th:switch="${progressBar.inProgress}">
+                                            <div th:case="true" class="determinate blue progressbar-progress" th:styleappend="'width: '+ ${progressBar.progress}" th:text="${progressBar.progress}+'%'">0%</div>
+                                            <div th:case="false" style="width: 0"></div>
+                                        </div>
+                                    </div>
+                                    <div class="collapsible-body m_0 w_100p">
+                                        <div th:switch="${progressBar.inProgress}">
+                                            <div th:case="true">
+                                                <div class="row">
+                                                    <div class="col-6" th:text="#{progressbar.started.at}"></div>
+                                                    <span th:text="${#dates.format(progressBar.startAt,T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT)}"></span>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-6" th:text="#{progressbar.username}"></div>
+                                                    <span th:text="${progressBar.username}"></span>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-6" th:text="#{progressbar.log}"></div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12 progressbar-log"></div>
+                                                </div>
+                                            </div>
+                                            <div th:case="false">
+                                                <span th:text="#{no.data}"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row m_T10" >
+                        <div class="col-12">
+                            <a th:replace="~{base/form/button :: material-btn(label = #{btn.start}, dataAction = 'start-remove-person-process', dataUrl = @{/admin/person/remove-not-used/start-progressbar}, icon='check', classes = 'right m_T5 w_150px', isDisabled = ${progressBar.inProgress})}"></a>
+                            <a th:replace="~{base/form/button :: material-btn(label = #{btn.stop}, dataAction = 'stop-remove-person-process', dataUrl = @{/admin/person/remove-not-used/stop-progressbar}, icon='clear', classes = 'right m_T5 w_150px m_R20', isDisabled = ${!progressBar.inProgress})}"></a>
+                        </div>
+                    </div>
+                    <div th:if="${executeProcess eq true}" th:id="execute-remove-person-process" th:attr="data-url=@{/admin/person/remove-not-used/execute-process}"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<footer class="page-footer" th:replace="base/footer"></footer>
+<div th:replace="base/template :: js-footer" th:remove="tag"></div>
+</body>
+</html>

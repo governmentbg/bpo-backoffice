@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg">
+
+<head th:replace="~{base/template :: head(title=#{error.log.title})}"></head>
+
+<body class="dark left-sidebar-show">
+
+<header class="app-header" th:replace="~{base/header}"></header>
+
+<div class="app-body">
+    <div class="left-sidebar">
+        <div id="psb" class="ps--active-y">
+            <nav class="sidebar-nav">
+                <ul class="nav DropDownMenu">
+                    <li th:each="url : ${T(com.duosoft.ipas.util.UrlMap).ADMIN_PANEL_URLS}">
+                        <a th:href="@{${url.url}}" th:title="${#messages.msgOrNull(url.text)}" th:text="${#messages.msgOrNull(url.shortText)}"></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <main class="main">
+        <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+        <div class="inner continer" th:with="errorLogUtils=${T(bg.duosoft.ipas.util.error_log.ErrorLogUtils)}">
+            <div class="row">
+                <div class="col-12">
+                    <div class="panel" th:id="error-log-page-wrapper">
+                        <div class="center">
+                            <h1 class="section-header" th:text="#{error.log.title}"></h1>
+                        </div>
+                        <div class="table-filter-wrapper m_T10">
+                            <div class="row">
+                                <div class="col-4">
+                                    <div th:replace="~{base/form/select :: map(id = 'error-log-resolved-filter', label = #{error.log.label.resolved}, map = ${errorLogUtils.generateResolvedSelectOptions(@messageSource)}, selected = ${errorLogFilter.resolved})}"></div>
+                                </div>
+                                <div class="col-4" >
+                                    <div th:replace="~{base/form/select :: map(id = 'error-log-priority-filter', label = #{error.log.label.priority}, map = ${errorLogUtils.generatePrioritySelectOptions(@messageSource)}, selected = ${errorLogFilter.priority}, emptySelectOption = #{all})}"></div>
+                                </div>
+                                <div class="col-4">
+                                    <div th:replace="~{base/form/select :: map(id = 'error-log-about-filter', label = #{error.log.label.about}, map = ${errorLogUtils.generateAboutSelectOptions(@messageSource)}, selected = ${errorLogFilter.about}, emptySelectOption = #{all})}"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 right-align">
+                                    <button th:id="search-error-log-btn" th:attr="data-url=@{/admin/error-log/update-table}" th:text="#{btn.search}" th:type="button" class="button sm-icn-reload  m_T5"></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div data-type="wrapper" th:id="error-log-table-wrapper" th:attr="data-url=@{/admin/error-log/update-table}">
+                            <div th:replace="~{admin/error/log/error_log_table :: table(errorLogList=${errorLogList},errorLogCount=${errorLogCount},errorLogFilter=${errorLogFilter})}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<footer class="page-footer" th:replace="base/footer"></footer>
+<div th:replace="~{base/template :: js-footer}" th:remove="tag"></div>
+</body>
+</html>

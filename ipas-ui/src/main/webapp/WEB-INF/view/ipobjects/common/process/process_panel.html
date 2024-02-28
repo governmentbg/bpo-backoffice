@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="process" type="bg.duosoft.ipas.core.model.process.CProcess"*/-->
+<!--/*@thymesVar id="isReception" type="java.lang.Boolean"*/-->
+<div th:fragment="process(process,processTypeMap,nextProcessActions,isReception)"
+     th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT},
+              processUtils=${T(com.duosoft.ipas.util.ProcessUtils)},
+              processTypeUtils=${T(bg.duosoft.ipas.util.process.ProcessTypeUtils)},
+              processActionUtils=${T(bg.duosoft.ipas.util.process.ProcessActionUtils)},
+              collectionUtils=${T(org.springframework.util.CollectionUtils)}">
+
+
+    <div class="row">
+        <div class="col-6">
+            <div th:replace="~{base/form/input :: readonly(label = #{process.panel.status}, value = ${process.status.statusName})}"></div>
+        </div>
+        <div class="col-6">
+            <div th:replace="~{base/form/input :: readonly(label = #{process.panel.statusDate}, value = ${#dates.format(process.statusDate , dateFormatDot)})}"></div>
+        </div>
+    </div>
+    <div th:remove="tag" th:with="nextProcessAfterExpiration=${@processServiceImpl.selectNextActionAfterExpirationDate(process.processId, process.status.statusId.statusCode)},actionsWithExpirationDate=${@processServiceImpl.selectActionsWithExpirationDate(process)}">
+        <div class="row">
+            <div th:if="${null != nextProcessAfterExpiration || null != actionsWithExpirationDate}" th:id="process-manual-due-date-wrapper" th:classappend="${null == (process.dueDate) ? 'hidden-element':''}">
+                <div th:replace="~{ :: manual-due-date(${process},null)}"></div>
+            </div>
+            <div th:id="process-responsible-user-wrapper">
+                <div th:replace="~{ :: responsible-user(${process},null)}"></div>
+            </div>
+        </div>
+        <div class="row" th:if="${null != nextProcessAfterExpiration}">
+            <div class="col-6">
+                <div th:replace="~{base/form/input :: readonly(label = #{process.panel.statusAfterExpirationDate}, value = ${nextProcessAfterExpiration.statusName})}"></div>
+            </div>
+            <div class="col-6">
+                <div th:replace="~{base/form/input :: readonly(label = #{process.panel.automaticActionAfterExpirationDate}, value = ${nextProcessAfterExpiration.actionTypeName})}"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row m_B10" th:if="${!collectionUtils.isEmpty(process.processFreezingList)}">
+        <div class="col-12">
+            <label class="bld" th:text="#{process.panel.freezingList}"></label>
+            <span th:each="processFreezing,processFreezingStat : ${process.processFreezingList}">
+                <span th:text="|${processFreezing.freezingProcessId.processType} (${processTypeMap.get(processFreezing.freezingProcessId.processType)}) - ${processFreezing.freezingProcessId.processNbr}|"></span>
+                <span th:if="${!processFreezingStat.last}" th:text="','"></span>
+            </span>
+        </div>
+    </div>
+    <div class="row m_B10" th:if="${!T(org.springframework.util.CollectionUtils).isEmpty(process.processFrozenList)}">
+        <div class="col-12 ">
+            <label class="bld" th:text="#{process.panel.frozenList}"></label>
+            <span th:each="processFrozen,processFrozenStat : ${process.processFrozenList}">
+                    <span th:text="|${processFrozen.frozenProcessId.processType} (${processTypeMap.get(processFrozen.frozenProcessId.processType)}) - ${processFrozen.frozenProcessId.processNbr}|"></span>
+                    <span th:if="${!processFrozenStat.last}" th:text="','"></span>
+            </span>
+        </div>
+    </div>
+
+    <div class="m_T10">
+        <div th:replace="ipobjects/common/process/process_tree :: tree(${process},false,false,false)"></div>
+    </div>
+    <div class="hidden-element">
+        <hr>
+        <div th:remove="tag" th:switch="${!#strings.isEmpty(process.responsibleUser)}">
+            <div th:case="true">
+                <div th:remove="tag" th:switch="${isReception}">
+                    <div th:remove="tag" th:case="true" >
+                        <div class="row m_B10">
+                            <div class="col-12">
+                                <div th:replace="base/message :: warning(#{process.insert.action.reception.warning})"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div th:remove="tag" th:case="false">
+                        <div th:remove="tag" th:switch="${null != missingRecordalRecordError && missingRecordalRecordError}">
+                            <div th:remove="tag" th:case="true">
+                                <div class="row m_B10">
+                                    <div class="col-12">
+                                        <div th:replace="base/message :: error(#{process.insert.action.missing.recordal.warning})"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:remove="tag" th:case="*">
+                                <div th:remove="tag" th:switch="${collectionUtils.isEmpty(nextProcessActions)}">
+                                    <div th:remove="tag" th:case="true">
+                                        <div class="row m_B10">
+                                            <div class="col-12">
+                                                <div th:replace="base/message :: info(#{process.panel.last.status.info})"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div th:remove="tag" th:case="false">
+                                        <div th:remove="tag" >
+                                            <div th:if="${processActionUtils.hasPermissionsForExecuteActions(process)}">
+                                                <div class="row m_B10" style="display: flex">
+                                                    <div class="m_L10">
+                                                        <div class="inline-block m_R20">
+                                                            <label>
+                                                                <input th:name="process-action-radio" th:type="radio" checked class="with-gap"
+                                                                       th:attr="data-url=@{/process/insert-action/update-next-action-select},data-type='normal',data-process=|${process.processId.processType}-${process.processId.processNbr}|,"/>
+                                                                <span th:text="#{process.panel.actions.normal}"></span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="inline-block m_R20">
+                                                            <label>
+                                                                <input th:name="process-action-radio" th:type="radio" class="with-gap"
+                                                                       th:attr="data-url=@{/process/insert-action/update-next-action-select},data-type='note',data-process=|${process.processId.processType}-${process.processId.processNbr}|,"/>
+                                                                <span th:text="#{process.panel.actions.notification}"></span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="inline-block m_R20" th:if="${processTypeUtils.isIpObjectProcess(process) || processTypeUtils.isUserdocProcess(process)}">
+                                                            <label>
+                                                                <input th:name="process-action-radio" th:type="radio" class="with-gap"
+                                                                       th:attr="data-url=@{/process/insert-action/update-next-action-select},data-type='msprocess',data-process=|${process.processId.processType}-${process.processId.processNbr}|,"/>
+                                                                <span th:text="#{process.panel.msprocess}"></span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div th:id="next-action-wrapper">
+                                                    <div th:replace="ipobjects/common/process/process_next_action :: next-normal-special-select(${nextProcessActions},${process})"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div th:case="false" th:remove="tag" >
+                <div class="row m_B10">
+                    <div class="col-12">
+                        <div th:replace="base/message :: warning(#{process.insert.action.responsible.user.warning})"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:remove="tag" th:with="securityUtils=${T(bg.duosoft.ipas.util.security.SecurityUtils)},securityRoles=${T( bg.duosoft.ipas.enums.security.SecurityRole)}">
+            <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.ProcessRegisterOldUserdocs)}">
+                <div class="row" th:if="${process.processOriginData.fileId != null && !isReception}">
+                    <div class="col-12">
+                        <a th:replace="~{base/form/button :: material-btn(label = #{process.panel.register.document.title}, dataAction = 'open-register-userdoc-modal',dataUrl = @{/process/document/register/open-modal}, icon = 'note_add' ,classes = '')}"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:id="process-edit-modal-wrapper"></div>
+    <div th:id="process-delete-modal-wrapper"></div>
+    <div th:id="process-register-userdoc-modal-wrapper"></div>
+</div>
+
+<div th:fragment="responsible-user(process,validationErrors)" th:remove="tag" th:with="securityUtils=${T(bg.duosoft.ipas.util.security.SecurityUtils)},securityRoles=${T( bg.duosoft.ipas.enums.security.SecurityRole)}">
+    <div th:remove="tag" th:switch="${securityUtils.hasRights(securityRoles.ProcessChangeResponsibleUser)}">
+        <div th:remove="tag" th:case="true">
+            <div th:remove="tag" th:classappend="${null == (process.responsibleUser) ? 'hidden-element':''}">
+                <div class="col-5">
+                    <div th:replace="~{base/form/input :: text(id = 'autocomplete-process-responsibleUser', label = #{process.panel.responsibleUser}, value = (${process.responsibleUser != null ? process.responsibleUser.userName : ''}), url = @{/user/users-autocomplete}, dataId = (${process.responsibleUser != null ? process.responsibleUser.userId : ''}))}"></div>
+                </div>
+                <div class="col-1 m_T10">
+                    <a th:title="#{process.panel.btn.responsibleUser.edit}" class="hidden-element btn-floating ipas waves-effect waves-light action-button-top"
+                       th:attr="data-action='change-responsible-user',
+                        data-process=|${process.processId.processType}-${process.processId.processNbr}|,
+                        data-url=@{/process/responsible-user/change},
+                        data-validation-url=@{/process/responsible-user/validate}"
+                    >
+                        <i class="material-icons">arrow_forward</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div th:case="false" th:remove="tag">
+            <div class="col-6" th:if="${null != (process.responsibleUser)}">
+                <div th:replace="~{base/form/input :: readonly(label = #{process.panel.responsibleUser}, value = ${process.responsibleUser.userName})}"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div th:fragment="manual-due-date(process,validationErrors)" th:remove="tag" th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT},processUtils=${T(com.duosoft.ipas.util.ProcessUtils)}">
+    <div th:remove="tag" th:switch="${processUtils.hasPermissionsForChangeManualDueDate(process)}">
+        <div th:remove="tag" th:case="true">
+            <div class="col-5">
+                <div th:replace="~{base/form/input :: datepicker(id = 'input-process-dueDate', label = #{process.panel.expirationDate}, value = ${#dates.format(process.dueDate, dateFormatDot)})}"></div>
+            </div>
+            <div class="col-1 m_T10">
+                <a th:title="'Промени срок'" class="hidden-element btn-floating ipas waves-effect waves-light action-button-top"
+                   th:attr="data-action='change-expiration-date',
+                    data-process=|${process.processId.processType}-${process.processId.processNbr}|,
+                    data-url=@{/process/expiration-date/change},
+                    data-validation-url=@{/process/expiration-date/validate}">
+                    <i class="material-icons">arrow_forward</i>
+                </a>
+            </div>
+        </div>
+        <div th:case="false" class="col-6">
+            <div th:replace="~{base/form/input :: readonly(label = #{process.panel.expirationDate}, value = ${#dates.format(process.dueDate, dateFormatDot)})}"></div>
+        </div>
+    </div>
+
+
+</div>
+
+<div th:fragment="loader">
+    <div th:replace=":: simple-header"></div>
+    <div th:replace="base/loader :: local-loader"></div>
+</div>
+
+<div th:fragment="simple-header">
+    <div class="col-12">
+        <h3 class="inline-block" th:text="#{panel.title.process}"></h3>
+    </div>
+</div>
+
+<div th:fragment="process-panel(process, processTypeMap, isReception)" th:remove="tag" th:with="panelName=${T(com.duosoft.ipas.enums.MarkPanel).Process.code()}">
+    <div class="row">
+        <div class="col-10">
+            <h3 class="inline-block" th:text="#{panel.title.process}"></h3>
+            <div class="inline-block">
+                <span class="sign bg__dark-red edit none" th:text="#{panel.header.edit}"></span>
+            </div>
+        </div>
+        <div class="col-2 txtRight" th:if="${editEnabled}">
+            <a class="small sm-icn-edit m_T10 m_B10" th:attr="data-process=|${process.processId.processType}-${process.processId.processNbr}|,
+                                                                  data-action='process-edit',
+                                                                  data-panel=${panelName},
+                                                                  data-reception=${isReception},
+                                                                  data-url=@{/process/update-panel-content}" th:title="#{btn.change}"></a>
+            <a class="small sm-icn-cross m_T10 m_B10 none" th:attr="data-process=|${process.processId.processType}-${process.processId.processNbr}|,
+                                                                        data-action='process-cancel',
+                                                                        data-panel=${panelName},
+                                                                        data-reception=${isReception},
+                                                                        data-url=@{/process/update-panel-content}" th:title="#{btn.cancel}"></a>
+        </div>
+    </div>
+    <div th:id="|panel-body-${panelName}|">
+        <div th:replace="ipobjects/common/process/process_panel :: process(${process},${processTypeMap},null,${isReception})"></div>
+    </div>
+</div>
+
+</body>
+</html>

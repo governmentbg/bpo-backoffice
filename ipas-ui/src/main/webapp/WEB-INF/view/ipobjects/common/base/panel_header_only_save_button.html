@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div class="row" th:fragment="panel-header(title,panel,actionURL,initURL,editEnabled)">
+    <div class="col-10">
+        <h3 class="panel-title" style="display: inline-block" th:text="${title}"></h3>
+        <div style="display: inline-block">
+            <span class="sign bg__dark-red edit none" th:text="#{panel.header.edit}"></span>
+            <span class="sign bg__dark-red edited none" th:text="#{panel.header.edited}"></span>
+        </div>
+    </div>
+    <div class="col-2 txtRight m_H60" th:if="${editEnabled}">
+        <a class="small sm-icn-edit m_T10 m_B10" th:title="#{btn.edit}"
+           th:attr="data-action='edit',
+                    data-panel=${panel},
+                    data-url=${initURL}">
+        </a>
+        <a class="small sm-icn-save m_T10 m_B10 none" th:title="#{btn.save}"
+           th:attr="data-action='save',
+                    data-validation-block='#panel-'+${panel},
+                    data-panel=${panel},
+                    data-url=${actionURL}" >
+        </a>
+    </div>
+</div>
+</body>
+</html>

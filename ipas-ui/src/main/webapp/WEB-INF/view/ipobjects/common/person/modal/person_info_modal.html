@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="person" type="bg.duosoft.ipas.core.model.person.CPerson"*/-->
+<div th:fragment="person-info(person,countryMap)">
+    <div th:id="person-info-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="${person.personName}"></h4>
+            </div>
+            <div>
+                <div class="row m_T30">
+                    <div class="col-4" th:if="${null != person.personNbr}" th:classappend="${0 > person.personNbr}?none">
+                        <div th:replace="~{base/form/input :: readonly(label = #{person.personNbr}, value = ${person.personNbr})}"></div>
+                    </div>
+                    <div class="col-4" th:if="${null != person.gralPersonIdNbr}">
+                        <div th:replace="~{base/form/input :: readonly(label = #{person.gralPersonIdNbr}, value = ${person.gralPersonIdNbr})}"></div>
+                    </div>
+                    <div class="col-4" th:if="${null != person.agentCode}">
+                        <div th:replace="~{base/form/input :: readonly(label = #{person.agentCode}, value = ${person.agentCode})}"></div>
+                    </div>
+                </div>
+                <div class="row m_T5">
+                    <div class="col-4" th:if="${null != person.nationalityCountryCode}">
+                        <div th:replace="~{base/form/input :: readonly(label = #{person.nationality}, value = ${countryMap.get(person.nationalityCountryCode)})}"></div>
+                    </div>
+                    <div class="col-4" th:if="${null != person.residenceCountryCode}">
+                        <div th:replace="~{base/form/input :: readonly(label = #{person.country}, value = ${countryMap.get(person.residenceCountryCode)})}"></div>
+                    </div>
+                    <div class="col-4" th:if="${null != person.cityName}">
+                        <div th:replace="~{base/form/input :: readonly(label = #{person.city}, value = ${person.cityName})}"></div>
+                    </div>
+                    <div class="col-4" th:if="${null != person.addressStreet}">
+                        <div th:replace="~{base/form/input :: readonly(label = #{person.street}, value = ${person.addressStreet})}"></div>
+                    </div>
+                    <div class="col-4" th:if="${null != person.zipCode}">
+                        <div th:replace="~{base/form/input :: readonly(label = #{person.zipCode}, value = ${person.zipCode})}"></div>
+                    </div>
+                    <div class="col-4" th:if="${null != person.stateName}">
+                        <div th:replace="~{base/form/input :: readonly(label = #{person.stateName}, value = ${person.stateName})}"></div>
+                    </div>
+                    <div class="col-4" th:if="${null != person.indCompany}">
+                        <div th:replace="~{base/form/input :: readonly(label = 'Тип', value = (${person.indCompany} ? #{person.legalEntity.type} : #{person.naturalPerson.type}))}"></div>
+                    </div>
+                    <div class="col-4" th:if="${null != person.email}">
+                        <div th:replace="~{base/form/input :: readonly(label = #{person.email}, value = ${person.email})}"></div>
+                    </div>
+                    <div class="col-4" th:if="${null != person.telephone}">
+                        <div th:replace="~{base/form/input :: readonly(label = #{person.phone}, value = ${person.telephone})}"></div>
+                    </div>
+
+                    <div class="col-4" th:if="${null != person.individualIdTxt}" th:with="personIdTypeEnum = ${T(bg.duosoft.ipas.enums.PersonIdType)}">
+                        <div th:remove="tag" th:switch="${person.individualIdType}">
+                            <div th:remove="tag" th:case="${personIdTypeEnum.EGN.name()}">
+                                <div th:replace="~{base/form/input :: readonly(label = #{person.egn}, value = ${person.individualIdTxt})}"></div>
+                            </div>
+                            <div th:remove="tag" th:case="${personIdTypeEnum.LNCH.name()}">
+                                <div th:replace="~{base/form/input :: readonly(label = #{person.lnch}, value = ${person.individualIdTxt})}"></div>
+                            </div>
+                            <div th:remove="tag" th:case="${personIdTypeEnum.EIK.name()}">
+                                <div th:replace="~{base/form/input :: readonly(label = #{person.eik}, value = ${person.individualIdTxt})}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="row">
+                <div class="col-12">
+                    <button type="button" class="button sm-icn-cross modal-close wmin_130" th:text="#{btn.close}"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

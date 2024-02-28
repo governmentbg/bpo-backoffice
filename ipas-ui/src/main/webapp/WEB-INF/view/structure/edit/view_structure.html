@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<!--/*@thymesVar id="structure" type="bg.duosoft.ipas.core.model.structure.StructureNode"*/-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:with="title=${structure.officeStructureId.isDivision() ? #messages.msg('division.view.title') : (structure.officeStructureId.isDepartment() ? #messages.msg('department.view.title') : #messages.msg('section.view.title'))}">
+<head th:replace="base/template :: head(${title})" t>
+</head>
+
+<body class="dark">
+    <div class="app-body">
+        <header class="app-header" th:replace="base/header"></header>
+
+        <div class="left-sidebar">
+            <div id="psb" class="ps--active-y">
+            </div><!-- #psb -->
+        </div><!-- .left-sidebar -->
+
+        <main class="main" th:with="stringUtils=${T(org.springframework.util.StringUtils)}">
+            <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+            <div class="inner continer">
+                    <div class="row panel">
+                        <div class="center">
+                            <h2 th:text="${title}"></h2>
+                        </div>
+
+                        <div id="content">
+                            <br>
+                            <div class="row">
+                                <div class="col-12">
+                                    <span th:text="#{name.label}"></span>:
+                                    <span th:text="${structure?.name}"></span>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-12">
+                                    <span th:text="#{active}"></span>:
+                                    <span th:text="${structure?.active != null && structure?.active ? #messages.msg('yes'): #messages.msg('no')}"></span>
+                                </div>
+                            </div>
+                            <br>
+
+                            <div class="row" th:if="${structure?.officeStructureId?.officeDivisionCode != null && availableDivisions != null}">
+                                <div class="col-12">
+                                    <label for="division" th:text="#{division.label}"></label>:
+                                    <span th:each="division: ${availableDivisions}" th:remove="tag">
+                                        <span id="division" th:text="${division.name}" th:if="${division.officeStructureId.officeDivisionCode.equals(structure?.officeStructureId?.officeDivisionCode)}"></span>
+                                    </span>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row" th:if="${structure?.officeStructureId?.officeDepartmentCode != null && availableDepartments != null}">
+                                <div class="col-12">
+                                    <label for="department" th:text="#{department.label}"></label>:
+                                    <span th:each="department: ${availableDepartments}" th:remove="tag">
+                                        <span id="department" th:text="${department.name}" th:if="${division.officeStructureId.officeDepartmentCode.equals(structure?.officeStructureId?.officeDepartmentCode)}"></span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <label for="department" th:text="#{user.director}"></label>:
+                                    <span th:each="director: ${directors}" th:remove="tag">
+                                        <span id="director" th:text="${director.userName}" th:if="${structure?.signatureUser?.userId == director.userId}"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row m_B20" >
+                            <div class="col-12">
+                                <table class="simple">
+                                    <thead>
+                                    <tr>
+                                        <td th:text="#{users.label}"></td>
+                                        <td th:text="#{active}"></td>
+                                    </tr>
+                                    </thead>
+                                    <tbody th:if="${structureEmployees != null && structureEmployees?.size() != 0}">
+                                    <tr th:each="employee: ${structureEmployees}">
+                                        <td th:text="${employee.userName}"></td>
+                                        <td th:text="${!employee.indInactive ? #messages.msg('yes') : #messages.msg('no')}"></td>
+                                    </tr>
+                                    </tbody>
+                                    <tbody th:if="${structureEmployees == null || structureEmployees?.size() == 0}">
+                                    <tr>
+                                        <td th:text="#{no.data}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row m_B20" th:if="${structureSections != null}">
+                            <div class="col-12">
+                                <table class="simple">
+                                    <thead>
+                                    <tr>
+                                        <td th:text="#{section.label}"></td>
+                                        <td th:text="#{active}"></td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="section: ${structureSections}">
+                                        <td th:text="${section.name}"></td>
+                                        <td th:text="${section.active  ? #messages.msg('yes') : #messages.msg('no')}"></td>
+                                    </tr>
+                                    <tr th:if="${structureSections?.size() == 0}">
+                                        <td colspan="2" th:text="#{no.data}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row m_B20" th:if="${structureDepartments != null}">
+                            <div class="col-12">
+                                <table class="simple">
+                                    <thead>
+                                    <tr>
+                                        <td th:text="#{department.label}"></td>
+                                        <td th:text="#{active}"></td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="dep: ${structureDepartments}">
+                                        <td th:text="${dep.name}"></td>
+                                        <td th:text="${dep.active  ? #messages.msg('yes') : #messages.msg('no')}"></td>
+                                    </tr>
+                                    <tr th:if="${structureDepartments?.size() == 0}">
+                                        <td colspan="2" th:text="#{no.data}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+                    </div>
+
+            </div>
+        </main>
+        <div id="save_structure_status"></div>
+    </div>
+
+    <!-- JQuery files -->
+    <footer class="page-footer" th:replace="base/footer"></footer>
+    <div th:replace="base/template :: js-footer" th:remove="tag"></div>
+</body>
+</html>

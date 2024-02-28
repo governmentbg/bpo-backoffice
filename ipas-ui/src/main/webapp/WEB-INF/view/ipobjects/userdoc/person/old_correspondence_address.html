@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="userdoc" type="bg.duosoft.ipas.core.model.userdoc.CUserdoc"*/-->
+<!--/*@thymesVar id="userdocPersonData" type="bg.duosoft.ipas.core.model.userdoc.CUserdocPersonData"*/-->
+<!--/*@thymesVar id="userdocPerson" type="bg.duosoft.ipas.core.model.userdoc.CUserdocPerson"*/-->
+<!--/*@thymesVar id="userdocPersonUtils" type="bg.duosoft.ipas.util.userdoc.UserdocPersonUtils"*/-->
+<div th:fragment="old-correspondence-address(userdoc)" th:with="objectUtils=${T(java.util.Objects)},
+                                                personKind = ${T(com.duosoft.ipas.enums.PersonKind).OldCorrespondenceAddress.code()},
+                                                userdocPersonUtils=${T(bg.duosoft.ipas.util.userdoc.UserdocPersonUtils)}">
+    <div th:with="userdocPersonData=${userdoc.userdocPersonData}">
+        <div class="col-12" th:classappend="${#lists.isEmpty(userdocPersonUtils.selectOldCorrespondenceAddress(userdocPersonData))}?'hidden-element'">
+            <div th:replace=" :: old-correspondence-address-header"></div>
+            <div th:replace=" :: old-correspondence-address-body"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="old-correspondence-address-header">
+    <div>
+        <div class="inline-block">
+            <h4 th:text="#{person.old.ca.title}"></h4>
+        </div>
+    </div>
+    <div th:if="${!#lists.isEmpty(validationErrors)}" th:id="userdoc-userdocPersonData-oldCorrespondenceAddressList">
+        <div th:replace="base/validation :: validation-message(${validationErrors},'userdoc-userdocPersonData-oldCorrespondenceAddressList')"></div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="old-correspondence-address-body">
+    <div th:if="${!#lists.isEmpty(userdocPersonUtils.selectOldCorrespondenceAddress(userdocPersonData))}" th:with="servicePerson=${userdoc.servicePerson}">
+        <div class="list-elements-wrapper">
+            <div th:remove="tag" th:each="userdocPerson : ${userdocPersonUtils.selectOldCorrespondenceAddress(userdocPersonData)}">
+                <div class="row list-element" th:with="person=${userdocPerson.person}">
+                    <div class="col-11">
+                        <div th:replace="ipobjects/common/person/elements :: label-representative(${person})"></div>
+                        <div th:replace="ipobjects/common/person/elements :: label-ca(${servicePerson},${person})"></div>
+                        <div th:replace="ipobjects/common/person/elements :: person-info(${person})"></div>
+                    </div>
+                    <div th:replace=" :: old-correspondence-address-menu"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="old-correspondence-address-menu" th:with="isServicePerson = ${userdocPersonUtils.isCurrentPersonCA(person.personNbr, person.addressNbr, userdoc)}">
+    <div class="col-1 hidden-element right-align action-menu-list-fs" th:with="menuId=|old-correspondence-address-menu-${person.personNbr}-${person.addressNbr}|">
+        <i th:title="#{menu}" th:attr="data-action='toggle-menu',data-id=${menuId}" class="zmdi zmdi-menu"></i>
+        <div th:id="${menuId}" class="action-menu none">
+            <div th:replace="ipobjects/common/person/elements :: menu-option-view-person(person = ${person})"></div>
+            <div th:remove="tag" th:if="${!isServicePerson}">
+                <div th:replace="ipobjects/common/person/elements :: menu-option-change-ca(${personKind}, ${person.personNbr}, ${person.addressNbr}, #{person.menu.choose.ca.confirm.message}, ${!#lists.isEmpty(userdocPersonUtils.selectRepresentatives(userdocPersonData))})"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,180 @@
+/**
+ *    File: colors.css
+ *
+ * Created: 01.10.2007
+ * Revised: 04.08.2018
+ *  Author: Diana Todorova DTH, http://www.adianam.info, http://www.dth.bg
+ * -------------------------------------------------------------------------- */
+
+/* FILE types
+============================================================================= */
+
+  a[href$=".zip"],
+  a[href$=".rar"],
+  a[href$=".pdf"],
+  a[href$=".ppt"],
+  a[href$=".doc"],
+  a[href$=".docx"],
+  a[href$=".xls"],
+  a[href$=".xlsx"],
+  a[href$=".jpg"],
+  a[href$=".png"],
+  a[href$=".gif"],
+  a[href$=".jpeg"] {
+    position:relative;
+    display:inline-block;
+    margin-left:2.0rem;/*       04.08.2018, DTH */
+    border-bottom:0;
+    text-decoration:underline;}
+
+  a[href$=".zip"]:before,
+  a[href$=".rar"]:before,
+  a[href$=".pdf"]:before,
+  a[href$=".ppt"]:before,
+  a[href$=".doc"]:before,
+  a[href$=".docx"]:before,
+  a[href$=".xls"]:before,
+  a[href$=".xlsx"]:before,
+  a[href$=".jpg"]:before,
+  a[href$=".png"]:before,
+  a[href$=".gif"]:before,
+  a[href$=".jpeg"]:before
+   {display:inline-block;
+    position:absolute;
+    left:-2.0rem;/*             04.08.2018, DTH */
+    width:2rem;
+    padding:2px 0;
+    text-decoration:none !important;    /* nor working in MSIE */
+    font-size:.75rem;
+    font-weight:bold;
+    text-transform:uppercase;
+    text-align:center;
+    -webkit-border-radius:3px;
+         -o-border-radius:3px;
+            border-radius:3px;}
+
+ /* --- Content --- */
+  a[href$=".pdf"]:before {content:'pdf';}
+  a[href$=".ppt"]:before {content:'ppt';}
+  a[href$=".doc"]:before, a[href$=".docx"]:before {content:'doc';}
+
+  a[href$=".xls"]:before, a[href$=".xlsx"]:before {content:'xls';}
+
+  a[href$=".zip"]:before {content:'zip';}
+  a[href$=".rar"]:before {content:'rar';}
+
+  a[href$=".jpg"]:before,
+  a[href$=".png"]:before,
+  a[href$=".gif"]:before,
+  a[href$=".jpeg"]:before {content:'img';}
+
+ /* --- Colors --- */
+  a[href$=".pdf"]:before  {background-color:#fee2e1;color:#d00;}
+  a[href$=".ppt"]:before  {background-color:#eed0dd;color:#903;}
+
+  a[href$=".doc"]:before,
+  a[href$=".docx"]:before {background-color:#ccd6eb;color:#039;}
+
+  a[href$=".xls"]:before,
+  a[href$=".xlsx"]:before {background-color:#dbf2e3;color:#090;}
+
+  a[href$=".jpg"]:before,
+  a[href$=".png"]:before,
+  a[href$=".gif"]:before,
+  a[href$=".jpeg"]:before {background-color:#ffff33;color:#c33;}
+
+  a[href$=".zip"]:before,
+  a[href$=".rar"]:before  {background-color:#e1e1e1;color:#333;}
+
+  header a[href$=".pdf"] {
+    margin: 0 5px;
+  }
+  header a[href$=".pdf"]:before {
+    background-color: unset;
+    color: unset;
+    content: none;
+  }
+
+/* COLORS
+============================================================================= */
+
+ /* --- Colored Text on LIGHT colored background --- */
+
+  .bg__light-cyan    {color:#115577;background-color:#d2eef7;border-color:#c1e7f4;}
+  .bg__light-blue    {color:#003399;background-color:#ccddee;border-color:#4466bb;}
+  .bg__light-green   {color:#28623c;background-color:#dbf2e3;border-color:#cdedd8;}
+  .bg__light-red     {color:#813838;background-color:#fee2e1;border-color:#fdd6d6;}
+  .bg__light-yellow  {color:#856404;background-color:#fff3cd;border-color:#ffeeba;}
+  .bg__light-gray    {color:#686b6e;background-color:#f4f5f6;border-color:#f0f1f3;}
+  .bg__light-gray_d  {color:#181c1e;background-color:#d5d7d8;border-color:#c5c6c8;}
+
+  /* --- hover --- */
+  .bg__light-cyan:hover    {background-color:#abdff0;}
+  .bg__light-blue:hover    {background-color:#bbccee;}
+  .bg__light-green:hover   {background-color:#bae6c9;}
+  .bg__light-red:hover     {background-color:#fcbebe;}
+  .bg__light-yellow:hover  {background-color:#ffe8a1;}
+  .bg__light-gray:hover    {background-color:#e2e4e8;}
+  .bg__light-gray_d:hover  {background-color:#b8b9bc;}
+
+
+ /* --- White Text on DARK Colored background --- */
+
+  [class*="bg__dark"],
+  [class*="bg__dark"] * {color:#fff !important;}
+
+  [class*="bg__dark"] a {font-weight:bold;border-color:rgba(255,255,255,.75);}
+
+  .bg__dark-blue    {background-color:#20a8d8;border-color:#187da0;}
+  .bg__dark-green   {background-color:#4dbd74;border-color:#379457;}
+  .bg__dark-yellow  {background-color:#ffc107;border-color:#c69500;}
+  .bg__dark-red     {background-color:#f86c6b;border-color:#f5302e;}
+  .bg__dark-violet  {background-color:#a826d4;border-color:#7700aa;}
+  .bg__dark-gray    {background-color:#2f353a;border-color:#121517;}
+  .bg__dark-dark-blue {background-color:#059;border-color: #003799;}
+
+  /* --- Modifications: 04.08.2018, DTH, za da raboti i kato buton --- */
+  .bg__dark-blue:hover,
+  .bg__dark-blue:focus,
+  .bg__dark-blue:active
+    {background-color:#1985ac !important;}
+
+  .bg__dark-dark-blue:hover,
+  .bg__dark-dark-blue:focus,
+  .bg__dark-dark-blue:active
+  {background-color: #002699 !important;}
+
+  .bg__dark-green:hover,
+  .bg__dark-green:focus,
+  .bg__dark-green:active
+    {background-color:#3a9d5d !important;}
+
+  .bg__dark-yellow:hover,
+  .bg__dark-yellow:focus,
+  .bg__dark-yellow:active
+    {background-color:#d39e00 !important;}
+
+  .bg__dark-red:hover,
+  .bg__dark-red:focus,
+  .bg__dark-red:active
+    {background-color:#f63c3a !important;}
+
+  .bg__dark-violet:hover,
+  .bg__dark-violet:focus,
+  .bg__dark-violet:active
+    {background-color:#9900cc !important;}
+
+  .bg__dark-gray:hover,
+  .bg__dark-gray:focus,
+  .bg__dark-gray:active
+    {background-color:#181b1e !important;}
+  /* --- End of Modifications: 04.08.2018, DTH --- */
+
+  /* --- Remove Border-color --- */
+  .brdr-none {border-color:transparent !important}
+
+  /* --- BPO color --- */
+  .bpo-blue-color {color: #059}
+  .bpo-blue-background {background: #059}
+
+  .bg__blue, .bg__blue:hover, .bg__blue:focus {color: #fff !important;background-color: #059 !important;border-color: #059 !important;}

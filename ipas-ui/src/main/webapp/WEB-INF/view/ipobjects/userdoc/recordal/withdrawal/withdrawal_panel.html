@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="userdoc" type="bg.duosoft.ipas.core.model.userdoc.CUserdoc"*/-->
+<div th:fragment="withdrawal(userdoc)"
+     th:with="userdocUtils=${T(bg.duosoft.ipas.util.userdoc.UserdocUtils)},
+              parentData=${userdoc.userdocParentData},
+              extraDataUtils = ${T(bg.duosoft.ipas.util.userdoc.UserdocExtraDataUtils)},
+              panelName=${T(bg.duosoft.ipas.enums.RecordalType).Withdrawal.name()},
+              typesEnum=${T(bg.duosoft.ipas.enums.UserdocExtraDataTypeCode)},
+              types = ${extraDataUtils.selectTypes(userdoc, panelName)},
+              userdocExtraData=${userdoc.userdocExtraData}
+">
+    <div class="row">
+        <div th:remove="tag" th:with="type = ${typesEnum.EFFECTIVE_DATE}">
+            <div th:replace="ipobjects/userdoc/extra_data/fragments.html :: dataDate(type = ${type}, value = ${extraDataUtils.selectDate(type, userdocExtraData)}, classes = 'col-4', allowedTypes = ${types})"></div>
+        </div>
+    </div>
+    <div class="row m_B10">
+        <div th:remove="tag" th:with="type = ${typesEnum.DESCRIPTION}">
+            <div th:replace="ipobjects/userdoc/extra_data/fragments.html :: dataText-textarea(type = ${type}, value = ${extraDataUtils.selectText(type, userdocExtraData)}, wrapperClasses = 'col-12', allowedTypes = ${types}, textareaClasses = '')"></div>
+        </div>
+    </div>
+    <div th:remove="tag" th:if="${userdocUtils.isUserdocMainObjectMark(parentData)}">
+        <div th:replace="ipobjects/userdoc/extra_data/nice_classes :: nice-classes(${userdoc})"></div>
+    </div>
+    <div th:remove="tag" th:if="${userdocUtils.isUserdocMainObjectDesign(parentData)}">
+        <div th:replace="~{ipobjects/userdoc/extra_data/single_designs :: single-designs(${userdoc})}"></div>
+    </div>
+</div>
+
+</body>
+</html>

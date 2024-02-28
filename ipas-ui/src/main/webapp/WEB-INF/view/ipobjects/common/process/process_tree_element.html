@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="process" type="bg.duosoft.ipas.core.model.process.CProcess"*/-->
+<!--/*@thymesVar id="isFullyLoad" type="java.lang.Boolean"*/-->
+<!--/*@thymesVar id="isViewMode" type="java.lang.Boolean"*/-->
+<!--/*@thymesVar id="eventUserdoc" type="bg.duosoft.ipas.core.model.process.CUserdocProcessEvent"*/-->
+<!--/*@thymesVar id="processEvent" type="bg.duosoft.ipas.core.model.process.CProcessEvent"*/-->
+<!--/*@thymesVar id="eventAction" type="bg.duosoft.ipas.core.model.process.CActionProcessEvent"*/-->
+<div th:remove="tag" th:fragment="userdoc-expiration-date(eventUserdoc)" th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT},
+                                                                                  processEventUtils=${T(bg.duosoft.ipas.util.process.ProcessEventUtils)},
+                                                                                  dateTimeFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT},
+                                                                                  objectUtil=${T(java.util.Objects)}">
+    <div th:title="#{process.tree.status}">
+        <span th:text="|#{process.tree.status}: |"></span>
+        <span th:text="${eventUserdoc.status}"></span>
+    </div>
+    <div th:title="#{process.tree.expiration.date}" th:if="${objectUtil.nonNull(eventUserdoc.expirationDate)}">
+        <div th:if="${objectUtil.nonNull(eventUserdoc.nextProcessActionAfterExpirationDate)}">
+            <span th:text="|#{process.tree.expirationDate.nextStatus}: |"></span>
+            <span th:text="${eventUserdoc.nextProcessActionAfterExpirationDate.actionTypeName}"></span>
+        </div>
+        <div th:with="remainingDays=${processEventUtils.calculateRemainingDaysBeforeExpirationDate(eventUserdoc.expirationDate)}">
+            <span th:text="|#{process.tree.expiration.date}: |"></span>
+            <span th:text="${#dates.format(eventUserdoc.expirationDate, dateFormatDot)}"></span>
+            <span th:if="${objectUtil.nonNull(remainingDays)}" th:text="${remainingDays == 1} ? #{process.tree.expirationDate.oneDayRemaining} : #{process.tree.expirationDate.remainingDays(${remainingDays})}"></span>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="action-journal(eventAction)" th:with="objectUtil=${T(java.util.Objects)}, journalUtils = ${T(bg.duosoft.ipas.util.journal.JournalUtils)}">
+    <div class="row" th:if="${objectUtil.nonNull(eventAction.journal)}" th:with="journal=${eventAction.journal}">
+        <div class="col-1"></div>
+        <div class="col-2">
+            <div th:switch="${objectUtil.isNull(journal.publicationDate)}">
+                <span th:case="false" th:with="isOldJournal = ${journalUtils.isBeforeNewJournalVersion(journal.publicationDate)}">
+                    <span th:if="${isOldJournal}" th:text="#{process.tree.published}"></span>
+                    <a th:if="${!isOldJournal}" download
+                       th:href="@{'/process/tree/journal/download-published?processEventId=' + |${eventAction.actionId.processId.processType}-${eventAction.actionId.processId.processNbr}-${eventAction.actionId.actionNbr}|+'&time='+ ${#dates.format(#dates.createNow(),'HH:mm:ss.SSS')}}"
+                       class="b0" th:text="#{process.tree.published}"></a>
+                </span>
+                <a th:case="true" download
+                   th:href="@{'/process/tree/journal/download-not-published?processEventId=' + |${eventAction.actionId.processId.processType}-${eventAction.actionId.processId.processNbr}-${eventAction.actionId.actionNbr}|+'&time='+ ${#dates.format(#dates.createNow(),'HH:mm:ss.SSS')}}"
+                   class="b0" th:text="#{process.tree.not.published}"></a>
+            </div>
+        </div>
+        <div class="col-8">
+            <div>
+                <a th:attr="data-action='journal-redirect',
+                            data-url=@{/process/tree/journal/open-journal},
+                            data-process=|${eventAction.actionId.processId.processType}-${eventAction.actionId.processId.processNbr}-${eventAction.actionId.actionNbr}"
+                   class="b0" href="javascript:void(0)" th:text="${journal.journalCode}"></a>
+            </div>
+        </div>
+        <div class="col-1"></div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="action-menu(isViewMode,processIdentifier,eventAction)" th:with="objectUtil=${T(java.util.Objects)}">
+    <div th:classappend="${isViewMode}?none" class="hidden-element" th:with="menuId=|action-menu-body-${processIdentifier}|">
+        <i th:title="#{menu}" class="hidden-element zmdi zmdi-menu " th:classappend="${isViewMode}?none"
+           th:attr="data-action='toggle-menu',data-process=${processIdentifier},data-id=${menuId}">
+        </i>
+        <div th:id="${menuId}" class="action-menu none action-menu-list-fs">
+            <span th:if="${objectUtil.nonNull(eventAction.generatedOffidoc)}">
+                <i class="icon-doc"></i>
+                <a th:attr="data-action='abdocs-offidoc-redirect',
+                            data-url=@{/process/document/open-office-document},
+                            data-process=|${eventAction.generatedOffidoc.processId.processType}-${eventAction.generatedOffidoc.processId.processNbr}|,
+                            data-offidoc=${eventAction.generatedOffidoc.offidocId.createFilingNumber()}"
+                   class="b0" href="javascript:void(0)" th:text="#{process.tree.document}"></a>
+            </span>
+            <span th:attr="data-url=@{/process/edit-action/open-modal}">
+                <i class="icon-pencil"></i>
+                <a th:attr="data-action='action-edit-modal'" class="b0" href="javascript:void(0);" th:text="#{process.tree.edit}"></a>
+            </span>
+            <span th:if="${(eventAction.lastActionInProcess && isAction && ((eventAction.journal == null) || (eventAction.journal != null && (not eventAction.journal.indClosed)))) || (isNote)}" th:attr="data-url=@{/process/delete-action/open-modal}">
+                <i class="icon-trash"></i>
+                <a th:attr="data-action='action-delete-modal'" class="b0" href="javascript:void(0);" th:text="#{process.tree.delete}"></a>
+            </span>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="userdoc-menu(isViewMode,processIdentifier,eventUserdoc)" th:with="objectUtil=${T(java.util.Objects)}">
+    <div th:classappend="${isViewMode}?none" class="hidden-element action-menu-list-fs" th:with="menuId=|action-menu-body-${processIdentifier}|">
+        <i th:title="#{menu}" class="hidden-element zmdi zmdi-menu "
+           th:attr="data-action='toggle-menu',data-process=${processIdentifier},data-id=${menuId}"
+           th:classappend="${isViewMode}?none">
+        </i>
+        <div th:id="${menuId}" class="action-menu none">
+         <span>
+                <i class="icon-doc"></i>
+                <a class="b0 p_0" th:attr="data-action='abdocs-userdoc-redirect',
+                                    data-url=@{/process/document/open-user-document},
+                                    data-process=|${eventUserdoc.userdocProcessId.processType}-${eventUserdoc.userdocProcessId.processNbr}|,
+                                    data-document=${eventUserdoc.documentId.createFilingNumber()}"
+                   href="javascript:void(0)" th:text="#{process.tree.document}">
+                </a>
+            </span>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="manual-menu(isViewMode,processIdentifier,processEvent)" th:with="objectUtil=${T(java.util.Objects)}">
+    <div th:classappend="${isViewMode}?none" class="hidden-element action-menu-list-fs" th:with="menuId=|action-menu-body-${processIdentifier}|">
+        <i th:title="#{menu}" class="hidden-element zmdi zmdi-menu "
+           th:attr="data-action='toggle-menu',data-process=${processIdentifier},data-id=${menuId}"
+           th:classappend="${isViewMode}?none" >
+        </i>
+        <div th:id="${menuId}" class="action-menu none">
+            <span>
+                <i class="icon-list"></i>
+                <a class="b0" th:href="@{/ipobject/view(msprocess=${processIdentifier})}" th:text="#{process.tree.uprocess}"></a>
+            </span>
+
+            <span>
+                <i class="icon-trash"></i>
+                <a class="b0 confirm" th:attr="data-action='delete-msprocess',
+                                       data-process=${processIdentifier},
+                                       data-validation-url=@{/msprocess/delete/validate},
+                                       data-url=@{/msprocess/delete}" th:text="#{process.tree.delete}">
+                </a>
+            </span>
+
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="userdoc-body(isFullyLoad,isViewMode,processEvent,eventUserdoc)"
+     th:with="objectUtil=${T(java.util.Objects)},
+              collectionUtils=${T(org.springframework.util.CollectionUtils)}">
+    <ul>
+        <li class="p_0" th:if="${objectUtil.nonNull(eventUserdoc.applicantName)}">
+            <div class="row">
+                <div class="col-1"></div>
+                <div class="col-2">
+                    <label th:title="#{process.tree.applicant}" th:text="#{process.tree.applicant}"></label>
+                </div>
+                <div class="col-9">
+                    <span th:text="${eventUserdoc.applicantName}"></span>
+                </div>
+            </div>
+        </li>
+        <li class="p_0" th:if="${objectUtil.nonNull(eventUserdoc.filingDate)}">
+            <div class="row">
+                <div class="col-1"></div>
+                <div class="col-2">
+                    <label th:title="#{process.tree.filingTime}" th:text="#{process.tree.filingTime}"></label>
+                </div>
+                <div class="col-9">
+                    <span th:text="${#dates.format(eventUserdoc.filingDate, dateTimeFormatDot)}"></span>
+                </div>
+            </div>
+        </li>
+        <li class="p_0">
+            <div class="row">
+                <div class="col-1"></div>
+                <div class="col-2">
+                    <label th:title="#{process.tree.status}" th:text="#{process.tree.status}"></label>
+                </div>
+                <div class="col-9">
+                    <span th:text="${processEvent.eventStatus}"></span>
+                </div>
+            </div>
+        </li>
+        <li class="p_0" th:if="${objectUtil.nonNull(processEvent.eventUser)}">
+            <div class="row">
+                <div class="col-1"></div>
+                <div class="col-2">
+                    <label th:title="#{process.tree.responsible.user}" th:text="#{process.tree.responsible.user}"></label>
+                </div>
+                <div class="col-9">
+                    <span th:text="${processEvent.eventUser}"></span>
+                </div>
+            </div>
+        </li>
+        <li class="p_0">
+            <div class="row">
+                <div class="col-1"></div>
+                <div class="col-2">
+                    <label th:text="#{process.tree.document}"></label>
+                </div>
+                <div class="col-9">
+                    <span>
+                        <a class="b0 p_0" th:attr="data-action='abdocs-userdoc-redirect',
+                                    data-url=@{/process/document/open-user-document},
+                                    data-process=|${eventUserdoc.userdocProcessId.processType}-${eventUserdoc.userdocProcessId.processNbr}|,
+                                    data-document=${eventUserdoc.documentId.createFilingNumber()}"
+                           href="javascript:void(0)" th:text="#{process.tree.open.in.abdocs}">
+                        </a>
+                    </span>
+                </div>
+            </div>
+        </li>
+
+        <div th:remove="tag" th:with="userdocProcess=${@processServiceImpl.selectProcess(eventUserdoc.userdocProcessId, true)}">
+            <div class="row" th:if="${!collectionUtils.isEmpty(userdocProcess)}">
+                <div th:remove="tag" th:if="${!collectionUtils.isEmpty(userdocProcess.processEventList)}">
+                    <div class="col-1"></div>
+                    <div class="col-11 m_0">
+                        <li>
+                            <div class="row">
+                                <div class="col-12">
+                                    <label th:text="#{process.tree.process}"></label>
+                                </div>
+                            </div>
+                            <ul>
+                                <div th:replace="ipobjects/common/process/process_tree :: tree(${userdocProcess},${isFullyLoad},true,${isViewMode})"></div>
+                            </ul>
+                        </li>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ul>
+</div>
+
+<div th:remove="tag" th:fragment="manual-body(isFullyLoad,isViewMode,processEvent)"
+     th:with="objectUtil=${T(java.util.Objects)},
+              collectionUtils=${T(org.springframework.util.CollectionUtils)}">
+
+    <ul>
+        <li class="p_0">
+            <div class="row">
+                <div class="col-1"></div>
+                <div class="col-2">
+                    <label th::title="#{process.tree.status}" th:text="#{process.tree.status}"></label>
+                </div>
+                <div class="col-9">
+                    <span th:text="${processEvent.eventStatus}"></span>
+                </div>
+            </div>
+        </li>
+        <li class="p_0">
+            <div class="row">
+                <div class="col-1"></div>
+                <div class="col-2">
+                    <div>
+                        <label th:title="#{process.tree.responsible.user}" th:text="#{process.tree.responsible.user}"></label>
+                    </div>
+                </div>
+                <div class="col-9">
+                    <span th:title="#{process.tree.responsible.user}" th:text="${processEvent.eventUser}"></span>
+                </div>
+            </div>
+        </li>
+        <div th:remove="tag" th:with="manualProcess=${@processServiceImpl.selectProcess(processEvent.eventProcessId, true)}">
+            <div class="row" th:if="${!collectionUtils.isEmpty(manualProcess)}">
+                <div th:remove="tag" th:if="${!collectionUtils.isEmpty(manualProcess.processEventList)}">
+                    <div class="col-1"></div>
+                    <div class="col-11 m_0">
+                        <li>
+                            <div class="row">
+                                <div class="col-12">
+                                    <label th:text="#{process.tree.process}"></label>
+                                </div>
+                            </div>
+                            <ul>
+                                <div th:replace="ipobjects/common/process/process_tree :: tree(${manualProcess},${isFullyLoad},true,${isViewMode})"></div>
+                            </ul>
+                        </li>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ul>
+</div>
+
+<div th:remove="tag" th:fragment="action-body(isFullyLoad,isViewMode,isAction,eventAction)"
+     th:with="objectUtil=${T(java.util.Objects)},
+              collectionUtils=${T(org.springframework.util.CollectionUtils)},
+              dateTimeFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT}">
+
+    <ul>
+        <li class="p_0" th:if="${isAction}">
+            <div class="row">
+                <div class="col-1"></div>
+                <div class="col-2">
+                    <label th:title="#{process.tree.transition}" th:text="#{process.tree.transition}"></label>
+                </div>
+                <div class="col-9">
+                    <span class="m_R10" th:title="#{process.tree.old.status}" th:text="${eventAction.oldStatus}?${eventAction.oldStatus.statusName}:''"></span>
+                    <i class="zmdi zmdi-long-arrow-right"></i>
+                    <span class="m_L10" th:title="#{process.tree.new.status}" th:text="${eventAction.newStatus}?${eventAction.newStatus.statusName}:''"></span>
+                </div>
+            </div>
+        </li>
+        <li class="p_0">
+            <div class="row">
+                <div class="col-1"></div>
+                <div class="col-2">
+                    <label th:text="#{process.tree.execute.on}"></label>
+                </div>
+                <div class="col-9">
+                    <span class="m_R10" th:text="${#dates.format(eventAction.captureDate, dateTimeFormatDot)}"></span>
+                    <label th:text="#{process.tree.by}"></label>
+                    <span class="m_L10" th:title="#{process.tree.user.saved.change}"
+                          th:text="${eventAction.captureUser}?${eventAction.captureUser.userName}:''"></span>
+                </div>
+            </div>
+        </li>
+        <li class="p_0" th:if="${not #strings.isEmpty(eventAction.notes1)}">
+            <div class="row">
+                <div class="col-1"></div>
+                <div class="col-2" th:with="prompt1=${eventAction.actionType.notes1Prompt}">
+                    <label th:if="${prompt1 != null}" th:text="|${prompt1}|"></label>
+                </div>
+                <div class="col-9">
+                    <span th:text="${eventAction.notes1}"></span>
+                </div>
+            </div>
+        </li>
+        <li class="p_0" th:if="${not #strings.isEmpty(eventAction.notes2)}">
+            <div class="row">
+                <div class="col-1"></div>
+                <div class="col-2" th:with="prompt2=${eventAction.actionType.notes2Prompt}">
+                    <label th:if="${prompt2 != null}" th:text="|${prompt2}|"></label>
+                </div>
+                <div class="col-9">
+                    <span th:text="${eventAction.notes2}"></span>
+                </div>
+            </div>
+        </li>
+        <li class="p_0" th:if="${not #strings.isEmpty(eventAction.notes3)}">
+            <div class="row">
+                <div class="col-1"></div>
+                <div class="col-2" th:with="prompt3=${eventAction.actionType.notes3Prompt}">
+                    <label th:if="${prompt3 != null}" th:text="|${prompt3}|"></label>
+                </div>
+                <div class="col-9">
+                    <span th:text="${eventAction.notes3}"></span>
+                </div>
+            </div>
+        </li>
+        <li class="p_0" th:if="${not #strings.isEmpty(eventAction.notes4)}">
+            <div class="row">
+                <div class="col-1"></div>
+                <div class="col-2" th:with="prompt4=${eventAction.actionType.notes4Prompt}">
+                    <label th:if="${prompt4 != null}" th:text="|${prompt4}|"></label>
+                </div>
+                <div class="col-9">
+                    <div th:text="${eventAction.notes4}"></div>
+                </div>
+            </div>
+        </li>
+        <li class="p_0" th:if="${not #strings.isEmpty(eventAction.notes5)}">
+            <div class="row">
+                <div class="col-1"></div>
+                <div class="col-2" th:with="prompt5=${eventAction.actionType.notes5Prompt}">
+                    <label th:if="${prompt5 != null}" th:text="|${prompt5}|"></label>
+                </div>
+                <div class="col-9">
+                    <span th:text="${eventAction.notes5}"></span>
+                </div>
+            </div>
+        </li>
+        <div class="row" th:if="${objectUtil.nonNull(eventAction.generatedOffidoc)}">
+            <div class="col-1"></div>
+            <div class="col-11 m_0">
+                <li>
+                    <div th:replace=" :: action-offidoc-data(${isFullyLoad},${isViewMode},${eventAction})"></div>
+                </li>
+            </div>
+        </div>
+    </ul>
+</div>
+
+<div th:remove="tag" th:fragment="action-offidoc-data(isFullyLoad,isViewMode,eventAction)" th:with="objectUtil=${T(java.util.Objects)}">
+    <div th:remove="tag" th:with="offidocProcess=${@processServiceImpl.selectProcess(eventAction.generatedOffidoc.processId, true)},
+                                  dateTimeFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT}">
+        <div class="row">
+            <div class="col-3">
+                <label th:text="#{process.tree.document.generated}"></label>
+            </div>
+            <div class="col-9">
+                <div th:title="#{process.tree.document.type}">
+                    <a class="b0 p_0" th:text="${eventAction.generatedOffidoc.offidocType.offidocName}"
+                       th:href="@{/ipobject/view(offidocFilingNumber=${eventAction.generatedOffidoc.offidocId.createFilingNumber()})}"></a>
+                </div>
+            </div>
+        </div>
+        <ul class="p_0" th:attr="data-visible=${true}">
+            <li th:if="${objectUtil.nonNull(offidocProcess.dueDate)}">
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-2">
+                        <label th:text="#{process.tree.expiration.date}"></label>
+                    </div>
+                    <div class="col-9">
+                        <span th:title="#{process.tree.expiration.date}" th:text="${#dates.format(offidocProcess.dueDate, dateTimeFormatDot)}"></span>
+                    </div>
+                </div>
+            </li>
+
+            <li class="p_0">
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-2">
+                        <label th:text="#{process.tree.reg.number}"></label>
+                    </div>
+                    <div class="col-9" th:with="number = (${eventAction.generatedOffidoc.externalSystemId == null} ? #{not.registered} : ${eventAction.generatedOffidoc.externalSystemId})">
+                        <span th:title="#{process.tree.filing.number}" th:text="|${number} / ${#dates.format(eventAction.generatedOffidoc.printDate, dateTimeFormatDot)}|" ></span>
+                    </div>
+                </div>
+            </li>
+            <li class="p_0">
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-2">
+                        <label th:text="#{process.tree.status}"></label>
+                    </div>
+                    <div class="col-9">
+                        <span th:title="#{process.tree.status}" th:text="${offidocProcess.status.statusName}"></span>
+                    </div>
+                </div>
+            </li>
+            <li class="p_0">
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-2">
+                        <label th:text="#{process.tree.last.change}"></label>
+                    </div>
+                    <div class="col-9">
+                        <span th:title="#{process.tree.last.change}" th:text="${#dates.format(offidocProcess.statusDate, dateTimeFormatDot)}"></span>
+                    </div>
+                </div>
+            </li>
+            <li class="p_0">
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-2">
+                        <label th:text="#{process.tree.file}"></label>
+                    </div>
+                    <div class="col-9">
+                        <span>
+                            <a class="b0 p_0" th:attr="data-action='abdocs-offidoc-redirect',
+                                        data-url=@{/process/document/open-office-document},
+                                        data-process=|${eventAction.generatedOffidoc.processId.processType}-${eventAction.generatedOffidoc.processId.processNbr}|,
+                                        data-offidoc=${eventAction.generatedOffidoc.offidocId.createFilingNumber()}"
+                               href="javascript:void(0)" th:text="#{process.tree.open.in.abdocs}">
+                            </a>
+                        </span>
+                    </div>
+                </div>
+            </li>
+
+            <div class="row" th:if="${!collectionUtils.isEmpty(offidocProcess)}">
+                <div class="col-1"></div>
+                <div class="col-11 m_0">
+                    <li>
+                        <div class="row">
+                            <div class="col-12">
+                                <label th:text="#{process.tree.process}"></label>
+                            </div>
+                        </div>
+                        <ul th:attr="data-visible=${true}">
+                            <div th:replace="ipobjects/common/process/process_tree :: tree(${offidocProcess},${isFullyLoad},true,${isViewMode})"></div>
+                        </ul>
+                    </li>
+                </div>
+            </div>
+        </ul>
+    </div>
+
+</div>
+
+</body>
+</html>

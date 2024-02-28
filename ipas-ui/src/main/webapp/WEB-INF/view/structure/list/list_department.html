@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="department" type="com.duosoft.ipas.webmodel.structure.DepartmentWebModel"*/-->
+
+<div class="row" th:fragment="list-department(department)" th:remove="tag" th:with="d=${department.department},index=${department.department.officeStructureId.code},depUrl=${department.department.officeStructureId.officeDivisionCode} + '/' + ${department.department.officeStructureId.officeDepartmentCode}">
+
+    <li th:attr="data-li=${index},data-department=${d.officeStructureId.officeDepartmentCode},data-department-division=${d.officeStructureId.officeDivisionCode},data-url=@{/structure/list/department-node},data-load=${department.loaded}" class="has-children">
+
+        <div th:replace="structure/list/list_structure_template :: formFields(isActive=${d.active},name=${d.name},
+                                                editHref=@{/structure/department/edit/{depUrl}(depUrl=${depUrl})},viewHref=@{/structure/department/view/{depUrl}(depUrl=${depUrl})},deleteHref=@{/structure/department/delete/{depUrl}(depUrl=${depUrl})},activateHref=@{/structure/department/activate/{depUrl}(depUrl=${depUrl})},id=${d.officeStructureId.officeDepartmentCode},nav=${index})">
+        </div>
+        <ul th:id="'LinkedList' + ${index}" class="Linked-List" th:if="${department.loaded}">
+            <li class="has-children"><div th:replace="structure/list/list_employees :: list-employees(employees=${department.employees},index=${index} + '-1')"></div></li>
+            <li class="has-children"><div th:replace="structure/list/list_sections :: list-sections(sections=${department.sections},index=${index} + '-2')"></div></li>
+        </ul>
+    </li>
+
+
+</div>
+
+
+</body>
+</html>

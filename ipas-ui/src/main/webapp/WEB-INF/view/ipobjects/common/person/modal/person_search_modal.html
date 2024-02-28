@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="person" type="bg.duosoft.ipas.core.model.person.CPerson"*/-->
+<!--/*@thymesVar id="searchForm" type="com.duosoft.ipas.webmodel.PersonModalSearchForm"*/-->
+<div th:fragment="person-search(personKind, tempParentPersonNbr)">
+    <div th:id="person-search-modal" class="modal remove-on-close">
+        <div class="position-relative">
+            <div class="row position-absolute" th:id="search-person-loader" style="display: none">
+                <div class="progress m_T0">
+                    <div class="indeterminate"></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="#{person.search.modal.title}"></h4>
+            </div>
+            <div th:replace=" :: person-search-content-data"></div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="person-search-content-data">
+    <div th:id="person-search-content-data">
+        <div th:id="person-search-modal-body">
+            <div th:replace=" :: person-search-modal-body(null,null,null)"></div>
+        </div>
+        <div th:id="person-search-modal-table-wrapper"></div>
+        <div>
+            <input th:id="person-searchModal-personKind" th:type="hidden" class="form-ignore" th:value="${personKind}">
+            <div th:replace="~{base/form/input :: hidden(id = 'person-searchModal-tempParentPersonNbr', value = ${tempParentPersonNbr}, classes = 'form-ignore')}"></div>
+            <div th:replace="~{base/form/input :: hidden(id = 'person-searchModal-representativeType', value = ${representativeType}, classes = 'form-ignore')}"></div>
+        </div>
+    </div>
+
+</div>
+
+<div th:fragment="person-search-modal-body(searchPersonForm,validationErrors,searchForm)">
+    <div class="row">
+        <div class="col-8">
+            <div th:replace="~{base/form/input :: text(id = 'person-searchModal-personName', label = #{person.personName}, value = ${searchForm != null} ? ${searchForm.personName} : '', url = @{/person/person-name-autocomplete}, classes = 'default-focus')}"></div>
+        </div>
+        <div class="col-4">
+            <div th:replace="~{base/form/input :: text(id = 'person-searchModal-telephone', label = #{person.phone}, value = ${searchForm != null} ? ${searchForm.telephone} : '')}"></div>
+        </div>
+    </div>
+    <div class="row m_T5">
+        <div class="col-8">
+            <div th:replace="~{base/form/input :: text(id = 'person-searchModal-city', label = #{person.city}, value = ${searchForm != null} ? ${searchForm.city} : '', url = @{/person/settlement-autocomplete}, dataType = 'native')}"></div>
+        </div>
+        <div class="col-4">
+            <div th:replace="~{base/form/input :: text(id = 'person-searchModal-zipCode', label = #{person.zipCode}, value = ${searchForm != null} ? ${searchForm.zipCode} : '')}"></div>
+        </div>
+    </div>
+    <div class="row m_T5">
+        <div class="col-8">
+            <div th:replace="~{base/form/input :: text(id = 'person-searchModal-street', label = #{person.street}, value = ${searchForm != null} ? ${searchForm.street} : '')}"></div>
+        </div>
+        <div class="col-4">
+            <div th:replace="~{base/form/input :: text(id = 'person-searchModal-email', label = #{person.email}, value = ${searchForm != null} ? ${searchForm.email} : '')}"></div>
+        </div>
+    </div>
+    <div class="row m_T5">
+        <div class="col-4">
+            <div th:replace="~{base/form/input :: text(id = 'person-searchModal-egn', label = #{person.egn}, value = ${searchForm != null} ? ${searchForm.egn} : '')}"></div>
+        </div>
+        <div class="col-4">
+            <div th:replace="~{base/form/input :: text(id = 'person-searchModal-lnch', label = #{person.lnch}, value = ${searchForm != null} ? ${searchForm.lnch} : '')}"></div>
+        </div>
+        <div class="col-4">
+            <div th:replace="~{base/form/input :: text(id = 'person-searchModal-eik', label = #{person.eik}, value = ${searchForm != null} ? ${searchForm.eik} : '')}"></div>
+        </div>
+    </div>
+    <div class="row m_T10">
+        <div class="col-7 m_L7-i" th:with="personNameSearchTypeEnum = ${T(bg.duosoft.ipas.enums.search.PersonNameSearchType)}">
+            <div th:replace="~{base/form/radio :: basic(name = 'person-searchModal-personNameSearchType', label = #{person.name.search.type.exactly}, value = ${personNameSearchTypeEnum.EXACTLY}, classes = 'm_R20', checked = ${(T(java.util.Objects).isNull(searchForm) || #strings.equals(searchForm.personNameSearchType, personNameSearchTypeEnum.EXACTLY))} )}"></div>
+            <div th:replace="~{base/form/radio :: basic(name = 'person-searchModal-personNameSearchType', label = #{person.name.search.type.whole.words}, value = ${personNameSearchTypeEnum.WHOLE_WORDS}, classes = 'm_R20', checked = ${(T(java.util.Objects).nonNull(searchForm) && #strings.equals(searchForm.personNameSearchType, personNameSearchTypeEnum.WHOLE_WORDS))} )}"></div>
+            <div th:replace="~{base/form/radio :: basic(name = 'person-searchModal-personNameSearchType', label = #{person.name.search.type.contains.words}, value = ${personNameSearchTypeEnum.CONTAINS_WORDS}, checked = (${T(java.util.Objects).nonNull(searchForm) && #strings.equals(searchForm.personNameSearchType, personNameSearchTypeEnum.CONTAINS_WORDS)}))}"></div>
+        </div>
+        <div class="col-5 right-align" >
+            <a th:replace="~{base/form/button :: material-btn(label = #{btn.search}, dataAction = 'person-search-submit', dataUrl = @{/person/search-modal/search}, icon = 'search', additionalArgs = 'data-validation-url=@{/person/search-modal/validate-search-form}', classes = 'm_R20')}"></a>
+            <a th:replace="~{base/form/button :: material-btn(label = #{btn.clear}, dataAction = 'person-search-clear', icon = 'clear')}"></a>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="person-search-modal-result(resultList, personKind, tempParentPersonNbr)"
+     th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)},
+              stringUtils=${T(org.springframework.util.StringUtils)},
+              objectsUtils=${T(java.util.Objects)}">
+    <div th:switch="${collectionUtils.isEmpty(resultList)}">
+        <hr>
+        <div th:case="true" class="m_T10">
+            <div th:replace="base/message :: warning(#{no.records.found})"></div>
+        </div>
+        <div th:case="*" class="m_T10" th:id="search-person-result-table">
+            <div class="row">
+                <div>
+                    <div th:replace="base/message :: info('Максималният брой върнати резултати е ограничен до 100 ! ')"></div>
+                </div>
+            </div>
+            <table class="simple">
+                <thead>
+                <tr>
+                    <th th:text="#{person.personName}"></th>
+                    <th th:text="#{person.street}"></th>
+                    <th th:text="#{person.city}"></th>
+                    <th th:text="#{person.zipCode}"></th>
+                    <th th:text="#{person.phone}"></th>
+                    <th style="width: 230px !important;"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="person : ${resultList}">
+                    <td>
+                        <div th:replace="ipobjects/common/person/elements :: label-representative-search-modal(${person})"></div>
+                        <span th:text="${person.personName}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${person.addressStreet}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${person.cityName}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${person.zipCode}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${person.telephone}"></span>
+                    </td>
+                    <td style="vertical-align: middle">
+                        <a class="button m-grey white-text btn-sm result-btn m_0"
+                           th:text="#{btn.view.small}"
+                           th:attr="data-action='person-info-modal',
+                                    data-person=${person.personNbr},
+                                    data-address=${person.addressNbr},
+                                    data-fromdatabase=${true},
+                                    data-url=@{/person/info-modal/open}"></a>
+                        <a class="button m-blue darken-3 white-text btn-sm result-btn m_0"
+                           th:text="#{btn.select.small}"
+                           th:attr="data-action='import-person',
+                                    data-person=${person.personNbr},
+                                    data-address=${person.addressNbr},
+                                    data-tempParentPersonNbr=${tempParentPersonNbr},
+                                    data-representativetype=${representativeType},
+                                    data-kind=${personKind},
+                                    data-url=@{/person/import-person}"></a>
+                        <a class="button m-green darken-1 white-text btn-sm result-btn m_0"
+                           th:text="#{btn.new.small}"
+                           th:attr="data-action='open-person-form-modal',
+                             data-url=@{/person/open-person-modal},
+                             data-person=${person.personNbr},
+                             data-address=${person.addressNbr},
+                             data-tempParentPersonNbr=${tempParentPersonNbr},
+                             data-representativetype=${representativeType},
+                             data-load-person-from-search=${true},
+                             data-kind=${personKind}"></a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row right-align m_T10">
+            <button th:text="#{btn.add.person}" type="button" class="button sm-icn-add"
+                    th:attr="data-action='open-person-form-modal',
+                             data-url=@{/person/open-person-modal},
+                             data-tempParentPersonNbr=${tempParentPersonNbr},
+                             data-representativetype=${representativeType},
+                             data-is-search=${true},
+                             data-kind=${personKind}">
+            </button>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

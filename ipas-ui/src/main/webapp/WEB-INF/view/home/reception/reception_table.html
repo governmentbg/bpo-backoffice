@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+
+<div th:fragment="reception-table(receptions,receptionsCount,receptionListFilter)"
+     th:with="sorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.SorterUtils)},receptionSorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.ReceptionSorterUtils)}">
+
+    <div th:remove="tag" th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(receptions)}">
+        <div th:remove="tag" th:case="true">
+            <div th:replace="base/message :: info(#{empty.list})"></div>
+        </div>
+        <div th:remove="tag" th:case="false">
+            <div class="row">
+                <div>
+                    <span th:text="#{total}"></span>
+                    <span th:text="${receptionsCount}"></span>
+                </div>
+            </div>
+            <div class="m_T5">
+                <table class="simple bpo">
+                    <thead>
+                    <tr>
+                        <th>
+                            <div th:replace="~{base/form/checkbox :: basic(id ='proc-change-ruser-checbox-all', label = '', isChecked = false,classes='bpo-table-header-checkbox')}"></div>
+                        </th>
+                        <th th:text="#{number}"></th>
+                        <th style="width: 30px"></th>
+                        <th th:with="isSelected=${#strings.equalsIgnoreCase(receptionListFilter.sortColumn,receptionSorterUtils.RECEPTION_FILING_NUMBER)},dataSort=${receptionSorterUtils.RECEPTION_FILING_NUMBER}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,receptionListFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{reception.table.filingNumber},${receptionListFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th th:with="isSelected=${#strings.equalsIgnoreCase(receptionListFilter.sortColumn,receptionSorterUtils.RECEPTION_FILING_DATE)},dataSort=${receptionSorterUtils.RECEPTION_FILING_DATE}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,receptionListFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{reception.table.filingDate},${receptionListFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th th:text="'Наименование'"></th>
+                        <th th:with="isSelected=${#strings.equalsIgnoreCase(receptionListFilter.sortColumn,receptionSorterUtils.RECEPTION_SUBMISSION_TYPE)},dataSort=${receptionSorterUtils.RECEPTION_SUBMISSION_TYPE}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,receptionListFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{reception.table.submissionType},${receptionListFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th th:with="isSelected=${#strings.equalsIgnoreCase(receptionListFilter.sortColumn,receptionSorterUtils.RECEPTION_ORIGINAL_EXPECTED)},dataSort=${receptionSorterUtils.RECEPTION_ORIGINAL_EXPECTED}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,receptionListFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{reception.table.originalExpected},${receptionListFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th th:with="isSelected=${#strings.equalsIgnoreCase(receptionListFilter.sortColumn,receptionSorterUtils.RECEPTION_CREATE_DATE)},dataSort=${receptionSorterUtils.RECEPTION_CREATE_DATE}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,receptionListFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{reception.table.createDate},${receptionListFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="reception,receptionStat : ${receptions}"
+                        th:with="filingNumber=${T(com.duosoft.ipas.util.CoreUtils).createFilingNumber(reception.fileSeq,reception.fileType,reception.fileSer,reception.fileNbr,false)}">
+                        <td>
+                            <div th:replace="~{base/form/checkbox :: basic(id =${reception.procId}, label = '', isChecked = false,classes='proc-change-ruser-checbox')}"></div>
+                        </td>
+
+                        <td>
+                            <span th:text="${receptionStat.count}"></span>
+                        </td>
+                        <td>
+                            <img th:if="${T(java.util.Objects).nonNull(reception.priorityRequest)}" th:src="@{/img/flash_on_small.png}" th:title="#{efiling.priorityRequest.label}"/></td>
+                        </td>
+                        <td>
+                            <a th:text="${filingNumber}" th:href="|@{/reception/detail/}${filingNumber}|"></a>
+                        </td>
+                        <td>
+                            <span th:text="${#dates.format(reception.filingDate,T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT)}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${reception.title}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${reception.submissionTypeName}"></span>
+                        </td>
+                        <td>
+                            <div th:switch="${reception.originalExpected}">
+                                <span th:case="true" th:text="#{yes}"></span>
+                                <span th:case="*" th:text="#{no}"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <span th:text="${#dates.format(reception.createDate,T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT)}"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

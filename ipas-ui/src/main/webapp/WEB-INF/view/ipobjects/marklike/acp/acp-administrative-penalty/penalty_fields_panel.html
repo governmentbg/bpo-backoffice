@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="fields(penalty)" th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT},
+                                            administrativePenaltyUtils = ${T(com.duosoft.ipas.util.AcpAdministrativePenaltyUtils)}">
+
+    <div class="row hidden-element">
+        <div class="col-12">
+            <div th:replace="base/message :: warning(#{amount.format.message})"></div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-6" th:classappend="${penalty?.penaltyType?.id == null} ? 'none'">
+            <div th:replace="~{base/form/select :: object(id = 'acp-penalty-penaltyType',url = @{/acp/administrative-penalty/reload-fields},emptySelectOption = #{default.select.option}, selected=${penalty?.penaltyType?.id},label = #{acp.penalty.type.label},
+            objects = ${acpAdministrativePenaltyTypeList},
+            valuePointer = 'id', textPointer = 'description')}"></div>
+        </div>
+    </div>
+
+    <div class="row" th:if="${administrativePenaltyUtils.showOtherTypeDescription(penalty)}">
+        <div class="col-12">
+            <div th:replace="~{base/form/textarea :: basic(id = 'acp-penalty-otherTypeDescription', value = ${penalty?.otherTypeDescription}, label = #{acp.penalty.other.type.description.label})}"></div>
+        </div>
+    </div>
+
+
+    <th:block th:if="${administrativePenaltyUtils.showAmountSection(penalty)}">
+
+        <div class="row">
+            <div class="col-6">
+                <div th:replace="~{base/form/input :: text(id = 'acp-penalty-amount', classes='amount', name = 'amount',value = ${penalty?.amount}, label = #{acp.penalty.amount.label})}"></div>
+            </div>
+        </div>
+
+
+<!--        <div class="row">-->
+<!--            <div class="col-12  mark-administrative-penalty-subsection">-->
+<!--                <h4 style="display: inline-block" th:text="#{acp.penalty.voluntary.performance.subsection.label}"></h4>-->
+<!--            </div>-->
+<!--        </div>-->
+
+        <div class="row">
+            <div class="col-6" th:classappend="${penalty?.paymentStatus?.id == null} ? 'none'">
+                <div th:replace="~{base/form/select :: object(id = 'acp-penalty-paymentStatus',url = @{/acp/administrative-penalty/reload-fields},emptySelectOption = #{default.select.option}, selected=${penalty?.paymentStatus?.id},label = #{acp.penalty.payment.status.label},
+            objects = ${acpAdministrativePenaltyPaymentStatusListList},
+            valuePointer = 'id', textPointer = 'description')}"></div>
+            </div>
+
+            <div class="col-6" th:if="${administrativePenaltyUtils.showPartiallyPaidAmount(penalty)}">
+                <div th:replace="~{base/form/input :: text(id = 'acp-penalty-partiallyPaidAmount', classes='amount',name = 'partiallyPaidAmount',value = ${penalty?.partiallyPaidAmount}, label = #{acp.penalty.partly.amount.label})}"></div>
+            </div>
+        </div>
+
+    </th:block>
+
+
+    <th:block th:if="${administrativePenaltyUtils.showNotificationDate(penalty)}">
+
+<!--    <div class="row">-->
+<!--        <div class="col-12  mark-administrative-penalty-subsection">-->
+<!--            <h4 style="display: inline-block" th:text="#{acp.penalty.enforcement.subsection.label}"></h4>-->
+<!--        </div>-->
+<!--    </div>-->
+
+
+    <div class="row">
+        <div class="col-6">
+            <div th:replace="~{base/form/input :: datepicker(id = 'acp-penalty-notificationDate', label = #{acp.penalty.notification.date.label}, value = ${penalty?.notificationDate != null ? #dates.format(penalty.notificationDate, dateFormatDot): ''})}"></div>
+        </div>
+    </div>
+
+
+    </th:block>
+
+
+</div>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://oami.europa.eu/trademark/goods-services/term-verification" targetNamespace="http://oami.europa.eu/trademark/goods-services/term-verification" version="1.0" elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+
+<xs:annotation>
+  <xs:documentation>
+    GoodsServices Verification Response  Version 1.1 Dated 2016-08-31
+  </xs:documentation>
+</xs:annotation>
+
+<!-- ====================================================================== -->
+<!-- Include of external standard types                                     -->
+<!-- ====================================================================== -->
+<xs:include schemaLocation="WIPOST3CodeType-V2007.xsd"/>
+<xs:include schemaLocation="CommonLanguages.xsd"/>
+
+
+<xs:element name="Transaction" type="TransactionType"/>
+
+
+<xs:complexType name="TransactionType">
+  <xs:sequence>
+    <xs:element name="TransactionHeader" type="TransactionHeaderType"/>
+    <xs:element name="TransactionBody" type="TransactionBodyType"/>
+  </xs:sequence>
+</xs:complexType>
+
+
+<xs:complexType name="TransactionHeaderType">
+  <xs:sequence>
+    <xs:element name="SenderDetails">
+      <xs:complexType>
+        <xs:sequence>
+          <xs:element name="RequestProducerDateTime" type="xs:dateTime"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:element>
+  </xs:sequence>
+</xs:complexType>
+
+
+<xs:complexType name="TransactionBodyType">
+  <xs:sequence>
+    <xs:element name="TransactionContentDetails">
+      <xs:complexType>
+        <xs:sequence>
+          <xs:element name="TransactionIdentifier" type="xs:token"/>
+          <xs:element name="TransactionCode" type="TransactionCodeType"/>
+          <xs:element name="TransactionData" type="TransactionDataType"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:element>
+  </xs:sequence>
+</xs:complexType>
+
+
+<xs:simpleType name="TransactionCodeType">
+  <xs:restriction base="xs:token">
+    <xs:enumeration value="Goods and Services Verification Request"/>
+  </xs:restriction>
+</xs:simpleType>
+
+
+<xs:complexType name="TransactionDataType">
+  <xs:sequence>
+     <xs:element name="VerifyList">
+       <xs:complexType>
+         <xs:sequence>
+         	<xs:element name="VerifyListResponse" type="VerifyListResponseType"/>
+         </xs:sequence>
+       </xs:complexType>
+     </xs:element>
+  </xs:sequence>
+</xs:complexType>
+
+
+<xs:complexType name="VerifyListResponseType">
+	<xs:sequence>
+        <xs:element name="GoodsServicesDetails" type="GoodsServicesDetailsType"/>
+	</xs:sequence>
+</xs:complexType>
+
+
+<xs:complexType name="GoodsServicesDetailsType">
+	<xs:sequence>
+		<!--  xs:element name="GoodsServicesVersion" type="xs:token"/-->
+		<xs:element name="ClassDescriptionDetails" type="ClassDescriptionDetailsType"/>
+	</xs:sequence>
+</xs:complexType>
+
+
+<xs:complexType name="ClassDescriptionDetailsType">
+	<xs:sequence>
+		<!-- INPUT DATA -->
+		<xs:element name="LanguageCode" type="EM_LanguageCodeType"/>
+	  	<xs:element name="OfficeCode" type="WIPOST3CodeType"/>
+	    <xs:element name="InputTermList" type="xs:string"/>
+	    <xs:element name="SearchOnSublevel" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="SearchInLegacy" type="xs:boolean" minOccurs="0"/>
+        <xs:element name="SearchFuzzy" type="xs:boolean" minOccurs="0"/>
+	    <xs:element name="ClassNumber" type="NiceClassNumberType" minOccurs="0"/>
+
+	    <!-- OUTPUT DATA -->
+		<xs:element name="VerifiedTermsDetails" type="VerifiedTermsDetailsType"/>
+	</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="VerifiedTermsDetailsType">
+	<xs:sequence>
+		<xs:element name="VerifiedTerm" type="VerifiedTermType" maxOccurs="unbounded"/>
+	</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="VerifiedTermType">
+	<xs:sequence>
+		<xs:element name="Text" type="xs:string"/>
+		<xs:element name="TextPositionInInputTermList" type="SubStringPositionType" minOccurs="0"/>
+		<xs:element name="VerificationAssessment" type="VerifiedTermAssessmentType"/>
+		<xs:element name="VerificationResult" type="VerifiedTermResultType"/>
+		<xs:element name="MatchedTerms" type="MatchedTermsType" minOccurs="0"/>
+		<xs:element name="Taxonomy" type="TaxonomyType" minOccurs="0"/>
+	</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="MatchedTermsType">
+	<xs:sequence>
+		<xs:element name="MatchedTerm" type="MatchedTermType" maxOccurs="unbounded"/>
+	</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="MatchedTerminologySourceList">
+	<xs:sequence>
+		<xs:element name="TerminologySource" type="xs:string" maxOccurs="unbounded"/>
+	</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="MatchedTermType">
+	<xs:sequence>
+		<xs:element name="TermSourceType" type="ClassificationTermSourceType"/>
+		<xs:element name="IsPartial" type="xs:boolean" minOccurs="0"/>
+		<xs:element name="MatchClassType" type="MatchClassTypeType"/>
+		<xs:element name="MatchProximity" type="MatchProximityType"/>
+		<xs:element name="MatchedClassNumber" type="NiceClassNumberType"/>
+		<xs:element name="MatchedTermText" type="xs:string"/>
+		<xs:element name="Identifier" type="xs:token"/>
+	    <xs:element name="MatchedTermPositionInInputTermList" type="SubStringPositionType" minOccurs="0"/>
+    	<xs:element name="MatchedTermPositionInInputTerm" type="SubStringPositionType" minOccurs="0"/>
+		<xs:element name="MatchRank" type="xs:nonNegativeInteger" minOccurs="0"/>
+    	<xs:element name="LegacyTermFrequency" type="xs:nonNegativeInteger" minOccurs="0"/>
+    	<xs:element name="LegacyTermFirstUseDate" type="xs:date" minOccurs="0"/>
+    	<xs:element name="LegacyTermLastUseDate" type="xs:date" minOccurs="0"/>
+    	<xs:element name="HarmoConcept" type="xs:string" minOccurs="0"/>
+		<!-- The list of terminology sources where the term is matched -->
+		<xs:element name="MatchedTerminologySourceList" type="MatchedTerminologySourceList" minOccurs="0"/>
+	</xs:sequence>
+</xs:complexType>
+
+
+<xs:simpleType name="MatchProximityType">
+  <xs:restriction base="xs:token">
+    <xs:enumeration value="Term match"/>
+    <xs:enumeration value="Linguistic match"/>
+    <xs:enumeration value="Match to verify"/>
+    <xs:enumeration value="No match"/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="MatchClassTypeType">
+  <xs:restriction base="xs:token">
+    <xs:enumeration value="Same class"/>
+    <xs:enumeration value="Wrong class"/>
+    <xs:enumeration value="None"/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="ClassificationTermSourceType">
+  <xs:restriction base="xs:token">
+    <xs:enumeration value="Rejection database"/>
+    <xs:enumeration value="Reference database"/>
+    <xs:enumeration value="Legacy database"/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:complexType name="SubStringPositionType">
+  <xs:simpleContent>
+    <xs:extension base="xs:nonNegativeInteger">
+      <xs:attribute name="length" type="xs:nonNegativeInteger"/>
+    </xs:extension>
+  </xs:simpleContent>
+</xs:complexType>
+
+<xs:simpleType name="VerifiedTermAssessmentType">
+	<xs:restriction base="xs:token">
+		<xs:enumeration value="Rejection term"/>
+		<xs:enumeration value="Controlled term found"/>
+		<xs:enumeration value="Homonym found"/>
+		<xs:enumeration value="Wrong class"/>
+		<xs:enumeration value="Synonym found"/>
+		<xs:enumeration value="Synonym found in wrong class"/>
+		<xs:enumeration value="Not found"/>
+		<xs:enumeration value="No class given"/>
+		<xs:enumeration value="Similar term"/>
+		<xs:enumeration value="Contains controlled term"/>
+		<xs:enumeration value="Legacy term"/>
+		<xs:enumeration value="Contains legacy term"/>
+		<xs:enumeration value="Related service found"/>
+		<xs:enumeration value="HDB equivalent term found"/>
+	</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="VerifiedTermResultType">
+	<xs:restriction base="xs:token">
+		<xs:enumeration value="OK"/>
+		<xs:enumeration value="Hint"/>
+		<xs:enumeration value="Not OK"/>
+		<xs:enumeration value="None"/>
+	</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="NiceClassNumberType">
+  <xs:restriction base="xs:nonNegativeInteger">
+    <xs:maxInclusive value="45"/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:complexType name="TextType">
+  <xs:simpleContent>
+    <xs:extension base="xs:string">
+      <xs:attribute name="languageCode" type="xs:language" use="optional"/>
+    </xs:extension>
+  </xs:simpleContent>
+</xs:complexType>
+
+<xs:complexType name="TaxonomyType">
+	<xs:sequence>
+		<xs:element name="TaxonomyPath" type="xs:string" minOccurs="1"/>
+	</xs:sequence>
+</xs:complexType>
+
+</xs:schema>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="table(expiredTermList,expiredTermCount,expiredTermFilter,expiredTermsParentUrl)"
+     th:with="sorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.SorterUtils)},expiredTermSortedUtils=${T(bg.duosoft.ipas.util.filter.sorter.ExpiredTermSortedUtils)},securityUtils=${T(bg.duosoft.ipas.util.security.SecurityUtils)}, securityRoles=${T( bg.duosoft.ipas.enums.security.SecurityRole)}">
+
+    <div th:remove="tag" th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(expiredTermList)}">
+        <div th:remove="tag" th:case="true">
+            <div class="bg__light-blue p_10 m_B10 m_T10 center">
+                <span th:text="'Списъкът е празен !'"></span>
+            </div>
+        </div>
+        <div th:remove="tag" th:case="false">
+            <div class="row">
+                <div>
+                    <span th:text="'Общ брой: '"></span>
+                    <span th:text="${expiredTermCount}"></span>
+                </div>
+            </div>
+            <div class="m_T5">
+                <table class="simple bpo">
+                    <thead>
+                    <tr>
+                        <th style="width: 50px" th:text="'Номер'"></th>
+                        <th style="width: 150px" th:with="isSelected=${#strings.equalsIgnoreCase(expiredTermFilter.sortColumn,expiredTermSortedUtils.FILING_NUMBER)},dataSort=${expiredTermSortedUtils.FILING_NUMBER}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,expiredTermFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Идентификатор',${expiredTermFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th th:with="isSelected=${#strings.equalsIgnoreCase(expiredTermFilter.sortColumn,expiredTermSortedUtils.ACTION_TYPE_NAME)},dataSort=${expiredTermSortedUtils.ACTION_TYPE_NAME}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,expiredTermFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Действие',${expiredTermFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th style="width: 150px" th:with="isSelected=${#strings.equalsIgnoreCase(expiredTermFilter.sortColumn,expiredTermSortedUtils.ACTION_DATE)},dataSort=${expiredTermSortedUtils.ACTION_DATE}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,expiredTermFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Дата на действие',${expiredTermFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th th:with="isSelected=${#strings.equalsIgnoreCase(expiredTermFilter.sortColumn,expiredTermSortedUtils.STATUS_NAME)},dataSort=${expiredTermSortedUtils.STATUS_NAME}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,expiredTermFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{status.label},${expiredTermFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th th:if="${securityUtils.hasRights(securityRoles.IpObjectsSearchForeignObjectsData)}" th:with="isSelected=${#strings.equalsIgnoreCase(expiredTermFilter.sortColumn,expiredTermSortedUtils.USER_NAME)},dataSort=${expiredTermSortedUtils.USER_NAME}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,expiredTermFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{tableHeader.responsibleUser.label},${expiredTermFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="expiredTerm,expiredTermStat : ${expiredTermList}">
+                        <td>
+                            <span th:text="${expiredTermStat.count + ((expiredTermFilter.page - 1)*expiredTermFilter.pageSize)}"></span>
+                        </td>
+                        <td>
+                            <a th:text="${expiredTerm.filingNumber}" th:href="@{/ipobject/view(filingNumber=${expiredTerm.filingNumber})}"></a>
+                        </td>
+                        <td>
+                            <span th:text="${expiredTerm.actionName}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${#dates.format(expiredTerm.actionDate,T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${expiredTerm.statusName}"></span>
+                        </td>
+                        <td th:if="${securityUtils.hasRights(securityRoles.IpObjectsSearchForeignObjectsData)}">
+                            <span th:text="${expiredTerm.responsibleUserName}"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="home-panel-paginator" th:with="paginatorBaseUrl=${expiredTermsParentUrl =='expired-term-zmr'} ? @{expired-term-zmr/update-table} : @{expired-term/update-table}">
+                    <div th:replace="base/paginator :: paginator(page=${expiredTermFilter.page},pageSize=${expiredTermFilter.pageSize},total=${expiredTermCount},baseUrl=@{${paginatorBaseUrl}},
+                        tableContainerDiv='expired-term-table-wrapper',
+                        additionalParams= '&tableCount='+${expiredTermCount}+${expiredTermFilter.actionType != null ? '&actionType='+expiredTermFilter.actionType : '' }+
+                        '&sortOrder='+${expiredTermFilter.sortOrder}+
+                                         '&sortColumn='+${expiredTermFilter.sortColumn}+
+                                         ${expiredTermFilter.fileType != null ? '&fileType='+expiredTermFilter.fileType : '' }+
+                                          ${expiredTermFilter.statusCode != null ? '&statusCode='+expiredTermFilter.statusCode : '' }+
+                                         ${expiredTermFilter.responsibleUser != null ? '&responsibleUser='+expiredTermFilter.responsibleUser : '' })">
+                    </div>
+                </div>
+            </div>
+            <div>
+                <input th:type="hidden" class="form-ignore" th:id="expired-term-page" th:value="${expiredTermFilter.page}">
+                <input th:type="hidden" class="form-ignore" th:id="expired-term-pageSize" th:value="${expiredTermFilter.pageSize}">
+                <input th:type="hidden" class="form-ignore" th:id="table-count" th:value="'?tableCount='+${expiredTermCount}">
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

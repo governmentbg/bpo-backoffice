@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="patent-claims(claimsList)">
+
+    <div class="row m_B10">
+
+        <div class="col-12" th:if="${T(java.util.Objects).nonNull(claimsList) && #lists.isEmpty(claimsList)}">
+            <div th:replace="base/message :: info(#{claims.not.found.message})"></div>
+        </div>
+
+        <div class="col-12">
+            <div style="display: inline-block">
+                <h4 th:classappend="${T(java.util.Objects).nonNull(claimsList) && #lists.isEmpty(claimsList)}?'hidden-element'"
+                    th:text="#{'published.claims.data.patent_like'}"></h4>
+            </div>
+            <div class="inline-block">
+                <a th:id="edit-claims-dialog-show" class="btn-floating ipas small waves-effect action-button-bot waves-light hidden-element" th:title="#{btn.add}"
+                   th:attr="data-action='edit-claims-dialog-show',data-url=@{/patent-like/claim/open-modal}">
+                    <i class="material-icons">add</i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row m_B20" th:if="${!T(org.springframework.util.CollectionUtils).isEmpty(claimsList)}">
+        <div class="col-12">
+            <table class="simple">
+                <thead>
+                <tr>
+                    <th th:text="#{number}"></th>
+                    <th th:text="#{claim.bg.label}"></th>
+                    <th th:text="#{claim.en.label}"></th>
+                    <th class="hidden-element"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="claim : ${claimsList}">
+                    <td th:text="${claim.claimNbr}"></td>
+                    <td th:title="${claim.claimDescription}" th:text="${#strings.length(claim.claimDescription)> 49 } ? ${#strings.substring(claim.claimDescription,0,46).concat('...')} : ${claim.claimDescription}"></td>
+                    <td th:title="${claim.claimEnglishDescription}" th:text="${#strings.length(claim.claimEnglishDescription)> 49 } ? ${#strings.substring(claim.claimEnglishDescription,0,46).concat('...')} : ${claim.claimEnglishDescription}"></td>
+                    <td class="hidden-element">
+                        <div class="row">
+                            <div class="col-11"></div>
+                            <div class="col-1 right-align action-menu-list-fs">
+                                <i th:title="#{menu}" th:attr="data-action='toggle-menu',data-id='patent-claims-actions-'+${claim.claimNbr}" class="zmdi zmdi-menu"></i>
+                                <div th:id="'patent-claims-actions-'+${claim.claimNbr}" class="action-menu none m_L25-i">
+                                <span>
+                                    <i class="icon-pencil"></i>
+                                     <a class="b0" th:title="#{btn.edit}" href="javascript:void(0);" th:text="#{btn.edit}"
+                                        th:attr="data-action='edit-claims-dialog-show',data-url=@{/patent-like/claim/open-modal},data-claimnbr=${claim.claimNbr}">
+                                    </a>
+                                </span>
+                                    <span>
+                                    <i class="icon-trash"></i>
+                                    <a class="b0" th:title="#{btn.delete}" href="javascript:void(0);" th:text="#{btn.delete}"
+                                       th:attr="data-action='delete-specific-claim',data-url=@{/patent-like/claim/delete},
+                                       data-claimnbr=${claim.claimNbr},data-message=#{claims.on.deleting.message}">
+                                    </a>
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row" th:if="${!T(org.springframework.util.CollectionUtils).isEmpty(claimsList)}">
+        <div class="col-12">
+            <h4 style="display: inline-block" th:text="#{claim.count.label}+': '+${claimsList.size()} "></h4>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

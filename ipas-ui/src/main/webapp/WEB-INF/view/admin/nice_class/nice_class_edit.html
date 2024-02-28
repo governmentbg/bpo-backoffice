@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg">
+<head th:replace="base/template :: head(title=#{nice.class.list.edit})"></head>
+<body class="dark">
+
+<header class="app-header" th:replace="base/header"></header>
+
+<div class="app-body">
+    <div class="left-sidebar">
+        <div id="psb" class="ps--active-y">
+            <nav class="sidebar-nav">
+                <ul class="nav DropDownMenu">
+                    <li th:each="url : ${T(com.duosoft.ipas.util.UrlMap).ADMIN_PANEL_URLS}">
+                        <a th:href="@{${url.url}}" th:title="${#messages.msgOrNull(url.text)}"
+                           th:text="${#messages.msgOrNull(url.shortText)}"></a>
+                    </li>
+                </ul>
+            </nav>
+        </div><!-- #psb -->
+    </div><!-- .left-sidebar -->
+
+    <main class="main">
+        <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+        <div class="inner" id="nice-class-edit-page-wrapper">
+
+            <div th:id="nice-class-data-panel">
+                <div th:replace="admin/nice_class/nice_class_edit_panels :: edit-nice-class-panel"></div>
+            </div>
+
+        </div>
+    </main>
+</div>
+<div th:replace=":: modals" th:remove="tag"></div>
+<!-- JQuery files -->
+<footer class="page-footer" th:replace="base/footer"></footer>
+<div th:replace="base/template :: js-footer" th:remove="tag"></div>
+<div th:remove="tag" th:fragment="modals">
+    <div th:if="${!#lists.isEmpty(validationErrors)}"
+         th:replace="base/modal/validation_errors::errors(${validationErrors})" th:remove="tag"></div>
+</div>
+</div>
+</body>
+</html>

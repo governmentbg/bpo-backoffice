@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="main_panel(acpCheckReasons,acpCheckData)"
+     th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+
+    <div id="check-reasons-area">
+        <div th:replace="ipobjects/marklike/acp/acp-check-data/check_reasons_table :: table(${acpCheckReasons})"></div>
+    </div>
+
+    <div class="row">
+        <div class="hidden-element">
+            <div class="col-8">
+                <div th:replace="~{base/form/select :: object(id = 'acp-check-reasonId', label = #{acp.check.reason.label}, objects = ${acpCheckReasonList},
+                     valuePointer = 'id', textPointer = 'description',classes = 'form-ignore')}"></div>
+            </div>
+            <div class="col-4">
+                <button th:text="#{btn.add.acp.check.reason}"
+                        th:attr="data-action='add-acp-check-reason',data-url=@{/acp/check-data/add-reason}" th:type="button"
+                        class="button sm-icn-add m_T10">
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row m_B40 m_T10 hidden-element">
+        <div class="col-8 ">
+            <div th:replace="base/message :: warning(#{acp.add.check.reason.warning})"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div>
+            <div class="col-8" th:classappend="${acpCheckData?.acpCheckResult?.id == null} ? 'none'">
+                <div th:replace="~{base/form/select :: object(id = 'acp-check-resultId',  emptySelectOption = #{acp.check.reason.empty.option},label = #{acp.check.result.label},selected=${acpCheckData?.acpCheckResult?.id}, objects = ${acpCheckResultList},
+                     valuePointer = 'id', textPointer = 'description',classes = 'form-ignore')}"></div>
+            </div>
+
+            <div class="col-4">
+                <div th:replace="~{base/form/input :: datepicker(id = 'acp-check-checkDate', label = #{acp.check.date.label}, value = ${acpCheckData?.checkDate != null ? #dates.format(acpCheckData.checkDate, dateFormatDot): ''})}"></div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</body>
+</html>

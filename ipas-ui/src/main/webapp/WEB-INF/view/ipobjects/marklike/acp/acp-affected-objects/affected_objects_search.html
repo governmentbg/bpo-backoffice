@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="search(fileTypesMap)">
+
+    <input type="text" class="form-ignore" th:id="affected-object-filling-number" th:type="hidden" th:value="''">
+    <input type="text" class="form-ignore" th:id="affected-object-registration-number" th:type="hidden" th:value="''">
+    <input type="text" class="form-ignore" th:id="affected-object-external-registration-number" th:type="hidden" th:value="''">
+    <input type="text" class="form-ignore" th:id="affected-object-external-name" th:type="hidden" th:value="''">
+    <input type="text" class="form-ignore" th:id="affected-object-external-id" th:type="hidden" th:value="''">
+
+    <div class="row hidden-element">
+        <div class="col-3">
+            <div th:replace="~{base/form/select :: map(id = 'acp-affected-object-file-type',classes='form-ignore', label = #{affected.object.file.type.label}, map = ${extFileTypes})}"></div>
+        </div>
+        <div class="affected-objects-local-search">
+            <div class="col-3">
+                <div class="input-field">
+                    <input id="acp-affected-object-autocomplete-filing-number" type="text"
+                           class="autocomplete form-ignore"
+                           th:attr="data-url=@{/acp/affected-objects/autocomplete-affected-object}">
+                    <label th:for="'acp-affected-object-autocomplete-filing-number'"
+                           th:text="#{affected.object.filing.number.autocomplete.label}"></label>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="input-field">
+                    <input id="acp-affected-object-autocomplete-reg-number" type="text" class="autocomplete form-ignore"
+                           th:attr="data-url=@{/acp/affected-objects/autocomplete-affected-object}">
+                    <label th:for="'acp-affected-object-autocomplete-reg-number'"
+                           th:text="#{affected.object.reg.number.autocomplete.label}"></label>
+                </div>
+            </div>
+            <div class="col-2">
+                <button id="acp-affected-object-add-button" th:text="#{affected.object.button.add.label}"
+                        th:attr="data-action='acp-affected-object-add',data-url=@{/acp/affected-objects/add-object}"
+                        th:type="button"
+                        class="button sm-icn-add m_T10">
+                </button>
+            </div>
+        </div>
+
+        <div class="affected-objects-tmview-search" style="display: none">
+            <div class="col-3">
+                <div class="input-field">
+                    <input id="acp-affected-object-tmview-autocomplete-reg-number" type="text"
+                           class="autocomplete form-ignore"
+                           th:attr="data-url=@{/acp/affected-objects/tmview-autocomplete-affected-object}">
+                    <label th:for="'acp-affected-object-tmview-autocomplete-reg-number'"
+                           th:text="#{affected.object.reg.number.autocomplete.label}"></label>
+                </div>
+            </div>
+            <div class="col-2">
+                <button id="acp-affected-object-tmview-add-button" th:text="#{affected.object.button.add.label}"
+                        th:attr="data-action='acp-affected-object-external-add',data-url=@{/acp/affected-objects/add-external-object}"
+                        th:type="button"
+                        class="button sm-icn-add m_T10">
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

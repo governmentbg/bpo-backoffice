@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="file" type="bg.duosoft.ipas.core.model.file.CFile"*/-->
+<div th:remove="tag" th:fragment="nice-classes(userdoc)"
+     th:with="extraDataUtils = ${T(bg.duosoft.ipas.util.userdoc.UserdocExtraDataUtils)},
+              type=${T(bg.duosoft.ipas.enums.UserdocExtraDataTypeCode).SERVICE_SCOPE},
+              userdocExtraData=${userdoc.userdocExtraData},
+              types = ${extraDataUtils.selectAllUserdocExtraDataTypes(userdoc)},
+              config=${T(com.duosoft.ipas.util.factory.NiceConfigFactory).get(T(com.duosoft.ipas.webmodel.NiceListType).USERDOC_REQUESTED, null, userdoc.userdocType.userdocType)}">
+
+    <div th:remove="tag" th:with="serviceScopeValue = ${extraDataUtils.selectBoolean(type, userdocExtraData)}">
+        <div th:classappend="${serviceScopeValue == null}? 'hidden-element'">
+            <div class="row">
+                <div class="col-12">
+                    <h4 style="display: inline-block" th:text="'Стоки и/или услуги, за които е подадено искането'"></h4>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12" th:with="id='object-userdoc-extraData-'+${type}">
+                    <div th:id="${id}">
+                        <div th:replace="ipobjects/userdoc/extra_data/fragments.html :: dataFlag-radio(type = ${type}, value = ${true}, classes = 'form-ignore with-gap userdoc-nice-class-radio all', allowedTypes = ${types}, label = 'Всички стоки и/или услуги на марката', checked = ${serviceScopeValue == true})"></div>
+                        <div th:replace="ipobjects/userdoc/extra_data/fragments.html :: dataFlag-radio(type = ${type}, value = ${false}, classes = 'form-ignore with-gap userdoc-nice-class-radio part', allowedTypes = ${types}, label = 'Част от стоките и/или услугите на марката', checked = ${serviceScopeValue == false})"></div>
+                        <div th:replace="base/validation :: validation-message(${validationErrors},${id})"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row userdoc-nice-classes-table-wrapper requested-nice" th:attr="data-url=@{/nice-class/{niceListType}/update-recordal-nice-classes(niceListType=${config.niceListType})}">
+                <div th:replace=" :: userdoc-nice-classes-table(${serviceScopeValue},${userdoc.protectionData != null ? userdoc.protectionData.niceClassList : null}, ${config})"></div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div th:remove="tag" th:fragment="nice-classes-approved(userdoc)" th:with="config=${T(com.duosoft.ipas.util.factory.NiceConfigFactory).get(T(com.duosoft.ipas.webmodel.NiceListType).USERDOC_APPROVED, null, userdoc.userdocType.userdocType)}">
+
+    <div th:classappend="${userdoc.approvedData == null || userdoc.approvedData.approvedAllNice == null}? 'hidden-element'">
+        <div class="row">
+            <div class="col-12">
+                <h4 style="display: inline-block" th:text="'Стоки и/или услуги, за които е одобрено искането'"></h4>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12" th:with="id='object-'+${panelPointer}+'-approvedData-approvedAllNice'">
+                <div th:id="${id}">
+                    <div th:replace="ipobjects/userdoc/extra_data/fragments.html :: approvedData-radio('approvedAllNice', ${true}, 'form-ignore with-gap userdoc-nice-class-radio all', 'Всички стоки и/или услуги на марката', ${userdoc.approvedData != null && userdoc.approvedData.approvedAllNice != null && userdoc.approvedData.approvedAllNice == true})"></div>
+                    <div th:replace="ipobjects/userdoc/extra_data/fragments.html :: approvedData-radio('approvedAllNice', ${false}, 'form-ignore with-gap userdoc-nice-class-radio part', 'Част от стоките и/или услугите на марката', ${userdoc.approvedData != null && userdoc.approvedData.approvedAllNice != null && userdoc.approvedData.approvedAllNice == false})"></div>
+                    <div th:replace="base/validation :: validation-message(${validationErrors},${id})"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row userdoc-nice-classes-table-wrapper approved-nice" th:attr="data-url=@{/nice-class/{niceListType}/update-recordal-nice-classes(niceListType=${config.niceListType})}">
+            <div th:replace=" :: userdoc-nice-classes-table(${userdoc.approvedData != null ? userdoc.approvedData.approvedAllNice : null},${userdoc.approvedNiceClassList}, ${config})"></div>
+        </div>
+    </div>
+
+</div>
+
+
+<div th:remove="tag" th:fragment="userdoc-nice-classes-table(isAllNiceClassesIncluded,niceClassList, config)" th:with="allowEdit=${config.allowEdit(isAllNiceClassesIncluded)}">
+    <div class="col-12">
+        <div th:id="|nice-classes-table-${config.niceListType}|" class="nice-classes-table">
+            <div th:if="${niceClassList != null}">
+                <div th:remove="tag" th:if="${isAllNiceClassesIncluded != true || config.hasViewAll }">
+                    <div th:replace="ipobjects/common/nice_class/nice_classes_table :: nice-classes-table(allowEdit=${allowEdit},niceClassList=${niceClassList},niceConfig=${config})"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="row m_T10">
+            <span th:if="${config.hasTranslate}" th:classappend="${(isAllNiceClassesIncluded == true) || (isAllNiceClassesIncluded == null)}? 'none'" class="translate-all-nice-classes-wrapper">
+                <span class="hidden-element">
+                    <a th:replace="~{base/form/button :: material-btn(additionalArgs = 'data-listtype=${config.niceListType}',label = #{btn.translate.all.nice.classes}, dataAction = 'translate-nice-classes',dataUrl = @{/nice-class/{niceListType}/translate-nice(niceListType=${config.niceListType})}, icon = 'translate', classes = 'right m_L10')}"></a>
+                </span>
+            </span>
+            <span th:if="${config.hasDeleteAll}" th:classappend="${(isAllNiceClassesIncluded == true) || (isAllNiceClassesIncluded == null)}? 'none'" class="delete-all-nice-classes-wrapper">
+                <span class="hidden-element">
+                    <a th:replace="~{base/form/button :: material-btn(additionalArgs = 'data-listtype=${config.niceListType}',label = #{btn.delete.all.nice.classes}, dataAction = 'delete-all-nice-classes',dataUrl = @{/nice-class/{niceListType}/delete-all-nice-classes(niceListType=${config.niceListType})}, icon = 'delete', classes = 'right m_L10')}"></a>
+                </span>
+            </span>
+            <span th:if="${config.hasReloadOriginal}" th:classappend="${(isAllNiceClassesIncluded == true) || (isAllNiceClassesIncluded == null)}? 'none'" class="restore-original-nice-classes-wrapper">
+                <span class="hidden-element">
+                    <a th:replace="~{base/form/button :: material-btn(additionalArgs = 'data-listtype=${config.niceListType}',label = #{btn.select.original.nice.classes}, dataAction = 'restore-nice-classes',dataUrl = @{/nice-class/{niceListType}/restore-original-nice-classes(niceListType=${config.niceListType})}, icon = 'refresh', classes = 'right m_L10')}"></a>
+                </span>
+            </span>
+            <span th:if="${config.hasReloadRequested}" th:classappend="${(isAllNiceClassesIncluded == true) || (isAllNiceClassesIncluded == null)}? 'none'" class="restore-requested-nice-classes-wrapper">
+                <span class="hidden-element">
+                    <a th:replace="~{base/form/button :: material-btn(additionalArgs = 'data-listtype=${config.niceListType}',label = #{btn.select.requested.nice.classes}, dataAction = 'restore-nice-classes',dataUrl = @{/nice-class/{niceListType}/restore-requested-nice-classes(niceListType=${config.niceListType})}, icon = 'refresh', classes = 'right m_L10')}"></a>
+                </span>
+            </span>
+            <span th:if="${config.hasReloadOriginal}" th:classappend="${(isAllNiceClassesIncluded == true) || (isAllNiceClassesIncluded == null)}? 'none'" class="add-class-from-original-wrapper">
+                <span class="hidden-element">
+                    <a th:replace="~{base/form/button :: material-btn(label = #{btn.select.add.original.class}, dataAction = 'select-add-original-class',dataUrl = @{/nice-class/{niceListType}/select-add-original-class(niceListType=${config.niceListType})}, icon = 'add', classes = 'right m_L10')}"></a>
+                </span>
+            </span>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

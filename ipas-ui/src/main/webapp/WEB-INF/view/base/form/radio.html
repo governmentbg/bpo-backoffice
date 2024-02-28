@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:remove="tag" th:fragment="basic(name, label, value)">
+    <label th:classappend="${classes != null} ? ${classes}">
+        <input th:class="with-gap"
+               th:classappend="${inputClasses != null} ? ${inputClasses}"
+               th:name="${name}"
+               th:type="radio"
+               th:value="${value}"
+               th:checked="${checkedExpression != null} ? ${__${checkedExpression}__} : (${checked != null } ? ${checked} : false)"/>
+        <span th:text="${label}"></span>
+    </label>
+</div>
+
+<div th:remove="tag" th:fragment="input-field(name, label, value)">
+    <div th:class="input-field"
+         th:classappend="${wrapperClasses != null} ? ${wrapperClasses}"
+    >
+        <div>
+            <div th:replace="~{base/form/radio :: basic(name = ${name}, label = ${label}, value = ${value})}"></div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

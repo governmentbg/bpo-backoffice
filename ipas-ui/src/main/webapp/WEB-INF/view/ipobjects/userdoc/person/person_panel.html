@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="userdoc" type="bg.duosoft.ipas.core.model.userdoc.CUserdoc"*/-->
+<div th:fragment="userdoc-persons(userdoc)">
+    <div th:remove="tag" th:with="roles=${T(bg.duosoft.ipas.util.userdoc.UserdocPersonUtils).selectPersonRoleEnums(userdoc.userdocType.roles)},personRole=${T(bg.duosoft.ipas.enums.UserdocPersonRole)}">
+        <div th:if="${roles.contains(personRole.APPLICANT)}" th:remove="tag" >
+            <div th:replace="ipobjects/userdoc/person/applicants :: applicants(${userdoc})"></div>
+        </div>
+
+        <div th:if="${roles.contains(personRole.GRANTOR)}" th:remove="tag" >
+            <div th:replace="ipobjects/userdoc/person/grantors :: grantors(${userdoc})"></div>
+        </div>
+
+        <div th:if="${roles.contains(personRole.GRANTEE)}" th:remove="tag" >
+            <div th:replace="ipobjects/userdoc/person/grantees :: grantees(${userdoc})"></div>
+        </div>
+
+        <div th:if="${roles.contains(personRole.AFFECTED_INVENTOR)}" th:remove="tag" >
+            <div th:replace="ipobjects/userdoc/person/affected_inventors :: affected-inventors(${userdoc})"></div>
+        </div>
+
+        <div th:if="${roles.contains(personRole.PAYEE)}" th:remove="tag" >
+            <div th:replace="ipobjects/userdoc/person/payees :: payees(${userdoc})"></div>
+        </div>
+
+        <div th:if="${roles.contains(personRole.PAYER)}" th:remove="tag" >
+            <div th:replace="ipobjects/userdoc/person/payers :: payers(${userdoc})"></div>
+        </div>
+
+        <div th:if="${roles.contains(personRole.PLEDGER)}" th:remove="tag" >
+            <div th:replace="ipobjects/userdoc/person/pledgers :: pledgers(${userdoc})"></div>
+        </div>
+
+        <div th:if="${roles.contains(personRole.CREDITOR)}" th:remove="tag" >
+            <div th:replace="ipobjects/userdoc/person/creditors :: creditors(${userdoc})"></div>
+        </div>
+
+        <div th:if="${roles.contains(personRole.OLD_OWNER)}" th:remove="tag" >
+            <div th:replace="ipobjects/userdoc/person/old_owners :: old-owners(${userdoc})"></div>
+        </div>
+
+        <div th:if="${roles.contains(personRole.NEW_OWNER)}" th:remove="tag" >
+            <div th:replace="ipobjects/userdoc/person/new_owners :: new-owners(${userdoc})"></div>
+        </div>
+
+        <div th:if="${roles.contains(personRole.OLD_REPRESENTATIVE)}" th:remove="tag" >
+            <div th:replace="ipobjects/userdoc/person/old_representatives :: old-representatives(${userdoc})"></div>
+        </div>
+
+        <div th:if="${roles.contains(personRole.NEW_REPRESENTATIVE)}" th:remove="tag" >
+            <div th:replace="ipobjects/userdoc/person/new_representatives :: new-representatives(${userdoc})"></div>
+        </div>
+
+        <div th:if="${roles.contains(personRole.OLD_CORRESPONDENCE_ADDRESS)}" th:remove="tag" >
+            <div th:replace="ipobjects/userdoc/person/old_correspondence_address :: old-correspondence-address(${userdoc})"></div>
+        </div>
+
+        <div th:if="${roles.contains(personRole.NEW_CORRESPONDENCE_ADDRESS)}" th:remove="tag" >
+            <div th:replace="ipobjects/userdoc/person/new_correspondence_address :: new-correspondence-address(${userdoc})"></div>
+        </div>
+
+        <div th:if="${roles.contains(personRole.REPRESENTATIVE)}" th:remove="tag" >
+            <div th:replace="ipobjects/userdoc/person/representatives :: representatives(${userdoc})"></div>
+        </div>
+
+        <div th:replace="ipobjects/userdoc/person/correspondence_address :: correspondence-address(${userdoc})"></div>
+
+        <div th:if="${roles.contains(personRole.REPRESENTATIVE_OF_THE_OWNER)}" th:remove="tag" >
+            <div th:replace="ipobjects/userdoc/person/representatives_of_the_owner :: representatives-of-the-owner(${userdoc})"></div>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="error-modal-exception">
+    <div th:id="error-modal-exception" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h2 class="red" th:text="'ГРЕШКА'"></h2>
+            </div>
+            <div>
+                <div>
+                    <span style="font-weight: bold" th:text="'Статус:'"></span>
+                    <span id="modal-error-exception-status"></span>
+                </div>
+                <div>
+                    <span style="font-weight: bold" th:text="'Грешка:'"></span>
+                    <span id="modal-error-exception-error"></span>
+                </div>
+                <div>
+                    <span style="font-weight: bold" th:text="'Съобщение:'"></span>
+                    <span id="modal-error-exception-message"></span>
+                </div>
+                <div>
+                    <span style="font-weight: bold" th:text="'Подробна информация:'"></span>
+                    <div id="modal-error-exception-trace" style="overflow-y: auto;max-height: 400px"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="process-error-modal(message)">
+    <div th:id="process-error-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h2 class="red" th:text="#{attention}"></h2>
+            </div>
+            <div>
+                <div class="center">
+                    <span th:text="${message}"></span>
+                </div>
+            </div>
+            <span class="none validation-indication"></span>
+        </div>
+        <div class="modal-footer">
+            <div>
+                <button th:text="#{btn.understand}" type="button" class="button sm-icn-save modal-close"></button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

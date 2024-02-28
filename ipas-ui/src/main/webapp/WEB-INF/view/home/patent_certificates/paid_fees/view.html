@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg">
+<head th:replace="base/template :: head(title=#{patent.paid.fees.cert.title})"></head>
+<body class="dark left-sidebar-show">
+<header class="app-header" th:replace="base/header"></header>
+
+<div class="app-body">
+    <div th:replace="base/left-sidebars :: list(urls = ${T(com.duosoft.ipas.util.UrlMap).getAdminServiceUrlsFiltered()})"></div>
+
+    <main class="main">
+        <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+        <div class="inner continer">
+            <div class="home-panel-messages-div">
+                <div th:replace="base/toast/message :: error(message = ${errorMessage},unescaped = true)"></div>
+                <div th:replace="base/toast/message :: success(message = ${successMessage},unescaped = true)"></div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="panel">
+                        <div class="center">
+                            <h1 class="section-header" th:text="#{patent.paid.fees.cert.title}"></h1>
+                        </div>
+
+                        <div th:remove="tag" th:if="${!progressBar.inProgress}">
+                            <div th:id="patentCertificate-paidFees-filters-wrapper">
+                                <div th:replace="~{home/patent_certificates/paid_fees/filters :: filters}"></div>
+                            </div>
+                            <div th:id="patentCertificate-paidFees-table-wrapper"></div>
+                        </div>
+
+                        <div th:remove="tag" th:if="${progressBar.inProgress}">
+                            <div class="row m_B5">
+                                <div class="col-12">
+                                    <h4 class="progressbar-info" th:text="${progressBar.inProgress} ? #{process.started} : #{process.not.started}"></h4>
+                                </div>
+                            </div>
+
+                            <div class="modded row w_100p p_0" th:id="patentCertificate-paidFees-progressbar" th:attr="data-url=@{/patent-certificates/paid-fees/select-progressbar-info}, data-baseurl=@{/patent-certificates/paid-fees}">
+                                <div class="col-12">
+                                    <ul class="collapsible m_L0-i w_100p p_0">
+                                        <li>
+                                            <div class="collapsible-header m_L0-i w_100p">
+                                                <div class="progress blue lighten-4" th:switch="${progressBar.inProgress}">
+                                                    <div th:case="true" class="determinate blue progressbar-progress" th:styleappend="'width: '+ ${progressBar.progress}" th:text="${progressBar.progress}+'%'">0%</div>
+                                                    <div th:case="false" style="width: 0"></div>
+                                                </div>
+                                            </div>
+                                            <div class="collapsible-body m_0 w_100p">
+                                                <div th:switch="${progressBar.inProgress}">
+                                                    <div th:case="true">
+                                                        <div class="row">
+                                                            <div class="col-6" th:text="#{progressbar.started.at}"></div>
+                                                            <span th:text="${#dates.format(progressBar.startAt,T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT)}"></span>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-6" th:text="#{progressbar.username}"></div>
+                                                            <span th:text="${progressBar.username}"></span>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-6" th:text="#{progressbar.log}"></div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-12 progressbar-log"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div th:case="false">
+                                                        <span th:text="#{no.data}"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="row m_T10">
+                                <div class="col-12">
+                                    <a th:replace="~{base/form/button :: material-btn(idBtn = 'stop-patentCertificate-paidFees-process', label = #{patent.paid.fees.cert.btn.stop}, dataUrl = @{/patent-certificates/paid-fees/stop-progressbar} , icon = 'clear', classes = 'm_T5 w_150px right')}"></a>
+                                </div>
+                            </div>
+                            <div th:if="${executeProcess eq true}" th:id="patentCertificate-paidFees-execute-process" th:attr="data-url=@{/patent-certificates/paid-fees/execute-process}"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div th:id="patentCertificate-paidFees-result-wrapper" th:attr="data-url=@{/patent-certificates/paid-fees/update-generation-result}">
+                <div th:remove="tag" th:replace="~{home/patent_certificates/paid_fees/result :: result(progressBar = ${progressBar}, generatedDocuments = ${progressBar.results})}"></div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<footer class="page-footer" th:replace="base/footer"></footer>
+<div th:replace="base/template :: js-footer" th:remove="tag"></div>
+
+</body>
+</html>

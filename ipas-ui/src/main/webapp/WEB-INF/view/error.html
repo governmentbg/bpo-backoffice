@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg">
+
+<head th:replace="base/template :: head(title='Error')"></head>
+
+<body class="dark">
+
+
+<div class="app-body">
+
+    <!-- ****************************************************** Left Side Nav -->
+    <div class="left-sidebar">
+        <div id="psb" class="ps--active-y">
+
+            <nav class="sidebar-nav">
+                <ul class="nav DropDownMenu">
+
+                </ul>
+            </nav><!-- .sidebar-nav -->
+
+        </div><!-- #psb -->
+    </div><!-- .left-sidebar -->
+
+
+    <!-- ********************************************************** Main body -->
+    <main class="main">
+
+        <!-- -------------------------------------------------------- Page Inner -->
+        <div class="inner continer">
+
+            <h1>Error Page</h1>
+            <p>Application has encountered an error. Please contact support on ...</p>
+
+
+        </div><!-- .inner -->
+
+    </main>
+
+</div><!-- .app-body -->
+
+
+<!-- JQuery files -->
+<div th:replace="base/template :: js-footer" th:remove="tag"></div>
+
+</body>
+</html>

@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="invalidity(userdocRootGrounds,panelPointer)">
+    <div th:replace="ipobjects/userdoc/grounds/common_elements/userdoc_grounds_view_page :: root-grounds(${userdocRootGrounds},${panelPointer},true)"></div>
+</div>
+</body>
+</html>

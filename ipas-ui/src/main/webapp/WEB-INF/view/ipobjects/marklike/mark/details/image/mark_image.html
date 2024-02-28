@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="mark" type="bg.duosoft.ipas.core.model.mark.CMark"*/-->
+<div th:fragment="image(mark,sessionObjectIdentifier,attachmentIndex, attachment)"
+     th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)},markSignTypeUtils=${T(bg.duosoft.ipas.util.mark.MarkSignTypeUtils)}">
+    <hr class="hidden-element">
+    <div>
+        <div class="row">
+            <div class="col-4" th:id="'mark-image-div-'+${attachmentIndex}">
+                <div th:replace="~{ipobjects/marklike/mark/details/image/img :: tag(url=@{/mark/file/image/}, sessionIdentifier =${sessionObjectIdentifier},attachmentIndex= ${attachmentIndex})}"></div>
+            </div>
+            <div class="col-7 hidden-element">
+                <div>
+                    <span>
+                        <input th:accept="'.jpg, .jpeg, .png'" th:id="'mark-imageFile-'+${attachmentIndex}" th:type="file" th:name="'uploadMarkLogo'" class="input_file" th:attr="data-url=@{/mark/validate-uploaded-logo},data-action='upload-mark-image',data-index=${attachmentIndex}">
+                        <label th:for="'mark-imageFile-'+${attachmentIndex}" class="bttn bg__blue inline-block" th:text="'Изберете файл'"></label>
+                    </span>
+                    <span style="font-weight: bold" th:id="'mark-logo-file-name-'+${attachmentIndex}" th:attr="data-label='Избран файл: '"></span>
+                </div>
+                <div>
+                    <div class="m_T5">
+                        <div th:replace="~{base/validation :: validation-message(${validationErrors},'mark-imageFile-'+${attachmentIndex})}"></div>
+                        <div th:id="'mark-logo-error-div-'+${attachmentIndex}"></div>
+                    </div>
+                    <div class="m_T5">
+                        <span th:text="'Изборът на изображение за лого е ограничен до форматите JPEG и PNG'"></span>
+                    </div>
+                    <div class="m_T5">
+                        <span th:text="'Максимален размер на файла: 2 MB'"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="hidden-element right">
+                <a class="btn-floating ipas small waves-effect waves-light" th:title="'Изтрий изображението'"
+                   th:attr="data-action='delete-mark-attachment',data-index=${attachmentIndex},data-url=@{/mark/delete-mark-attachment},data-type=${T(bg.duosoft.ipas.enums.AttachmentType).IMAGE.name()}"
+                >
+                    <i class="material-icons">close</i>
+                </a>
+            </div>
+        </div>
+        <div th:if="${markSignTypeUtils.isMarkContainImages(mark.signData.signType)}">
+            <div th:replace="~{ipobjects/marklike/mark/details/vienna/vienna.html :: section(attachment = ${attachment}, attachmentIndex = ${attachmentIndex}, attachmentType = ${T(bg.duosoft.ipas.enums.AttachmentType).IMAGE.name()})}"></div>
+        </div>
+
+    </div>
+    <hr class="hidden-element">
+</div>
+
+</body>
+</html>

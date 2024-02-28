@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="offidoc" type="bg.duosoft.ipas.core.model.offidoc.COffidoc"*/-->
+
+<div th:remove="tag" th:fragment="main-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}"
+         th:with="panelName=${T(com.duosoft.ipas.enums.OffidocPanel).MainData.code()}">
+        <div th:replace="ipobjects/common/base/panel_header_without_buttons :: panel-header(title=#{panel.title.offidoc.main.data})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/offidoc/main_data/main_data_panel :: panel(${offidoc})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="generate-files-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}"
+         th:with="panelName=${T(com.duosoft.ipas.enums.OffidocPanel).GenerateFiles.code()}">
+        <div class="row">
+            <div class="col-10">
+                <h3 class="inline-block" th:text="#{panel.title.offidoc.generate.files.data}"></h3>
+                <div class="inline-block">
+                    <span class="sign bg__dark-red edit none" th:text="#{panel.header.edit}"></span>
+                </div>
+            </div>
+            <div class="col-2 txtRight">
+                <a class="small sm-icn-edit m_T10 m_B10" th:attr="data-action='edit'" th:title="#{btn.change}"></a>
+                <a class="small sm-icn-cross m_T10 m_B10 none" th:attr="data-action='cancel'"
+                   th:title="#{btn.cancel}"></a>
+            </div>
+        </div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/offidoc/generate_files/generate_files_panel :: panel(${offidoc})"></div>
+        </div>
+    </div>
+</div>
+
+
+<div th:remove="tag" th:fragment="published-decision-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}"
+         th:with="panelName=${T(com.duosoft.ipas.enums.OffidocPanel).PublishedDecision.code()}">
+        <div class="row">
+            <div class="col-10">
+                <h3 class="inline-block" th:text="#{panel.title.offidoc.published.decision.data}"></h3>
+                <div class="inline-block">
+                    <span class="sign bg__dark-red edit none" th:text="#{panel.header.edit}"></span>
+                </div>
+            </div>
+            <div class="col-2 txtRight">
+                <a class="small sm-icn-edit m_T10 m_B10" th:attr="data-action='edit'" th:title="#{btn.change}"></a>
+                <a class="small sm-icn-cross m_T10 m_B10 none" th:attr="data-action='cancel'"
+                   th:title="#{btn.cancel}"></a>
+            </div>
+        </div>
+        <div th:id="|panel-body-${panelName}|" >
+            <div th:replace="ipobjects/offidoc/published-decision/published_decision_panel :: panel(${offidoc},${sessionObjectIdentifier})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="decisions-data" th:with="panelName=${T(com.duosoft.ipas.enums.OffidocPanel).Decisions.code()}">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName},data-url=@{/offidoc/decisions/load-data}">
+        <div th:replace="ipobjects/offidoc/decisions/decisions_panel :: loader"></div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="process-data"
+     th:with="panelName=${T(com.duosoft.ipas.enums.OffidocPanel).Process.code()}">
+    <div th:id="|panel-${panelName}|" class="panel"
+         th:attr="data-group=${panelName},data-url=@{/process/load-panel},data-process=|${offidoc.processId.processType}-${offidoc.processId.processNbr}|">
+        <div th:replace="ipobjects/common/process/process_panel :: loader"></div>
+    </div>
+</div>
+
+</body>
+</html>

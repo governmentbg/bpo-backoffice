@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="single-designs-subsection(singleDesignsWebModel)">
+
+    <div class="m_T10" th:if="${!T(org.springframework.util.CollectionUtils).isEmpty(singleDesignsWebModel)}">
+        <div class="col-12 ground-single-design-table">
+            <table class="simple">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="ground-single-design-row" th:each="singleDesign : ${singleDesignsWebModel}">
+                    <td class="ground-single-design-id-column" th:attr="data-design-id=${singleDesign.id},data-design-title=${singleDesign.title}" th:text="${T(com.duosoft.ipas.util.DesignUtils).formatSingleDesignIdentityNumber(singleDesign.id,singleDesign.title)}"></td>
+                    <td class="txtRight">
+                        <a style="border: 0" th:title="#{btn.delete}" href="javascript:void(0);"
+                           th:attr="data-action='delete-ground-single-design'"
+                           class="txtLeft btn-floating ipas waves-effect waves-light action-button-top ">
+                            <i class="icon-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

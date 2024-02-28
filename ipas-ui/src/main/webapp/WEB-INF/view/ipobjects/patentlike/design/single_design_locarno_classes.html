@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="single_design_locarno_classes(singleDesign,filingNumber)">
+
+    <label th:styleappend="${!T(org.springframework.util.CollectionUtils).isEmpty(singleDesign.technicalData.locarnoClassList) ? '':'display:none'}"
+           style="color: #9e9e9e;" th:for="${index}+'-'+${singleDesign.file.fileId.fileNbr}+'-designLocarnoClasses'"
+           th:text="#{single.design.locarno.classes.label }"></label>
+
+    <ul th:id="${index}+'-'+${singleDesign.file.fileId.fileNbr}+'-designLocarnoClasses'">
+        <th:block th:each="locarnoClass: ${singleDesign.technicalData.locarnoClassList}">
+            <li th:class="tc-solid" style="margin: 0px">
+                <span th:text="${locarnoClass.locarnoClassCode}"></span>
+                <span class="hidden-element">
+                    <a style="border: 0" th:title="#{btn.delete}" href="javascript:void(0);"
+                       th:attr="data-action='delete-locarno-class',data-url=@{/design/locarno/delete},
+                                 data-filingNumber=${filingNumber},
+                                 data-locarno-class-code=${locarnoClass.locarnoClassCode},
+                                 data-locarno-edition-code=${locarnoClass.locarnoEditionCode}"><i>X</i></a>
+               </span>
+            </li>
+        </th:block>
+    </ul>
+
+</div>
+</body>
+</html>

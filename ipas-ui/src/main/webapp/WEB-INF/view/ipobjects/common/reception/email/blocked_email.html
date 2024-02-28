@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg">
+
+<head th:replace="base/template :: head(title = #{reception.page.title})"></head>
+
+<body class="dark left-sidebar-show">
+
+<header class="app-header" th:replace="base/header"></header>
+
+<div class="app-body">
+
+    <div class="left-sidebar">
+        <div id="psb" class="ps--active-y">
+            <nav class="sidebar-nav">
+                <ul class="nav DropDownMenu">
+                    <li>
+                        <a th:href="@{/reception/create}" th:text="#{reception.breadcrumb.document.registration}"></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <main class="main">
+        <div class="breadcrumbs ignore-default-breadcrumb" th:id="breadcrumbs">
+            <ol class="crumbs">
+                <div th:remove="tag">
+                    <li>
+                        <a th:href="${@environment.getProperty('abdocs.rest.service.url')}" th:text="#{reception.breadcrumb.documents.system}"></a>
+                    </li>
+                    <li>
+                        <a th:href="@{/reception/create}" th:text="#{reception.breadcrumb.document.registration}"></a>
+                    </li>
+                    <li>
+                        <span th:text="#{reception.breadcrumb.email.block}"></span>
+                    </li>
+                </div>
+            </ol>
+        </div>
+
+        <div class="inner" th:with="stringUtils=${T(org.springframework.util.StringUtils)}, dateTimeFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT}">
+            <div class="panel">
+                <div class="col-12 center">
+                    <h2 style="display: inline-block;color: #c62222;" th:text="#{reception.email.block.title}"></h2>
+                </div>
+
+                <div class="row m_T10">
+                    <div class="col-12">
+                        <span class="bold" th:text="#{reception.email.block.user}"></span>
+                        <span th:text="${stringUtils.isEmpty(activeReceptionEmailSession.userFullName)} ? ${activeReceptionEmailSession.username} : ${activeReceptionEmailSession.userFullName}"></span>
+                    </div>
+                </div>
+
+                <div class="row m_T10">
+                    <div class="col-12">
+                        <span class="bold" th:text="#{reception.email.block.subject}"></span>
+                        <span th:text="${activeReceptionEmailSession.emailSubject}"></span>
+                    </div>
+                </div>
+
+                <div class="row m_T10">
+                    <div class="col-12">
+                        <span class="bold" th:text="#{reception.email.block.process.date}"></span>
+                        <span th:text="${#dates.format(activeReceptionEmailSession.date, dateTimeFormatDot)}"></span>
+                    </div>
+                </div>
+
+                <div class="row m_T30">
+                    <div class="col-12">
+                        <a th:replace="~{base/form/button :: material-btn(label = #{btn.new.request}, href = @{/reception/create}, icon = 'check', btnStyle = 'width: 200px')}"></a>
+                        <a th:replace="~{base/form/button :: material-btn(label = #{btn.try.again}, dataAction = 'reload-page', icon = 'refresh', btnStyle = 'width: 200px', classes = 'm_L20')}"></a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<footer class="page-footer" th:replace="base/footer"></footer>
+<div th:replace="base/template :: js-footer" th:remove="tag"></div>
+
+</body>
+</html>

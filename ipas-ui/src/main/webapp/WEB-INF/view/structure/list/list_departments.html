@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="departments" type="java.util.List<com.duosoft.ipas.webmodel.structure.DepartmentWebModel>"*/-->
+
+<div class="row" th:fragment="list-departments(departments, index)" th:remove="tag">
+    <div class="row">
+        <div class="col-10">
+            <div class="div-field">
+                <div class="div-field">
+                    <span th:text="#{departments.label}"></span>
+                    <span class="sign bg__dark-blue" th:text="${departments == null ? 0 : departments.size()}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <ul th:id="'LinkedList' + ${index}" class="Linked-List" >
+            <th:block th:each="department,depStat:${departments}">
+                <li th:replace="structure/list/list_department :: list-department(department = ${department})"></li>
+            </th:block>
+        </ul>
+</div>
+
+
+
+</body>
+</html>

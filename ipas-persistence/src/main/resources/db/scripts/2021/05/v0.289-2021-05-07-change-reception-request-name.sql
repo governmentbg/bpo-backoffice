@@ -1,0 +1,7 @@
+--liquibase formatted sql
+
+--changeset raneva:289.1
+
+ALTER TABLE EXT_RECEPTION.RECEPTION_REQUEST
+ALTER COLUMN NAME NVARCHAR(4000);
+

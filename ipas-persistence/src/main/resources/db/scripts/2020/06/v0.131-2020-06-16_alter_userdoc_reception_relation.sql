@@ -1,0 +1,9 @@
+--liquibase formatted sql
+
+--changeset ggeorgiev:131.1
+alter table EXT_RECEPTION.USERDOC_RECEPTION_RELATION add IS_VISIBLE varchar(1);
+
+--changeset ggeorgiev:131.2
+update EXT_RECEPTION.USERDOC_RECEPTION_RELATION set IS_VISIBLE = 'S' where 1 = 1;
+alter table EXT_RECEPTION.USERDOC_RECEPTION_RELATION alter column IS_VISIBLE varchar(1) not null;
+INSERT INTO EXT_RECEPTION.USERDOC_RECEPTION_RELATION (MAIN_TYPE, LINKED_USERDOC_TYPE,  IS_VISIBLE) VALUES ('T', 'ЕПИВ', 'N');

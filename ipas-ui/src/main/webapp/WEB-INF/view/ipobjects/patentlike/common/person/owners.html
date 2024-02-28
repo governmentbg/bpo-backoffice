@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="file" type="bg.duosoft.ipas.core.model.file.CFile"*/-->
+<!--/*@thymesVar id="ownershipData" type="bg.duosoft.ipas.core.model.file.COwnershipData"*/-->
+<!--/*@thymesVar id="owner" type="bg.duosoft.ipas.core.model.person.COwner"*/-->
+<div th:fragment="owners(file)" th:with="objectUtils=${T(java.util.Objects)}">
+    <div class="col-12" th:classappend="${#lists.isEmpty(file.ownershipData.ownerList)}?'hidden-element'">
+        <div th:replace=" :: owners-header"></div>
+        <div th:replace=" :: owners-body"></div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="owners-header">
+    <div>
+        <div class="inline-block">
+            <h4 th:text="#{person.owner.title}"></h4>
+        </div>
+        <div class="inline-block">
+            <div th:replace="ipobjects/common/person/elements :: search-person-button(${T(com.duosoft.ipas.enums.PersonKind).Applicant.code()},${true})"></div>
+        </div>
+    </div>
+    <div th:if="${!#lists.isEmpty(validationErrors)}" th:id="mark-file-ownershipData-ownerList">
+        <div th:replace="base/validation :: validation-message(${validationErrors},'mark-file-ownershipData-ownerList')"></div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="owners-body">
+    <div th:if="${!#lists.isEmpty(file.ownershipData.ownerList)}" th:with="servicePerson=${file.servicePerson}">
+        <div class="list-elements-wrapper">
+            <div th:remove="tag" th:each="owner : ${file.ownershipData.ownerList}" th:with="minOrderNumber=${T(bg.duosoft.ipas.util.person.OwnerUtils).getMinOrderNumber(file.ownershipData.ownerList)}">
+                <div class="row list-element" th:with="person=${owner.person}">
+                    <div class="col-11">
+                        <div th:replace="ipobjects/common/person/elements :: label-representative(${person})"></div>
+                        <div th:replace="ipobjects/common/person/elements :: label-main-owner(${owner},${minOrderNumber})"></div>
+                        <div th:replace="ipobjects/common/person/elements :: label-ca(${servicePerson},${person})"></div>
+                        <div th:replace="ipobjects/common/person/elements :: person-info(${person})"></div>
+                    </div>
+                    <div th:replace=" :: owners-menu"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="owners-menu">
+    <div class="col-1 hidden-element right-align action-menu-list-fs" th:with="menuId=|owner-menu-${person.personNbr}-${person.addressNbr}|">
+        <i th:title="#{menu}" th:attr="data-action='toggle-menu',data-id=${menuId}" class="zmdi zmdi-menu"></i>
+        <div th:id="${menuId}" class="action-menu none" th:with="isCurrentPersonCA=${T(com.duosoft.ipas.util.PersonUtils).isCurrentPersonCA(person.personNbr,person.addressNbr,file)}">
+            <div th:replace="ipobjects/common/person/elements :: menu-option-view-person(person = ${person})"></div>
+            <div th:remove="tag" th:if="${(null != minOrderNumber) && (minOrderNumber != owner.orderNbr )}">
+                <div th:replace="ipobjects/common/person/elements :: menu-option-change-main-owner(${T(com.duosoft.ipas.enums.PersonKind).Applicant.code()},${person.personNbr},${person.addressNbr},#{person.menu.choose.main.confirm.message},${true})"></div>
+            </div>
+            <div th:remove="tag" th:if="${T(java.util.Objects).isNull(servicePerson) || (!((servicePerson.personNbr == person.personNbr) && (servicePerson.addressNbr == person.addressNbr)))}">
+                <div th:replace="ipobjects/common/person/elements :: menu-option-change-ca(${T(com.duosoft.ipas.enums.PersonKind).Applicant.code()},${person.personNbr},${person.addressNbr},#{person.menu.choose.ca.confirm.message},${!#lists.isEmpty(file.representationData.representativeList)})"></div>
+            </div>
+            <div th:remove="tag" th:if="${!person.hasAgentCode()}">
+                <div th:replace="ipobjects/common/person/elements :: menu-option-edit(${T(com.duosoft.ipas.enums.PersonKind).Applicant.code()},${person.personNbr},${person.addressNbr})"></div>
+            </div>
+            <div th:replace="ipobjects/common/person/elements :: menu-option-delete(${T(com.duosoft.ipas.enums.PersonKind).Applicant.code()},${person.personNbr},${person.addressNbr},((${isCurrentPersonCA } ? #{person.owner.delete.message} : '') + #{person.owner.delete.confirm.message}))"></div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

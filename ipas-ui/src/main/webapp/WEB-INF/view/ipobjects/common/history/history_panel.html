@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="fileLogChanges" type="java.util.List<bg.duosoft.ipas.core.model.logging.CFileLogChanges>"*/-->
+<div th:fragment="historyDetails(fileLogChanges)">
+    <div th:replace="ipobjects/common/base/panel_url_header :: panel-url-header(title=#{panel.title.history},url='',editEnabled=${false})"></div>
+    <div th:remove="tag" th:switch="${!T(org.springframework.util.CollectionUtils).isEmpty(fileLogChanges)}">
+        <div th:case="true">
+            <div th:id="|panel-body-${T(com.duosoft.ipas.enums.MarkPanel).History.code()}|" th:class="row">
+                <div th:replace="ipobjects/common/history/history_panel :: history-body(logChanges=${fileLogChanges}, url='file-history')"></div>
+            </div>
+        </div>
+        <div th:case="*">
+            <div class="row m_T10">
+                <div class="col-12">
+                    <div th:replace="base/message :: info('Няма намерени записи в историята !')"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--/*@thymesVar id="userdocLogChanges" type="java.util.List<bg.duosoft.ipas.core.model.logging.CUserdocLogChanges>"*/-->
+<div th:fragment="userdocHistoryDetails(userdocLogChanges)">
+
+    <div th:remove="tag" th:switch="${!T(org.springframework.util.CollectionUtils).isEmpty(userdocLogChanges)}">
+        <div th:case="true">
+            <div th:id="|panel-body-${T(com.duosoft.ipas.enums.UserdocPanel).History.code()}|" th:class="row">
+                <div th:replace="ipobjects/common/history/history_panel :: history-body(logChanges=${userdocLogChanges}, url='userdoc-history')"></div>
+            </div>
+        </div>
+        <div th:case="*">
+            <div class="row m_T10">
+                <div class="col-12">
+                    <div th:replace="base/message :: info('Няма намерени записи в историята !')"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="history-body(logChanges, url)" th:if="${!T(org.springframework.util.CollectionUtils).isEmpty(logChanges)}">
+    <div class="col-12" >
+        <table class="simple">
+            <thead>
+            <tr>
+                <th>&nbsp;</th>
+                <th th:text="'Дата на промяната'"></th>
+                <th th:text="'Потребител, извършил промяната'"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="c : ${logChanges}">
+                <td >
+                    <i class="dth-sm-info pointer"
+                       th:attr="data-url=@{/{url}/view-details(url=${url})},
+                                data-changeNbr=${c.changeNumber},
+                                data-action='object-history-details'">
+                    </i>
+                </td>
+                <td th:text="${#dates.format(c.changeDate,T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT)}"></td>
+                <td th:text="${c.changeUser.userName}">...</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:id="object-history-info-modal-wrapper"></div>
+</div>
+
+<div th:fragment="history-loader">
+    <div th:replace=":: simple-history-panel-header"></div>
+    <div th:replace="base/loader :: local-loader"></div>
+</div>
+
+<div th:fragment="simple-history-panel-header">
+    <div class="col-12">
+        <h3 class="inline-block" th:text="'История'"></h3>
+    </div>
+</div>
+
+</body>
+</html>

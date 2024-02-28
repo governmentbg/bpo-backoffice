@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="table(automaticActionsLogList, automaticActionsFilter)"
+     th:with="sorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.SorterUtils)},aaSorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.AutomaticActionsLogSorterUtils)},
+     coreUtils=${T(com.duosoft.ipas.util.CoreUtils)}">
+
+    <div th:remove="tag" th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(automaticActionsLogList)}">
+        <div th:remove="tag" th:case="true">
+            <div class="bg__light-blue p_10 m_B10 m_T10 center">
+                <span th:text="#{empty.list}"></span>
+            </div>
+        </div>
+        <div th:remove="tag" th:case="false">
+            <div class="m_T5">
+                <table class="simple bpo">
+                    <thead>
+                    <tr>
+                        <th>-</th>
+                        <th style="width: 140px" th:with="isSelected=${#strings.equalsIgnoreCase(automaticActionsFilter.sortColumn,aaSorterUtils.TIMER_NAME)},dataSort=${aaSorterUtils.TIMER_NAME}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,automaticActionsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Име на автоматично действие',${automaticActionsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th style="width: 160px" th:with="isSelected=${#strings.equalsIgnoreCase(automaticActionsFilter.sortColumn,aaSorterUtils.DATE_START)},dataSort=${aaSorterUtils.DATE_START}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,automaticActionsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Начало',${automaticActionsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th style="width: 160px" th:with="isSelected=${#strings.equalsIgnoreCase(automaticActionsFilter.sortColumn,aaSorterUtils.DATE_END)},dataSort=${aaSorterUtils.DATE_END}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,automaticActionsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Край',${automaticActionsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th style="width: 40px" th:with="isSelected=${#strings.equalsIgnoreCase(automaticActionsFilter.sortColumn,aaSorterUtils.DURATION)},dataSort=${aaSorterUtils.DURATION}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,automaticActionsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Продължителност',${automaticActionsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th style="width: 40px" th:with="isSelected=${#strings.equalsIgnoreCase(automaticActionsFilter.sortColumn,aaSorterUtils.IS_ERROR)},dataSort=${aaSorterUtils.IS_ERROR}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,automaticActionsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Грешки при изпълнението',${automaticActionsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th style="width: 160px" th:text="'Последна дата на стартиране на сървъра'"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <div th:remove="tag" th:switch="${#lists.size(automaticActionsLogList) < 2000}">
+                        <div th:remove="tag" th:case="true">
+                            <tr th:each="rec, stat : ${automaticActionsLogList}">
+                                <td>
+                                    <span th:text="${stat.count}"></span>
+                                </td>
+                                <td>
+                                    <span th:text="${rec.timerName}"></span>
+                                </td>
+                                <td>
+                                    <span th:text="${#temporals.format(rec.dateStart, T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT)}"></span>
+                                </td>
+                                <td>
+                                    <span th:text="${#temporals.format(rec.dateEnd, T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT)}"></span>
+                                </td>
+                                <td>
+                                    <span th:text="${T(java.time.Duration).between(rec.dateStart, rec.dateEnd)}"></span>
+                                </td>
+                                <td th:class="${rec.error} ? 'bg__light-red' : ''">
+                                    <span th:text="${rec.error} ? #{yes} : #{no}"></span>
+                                </td>
+                                <td>
+                                    <span th:text="${#temporals.format(rec.lastIpasServerStartDate, T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT)}"></span>
+                                </td>
+                            </tr>
+                        </div>
+                        <div th:remove="tag" th:case="false">
+                            <tr><td colspan="7" class="red center-align">Върнатите резултати са над 2000, моля използвайте филтри!</td></tr>
+                        </div>
+                    </div>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

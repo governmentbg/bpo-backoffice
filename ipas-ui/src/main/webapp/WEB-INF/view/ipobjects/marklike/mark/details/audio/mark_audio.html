@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="mark" type="bg.duosoft.ipas.core.model.mark.CMark"*/-->
+<div th:fragment="audio(mark,sessionObjectIdentifier,attachmentIndex, attachment)"
+     th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)},markSignTypeUtils=${T(bg.duosoft.ipas.util.mark.MarkSignTypeUtils)}">
+    <hr class="hidden-element">
+    <div>
+        <div class="row">
+            <div class="col-4" th:id="'mark-audio-div-'+${attachmentIndex}">
+                <div th:replace="~{ipobjects/marklike/mark/details/audio/audio:: tag(url=@{/mark/file/audio/}, sessionIdentifier =${sessionObjectIdentifier},attachmentIndex= ${attachmentIndex})}"></div>
+            </div>
+            <div class="col-7 hidden-element">
+                <div>
+                    <span>
+                        <input th:accept="'.mp3'" th:id="'mark-audioFile-'+${attachmentIndex}" th:type="file" th:name="'uploadMarkAudio'" class="input_file" th:attr="data-url=@{/mark/validate-uploaded-audio},data-action='upload-mark-audio',data-index=${attachmentIndex}">
+                        <label th:for="'mark-audioFile-'+${attachmentIndex}" class="bttn bg__blue inline-block" th:text="'Изберете файл'"></label>
+                    </span>
+                    <span style="font-weight: bold" th:id="'mark-audio-file-name-'+${attachmentIndex}" th:attr="data-label='Избран файл: '"></span>
+                </div>
+                <div>
+                    <div class="m_T5">
+                        <div th:replace="~{base/validation :: validation-message(${validationErrors},'mark-audioFile-'+${attachmentIndex})}"></div>
+                        <div th:id="'mark-audio-error-div-'+${attachmentIndex}"></div>
+                    </div>
+                    <div class="m_T5">
+                        <span th:text="'Изборът на звуков файл е ограничен до MP3 формат'"></span>
+                    </div>
+                    <div class="m_T5">
+                        <span th:text="'Максимален размер на файла: 20 MB'"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="hidden-element right">
+                <a class="btn-floating ipas small waves-effect waves-light" th:title="'Изтрий файла'"
+                   th:attr="data-action='delete-mark-attachment',data-index=${attachmentIndex},data-url=@{/mark/delete-mark-attachment},data-type=${T(bg.duosoft.ipas.enums.AttachmentType).AUDIO.name()}"
+                >
+                    <i class="material-icons">close</i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <hr class="hidden-element">
+</div>
+
+</body>
+</html>

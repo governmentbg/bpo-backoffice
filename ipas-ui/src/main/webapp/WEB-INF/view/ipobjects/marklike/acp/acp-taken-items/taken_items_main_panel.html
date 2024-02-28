@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="main_panel(acpTakenItems)">
+
+
+    <div class="row m_B10">
+        <div class="col-12" th:if="${T(java.util.Objects).nonNull(acpTakenItems) && #lists.isEmpty(acpTakenItems)}">
+            <div th:replace="base/message :: info(#{acp.taken.items.empty.list.message})"></div>
+        </div>
+
+        <div class="col-12">
+            <div style="display: inline-block">
+                <h4 th:classappend="'hidden-element'"
+                    th:text="#{'panel.title.acp_taken_items'}"></h4>
+            </div>
+            <div class="inline-block">
+                <a th:id="edit-acp-taken-item-dialog-show"
+                   class="btn-floating ipas small waves-effect action-button-bot waves-light hidden-element"
+                   th:title="#{btn.add}"
+                   th:attr="data-action='edit-acp-taken-item-dialog-show',data-url=@{/acp/taken-items/open-modal}">
+                    <i class="material-icons">add</i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12" th:if="${!T(org.springframework.util.CollectionUtils).isEmpty(acpTakenItems)}">
+        <table class="simple">
+            <thead>
+            <tr>
+                <th th:text="#{acp.taken.item.type.label}"></th>
+                <th th:text="#{acp.taken.item.storage.label}"></th>
+                <th th:text="#{acp.taken.item.count.label}"></th>
+                <th th:text="#{acp.taken.item.for.destruction.label}"></th>
+                <th th:text="#{acp.taken.item.returned.label}"></th>
+                <th th:text="#{acp.taken.item.in.stock.label}"></th>
+                <th class="hidden-element"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${acpTakenItems}">
+                <td th:text="${item?.type?.name}"></td>
+                <td th:text="${item?.storage?.name}"></td>
+                <td th:text="${item.count}"></td>
+                <td>
+                    <div th:switch="${item.forDestruction}">
+                        <span th:case="true" th:text="#{yes}"></span>
+                        <span th:case="*" th:text="#{no}"></span>
+                    </div>
+                </td>
+                <td>
+                    <div th:switch="${item.returned}">
+                        <span th:case="true" th:text="#{yes}"></span>
+                        <span th:case="*" th:text="#{no}"></span>
+                    </div>
+                </td>
+                <td>
+                    <div th:switch="${item.inStock}">
+                        <span th:case="true" th:text="#{yes}"></span>
+                        <span th:case="*" th:text="#{no}"></span>
+                    </div>
+                </td>
+                <td class="hidden-element txtRight">
+                    <div class="row">
+                        <div class="col-11"></div>
+                        <div class="col-1 right-align action-menu-list-fs">
+                            <i th:title="#{menu}" th:attr="data-action='toggle-menu',data-id='acp-taken-items-actions-'+${item.id}" class="zmdi zmdi-menu"></i>
+                            <div th:id="'acp-taken-items-actions-'+${item.id}" class="action-menu none m_L25-i">
+                                <span>
+                                    <i class="icon-pencil"></i>
+                                     <a class="b0" th:title="#{btn.edit}" href="javascript:void(0);" th:text="#{btn.edit}"
+                                        th:attr="data-action='edit-acp-taken-item-dialog-show',data-url=@{/acp/taken-items/open-modal},data-id=${item.id}">
+                                    </a>
+                                </span>
+                                <span>
+                                    <i class="icon-trash"></i>
+                                    <a class="b0 confirm" th:title="#{btn.delete}" href="javascript:void(0);" th:text="#{btn.delete}"
+                                       th:attr="data-action='acp-taken-item-delete',data-url=@{/acp/taken-items/delete},
+                                       data-id=${item.id},data-message=#{delete.taken.item.message }">
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>

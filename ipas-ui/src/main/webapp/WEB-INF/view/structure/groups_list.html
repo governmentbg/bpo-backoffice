@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg">
+<head th:replace="base/template :: head(title=#{groups.list.title})"></head>
+<body class="dark">
+
+<header class="app-header" th:replace="base/header"></header>
+
+<div class="app-body" th:with="securityRole=${T( bg.duosoft.ipas.enums.security.SecurityRole)}">
+    <div class="left-sidebar">
+        <div id="psb" class="ps--active-y">
+        </div><!-- #psb -->
+    </div><!-- .left-sidebar -->
+    <!-- ********************************************************** Main body -->
+    <main class="main">
+        <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+        <div class="inner">
+            <div class="panel" id="groupPanel">
+
+
+                <div class="col-12 center">
+                    <div>
+                        <h1 class="inline-block section-header" th:text="#{groups.list.title}"></h1>
+                    </div>
+                </div>
+
+                <div id="content" class="m_T10">
+                    <div class="row">
+                        <div>
+                            <span th:text="'Общ брой: '"></span>
+                            <span th:text="${groupsMap.size()}"></span>
+                        </div>
+                    </div>
+                    <div class="row m_T5">
+                        <table class="simple bpo">
+                            <thead>
+                            <tr>
+                                <th style="width: 50px" th:text="#{number}"></th>
+                                <th  th:text="#{group.name}"></th>
+                                <th style="width: 70px" th:text="#{options.label}"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="group,groupStat : ${groupsMap}">
+                                <td>
+                                    <span th:text="${groupStat.count}"></span>
+                                </td>
+                                <td>
+                                    <span th:text="${group.value}"></span>
+                                </td>
+                                <td class="p_0 center">
+                                    <div th:remove="tag" th:if="${#securityUtil.hasRights(securityRole.StructureGroupView)}">
+                                        <a th:replace="~{base/form/button :: material-table-btn(title = #{btn.view}, href = @{/structure/group/view/{id}(id=${group.key})} , icon = 'visibility')}"></a>
+                                    </div>
+                                    <div th:remove="tag" th:if="${#securityUtil.hasRights(securityRole.StructureGroupEdit)}">
+                                        <a th:replace="~{base/form/button :: material-table-btn(title = #{btn.edit}, href = @{/structure/group/edit/{id}(id=${group.key})} , icon = 'edit')}"></a>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class=" m_T10" th:if="${#securityUtil.hasRights(securityRole.StructureGroupEdit)}">
+                        <div>
+                            <a th:replace="~{base/form/button :: material-btn(label = #{group.add}, href = @{/structure/group/new} , icon = 'add')}"></a>
+                        </div>
+                    </div>
+                </div>
+                <br>
+            </div>
+        </div>
+    </main>
+
+</div>
+
+<!-- JQuery files -->
+<footer class="page-footer" th:replace="base/footer"></footer>
+<div th:replace="base/template :: js-footer" th:remove="tag"></div>
+
+<script th:inline="javascript">
+    $(document).ready(function () {
+        executeCommonInitialization({
+            initializeFormElementsWrapper: "#groupPanel",
+        });
+    });
+</script>
+
+</body>
+</html>

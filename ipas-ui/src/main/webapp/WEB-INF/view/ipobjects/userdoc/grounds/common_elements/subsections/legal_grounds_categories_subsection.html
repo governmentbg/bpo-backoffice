@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="legal-grounds-categories-subsection(rootGround,panel,rootGroundId,earlierLegalGroundCategories)">
+
+    <input id="panel-on-category-change" type="hidden" class="form-ignore" th:value="${panel}">
+    <input id="rootGroundId-on-category-change" type="hidden" class="form-ignore" th:value="${rootGroundId}">
+    <input id="url-on-category-change" type="hidden" class="form-ignore" th:attr="data-url=@{/{panel}/change-category-type(panel=${panel})}">
+    <div class="m_B20">
+        <th:block th:each="legalGroundCategory,iter : ${earlierLegalGroundCategories}">
+            <div th:replace="~{base/form/radio :: basic(name = 'legalGroundCategory', label = ${legalGroundCategory.name}, value = ${legalGroundCategory.code}, checked = ${legalGroundCategory.code == rootGround.markGroundData?.legalGroundCategory}, classes = 'row col-12')}"></div>
+        </th:block>
+        <div th:replace="base/validation :: validation-message(${validationErrors},'userdoc-ground-legal-categories')"></div>
+    </div>
+</div>
+</body>
+</html>

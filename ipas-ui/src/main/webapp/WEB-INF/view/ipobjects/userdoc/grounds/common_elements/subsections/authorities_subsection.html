@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="applicant-authorities-subsection(rootGround,panel)" th:with="objectsUtils=${T(java.util.Objects)}">
+    <div class="col-12 m_T5" th:if="${objectsUtils.nonNull(applicantAuthorities)}">
+        <div th:replace="~{base/form/select :: object(
+                            id = 'select-applicant-authority', label = #{'applicant.authority.label.'+${panel}},
+                            name = 'rootGround.applicantAuthority', emptySelectOption = #{default.select.option},
+                            objects = ${applicantAuthorities},
+                            valuePointer = 'id', textPointer = 'name',
+                            selected = ${rootGround.applicantAuthority})}">
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

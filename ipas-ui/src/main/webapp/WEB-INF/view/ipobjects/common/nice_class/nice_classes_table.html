@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="nice-classes-table(niceClassList, niceConfig)" class="m_B10" th:if="${niceClassList != null && !T(org.springframework.util.CollectionUtils).isEmpty(niceClassList)}">
+    <div>
+        <a th:replace="~{base/form/button :: material-btn(label = #{mark.nice.btn.verify.all.terms}, dataAction = 'verify-all-nice-classes', dataUrl = @{/nice-class/{niceListType}/verify-panel(niceListType=${niceConfig.niceListType})}, icon = 'done_all', classes = 'right m_L10')}"></a>
+        <th:block th:if="${allowEdit}">
+            <a th:if="${allowEdit}"
+               th:replace="~{base/form/button :: material-btn(label = #{mark.nice.btn.classes.to.lower}, dataAction = 'edit-terms-tolower', dataUrl = @{/nice-class/{niceListType}/edit-terms-tolower(niceListType=${niceConfig.niceListType})}, icon = 'arrow_downward', classes = 'right m_L10 hidden-element')}"></a>
+        </th:block>
+        <th:block th:if="${niceConfig.hasAddition}">
+            <a th:replace="~{base/form/button :: material-btn(label = #{btn.add}, dataAction = 'open-nice-class-modal', dataUrl = @{/nice-class/{niceListType}/open-modal(niceListType=${niceConfig.niceListType})}, icon='add', classes = 'right hidden-element')}"></a>
+        </th:block>
+        <th:block th:if="${niceConfig.hasShowHide}">
+            <a th:replace="~{base/form/button :: material-btn(label = #{btn.hide.table}, dataAction = 'hide-table', icon='arrow_drop_up', classes = 'right')}"></a>
+            <a th:replace="~{base/form/button :: material-btn(label = #{btn.show.table}, dataAction = 'show-table', icon='arrow_drop_down', classes = 'none right')}"></a>
+        </th:block>
+    </div>
+    <div style="color:red" th:if="${tmClassError}" th:text="#{mark.tmclass.error}"></div>
+    <div style="color:red" th:if="${niceConfig.hasReloadRequested && emptyRequestedListWarn != null && emptyRequestedListWarn == true}" th:text="#{mark.requested.emptyList.warn}"></div>
+    <table class="simple">
+        <thead>
+        <tr>
+            <th th:text="#{mark.nice.class}">Клас</th>
+            <th th:text="#{mark.nice.gs}">Стоки/Услуги</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr th:each="niceClass : ${niceClassList}">
+                <td class="td-nice-class-nbr" style="vertical-align: top;" th:text="${niceClass.niceClassNbr}"></td>
+                <td class="td-nice-class-terms">
+                    <ul class="m_T0">
+                        <li th:each="term, iteration : ${niceClass.terms}" th:class="|tc-${term.termStatus} tc-base|">
+                            <span th:attr="data-idx=${iteration.index},data-url=@{/nice-class/{niceListType}/replace-term-text(niceListType=${niceConfig.niceListType})}"
+                                  th:class="${allowEdit == true and (niceClass.allTermsDeclaration == null or  niceClass.allTermsDeclaration == false) ? 'term-editable' :''}" th:text="${term.termText}"></span>
+
+                            <span class="hidden-element" th:if="${allowEdit == true and (niceClass.allTermsDeclaration == null or  niceClass.allTermsDeclaration == false)}">
+                                    <a style="border: 0" th:title="#{btn.delete}" href="javascript:void(0);"
+                                       th:attr="data-action='delete-nice-class-term',data-id=${niceClass.niceClassNbr},data-idx=${iteration.index},data-url=@{/nice-class/{niceListType}/delete-nice-class-term(niceListType=${niceConfig.niceListType})}">
+                                        <i>X</i>
+                                     </a>
+
+                                    <a style="border: 0" th:title="${term.matchedTermsString}" href="javascript:void(0);" th:if="${term.termStatus eq 'editable'}"
+                                       th:attr="data-action='edit-nice-class-term',data-id=${niceClass.niceClassNbr},data-idx=${iteration.index},data-url=@{/nice-class/{niceListType}/edit-nice-class-term(niceListType=${niceConfig.niceListType})}">
+                                        <i class="icon-pencil"></i>
+                                     </a>
+                                </span>
+                        </li>
+                    </ul>
+                    <p th:if="${niceConfig.hasDeclaration}">
+                        <label class="input-field">
+                            <input disabled="disabled" type="checkbox" class="filled-in nice-declaration-check"
+                                   th:attr="data-num=${niceClass.niceClassNbr},data-url=@{/nice-class/{niceListType}/class-declaration-change(niceListType=${niceConfig.niceListType})}"
+                                   th:checked="${niceClass.allTermsDeclaration != null and niceClass.allTermsDeclaration}">
+                            <span style="font-size: 10pt; font-weight: bold" th:text="#{mark.nice.allTermsDeclaration}">Декларирани намерения да се обхванат всички стоки/услуги включени в азбучния списък на този клас </span>
+                        </label>
+                    </p>
+                </td>
+                <td class="inline-block">
+                    <div class="row">
+                        <div class="col-11"></div>
+                        <div class="col-1 right-align action-menu-wrapper" th:with="menuId=|nice-class-menu-${niceClass.niceClassNbr}-${niceConfig.niceListType}|">
+                            <i th:title="'Меню'" th:attr="data-action='toggle-menu',data-id=${menuId}" class="zmdi zmdi-menu"></i>
+                            <div th:id="${menuId}" class="action-menu none m_L25-i">
+                                <span>
+                                    <i class="material-icons">done_all</i>
+                                    <a class="b0" th:title="#{mark.nice.btn.verify.terms}" href="javascript:void(0);" th:text="#{mark.nice.btn.verify.terms}"
+                                       th:attr="data-action='verify-nice-class',data-id=${niceClass.niceClassNbr},data-url=@{/nice-class/{niceListType}/verify(niceListType=${niceConfig.niceListType})}">
+                                    </a>
+                                </span>
+                                <span class="hidden-element" th:if="${niceConfig.hasFetch}">
+                                    <i class="material-icons">import_export</i>
+                                    <a class="b0" th:title="#{mark.nice.btn.fetch.terms}" href="javascript:void(0);" th:text="#{mark.nice.btn.fetch.terms}"
+                                       th:attr="data-action='fetch-class-terms',data-id=${niceClass.niceClassNbr},data-fetch='alpha',data-url=@{/nice-class/{niceListType}/fetch-class-terms(niceListType=${niceConfig.niceListType})}">
+                                    </a>
+                                </span>
+                                <span class="hidden-element" th:if="${niceConfig.hasFetch}">
+                                    <i class="material-icons">import_export</i>
+                                    <a class="b0" th:title="#{mark.nice.btn.fetch.heading}" href="javascript:void(0);" th:text="#{mark.nice.btn.fetch.heading}"
+                                       th:attr="data-action='fetch-class-terms',data-id=${niceClass.niceClassNbr},data-fetch='heading',data-url=@{/nice-class/{niceListType}/fetch-class-terms(niceListType=${niceConfig.niceListType})}">
+                                    </a>
+                                </span>
+                                <span>
+                                    <i class="material-icons">text_format</i>
+                                    <a class="b0" th:title="#{mark.nice.btn.edit.text}" href="javascript:void(0);" th:text="#{mark.nice.btn.edit.text}"
+                                       th:attr="data-action='edit-terms-text',data-id=${niceClass.niceClassNbr},data-url=@{/nice-class/{niceListType}/edit-terms-text(niceListType=${niceConfig.niceListType})}">
+                                    </a>
+                                </span>
+                                <span class="hidden-element" th:if="${niceConfig.hasTranslate}">
+                                    <i class="material-icons">translate</i>
+                                    <a class="b0" th:title="#{mark.nice.btn.translate}" href="javascript:void(0);" th:text="#{mark.nice.btn.translate}"
+                                       th:attr="data-action='translate-nice-classes',data-id=${niceClass.niceClassNbr},data-url=@{/nice-class/{niceListType}/translate-nice(niceListType=${niceConfig.niceListType})}">
+                                    </a>
+                                </span>
+                                <span class="hidden-element" th:if="${allowEdit == true}">
+                                    <i class="material-icons">arrow_downward</i>
+                                    <a class="b0" th:title="#{mark.nice.btn.to.lower}" href="javascript:void(0);" th:text="#{mark.nice.btn.to.lower}"
+                                       th:attr="data-action='edit-terms-tolower',data-id=${niceClass.niceClassNbr},data-url=@{/nice-class/{niceListType}/edit-terms-tolower(niceListType=${niceConfig.niceListType})}">
+                                    </a>
+                                </span>
+                                <span class="hidden-element" th:if="${allowEdit == true and niceConfig.hasReloadOriginal}">
+                                    <i class="material-icons">list</i>
+                                    <a class="b0" th:title="#{mark.nice.btn.select.original}" href="javascript:void(0);" th:text="#{mark.nice.btn.select.original}"
+                                       th:attr="data-action='select-from-class',data-id=${niceClass.niceClassNbr},data-url=@{/nice-class/{niceListType}/select-from-original-class(niceListType=${niceConfig.niceListType})}">
+                                    </a>
+                                </span>
+                                <span class="hidden-element" th:if="${allowEdit == true and niceConfig.hasReloadRequested}">
+                                    <i class="material-icons">list</i>
+                                    <a class="b0" th:title="#{mark.nice.btn.select.requested}" href="javascript:void(0);" th:text="#{mark.nice.btn.select.requested}"
+                                       th:attr="data-action='select-from-class',data-id=${niceClass.niceClassNbr},data-url=@{/nice-class/{niceListType}/select-from-requested-class(niceListType=${niceConfig.niceListType})}">
+                                    </a>
+                                </span>
+                                <span class="hidden-element" th:if="${allowEdit == true}">
+                                    <i class="icon-trash"></i>
+                                    <a class="b0" th:title="#{btn.delete}" href="javascript:void(0);" th:text="#{btn.delete}"
+                                       th:attr="data-action='delete-nice-class',data-id=${niceClass.niceClassNbr},data-url=@{/nice-class/{niceListType}/delete-nice-classes(niceListType=${niceConfig.niceListType})}">
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div style="color:red" th:if="${niceConfig.hasReloadRequested && emptyRequestedListWarn != null && emptyRequestedListWarn == true}" th:text="#{mark.requested.emptyList.warn}"></div>
+    <span th:if="${fetchClassEmpty != null and fetchClassEmpty}"
+          style="display: none" th:attr="data-message=#{mark.nice.btn.fetch.terms.error.message}" class="fetch-terms-error"></span>
+</div>
+</body>
+</html>

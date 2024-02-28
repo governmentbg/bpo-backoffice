@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="base/template :: head(title = (#{offidoc.breadcrumb.prefix} + ' ' + ${offidoc.offidocId.createFilingNumber()}))"></head>
+
+<!--/*@thymesVar id="panelEnum" type="com.duosoft.ipas.enums.OffidocPanel"*/-->
+<!--/*@thymesVar id="offidoc" type="bg.duosoft.ipas.core.model.offidoc.COffidoc"*/-->
+<body class="dark left-sidebar-show" th:with="panelEnum=${T(com.duosoft.ipas.enums.OffidocPanel)}">
+
+<th:block th:with="panelsList=(${{panelEnum.MainData.code(),
+                                 panelEnum.GenerateFiles.code(),
+                                 panelEnum.PublishedDecision.code(),
+                                 panelEnum.Decisions.code(),
+                                 panelEnum.Process.code()}
+                                 })">
+
+    <div th:replace="ipobjects/offidoc/offidoc_view_page :: content(${panelsList},'offidoc')"></div>
+
+</th:block>
+
+</body>
+</html>

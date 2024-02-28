@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="modal(filingNumber, process, childrenIds)"
+     th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)},
+     objectsUtils=${T(java.util.Objects)}">
+
+    <div th:id="userdoc-related-object-process-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="#{reception.udoc.tree.modal.title}"></h4>
+            </div>
+            <div class="m_T10">
+                <div th:replace="ipobjects/common/reception/userdoc/process/process_tree :: main-object(${filingNumber},${process},${childrenIds})"></div>
+            </div>
+        </div>
+        <div class="modal-footer row">
+            <div class="position-relative">
+                <div class="position-absolute left" style="margin-left: 20px;margin-top: -20px;">
+                    <span style="border: 1px solid #ffffff; padding-left:30px " class="m_R10 m-green lighten-4"></span>
+                    <span style="font-size: 12px" th:text="'Въведени преди по-малко от 30 дни'"></span>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <button th:attr="data-action='save-userdoc-related-object', data-url=@{/reception/create/save-related-userdoc-object}" th:text="#{btn.save}" type="button" class="button sm-icn-save wmin_130"></button>
+                <button th:text="#{btn.cancel}" th:type="button" class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

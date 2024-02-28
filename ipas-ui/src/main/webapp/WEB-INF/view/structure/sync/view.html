@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg">
+
+<head th:replace="base/template :: head(title='Потребители и права')"></head>
+
+<body class="dark left-sidebar-show">
+
+<header class="app-header" th:replace="base/header"></header>
+
+<div class="app-body">
+    <div th:replace="~{structure/sync/left_sidebar :: sidebar}"></div>
+    <main class="main">
+        <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+        <div class="inner continer">
+            <div th:replace="base/toast/message :: info(message=#{users.sync.info.message},removeCloseButton = true)"></div>
+            <div class="panel">
+                <div class="center">
+                    <h1 class="section-header" th:text="#{users.sync.title}"></h1>
+                </div>
+                <div th:id="users-sync-table-wrapper" th:attr="data-url=@{/users/sync/update-table}">
+                    <div th:replace="structure/sync/table :: table(users=${users},count=${count},usersFilter=${usersFilter})"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div th:if="${null != synchronizedUsers}">
+    <div th:replace="structure/sync/success_modal :: modal(${synchronizedUsers})"></div>
+</div>
+
+<footer class="page-footer" th:replace="base/footer"></footer>
+<div th:replace="base/template :: js-footer" th:remove="tag"></div>
+</body>
+</html>

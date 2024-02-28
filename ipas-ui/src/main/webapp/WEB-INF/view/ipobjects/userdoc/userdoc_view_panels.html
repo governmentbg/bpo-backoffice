@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="userdoc" type="bg.duosoft.ipas.core.model.userdoc.CUserdoc"*/-->
+<div th:remove="tag" th:fragment="userdoc-type-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${T(com.duosoft.ipas.enums.UserdocPanel).UserdocTypeData.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.userdoc.type},panel=${panelName},actionURL=@{/userdoc/change-userdoc-type},initURL=null,editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/type/userdoc_type_panel :: panel(${userdoc},${userdocTypeMap})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="main-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${T(com.duosoft.ipas.enums.UserdocPanel).UserdocMainData.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.userdoc.main.data},panel=${panelName},actionURL=@{/userdoc/main-data/edit-data},initURL=@{/{type}/init-panel-session-objects(type=${panelPrefix})},editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/main_data/main_data_panel :: panel(${userdoc})"></div>
+        </div>
+    </div>
+</div>
+
+
+
+<div th:remove="tag" th:fragment="userdoc-patent-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${T(com.duosoft.ipas.enums.UserdocPanel).UserdocPatentData.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.userdoc.patent.data},panel=${panelName},actionURL=@{/userdoc-patent-data/edit},initURL=null,editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/patent_data/patent_data :: panel(${userdoc.patentData})"></div>
+        </div>
+    </div>
+</div>
+
+
+<div th:remove="tag" th:fragment="bankruptcy">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${T(com.duosoft.ipas.enums.UserdocPanel).Bankruptcy.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.userdoc.bankruptcy},panel=${panelName},actionURL=@{/userdoc/bankruptcy/edit-panel},initURL=@{/{type}/init-panel-session-objects(type=${panelPrefix})},editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/recordal/bankruptcy/bankruptcy_panel :: bankruptcy(${userdoc})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="change">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${T(com.duosoft.ipas.enums.UserdocPanel).Change.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.userdoc.change},panel=${panelName},actionURL=@{/userdoc/change_name_or_address/edit-panel},initURL=@{/{type}/init-panel-session-objects(type=${panelPrefix})},editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/recordal/change_name_or_address/change_name_or_address_panel :: change-name-or-address(${userdoc})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="license">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${T(com.duosoft.ipas.enums.UserdocPanel).Licenses.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.userdoc.license},panel=${panelName},actionURL=@{/userdoc/license/edit-panel},initURL=@{/{type}/init-panel-session-objects(type=${panelPrefix})},editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/recordal/license/license_panel :: license(${userdoc})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="pledge">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${T(com.duosoft.ipas.enums.UserdocPanel).Pledge.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.userdoc.pledge},panel=${panelName},actionURL=@{/userdoc/pledge/edit-panel},initURL=@{/{type}/init-panel-session-objects(type=${panelPrefix})},editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/recordal/pledge/pledge_panel :: pledge(${userdoc})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="entry-changes">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${T(com.duosoft.ipas.enums.UserdocPanel).Entry_changes.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.userdoc.entry.changes},panel=${panelName},actionURL=@{/userdoc/entry_changes/edit-panel},initURL=@{/{type}/init-panel-session-objects(type=${panelPrefix})},editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/recordal/entry_changes/entry_changes_panel :: entry-changes(${userdoc})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="renewal">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${T(com.duosoft.ipas.enums.UserdocPanel).Renewal.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.userdoc.renewal},panel=${panelName},actionURL=@{/userdoc/renewal/edit-panel},initURL=@{/{type}/init-panel-session-objects(type=${panelPrefix})},editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/recordal/renewal/renewal_panel :: renewal(${userdoc})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="security-measure">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${T(com.duosoft.ipas.enums.UserdocPanel).Security_measure.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.userdoc.security.measure},panel=${panelName},actionURL=@{/userdoc/security_measure/edit-panel},initURL=@{/{type}/init-panel-session-objects(type=${panelPrefix})},editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/recordal/security_measure/security_measure_panel :: security-measure(${userdoc})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="change-representative">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${T(com.duosoft.ipas.enums.UserdocPanel).Change_representative.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.userdoc.change.representative},panel=${panelName},actionURL=@{/userdoc/change_representative/edit-panel},initURL=@{/{type}/init-panel-session-objects(type=${panelPrefix})},editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/recordal/change_representative/change_representative_panel :: change-representative(${userdoc})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="change-correspondence-address">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${T(com.duosoft.ipas.enums.UserdocPanel).Change_correspondence_address.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.userdoc.change.ca},panel=${panelName},actionURL=@{/userdoc/change_correspondence_address/edit-panel},initURL=@{/{type}/init-panel-session-objects(type=${panelPrefix})},editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/recordal/change_correspondence_address/change_correspondence_address_panel :: change-correspondence-address(${userdoc})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="claim">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${T(com.duosoft.ipas.enums.UserdocPanel).Claim.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.userdoc.claim},panel=${panelName},actionURL=@{/userdoc/claim/edit-panel},initURL=null,editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/claim/claim_panel :: claim(${userdoc})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="revocation">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelPointer = 'revocation',panelName=${T(com.duosoft.ipas.enums.UserdocPanel).Revocation.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.userdoc.revocation},panel=${panelName},actionURL=@{/{panelPointer}/save-userdoc-root-grounds(panelPointer=${panelPointer})},initURL=@{/{panelPointer}/init-panel-session-objects(panelPointer=${panelPointer})},editEnabled=${T(bg.duosoft.ipas.util.userdoc.UserdocGroundsUtils).userdocGroundsEditEnabled(editEnabled,userdoc.userdocRootGrounds,groundsVersion)})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/grounds/revocation_panel :: revocation(${userdoc.userdocRootGrounds},${panelPointer})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="objection">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelPointer = 'objection',panelName=${T(com.duosoft.ipas.enums.UserdocPanel).Objection.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.userdoc.objection},panel=${panelName},actionURL=@{/{panelPointer}/save-userdoc-root-grounds(panelPointer=${panelPointer})},initURL=@{/{panelPointer}/init-panel-session-objects(panelPointer=${panelPointer})},editEnabled=${T(bg.duosoft.ipas.util.userdoc.UserdocGroundsUtils).userdocGroundsEditEnabled(editEnabled,userdoc.userdocRootGrounds,groundsVersion)})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/grounds/objection_panel :: objection(${userdoc.userdocRootGrounds},${panelPointer})"></div>
+        </div>
+    </div>
+</div>
+
+
+<div th:remove="tag" th:fragment="spc-annulment-request">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelPointer = 'spc-annulment-request',panelName=${T(com.duosoft.ipas.enums.UserdocPanel).SpcAnnulmentRequest.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.userdoc.spc.annulment},panel=${panelName},actionURL=@{/{panelPointer}/save-userdoc-root-grounds(panelPointer=${panelPointer})},initURL=@{/{panelPointer}/init-panel-session-objects(panelPointer=${panelPointer})},editEnabled=${T(bg.duosoft.ipas.util.userdoc.UserdocGroundsUtils).userdocGroundsEditEnabled(editEnabled,userdoc.userdocRootGrounds,groundsVersion)})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/grounds/spc_annulment_request_panel :: spc-annulment(${userdoc.userdocRootGrounds},${panelPointer})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="patent-annulment-request">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelPointer = 'patent-annulment-request',panelName=${T(com.duosoft.ipas.enums.UserdocPanel).PatentAnnulmentRequest.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.userdoc.patent.annulment},panel=${panelName},actionURL=@{/{panelPointer}/save-userdoc-root-grounds(panelPointer=${panelPointer})},initURL=@{/{panelPointer}/init-panel-session-objects(panelPointer=${panelPointer})},editEnabled=${T(bg.duosoft.ipas.util.userdoc.UserdocGroundsUtils).userdocGroundsEditEnabled(editEnabled,userdoc.userdocRootGrounds,groundsVersion)})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/grounds/patent_annulment_request_panel :: patent-annulment(${userdoc.userdocRootGrounds},${panelPointer})"></div>
+        </div>
+    </div>
+</div>
+
+
+
+<div th:remove="tag" th:fragment="utility-model-annulment-request">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelPointer = 'utility-model-annulment-request',panelName=${T(com.duosoft.ipas.enums.UserdocPanel).UtilityModelAnnulmentRequest.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.userdoc.um.annulment},panel=${panelName},actionURL=@{/{panelPointer}/save-userdoc-root-grounds(panelPointer=${panelPointer})},initURL=@{/{panelPointer}/init-panel-session-objects(panelPointer=${panelPointer})},editEnabled=${T(bg.duosoft.ipas.util.userdoc.UserdocGroundsUtils).userdocGroundsEditEnabled(editEnabled,userdoc.userdocRootGrounds,groundsVersion)})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/grounds/utility_model_annulment_request_panel :: utility-model-annulment(${userdoc.userdocRootGrounds},${panelPointer})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="design-annulment-request">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelPointer = 'design-annulment-request',panelName=${T(com.duosoft.ipas.enums.UserdocPanel).DesignAnnulmentRequest.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.userdoc.design.annulment},panel=${panelName},actionURL=@{/{panelPointer}/save-userdoc-root-grounds(panelPointer=${panelPointer})},initURL=@{/{panelPointer}/init-panel-session-objects(panelPointer=${panelPointer})},editEnabled=${T(bg.duosoft.ipas.util.userdoc.UserdocGroundsUtils).userdocGroundsEditEnabled(editEnabled,userdoc.userdocRootGrounds,groundsVersion)})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/grounds/design_annulment_request_panel :: design-annulment(${userdoc.userdocRootGrounds},${panelPointer})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="court-appeals">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${T(com.duosoft.ipas.enums.UserdocPanel).CourtAppeals.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.userdoc.court.appeals},panel=${panelName},actionURL=@{/userdoc-court-appeals/save-userdoc-court-appeals},initURL=@{/{type}/init-panel-session-objects(type=${panelPrefix})},editEnabled=${editEnabled},editEnabled=${editEnabled})">
+        </div> <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/court_appeal/court_appeals :: court_appeals(${userdoc.userdocCourtAppeals})"></div>
+        </div>
+    </div>
+</div>
+
+
+<div th:remove="tag" th:fragment="reviewer-squad">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${T(com.duosoft.ipas.enums.UserdocPanel).ReviewerSquad.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.userdoc.reviewer.squad},panel=${panelName},actionURL=@{/userdoc-reviewer-squad/save-userdoc-reviewer},initURL=@{/{type}/init-panel-session-objects(type=${panelPrefix})},editEnabled=${editEnabled},editEnabled=${editEnabled})">
+        </div> <div th:id="|panel-body-${panelName}|">
+        <div th:replace="ipobjects/userdoc/reviewers/reviewer_squad :: reviewer_squad(${userdoc.reviewers})"></div>
+    </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="opposition">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelPointer = 'opposition',panelName=${T(com.duosoft.ipas.enums.UserdocPanel).Opposition.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.userdoc.opposition},panel=${panelName},actionURL=@{/{panelPointer}/save-userdoc-root-grounds(panelPointer=${panelPointer})},initURL=@{/{panelPointer}/init-panel-session-objects(panelPointer=${panelPointer})},editEnabled=${T(bg.duosoft.ipas.util.userdoc.UserdocGroundsUtils).userdocGroundsEditEnabled(editEnabled,userdoc.userdocRootGrounds,groundsVersion)})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/grounds/opposition_panel :: opposition(${userdoc.userdocRootGrounds},${panelPointer})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="invalidity">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelPointer = 'invalidity',panelName=${T(com.duosoft.ipas.enums.UserdocPanel).Invalidity.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.userdoc.invalidity},panel=${panelName},actionURL=@{/{panelPointer}/save-userdoc-root-grounds(panelPointer=${panelPointer})},initURL=@{/{panelPointer}/init-panel-session-objects(panelPointer=${panelPointer})},editEnabled=${T(bg.duosoft.ipas.util.userdoc.UserdocGroundsUtils).userdocGroundsEditEnabled(editEnabled,userdoc.userdocRootGrounds,groundsVersion)})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/grounds/invalidity_panel :: invalidity(${userdoc.userdocRootGrounds},${panelPointer})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="transfer">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${T(com.duosoft.ipas.enums.UserdocPanel).Transfer.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.userdoc.transfer},panel=${panelName},actionURL=@{/userdoc/transfer/edit-panel},initURL=@{/{type}/init-panel-session-objects(type=${panelPrefix})},editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/recordal/transfer/transfer_panel :: transfer(${userdoc})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="withdrawal">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${T(com.duosoft.ipas.enums.UserdocPanel).Withdrawal.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.userdoc.withdrawal},panel=${panelName},actionURL=@{/userdoc/withdrawal/edit-panel},initURL=@{/{type}/init-panel-session-objects(type=${panelPrefix})},editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/recordal/withdrawal/withdrawal_panel :: withdrawal(${userdoc})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="genericRecordal">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${T(com.duosoft.ipas.enums.UserdocPanel).GenericRecordal.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.userdoc.recordalData},panel=${panelName},actionURL=@{/userdoc/generic-recordal/edit-panel},initURL=@{/{type}/init-panel-session-objects(type=${panelPrefix})},editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/recordal/generic_recordal/generic_recordal_panel :: generic_recordal(${userdoc})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="international-registration">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}"
+         th:with="panelName=${T(com.duosoft.ipas.enums.UserdocPanel).InternationalRegistration.code()}">
+        <div th:replace="ipobjects/common/base/panel_header_without_buttons :: panel-header(title=#{panel.title.international.registration})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/international_registration/international_registration_panel :: international-registration(${userdoc})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="service-scope">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${T(com.duosoft.ipas.enums.UserdocPanel).ServiceScope.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.userdoc.serviceScope},panel=${panelName},actionURL=@{/userdoc/service-scope/edit-panel},initURL=@{/{type}/init-panel-session-objects(type=${panelPrefix})},editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/service_scope/service_scope_panel :: service-scope(${userdoc})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="international-service-scope">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}"
+    th:with="panelName=${T(com.duosoft.ipas.enums.UserdocPanel).InternationalNiceClassesRestrictions.code()},
+    niceListType=${T(com.duosoft.ipas.webmodel.NiceListType).USERDOC_REQUESTED}">
+        <div th:replace="ipobjects/common/base/panel_header_without_buttons :: panel-header(title=#{panel.title.international.nice.classes.restrictions})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/common/nice_class/international_nice_classes_panel :: international-nice-classes(internationalNiceClasses=${userdoc.internationalNiceClasses}, niceListType=${niceListType})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="approved">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${T(com.duosoft.ipas.enums.UserdocPanel).Approved.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.userdoc.approved},panel=${panelName},actionURL=@{/userdoc/approved/edit-panel},initURL=@{/{type}/init-panel-session-objects(type=${panelPrefix})},editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/approved/approved_panel :: approved(${userdoc})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="person-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}" th:with="panelName=${T(com.duosoft.ipas.enums.UserdocPanel).Persons.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.person},panel=${panelName},actionURL=@{/person/update-person-data},initURL=@{/{type}/init-panel-session-objects(type=${panelPrefix})},editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/userdoc/person/person_panel :: userdoc-persons(${userdoc})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="process-data" th:with="panelName=${T(com.duosoft.ipas.enums.UserdocPanel).Process.code()}">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName},data-url=@{/process/load-panel},data-process=|${userdoc.processSimpleData.processId.processType}-${userdoc.processSimpleData.processId.processNbr}|">
+        <div th:replace="ipobjects/common/process/process_panel :: loader"></div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="payments-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName},data-url=@{/userdoc-payments/load-panel}" th:with="panelName=${T(com.duosoft.ipas.enums.UserdocPanel).Payments.code()}">
+        <div th:replace="ipobjects/common/payments/payments_panel :: payments-loader"></div>
+    </div>
+</div>
+
+
+<div th:remove="tag" th:fragment="history-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName},data-url=@{/userdoc-history/load-panel}" th:with="panelName=${T(com.duosoft.ipas.enums.UserdocPanel).History.code()}">
+        <div th:replace="ipobjects/common/history/history_panel :: history-loader"></div>
+    </div>
+</div>
+
+
+</body>
+</html>

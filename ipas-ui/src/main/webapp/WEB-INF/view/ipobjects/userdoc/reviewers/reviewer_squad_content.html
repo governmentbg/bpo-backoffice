@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:remove="tag" th:fragment="reviewer_squad_content(reviewers)">
+
+    <div class="row hidden-element m_B10">
+        <div class="col-6">
+            <div th:replace="~{base/form/input :: text(id = 'autocomplete-add-reviewer', label = 'Служител', value = '', url = @{/user/users-autocomplete}, classes = 'autocomplete-user reviewers')}"></div>
+        </div>
+        <div class="col-6">
+            <button id="add-reviewer-button" th:text="#{btn.add}"
+                    th:attr="data-action='add-reviewer',data-url=@{/userdoc-reviewer-squad/add-reviewer}" th:type="button"
+                    class="button sm-icn-add m_T10">
+            </button>
+        </div>
+    </div>
+    <div th:if="${!#lists.isEmpty(validationErrors)}" th:id="userdoc-reviewers-errors">
+        <div th:replace="base/validation :: validation-message(${validationErrors},'userdoc-reviewers-errors')"></div>
+    </div>
+    <div th:if="${!#lists.isEmpty(reviewers)}">
+        <div class="col-12">
+            <table class="simple">
+                <thead>
+                <tr>
+                    <th th:text="'Служител'" style="width: 77%"></th>
+                    <th th:text="'Председател'"  class="txtRight"></th>
+                    <th class="hidden-element txtRight"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="reviewer : ${reviewers}">
+                    <td th:text="${reviewer.user.userName}"></td>
+                    <td class="txtRight">
+                            <div th:replace="~{base/form/checkbox :: basic(id =${reviewer.user.userId},url=@{/userdoc-reviewer-squad/main-reviewer-check} ,label = '', isChecked = ${reviewer.main},classes='reviewer-main-checkbox hidden-element')}"></div>
+                    </td>
+                    <td class="hidden-element txtRight">
+                         <span>
+                            <a style="border: 0" th:title="#{btn.delete}" href="javascript:void(0);"
+                               th:attr="data-action='delete-reviewer',data-id=${reviewer.user.userId},data-url=@{/userdoc-reviewer-squad/delete-reviewer}">
+                                 <i class="icon-trash"></i>
+                            </a>
+                        </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

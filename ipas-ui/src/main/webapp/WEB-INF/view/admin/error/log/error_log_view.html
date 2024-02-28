@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg">
+
+<head th:replace="~{base/template :: head(title=#{error.log.view.title})}"></head>
+
+<body class="dark">
+
+<header class="app-header" th:replace="~{base/header}"></header>
+
+<div class="app-body">
+
+    <main class="main" th:with="coreUtils=${T(com.duosoft.ipas.util.CoreUtils)},dateTimeFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT}">
+        <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+        <div class="inner continer">
+            <div class="row">
+                <div class="col-12">
+                    <div class="panel">
+                        <div class="col-12 center">
+                            <div>
+                                <h1 class="section-header" th:text="#{error.log.view.title}"></h1>
+                            </div>
+                            <div>
+                                <h4 class="inline-block" th:text="${#dates.format(errorLog.dateCreated, dateTimeFormatDot)}"></h4>
+                            </div>
+                        </div>
+
+                        <div th:switch="${errorLog != null}">
+                            <div th:case="true" class="m_T20">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <div th:replace="~{base/form/input :: readonly(label = #{error.log.label.view.resolved}, value = (${errorLog.dateResolved == null} ? #{no} : #{yes}))}"></div>
+                                    </div>
+                                    <div class="col-4" th:if="${errorLog.dateResolved != null}">
+                                        <div th:replace="~{base/form/input :: readonly(label = #{error.log.label.view.resolved.date}, value = ${#dates.format(errorLog.dateResolved,dateTimeFormatDot)})}"></div>
+                                    </div>
+                                    <div class="col-4" th:if="${errorLog.dateResolved != null && errorLog.usernameResolved != null}">
+                                        <div th:replace="~{base/form/input :: readonly(label = #{error.log.label.view.resolved.username}, value = ${errorLog.usernameResolved})}"></div>
+                                    </div>
+                                </div>
+                                <div class="row m_T10">
+                                    <div class="col-4">
+                                        <div th:replace="~{base/form/input :: readonly(label = #{error.log.label.view.system}, value = #{'error.log.label.'+${errorLog.about}})}"></div>
+                                    </div>
+                                    <div class="col-4" >
+                                        <div th:replace="~{base/form/input :: readonly(label = #{error.log.label.priority}, value = #{'error.log.priority.filter.'+${errorLog.priority}})}"></div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div th:replace="~{base/form/input :: readonly(label = #{error.log.label.user}, value = ${errorLog.username})}"></div>
+                                    </div>
+                                </div>
+                                <div class="row m_T10">
+                                    <div class="col-12">
+                                        <div th:replace="~{base/form/input :: readonly(label = #{error.log.label.action}, value = ${errorLog.action})}"></div>
+                                    </div>
+                                </div>
+                                <div class="m_T10">
+                                    <div class="row m_B5">
+                                        <div class="col-12">
+                                            <div th:replace="~{base/form/label :: active(title = #{error.log.label.errorMessage})}"></div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <span th:text="${errorLog.errorMessage}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m_T20">
+                                    <div class="row m_B5">
+                                        <div class="col-12">
+                                            <div th:replace="~{base/form/label :: active(title = #{error.log.label.customMessage})}"></div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <span th:utext="${errorLog.customMessage}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m_T20">
+                                    <div class="row m_B5">
+                                        <div class="col-12">
+                                            <div th:replace="~{base/form/label :: active(title = #{error.log.label.instruction})}"></div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <span th:utext="${errorLog.instruction}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row m_T20" th:if="${errorLog.dateResolved != null && errorLog.commentResolved != null && errorLog.commentResolved != ''}">
+                                    <div class="col-12">
+                                        <div th:replace="~{base/form/input :: readonly(label = #{error.log.label.comment}, value = ${errorLog.commentResolved})}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="inline-block m_T20">
+                            <div th:remove="tag" th:if="${errorLog.dateResolved == null}">
+                                <a href="javascript:void(0);" class="button sm-icn-save"
+                                   th:text="#{error.log.btn.mark.as.resolved}"
+                                   th:attr="data-action='open-resolve-error-modal',data-url=@{/admin/error-log/open-modal},data-id=${errorLog.id}">
+                                </a>
+                            </div>
+                            <a href="javascript:void(0);" class="button sm-icn-back"
+                               th:text="#{btn.back}" th:attr="data-action='error-log-back',data-url=@{/admin/error-log/list}">
+                            </a>
+                        </div>
+                        <div th:replace="~{admin/error/log/error_log_table :: filter-params(${errorLogFilter})}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<div th:id="resolve-error-modal-wrapper"></div>
+
+<!-- JQuery files -->
+<footer class="page-footer" th:replace="base/footer"></footer>
+<div th:replace="~{base/template :: js-footer}" th:remove="tag"></div>
+</body>
+</html>

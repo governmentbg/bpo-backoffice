@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="drawings(drawingList,sessionObjectIdentifier)" th:with="fileTyp=${T(bg.duosoft.ipas.util.general.BasicUtils).selectFileTypeOfSessionObjectIdentifier(sessionObjectIdentifier)}">
+    <div class="row m_B10">
+
+        <div class="col-12" th:if="${T(java.util.Objects).nonNull(drawingList) && #lists.isEmpty(drawingList)}">
+            <div th:replace="base/message :: info(#{drawings.not.found.message})"></div>
+        </div>
+        <div class="col-12" th:id="uploaded-drawing-errors-div"></div>
+        <div class="col-12">
+            <div>
+                <div class="inline-block">
+                    <h4 th:classappend="${T(java.util.Objects).nonNull(drawingList) && #lists.isEmpty(drawingList)}?'hidden-element'"  th:text="#{'published.drawings.data.patent_like_short.'+${fileTyp}}"></h4>
+                </div>
+                <div class="inline-block">
+                    <div th:replace="~{base/form/input :: multiple-file(
+                                  id = 'drawing-upload',
+                                  accept = '.jpg, .jpeg, .png, .gif, .bmp',
+                                  name = 'uploadDrawing',
+                                  classes = 'input_file',
+                                  style = 'display:none;',
+                                  urlUpload = @{/patent-like/drawing/load-on-add-complete},
+                                  url = @{/patent-like/drawing/add})}">
+                    </div>
+                    <a th:id="drawing-upload-href" class="btn-floating ipas small waves-effect action-button-bot waves-light hidden-element" th:title="#{btn.add}"
+                       th:attr="data-action='drawing-upload-href'">
+                        <i class="material-icons">add</i>
+                    </a>
+                    <div  class="hidden-element b0 inline-block">
+                        <span th:text="#{drawing.max.file.size.message}"></span>
+                        <span th:text="#{drawing.file.type.message}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <th:block th:each="drawingParent,parentIterator : ${drawingList}" th:if="${parentIterator.index % 4 == 0}">
+            <div class="row">
+                <th:block th:each="drawing,iter2 : ${drawingList}"  th:if="${iter2.index==parentIterator.index || (iter2.index-1)==parentIterator.index || (iter2.index-2)==parentIterator.index || (iter2.index-3)==parentIterator.index}">
+                    <div class="col-3" th:with="id=${drawing.drawingNbr}">
+                        <div class="input-field readonly">
+                            <input th:id="|drawing-id-${id}|" disabled th:value="${drawing.drawingNbr}" style="width:35%">
+                            <a th:attr="data-drawingn=${id}, data-message=#{drawing.delete.confirmation.message}, data-action='delete-patent-drawing',data-url=@{/patent-like/drawing/delete}"
+                               th:title="#{btn.delete}" href="javascript:void(0);" style="border: 0"
+                               class="hidden-element btn-floating ipas waves-effect waves-light action-button-top confirm">
+                                <i class="icon-trash"></i>
+                            </a>
+                            <a th:if="${drawingList[0].drawingNbr ne drawing.drawingNbr}"
+                               th:attr="data-action='swap-drawing-position',data-url=@{/patent-like/drawing/swap-position},data-higher-position=false, data-drawingnbr=${drawing.drawingNbr}"
+                               href="javascript:void(0);"
+                               class="hidden-element btn-floating ipas waves-effect waves-light action-button-top">
+                                <i class="material-icons">arrow_back</i>
+                            </a>
+                            <a th:if="${drawingList[drawingList.size()-1].drawingNbr ne drawing.drawingNbr}"
+                               th:attr="data-action='swap-drawing-position',data-url=@{/patent-like/drawing/swap-position},data-higher-position=true, data-drawingnbr=${drawing.drawingNbr}"
+                               href="javascript:void(0);"
+                               class="hidden-element btn-floating ipas waves-effect waves-light action-button-top">
+                                <i class="material-icons">arrow_forward</i>
+                            </a>
+                        </div>
+                        <div>
+                            <img th:attr="data-drawingn=${id},
+                    data-lazysrc = @{'/patent-like/drawing/content?sessionIdentifier=' + ${sessionObjectIdentifier}+'&drawingn='+${drawing.drawingNbr}+'&time='+ ${#dates.format(#dates.createNow(),'HH:mm:ss.SSS')}}"  class="materialboxed">
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+        </th:block>
+
+
+    </div>
+
+    <div th:id="drawings-uploading-wrapper" class="hidden-element">
+        <div class="m_T10">
+            <div th:if="${drawingList.size() >= 2}" id="change-drawing-positions-div">
+                <input type="number" class="form-ignore" style="width:6%" th:value="${drawingList[0].drawingNbr}">
+                <input type="number" class="form-ignore" style="width:6%" th:value="${drawingList[drawingList.size()-1].drawingNbr}">
+                <button th:text="#{drawing.swap.positions.button}" th:type="button" class="button m_T10"
+                        th:attr="data-action='global-swap-drawing-position',data-url=@{/patent-like/drawing/swap-position-global}">
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

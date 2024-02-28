@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="bookmarks-modal(bookmarks,id,attachmentTypeId)">
+    <div th:id="bookmarks-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="#{edit.bookmarks.title}"></h4>
+            </div>
+            <input th:id="attachment-id" type="hidden" th:value="${id}">
+            <input th:id="attachment-type-id" type="hidden" th:value="${attachmentTypeId}">
+            <div class="row">
+                <th:block th:each="bookmark : ${bookmarks}">
+                    <div class="row">
+                        <div class="col-8">
+                            <div th:replace="~{base/form/input :: text(dataOrder=${bookmark.bookmarkOrder},dataId=${bookmark.bookmarkName}, dataFlag=${bookmark.bookmarkRequired}, id = #{'attachment-bookmark-'+${bookmark.bookmarkName}}, label = #{'attachment.bookmark.'+${bookmark.bookmarkName}}, value = ${bookmark.pageNumber}, classes = 'number bookmark')}"></div>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+
+        </div>
+        <div class="modal-footer row">
+            <div class="col-12">
+                <button th:attr="data-action='edit-bookmarks',data-url=@{/patent-like/attachment/bookmarks/edit}, data-validation-block='#bookmarks-modal'"
+                        th:text="#{btn.save}" class="button sm-icn-save wmin_130">
+                </button>
+                <button th:text="#{btn.cancel}" th:type="button"
+                        class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

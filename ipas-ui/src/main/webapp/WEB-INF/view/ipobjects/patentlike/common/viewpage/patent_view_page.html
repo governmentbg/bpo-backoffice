@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="patent" type="bg.duosoft.ipas.core.model.patent.CPatent"*/-->
+<div th:fragment="content(panelsList,panelPrefix)" th:with="securityUtils=${T(bg.duosoft.ipas.util.security.SecurityUtils)},
+                                                            patentUtils=${T(bg.duosoft.ipas.util.patent.PatentUtils)},
+                                                            hasDetailDataAccessFlag=${patentUtils.hasDetailDataAccess(patent.file,@statusServiceImpl)},
+                                                            patentPanelEnum=${T(com.duosoft.ipas.enums.PatentPanel)},
+                                                            collectionUtils=${T(org.springframework.util.CollectionUtils)},
+                                                            securityRoles=${T( bg.duosoft.ipas.enums.security.SecurityRole)},
+                                                            editEnabled=${securityUtils.isIntellectualPropertyObjectEditEnabled('patent', patent.file,@processServiceImpl,@userServiceImpl)}"
+>
+
+    <div class="app-body">
+        <header class="app-header" th:replace="base/header"></header>
+
+        <div th:replace="ipobjects/patentlike/common/viewpage/patent_view_left_sidebar :: sidebar(${panelsList},${panelPrefix})"></div>
+
+        <main class="main">
+            <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+            <div class="inner" th:with="objectUtils=${T(java.util.Objects)},
+                                        stringUtils=${T(org.springframework.util.StringUtils)}">
+
+                <div th:remove="tag" th:if="${patent.reception}">
+                    <div class="right-message-panel-wrapper">
+                        <div class="right-message-panel">
+                            <div class="right-message-panel-fixed">
+                                <div class="w_97p p_0">
+                                    <div th:replace="base/toast/message :: warning(message = #{right.panel.message.message.reception},toastTitle = #{right.panel.message.title.reception},removeCloseButton = true)"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div th:replace="base/toast/message :: error(message = ${errorMessage},unescaped = true)"></div>
+                    <div th:replace="base/toast/message :: success(message = ${successMessage},unescaped = true)"></div>
+                    <div th:replace="base/toast/message :: warning(message = ${warningMessage},unescaped = true)"></div>
+                    <div th:replace="base/toast/message :: validation-errors(validationErrors = ${validationErrors})"></div>
+                </div>
+
+                <div th:id="panel-container-patent" class="row panel-container-padding">
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,patentPanelEnum.IdentityData.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.PatentIdentityData)}">
+                            <div th:replace="ipobjects/patentlike/common/viewpage/patent_view_panels :: identity-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,patentPanelEnum.SpcIdentityData.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.SpcIdentityData)}">
+                            <div th:replace="ipobjects/patentlike/common/viewpage/patent_view_panels :: spc-object-identity-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,patentPanelEnum.SpcMainData.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.SpcMainData) && hasDetailDataAccessFlag}">
+                            <div th:replace="ipobjects/patentlike/common/viewpage/patent_view_panels :: spc-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,patentPanelEnum.MainData.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.PatentMainData) && hasDetailDataAccessFlag}">
+                            <div th:replace="ipobjects/patentlike/common/viewpage/patent_view_panels :: main-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,patentPanelEnum.PlantMainData.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.PlantMainData) && hasDetailDataAccessFlag}">
+                            <div th:replace="ipobjects/patentlike/common/viewpage/patent_view_panels :: plant-main-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,patentPanelEnum.PublishedDrawingsData.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.PatentPublishedDrawingsData) && hasDetailDataAccessFlag}">
+                            <div th:replace="ipobjects/patentlike/common/viewpage/patent_view_panels :: drawings-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,patentPanelEnum.DesignDrawingsData.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.PatentPublishedDrawingsData) && hasDetailDataAccessFlag}">
+                            <div th:replace="ipobjects/patentlike/common/viewpage/patent_view_panels :: design-drawings-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,patentPanelEnum.Citations.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.PatentCitationsData) && hasDetailDataAccessFlag}">
+                            <div th:replace="ipobjects/patentlike/common/viewpage/patent_view_panels ::  citations-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,patentPanelEnum.ClaimsData.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.ClaimsData) && hasDetailDataAccessFlag}">
+                            <div th:replace="ipobjects/patentlike/common/viewpage/patent_view_panels :: claims-data"></div>
+                        </div>
+                    </div>
+
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,patentPanelEnum.CpcData.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.PatentCPCData) && hasDetailDataAccessFlag}">
+                            <div th:replace="ipobjects/patentlike/common/viewpage/patent_view_panels :: cpc-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,patentPanelEnum.IpcData.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.PatentIPCData) && hasDetailDataAccessFlag}">
+                            <div th:replace="ipobjects/patentlike/common/viewpage/patent_view_panels :: ipc-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,patentPanelEnum.Persons.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.PatentPersons) && hasDetailDataAccessFlag}">
+                            <div th:replace="ipobjects/patentlike/common/viewpage/patent_view_panels :: person-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,patentPanelEnum.RightsData.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.PatentRightsData) && hasDetailDataAccessFlag}">
+                            <div th:replace="ipobjects/patentlike/common/viewpage/patent_view_panels :: patent-rights-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,patentPanelEnum.Publication.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.PatentPublication) && hasDetailDataAccessFlag}">
+                            <div th:replace="ipobjects/patentlike/common/viewpage/patent_view_panels :: publication-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,patentPanelEnum.Recordals.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.PatentRecordals) && hasDetailDataAccessFlag}">
+                            <div th:replace="ipobjects/patentlike/common/viewpage/patent_view_panels :: recordals-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,patentPanelEnum.Process.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.PatentProcess) && hasDetailDataAccessFlag}">
+                            <div th:replace="ipobjects/patentlike/common/viewpage/patent_view_panels :: process-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,patentPanelEnum.Payments.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.PatentPayments) && hasDetailDataAccessFlag}">
+                            <div th:replace="ipobjects/patentlike/common/viewpage/patent_view_panels :: payments-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,patentPanelEnum.History.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.IpObjectsHistory) && hasDetailDataAccessFlag}">
+                            <div th:replace="ipobjects/patentlike/common/viewpage/patent_view_panels :: history-data"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div th:replace=":: submit-panel" th:remove="tag"></div>
+        </main>
+    </div>
+
+    <div th:replace=":: modals" th:remove="tag"></div>
+    <div th:replace=":: hidden-fields" th:remove="tag"></div>
+    <footer class="page-footer" th:replace="base/footer"></footer>
+    <div th:replace="base/template :: js-footer" th:remove="tag"></div>
+</div>
+
+<div th:remove="tag" th:fragment="modals">
+    <div th:if="${!#lists.isEmpty(validationErrors)}" th:replace="base/modal/validation_errors::errors(${validationErrors})" th:remove="tag"></div>
+    <div th:id="priority-modal-content"></div>
+    <div th:id="person-modal-content"></div>
+    <div th:id="person-search-modal-wrapper"></div>
+    <div th:id="person-info-modal-wrapper"></div>
+    <div th:id="claim-modal-content"></div>
+    <div th:id="citation-modal-content"></div>
+    <div th:id="bookmarks-modal-content"></div>
+    <div th:id="agent-modal-content"></div>
+    <div th:id="valid-ipcs-modal-content"></div>
+    <div th:id="valid-cpcs-modal-content"></div>
+    <div th:id="agent-power-of-attorney-modal-content"></div>
+    <div th:id="agent-power-of-attorney-info-modal-content"></div>
+</div>
+
+<div th:remove="tag" th:fragment="hidden-fields">
+    <input th:id="session-object-identifier" th:type="hidden" class="form-ignore" th:value="${sessionObjectIdentifier}">
+    <input th:if="${!#lists.isEmpty(validationErrors)}" type="hidden" th:id="patent-validation-errors" th:attr="data-size=${#lists.size(validationErrors)}">
+    <div th:if="${null != scrollToPanel}" class="none">
+        <input th:id="scroll-to-panel" th:type="hidden" class="form-ignore" th:value="${scrollToPanel}">
+    </div>
+
+    <div class="none" th:if="${!collectionUtils.isEmpty(editedPanels)}">
+        <div th:remove="tag" th:each="editePanel : ${editedPanels}">
+            <span class="edited-panel" th:attr="data-value=${editePanel}"></span>
+        </div>
+    </div>
+
+</div>
+
+<div th:remove="tag" th:fragment="submit-panel">
+    <div id="submitPanel" class="panel submit-panel">
+        <div class="row">
+            <button th:attr="data-action='save-ipobject',
+                             data-container='panel-container-patent',
+                             data-url = @{/{panelPrefix}/save-patent(panelPrefix=${panelPrefix})}"
+                    th:text="#{btn.save}" class="button submit-panel-btn sm-icn-save m_T5 pulse green"></button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

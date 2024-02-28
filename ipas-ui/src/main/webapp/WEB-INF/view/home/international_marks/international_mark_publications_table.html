@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="reception" type="bg.duosoft.ipas.core.model.reception.CReceptionRequest"*/-->
+<!--/*@thymesVar id="receptionListFilter" type="bg.duosoft.ipas.util.filter.ReceptionListFilter"*/-->
+<div th:fragment="table(enotifs,enotifsCount)">
+
+    <div th:remove="tag" th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(enotifs)}">
+        <div th:remove="tag" th:case="true">
+            <div th:replace="base/message :: info(#{empty.list})"></div>
+        </div>
+        <div th:remove="tag" th:case="false">
+            <div class="row">
+                <div>
+                    <span th:text="#{total}"></span>
+                    <span th:text="${enotifsCount}"></span>
+
+                </div>
+            </div>
+            <div class="m_T5">
+                <table class="simple bpo">
+                    <thead>
+                    <tr>
+                        <th th:text="'Бордеро'"></th>
+                        <th th:text="'Дата на публикуване'"></th>
+                        <th th:text="'Брой'"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="enotif : ${enotifs}" th:with="gazno = ${enotif.gazno}">
+                       <td>
+                           <a class="b0"
+                              th:href="@{/international-marks/list(gazno=${gazno})}"
+                              th:text="${gazno}" th:data-blockui="true"></a>
+                        </td>
+                        <td>
+                            <span th:text="${#dates.format(enotif.pubDate,T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${enotif.birthCount}"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,404 @@
+
+/* Input types: RADIO & CHECKBOX; checkbox like SWITCHER
+============================================================================= */
+
+.switcher,
+.radio_check {
+    display: inline-block;
+    background-color: transparent;
+    margin: 0.5rem 0;
+}
+
+.switcher input[type="checkbox"],
+.radio_check input[type="radio"],
+.radio_check input[type="checkbox"] {
+    /* visibility:hidden;   da ne se polzva zaradi JASW (access with tab-key) */
+    position: absolute;
+    margin: 0;
+    opacity: 0;
+}
+
+.switcher label,
+.radio_check label {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.radio_check label {
+    height: 20px;
+    line-height: 20px;
+    margin-right: 1.5rem;
+    padding-left: 1.5rem;
+}
+
+.switcher label {
+    height: auto;
+    min-height: 20px;
+    line-height: 1;
+    margin: 0;
+    width: 100%;
+}
+
+.switcher.at-left label {
+    padding-left: 2rem;
+}
+
+.switcher.at-right label {
+    padding-right: 2rem;
+}
+
+.switcher input[type="checkbox"] + label:before,
+.switcher input[type="checkbox"] + label:after,
+.radio_check input[type="radio"] + label:before,
+.radio_check input[type="radio"] + label:after,
+.radio_check input[type="checkbox"] + label:before,
+.radio_check input[type="checkbox"] + label:after {
+    position: absolute;
+    display: block;
+    cursor: pointer;
+    outline: none;
+    content: '';
+}
+
+/* --- Label After --- */
+.switcher input[type="checkbox"] + label:after,
+.radio_check input[type="radio"] + label:after,
+.radio_check input[type="checkbox"] + label:after {
+    -webkit-transition: all 250ms ease;
+    transition: all 250ms ease;
+}
+
+.radio_check input[type="radio"] + label:after {
+    left: 5px;
+    top: 5px;
+    width: 10px;
+    height: 10px;
+    -webkit-border-radius: 100%;
+    border-radius: 100%;
+}
+
+/* --- Label Before --- */
+.radio_check input[type="radio"] + label:before,
+.radio_check input[type="checkbox"] + label:before {
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--color-gray_ab);
+    background: #f4f4f4;
+    text-align: center;
+    font-family: arial, tahoma, sans-serif;
+    font-size: 1.2rem;
+    font-weight: normal;
+    content: '';
+}
+
+.radio_check input[type="radio"] + label:before {
+    border-radius: 100%;
+    -webkit-border-radius: 100%;
+    background: #f4f4f4;
+}
+
+.radio_check input[type="checkbox"] + label:before {
+    color: var(--color-bpo);
+    border-radius: .2em;
+    -webkit-border-radius: .2em;
+}
+
+/* --- Checked + Disabled --- */
+
+.switcher input[type="checkbox"]:disabled + label,
+.switcher input[type="checkbox"]:disabled + label:before,
+.switcher input[type="checkbox"]:disabled + label:after,
+.radio_check input[type="radio"]:disabled + label,
+.radio_check input[type="radio"]:disabled + label:before,
+.radio_check input[type="radio"]:disabled + label:after,
+.radio_check input[type="checkbox"]:disabled + label,
+.radio_check input[type="checkbox"]:disabled + label:before,
+.radio_check input[type="checkbox"]:disabled + label:after {
+    cursor: default;
+}
+
+.switcher input[type="checkbox"]:disabled + label,
+.radio_check input[type="radio"]:disabled + label,
+.radio_check input[type="checkbox"]:disabled + label {
+    opacity: .35;
+    color: inherit;
+}
+
+.switcher input + label:empty,
+.radio_check input + label:empty {
+    display: none;
+}
+.switcher input + label.empty,
+.radio_check input + label.empty {
+    display: initial;
+    width: unset;
+}
+
+.switcher span {
+    width: 79%;
+    display: inline-block;
+}
+
+.radio_check input[type="checkbox"]:checked + label:after,
+.radio_check input[type="checkbox"]:disabled:checked + label:after {
+    position: absolute;
+    top: 1px;
+    left: 7px;
+    width: 6px;
+    height: 14px;
+    border-color: #fff;
+    border-style: solid;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    content: '';
+}
+
+/* --- RADIO & CHECKBOX Colors: Checked + Disabled --- */
+
+.radio_check input[type="checkbox"]:checked + label:before,
+.radio_check input[type="radio"]:checked:disabled + label:before,
+.radio_check input[type="radio"]:checked + label:before {
+    border-color: var(--color-bpo);
+}
+
+.radio_check input[type="checkbox"]:checked + label:before,
+.radio_check input[type="radio"]:checked:disabled + label:after,
+.radio_check input[type="radio"]:checked + label:after {
+    background: var(--color-bpo);
+}
+
+/* SWITCHER colors
+============================================================================= */
+
+.switcher input[type="checkbox"] + label:before {
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+    width: 26px;
+    height: 10px;
+    top: 50%;
+    margin-top: -5px;
+    z-index: 1;
+}
+
+.switcher input[type="checkbox"] + label:after {
+    -webkit-border-radius: 100%;
+    border-radius: 100%;
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .2);
+    width: 14px;
+    height: 14px;
+    top: 50%;
+    margin-top: -7px;
+    z-index: 2;
+}
+
+.switcher.simple input[type="checkbox"] + label:after,
+.switcher.simple input[type="checkbox"] + label:before {
+    margin-top: 0;
+    top: 0;
+}
+
+.switcher.simple input[type="checkbox"] + label:after {
+    width: 16px;
+    height: 16px;
+}
+
+.switcher.simple input[type="checkbox"] + label:before {
+    width: 28px;
+    height: 16px;
+}
+
+/**/
+.switcher.simple input[type="checkbox"] + label:after {
+    box-shadow: none;
+}
+
+/* --- Position: left or right --- */
+.switcher.at-left input[type="checkbox"] + label:before {
+    left: 0;
+}
+
+.switcher.at-right input[type="checkbox"] + label:before {
+    right: 0;
+}
+
+.switcher.at-left input[type="checkbox"]:checked + label:after {
+    left: 13px;
+}
+
+/* (26-14) +1 */
+.switcher.at-right input[type="checkbox"]:checked + label:after {
+    right: 0;
+}
+
+.switcher.at-left input[type="checkbox"] + label:after {
+    left: 0;
+}
+
+.switcher.at-right input[type="checkbox"] + label:after {
+    right: 13px;
+}
+
+/* --- Colors: light background --- */
+.switcher input[type="checkbox"] + label:before {
+    background: rgba(0, 0, 0, .3);
+}
+
+.switcher input[type="checkbox"] + label:after {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, .2);
+}
+
+.switcher input[type="checkbox"]:checked + label:before {
+    background: rgba(0, 85, 153, .5)
+}
+
+.switcher input[type="checkbox"]:checked + label:after {
+    background: rgba(0, 85, 153, 1);
+    border-color: rgba(0, 85, 153, 1)
+}
+
+.switcher.simple input[type="checkbox"] + label:before {
+    background: rgba(0, 0, 0, .3);
+}
+
+.switcher.simple input[type="checkbox"] + label:after {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, .2);
+}
+
+.switcher.simple input[type="checkbox"]:checked + label:before {
+    background: rgba(0, 85, 153, 1)
+}
+
+.switcher.simple input[type="checkbox"]:checked + label:after {
+    background: rgba(255, 255, 255, 1);
+    border-color: rgba(0, 85, 153, 1)
+}
+
+/* --- Colors: dark background --- */
+.dark-bg .switcher input[type="checkbox"] + label:before {
+    background: rgba(170, 170, 170, .3);
+}
+
+.dark-bg .switcher input[type="checkbox"] + label:after {
+    background: #aaa;
+    border: 1px solid rgba(170, 170, 170, .2);
+}
+
+.dark-bg .switcher input[type="checkbox"]:checked + label:before {
+    background: rgba(102, 187, 238, .5)
+}
+
+.dark-bg .switcher input[type="checkbox"]:checked + label:after {
+    background: rgba(102, 187, 238, 1);
+    border-color: rgba(102, 187, 238, 0)
+}
+
+.dark .switcher input[type="checkbox"] + label:before {
+    background: rgba(170, 170, 170, .3);
+}
+
+.dark .switcher input[type="checkbox"] + label:after {
+    background: #aaa;
+    border: 1px solid rgba(170, 170, 170, .2);
+}
+
+.dark .switcher input[type="checkbox"]:checked + label:before {
+    background: rgba(102, 187, 238, .5)
+}
+
+.dark .switcher input[type="checkbox"]:checked + label:after {
+    background: rgba(102, 187, 238, 1);
+    border-color: rgba(102, 187, 238, 0)
+}
+
+.dark-bg .switcher.simple input[type="checkbox"] + label:before {
+    background: rgba(170, 170, 170, 1);
+}
+
+.dark-bg .switcher.simple input[type="checkbox"] + label:after {
+    background: #aaa;
+    border: 1px solid rgba(170, 170, 170, .2);
+}
+
+.dark-bg .switcher.simple input[type="checkbox"]:checked + label:before {
+    background: rgba(102, 187, 238, 1)
+}
+
+.dark-bg .switcher.simple input[type="checkbox"]:checked + label:after {
+    background: rgba(225, 235, 255, 1);
+    border-color: rgba(102, 187, 238, 0)
+}
+
+.dark .switcher.simple input[type="checkbox"] + label:before {
+    background: rgba(170, 170, 170, .5);
+}
+
+.dark .switcher.simple input[type="checkbox"] + label:after {
+    background: #aaa;
+    border: 1px solid rgba(170, 170, 170, .2);
+}
+
+.dark .switcher.simple input[type="checkbox"]:checked + label:before {
+    background: rgba(102, 187, 238, 1)
+}
+
+.dark .switcher.simple input[type="checkbox"]:checked + label:after {
+    background: rgba(225, 235, 255, 1);
+    border-color: rgba(102, 187, 238, 0)
+}
+
+.bttn {
+    font-family: sans-serif;
+    font-size: .9rem;
+    text-transform: uppercase;
+    border: 1px #69c solid;
+    color: #058;
+    background-color: #fafafa;
+    overflow: visible;
+    position: relative;
+    white-space: nowrap;
+    margin: 0 5px 0 0;
+    padding: 0 16px;
+    height: 32px;
+    line-height: 32px;
+    color: #058;
+    background-color: #fafafa;
+    border: 1px #49c solid;
+    border-top-color: rgb(68, 153, 204);
+    border-right-color: rgb(68, 153, 204);
+    border-bottom-color: rgb(68, 153, 204);
+    border-left-color: rgb(68, 153, 204);
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    text-decoration: none;
+    outline: none;
+    cursor: pointer;
+    z-index: 66;
+}
+
+input[class*="input_file"] {
+    visibility: hidden;
+    position: absolute;
+    left: -10em;
+    top: 0;
+}
+
+.dropdown-content li > a, .dropdown-content li > span {
+    padding: 5px 16px;
+}
+
+.dropdown-content li {
+    min-height: 30px;
+}
+
+.select-dropdown li.optgroup ~ li.optgroup-option {
+    padding-left: 0 !important;
+}
+
+.ui-datepicker{
+    z-index: 9800 !important;
+}

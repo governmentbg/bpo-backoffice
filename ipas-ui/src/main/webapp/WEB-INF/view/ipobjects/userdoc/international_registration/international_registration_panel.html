@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="international-registration(userdoc)">
+  <div th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT},
+                extraDataUtils = ${T(bg.duosoft.ipas.util.userdoc.UserdocExtraDataUtils)},
+                panelName=${T(com.duosoft.ipas.enums.UserdocPanel).InternationalRegistration.name()},
+                typesEnum=${T(bg.duosoft.ipas.enums.UserdocExtraDataTypeCode)},
+                types = ${extraDataUtils.selectTypes(userdoc, panelName)},
+                userdocExtraData=${userdoc.userdocExtraData}
+">
+    <div class="row">
+            <div th:remove="tag" th:with="type = ${typesEnum.INTERNATIONAL_REGISTRATION_NUMBER}">
+                <div th:replace="~{base/form/text :: readonly(label = #{international.registration.number}, text = ${extraDataUtils.selectText(type, userdocExtraData)}, columnSize='col-4')}"></div>
+            </div>
+
+            <div th:remove="tag" th:with="type = ${typesEnum.INTERNATIONAL_REGISTRATION_DATE}">
+                <div th:replace="~{base/form/text :: readonly-date(label = #{international.filing.date}, text = ${extraDataUtils.selectDate(type, userdocExtraData)}, columnSize='col-4')}"></div>
+            </div>
+
+            <div th:remove="tag" th:with="transactionType = ${extraDataUtils.selectText(typesEnum.INTERNATIONAL_REGISTRATION_TRANSACTION_TYPE, userdocExtraData)},
+                                          notificationDate = ${#dates.format(extraDataUtils.selectDate(typesEnum.INTERNATIONAL_REGISTRATION_NOTIFICATION_DATE, userdocExtraData),T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)},
+                                          bordero = ${extraDataUtils.selectText(typesEnum.INTERNATIONAL_REGISTRATION_GAZNO, userdocExtraData)}
+                                          ">
+                <div th:remove="tag" th:if="${!stringUtils.isEmpty(transactionType) or !stringUtils.isEmpty(notificationDate) or !stringUtils.isEmpty(bordero)}">
+                    <div th:replace="~{base/form/text :: readonly(label = #{international.notification}, text = ${#strings.concatReplaceNulls('-',transactionType,'/', bordero,', ',notificationDate)}, columnSize='col-4')}"></div>
+                </div>
+            </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

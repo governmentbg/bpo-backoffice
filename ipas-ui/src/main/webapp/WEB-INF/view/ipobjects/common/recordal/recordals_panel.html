@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="fileRecordals" type="java.util.List<bg.duosoft.ipas.core.model.file.CFileRecordal>"*/-->
+<div th:fragment="recordals(fileRecordals)"
+     th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT},
+              recordalType=${T(bg.duosoft.ipas.enums.RecordalType)}">
+    <div class="row">
+        <div class="col-12">
+            <table class="simple">
+                <thead>
+                <tr>
+                    <th th:text="#{recordal.table.type}"></th>
+                    <th th:text="#{recordal.table.recordalDate}"></th>
+                    <th th:text="#{recordal.table.recordalUserdoc}"></th>
+                    <th th:text="#{recordal.table.invalidationDate}"></th>
+                    <th th:text="#{recordal.table.invalidationUserdoc}"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="recordal : ${fileRecordals}">
+                    <td th:text="${recordalType.GenericRecordal.toString() != (recordal.type)} ? #{'recordal.title.'+${recordal.type}} : ${@userdocTypesServiceImpl.selectUserdocTypeByDocId(recordal.documentId).userdocName}"></td>
+                    <td th:text="${#dates.format(recordal.date, dateFormatDot)}"></td>
+                    <td>
+                        <a class="b0"
+                           th:href="@{/ipobject/view(userdocFilingNumber=${recordal.documentId.createFilingNumber()})}"
+                           th:text="${recordal.externalSystemId == null} ? #{not.registered} : ${recordal.externalSystemId}"></a>
+                    </td>
+                    <td th:text="${recordal.invalidationDate != null} ? ${#dates.format(recordal.invalidationDate, dateFormatDot)} : ''"></td>
+                    <td>
+                        <div th:remove="tag" th:switch="${recordal.invalidationDocumentId != null && recordal.invalidationDocumentId.docNbr != null}">
+                            <a th:case="true" class="b0"
+                               th:href="@{/ipobject/view(userdocFilingNumber=${recordal.invalidationDocumentId.createFilingNumber()})}"
+                               th:text="${recordal.invalidationExternalSystemId == null} ? #{not.registered} : ${recordal.invalidationExternalSystemId}">
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

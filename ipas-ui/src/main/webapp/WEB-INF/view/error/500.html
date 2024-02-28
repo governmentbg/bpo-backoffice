@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg">
+
+<head th:replace="base/template :: head(title = #{error.internal.server.error})"></head>
+
+<body class="dark">
+
+
+<div class="app-body">
+    <div class="left-sidebar">
+        <div id="psb" class="ps--active-y">
+            <nav class="sidebar-nav">
+                <ul class="nav DropDownMenu"></ul>
+            </nav>
+        </div>
+    </div>
+
+
+    <main class="main">
+        <div class="inner continer">
+            <div class="center">
+                <i class="zmdi zmdi-mood-bad" style="font-size: 250px;color: #444"></i>
+                <h1 style="font-size: 100px" th:text="'500'"></h1>
+                <h2 th:text="#{error.internal.server.error.title}"></h2>
+                <p th:text="#{error.internal.server.error.message}"></p>
+            </div>
+        </div>
+        <div th:replace="error/error_details :: message(${exception},${message},${status},${error},${trace})"></div>
+    </main>
+</div>
+<div th:replace="base/template :: js-footer" th:remove="tag"></div>
+
+</body>
+</html>

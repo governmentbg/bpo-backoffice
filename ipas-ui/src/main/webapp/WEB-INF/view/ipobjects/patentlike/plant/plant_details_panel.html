@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="plant-details(patent,sessionObjectIdentifier,hasSecretDataRights)" th:with = "hasTaxonNomenclature = ${patent.plantData != null && patent.plantData.plantNumenclature != null}, plantData = ${patent.plantData !=null} ? ${patent.plantData}">
+
+    <div>
+        <div class="row" id="plantTaxonNomenclature-area">
+
+            <input type="text" th:id="plantNumenclature-id" th:type="hidden" th:value="${(hasTaxonNomenclature)} ? ${patent.plantData.plantNumenclature.id}">
+
+            <div class="col-2" th:classappend="${!(hasTaxonNomenclature) || (patent.plantData.plantNumenclature.taxonCode == null)}?'hidden-element'">
+                <div th:replace="~{base/form/input :: readonly(id = 'plantNumenclature-taxonCode', label = #{taxon.label}, value = ${(hasTaxonNomenclature)} ? ${patent.plantData.plantNumenclature.taxonCode})}"></div>
+            </div>
+            <div class="col-4" th:classappend="${!(hasTaxonNomenclature) || (patent.plantData.plantNumenclature.commonClassifyBul == null)}?'hidden-element'">
+                <div th:replace="~{base/form/input :: readonly(id = 'plantNumenclature-commonClassifyBul', label = #{plant.classification.bg}, value = ${(hasTaxonNomenclature)} ? ${patent.plantData.plantNumenclature.commonClassifyBul})}"></div>
+            </div>
+            <div class="col-3" th:classappend="${!(hasTaxonNomenclature) || (patent.plantData.plantNumenclature.commonClassifyEng == null)}?'hidden-element'">
+                <div th:replace="~{base/form/input :: readonly(id = 'plantNumenclature-commonClassifyEng', label = #{plant.classification.en}, value = ${(hasTaxonNomenclature)} ? ${patent.plantData.plantNumenclature.commonClassifyEng})}"></div>
+            </div>
+
+            <div class="col-3" th:classappend="${!(hasTaxonNomenclature) || (patent.plantData.plantNumenclature.latinClassify == null)}?'hidden-element'">
+                <div th:replace="~{base/form/input :: readonly(id = 'plantNumenclature-latinClassify', label = #{plant.classification.la}, value = ${(hasTaxonNomenclature)} ? ${patent.plantData.plantNumenclature.latinClassify})}"></div>
+            </div>
+
+        </div>
+
+        <div class="row hidden-element">
+            <div class="col-6">
+                <div class="input-field">
+                    <input id="taxonNomenclatureAutocomplete" type="text" class="autocomplete form-ignore"
+                           th:classappend="${(hasTaxonNomenclature) && (patent.plantData.plantNumenclature.id != null)}? 'none'"
+                           th:placeholder="#{taxon.and.classification.search.label}"
+                           th:attr="data-url=@{/plants_and_breeds/detail/autocomplete}"
+                           th:label="#{taxon.and.classification.search.label}">
+                </div>
+            </div>
+        </div>
+
+        <div class="row hidden-element">
+
+            <div class="col-12 p_T10_B10">
+                <button id="taxonNomenclature-delete-button"  th:classappend="${!(hasTaxonNomenclature) || (patent.plantData.plantNumenclature.id == null) }? 'none'"
+                        th:text="#{delete.taxon.button}"
+                        th:attr="data-action='taxonNomenclature-delete',
+                        data-message=#{delete.taxon.button.message}"
+                        th:type="button"
+                        class="button sm-icn-delete" style="margin-left: 0px;margin-bottom: 20px;">
+                </button>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-12">
+                <div th:replace="~{base/form/textarea :: basic(id = 'patent-technicalData-title', value = ${patent.technicalData.title}, unescaped = true, label = #{plant.bg.name.label})}"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div th:replace="~{base/form/textarea :: basic(id = 'patent-technicalData-englishTitle', value = ${patent.technicalData.englishTitle}, unescaped = true, label = #{plant.en.name.label})}"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div th:replace="~{base/form/textarea :: basic(id = 'patent-plantData-proposedDenomination', value = ${plantData!=null} ? ${patent.plantData.proposedDenomination}, unescaped = true, label = #{plant.proposed.bg.name.label})}"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div th:replace="~{base/form/textarea :: basic(id = 'patent-plantData-proposedDenominationEng', value = ${plantData!=null} ? ${patent.plantData.proposedDenominationEng}, unescaped = true, label = #{plant.proposed.en.name.label})}"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div th:replace="~{base/form/textarea :: basic(id = 'patent-plantData-apprDenomination', value =${plantData!=null} ? ${patent.plantData.apprDenomination}, unescaped = true, label = #{plant.approved.bg.name.label})}"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div th:replace="~{base/form/textarea :: basic(id = 'patent-plantData-apprDenominationEng', value =${plantData!=null} ? ${patent.plantData.apprDenominationEng}, unescaped = true, label = #{plant.approved.en.name.label})}"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div th:replace="~{base/form/textarea :: basic(id = 'patent-plantData-publDenomination', value =${plantData!=null} ? ${patent.plantData.publDenomination}, unescaped = true, label = #{plant.published.bg.name.label})}"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div th:replace="~{base/form/textarea :: basic(id = 'patent-plantData-publDenominationEng', value =${plantData!=null} ? ${patent.plantData.publDenominationEng}, unescaped = true, label = #{plant.published.en.name.label})}"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div th:replace="~{base/form/textarea :: basic(id = 'patent-plantData-rejDenomination', value =${plantData!=null} ? ${patent.plantData.rejDenomination}, unescaped = true, label = #{plant.refused.bg.name.label})}"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div th:replace="~{base/form/textarea :: basic(id = 'patent-plantData-rejDenominationEng', value =${plantData!=null} ? ${patent.plantData.rejDenominationEng}, unescaped = true, label = #{plant.refused.en.name.label})}"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div th:replace="~{base/form/textarea :: basic(id = 'patent-technicalData-mainAbstract', value =${plantData!=null} ? ${patent.technicalData.mainAbstract}, unescaped = true, label = #{plant.origin.label})}"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div th:replace="~{base/form/textarea :: basic(id = 'patent-plantData-testing', value =${plantData!=null} ? ${patent.plantData.testing}, unescaped = true, label = #{plant.test.conditions.label})}"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div th:replace="~{base/form/textarea :: basic(id = 'patent-plantData-features', value =${plantData!=null} ? ${patent.plantData.features}, unescaped = true, label = #{plant.characteristic.label})}"></div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-12">
+                <div th:replace="~{base/form/textarea :: basic(id = 'patent-plantData-stability', value =${plantData!=null} ? ${patent.plantData.stability}, unescaped = true, label = #{plant.sustainability.label})}"></div>
+            </div>
+        </div>
+
+
+        <th:block th:if="${hasSecretDataRights}">
+
+            <div th:id="patent-attachments-wrapper">
+                <div th:replace="ipobjects/patentlike/common/details/patent_attachments :: patent-attachments(${patent?.patentDetails?.patentAttachments},${sessionObjectIdentifier})"></div>
+            </div>
+
+            <div class="hidden-element">
+                <div class="col-6 m_T20-i">
+                    <div th:replace="~{base/form/select :: object(id = 'patent-attachmentType', label = 'Вид документ', objects = ${attachmentTypes},
+                     valuePointer = 'id', textPointer = 'name',classes = 'form-ignore')}"></div>
+                </div>
+                <div class="col-6 m_T20-i">
+                    <button th:text="'Добави документ'"
+                            th:attr="data-action='add-patent-attachment'" th:type="button"
+                            class="button sm-icn-add m_T10">
+                    </button>
+                </div>
+            </div>
+
+        </th:block>
+
+    </div>
+
+</div>
+</body>
+</html>

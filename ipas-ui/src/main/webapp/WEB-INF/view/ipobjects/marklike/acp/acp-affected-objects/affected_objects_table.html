@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="table(affectedObjects)">
+
+    <div th:if="${!#lists.isEmpty(validationErrors)}" th:id="acp-affected-objects-errors">
+        <div class="row m_B20">
+            <div class="col-12">
+                <div th:replace="base/validation :: validation-message(${validationErrors},'acp-affected-objects-errors')"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12" th:if="${T(org.springframework.util.CollectionUtils).isEmpty(affectedObjects)}">
+        <div th:replace="base/message :: info(#{acp.affected.objects.empty.list})"></div>
+    </div>
+
+    <div class="row m_B20" th:if="${!T(org.springframework.util.CollectionUtils).isEmpty(affectedObjects)}">
+        <div class="col-12">
+            <table class="simple" id="affected-objects-table">
+                <thead>
+                <tr>
+                    <th th:text="#{acp.affected.object.title}"></th>
+                    <th class="hidden-element"></th>
+                </tr>
+
+                </thead>
+                <tbody>
+                <tr th:each="affectedObject : ${affectedObjects}">
+                    <td th:text="${T(com.duosoft.ipas.util.AcpUtils).generateAffectedObjectTitle(affectedObject)}"></td>
+                    <td class="hidden-element txtRight">
+                        <a style="border: 0" th:title="#{btn.delete}" href="javascript:void(0);"
+                           th:attr="data-action='acp-affected-object-delete',data-url=@{/acp/affected-objects/delete-object},data-id=${affectedObject.id},
+                               data-message=#{delete.affected.object.message }"
+                           class="txtLeft btn-floating ipas waves-effect waves-light action-button-top confirm">
+                            <i class="icon-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

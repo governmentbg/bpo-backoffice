@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="representationData" type="bg.duosoft.ipas.core.model.file.CRepresentationData"*/-->
+<!--/*@thymesVar id="isEditable" type="java.lang.Boolean"*/-->
+<div th:fragment="owner-list(ownershipData,isEditable)"
+     th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)},objectsUtils=${T(java.util.Objects)}">
+    <div th:remove="tag"
+         th:switch="${objectsUtils.isNull(ownershipData) || collectionUtils.isEmpty(ownershipData.ownerList)}">
+        <div th:case="true">
+            <div th:replace="base/message :: info(#{empty.list})"></div>
+        </div>
+        <div th:case="*">
+            <div class="list-elements-wrapper">
+                <div class="row list-element" th:each="owner : ${ownershipData.ownerList}" th:with="person=${owner.person}">
+                    <div class="col-11">
+                        <div th:replace="ipobjects/common/person/elements :: label-representative(${owner.person})"></div>
+                        <div th:replace="ipobjects/common/person/elements :: person-info(${owner.person})"></div>
+                    </div>
+                    <div th:if="${isEditable}" class="col-1 right-align action-menu-list-fs" th:with="menuId=|owner-menu-${person.personNbr}-${person.addressNbr}|">
+                        <i th:title="#{menu}" th:attr="data-action='toggle-menu',data-id=${menuId}" class="zmdi zmdi-menu"></i>
+                        <div th:id="${menuId}" class="action-menu none">
+                            <div th:replace="ipobjects/common/person/elements :: menu-option-view-person(person = ${person})"></div>
+                            <div th:remove="tag" th:if="${!person.hasAgentCode()}">
+                                <div th:replace="ipobjects/common/person/elements :: menu-option-edit(${T(com.duosoft.ipas.enums.PersonKind).Applicant.code()},${person.personNbr},${person.addressNbr})"></div>
+                            </div>
+                            <span>
+                                <i class="icon-trash"></i>
+                                    <a class="b0 confirm" th:text="#{btn.delete}" th:title="#{btn.delete}" href="javascript:void(0);"
+                                       th:attr="data-action='delete-reception-person',
+                                       data-kind=${T(com.duosoft.ipas.enums.PersonKind).Applicant.code()},
+                                       data-person=${person.personNbr},
+                                       data-address=${person.addressNbr},
+                                       data-url=@{/person/delete-person},
+                                       data-message=#{person.applicant.delete.confirm.message}">
+                                    </a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="agent-list(representationData)"
+     th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)},objectsUtils=${T(java.util.Objects)},representativeTypeEnum = ${T(bg.duosoft.ipas.enums.RepresentativeType)}">
+    <div th:remove="tag"
+         th:switch="${objectsUtils.isNull(representationData) || collectionUtils.isEmpty(representationData.representativeList)}">
+        <div th:case="true">
+            <div th:replace="base/message :: info(#{empty.list})"></div>
+        </div>
+        <div th:case="*">
+            <div class="list-elements-wrapper">
+                <div class="row list-element" th:each="representative : ${representationData.representativeList}" th:with="person=${representative.person},representativeType=${representativeTypeEnum.selectByCode(representative.representativeType)}">
+                    <div class="col-11">
+                        <div th:replace="ipobjects/common/person/elements :: label-other-representative(${representativeType})"></div>
+                        <div th:replace="ipobjects/common/person/elements :: label-representative(${representative.person})"></div>
+                        <div th:replace="ipobjects/common/person/elements :: person-info(${representative.person})"></div>
+                    </div>
+                    <div class="col-1 right-align action-menu-list-fs" th:with="menuId=|representative-menu-${person.personNbr}-${person.addressNbr}|">
+                        <i th:title="#{menu}" th:attr="data-action='toggle-menu',data-id=${menuId}" class="zmdi zmdi-menu"></i>
+                        <div th:id="${menuId}" class="action-menu none">
+                            <div th:replace="ipobjects/common/person/elements :: menu-option-view-person(person = ${person})"></div>
+                            <div th:remove="tag" th:if="${!person.hasAgentCode()}">
+                                <div th:replace="ipobjects/common/person/elements :: menu-option-edit(${T(com.duosoft.ipas.enums.PersonKind).Representative.code()},${person.personNbr},${person.addressNbr})"></div>
+                            </div>
+                            <span>
+                                <i class="icon-trash"></i>
+                                    <a class="b0 confirm"
+                                       th:text="#{btn.delete}"
+                                       th:title="#{btn.delete}"
+                                       href="javascript:void(0);"
+                                       th:attr="data-action='delete-reception-person',
+                                       data-kind=${T(com.duosoft.ipas.enums.PersonKind).Representative.code()},
+                                       data-person=${person.personNbr},
+                                       data-address=${person.addressNbr},
+                                       data-url=@{/person/delete-person},
+                                       data-message=(#{person.agent.delete.confirm.message})">
+                                    </a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

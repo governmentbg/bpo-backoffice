@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="cOffidocTypeTemplate" type="bg.duosoft.ipas.core.model.offidoc.COffidocTypeTemplate"*/-->
+<div th:fragment="modal(cOffidocTypeTemplate)"
+     th:with="offidocTypeTemplateConfig = ${T(bg.duosoft.ipas.enums.OffidocTypeTemplateConfig)}">
+
+    <div th:id="offidoc-template-edit-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="${cOffidocTypeTemplate.nameWFile}"></h4>
+            </div>
+            <div class="m_T20">
+                <div class="row">
+                    <div style=" color: #9e9e9e">
+                        <label th:text="#{offidoc.template.name.file.config}"></label>
+                    </div>
+                    <div class="col-12">
+                        <div th:replace="~{base/form/radio :: basic(name = 'template-nameConfig-radio', label = ${offidocTypeTemplateConfig.TEMPLATE.code()}, value = ${offidocTypeTemplateConfig.TEMPLATE.code()}, checked = ${cOffidocTypeTemplate.nameFileConfig == offidocTypeTemplateConfig.TEMPLATE})}"></div>
+                        <div th:replace="~{base/form/radio :: basic(name = 'template-nameConfig-radio', label = ${offidocTypeTemplateConfig.REGISTRATION_NBR.code()}, value = ${offidocTypeTemplateConfig.REGISTRATION_NBR.code()}, checked = ${cOffidocTypeTemplate.nameFileConfig == offidocTypeTemplateConfig.REGISTRATION_NBR})}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer row">
+            <div class="col-12">
+                <button th:attr="data-action='edit-offidoc-template', data-url=@{/admin/offidoc/edit-offidoc-template}, data-template=${cOffidocTypeTemplate.nameWFile}, data-offidoc-type=${cOffidocTypeTemplate.offidocType}"
+                        th:text="#{btn.save}" type="button" class="button sm-icn-save modal-close wmin_130"></button>
+                <button th:text="#{btn.cancel}" type="button" class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

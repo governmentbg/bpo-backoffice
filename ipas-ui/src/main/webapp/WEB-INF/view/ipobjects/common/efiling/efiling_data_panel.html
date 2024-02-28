@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--last change123-->
+<div th:remove="tag" th:fragment="efiling-data(efilingData)" th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT},
+efilingDataUtils=${T(com.duosoft.ipas.util.EfilingDataUtils)}">
+
+    <th:block th:if="${efilingData!=null}">
+        <input th:type="hidden" th:id="efilingDataLoginName" th:value="${efilingData.logUserName}">
+        <div class="row">
+            <div class="col-12 efilingData-subsection">
+                <h4 style="display: inline-block" th:text="#{efiling.info.label}"></h4>
+            </div>
+        </div>
+        <div class="row hidden-element">
+            <div class="col-12">
+                <div th:replace="~{base/message :: info(#{change.efperson.message})}"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <div th:replace="~{base/form/input :: text(id = 'portal-users-autocomplete', label = #{efiling.requested.user.label}, value = (${efilingDataUtils.getFormattedName(efilingData.logUserName,@restLoginUtils)}), url = @{/efiling-data/portal-users-autocomplete}, classes = 'form-ignore')}"></div>
+            </div>
+
+            <div th:if="${efilingData.priorityRequest!=null && efilingData.priorityRequest == true}" class="col-4">
+                <div th:replace="~{base/form/input :: readonly(label = #{efiling.priorityRequest.label}, value = #{yes})}"></div>
+            </div>
+        </div>
+        <th:block th:if="${efilingData.esUserName!=null   && efilingData.esUser!=null}">
+            <div class="col-4" th:if="${efilingData.esUserName!=null}">
+                <div th:replace="~{base/form/input :: readonly(label = #{esignature.name.label}, value = ${efilingData.esUserName})}"></div>
+            </div>
+            <div class="col-4" th:if="${efilingData.esUser!=null}">
+                <div th:replace="~{base/form/input :: readonly(label = #{esignature.es.user.label}, value = ${efilingData.esUser})}"></div>
+            </div>
+            <div class="col-4" th:if="${efilingData.esUserEmail!=null}">
+                <div th:replace="~{base/form/input :: readonly(label = #{user.email}, value = ${efilingData.esUserEmail})}"></div>
+            </div>
+            <div class="col-4" th:if="${efilingData.esValidFrom!=null}">
+                <div th:replace="~{base/form/input :: readonly(label = #{esignature.valid.from}, value = ${#dates.format(efilingData.esValidFrom,dateTimeFormatDot)})}"></div>
+            </div>
+            <div class="col-4" th:if="${efilingData.esValidTo!=null}">
+                <div th:replace="~{base/form/input :: readonly(label = #{esignature.valid.to}, value = ${#dates.format(efilingData.esValidTo,dateTimeFormatDot)})}"></div>
+            </div>
+            <div class="col-4" th:if="${efilingData.esDate!=null}">
+                <div th:replace="~{base/form/input :: readonly(label = #{esignature.date}, value = ${#dates.format(efilingData.esDate,dateTimeFormatDot)})}"></div>
+            </div>
+        </th:block>
+    </th:block>
+</div>
+</body>
+</html>

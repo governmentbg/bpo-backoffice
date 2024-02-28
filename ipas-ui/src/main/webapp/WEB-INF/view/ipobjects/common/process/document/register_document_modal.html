@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="modal(userdocReceptionRelations)" th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+    <div style="overflow: visible" th:id="register-document-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="#{process.panel.register.document.title}"></h4>
+            </div>
+            <div>
+                <div class="row">
+                    <div class="col-12">
+                        <div th:replace="~{base/form/input :: text(id = 'process-registerUserdoc-registrationNumber', value = ${registerDocumentForm?.registrationNumber}, label = #{process.document.register.registrationNumber})}"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div th:replace="~{base/form/input :: datepicker(id = 'process-registerUserdoc-filingDate', label = #{process.document.register.filingDate},classes = 'modal-date', value = ${registerDocumentForm != null and registerDocumentForm.filingDate != null ? #dates.format(registerDocumentForm.filingDate, dateFormatDot): ''})}"></div>
+                    </div>
+                </div>
+                <div class="row m_T10">
+                    <div class="col-12">
+                        <div th:replace="~{base/form/select :: object(
+                            id = 'process-registerUserdoc-userdocType', label = #{process.document.register.userdocType},
+                            name = 'userdoc.userdocType', emptySelectOption = #{default.select.option},
+                            classes = 'search-box', objects = ${userdocReceptionRelations},
+                            valuePointer = 'userdocType', textPointer = 'userdocName', selected = ${registerDocumentForm?.userdocType})}">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div th:replace="base/validation :: validation-message(${validationErrors},'process-registerUserdoc-errors')"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer row">
+            <div class="col-12">
+                <button th:id="submit-register-process-document" th:attr="data-url=@{/process/document/register/submit},data-validation-url=@{/process/document/register/validate}, data-validation-block='#register-document-modal'" class="button sm-icn-save wmin_130" th:text="#{btn.save}"> </button>
+                <button th:text="#{btn.cancel}" type="button" class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

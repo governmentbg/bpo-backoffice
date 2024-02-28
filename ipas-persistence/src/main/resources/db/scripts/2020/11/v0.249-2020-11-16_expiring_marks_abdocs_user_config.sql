@@ -1,0 +1,4 @@
+--liquibase formatted sql
+
+--changeset dveizov:249
+INSERT INTO IPASPROD.EXT_CONFIG_PARAM (CONFIG_CODE, VALUE) VALUES ('EXPIRING_MARK_NOTIFICATION_ABDOCS_DOCUMENT_TO', 'tslakova');

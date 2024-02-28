@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="file" type="bg.duosoft.ipas.core.model.file.CFile"*/-->
+<div th:fragment="persons(file)" th:with="personUtils = ${T(com.duosoft.ipas.util.PersonUtils)}">
+    <div th:replace="ipobjects/marklike/common/person/owners :: owners(${file})"></div>
+    <div th:replace="ipobjects/marklike/common/person/agents :: agents(${file})"></div>
+    <div th:replace="ipobjects/marklike/common/person/correspondence_address :: correspondence-address(${file})"></div>
+    <th:block th:if="${file.fileId.fileType == T(bg.duosoft.ipas.enums.FileType).ACP.code()}">
+        <div th:replace="ipobjects/marklike/acp/persons/infringer :: infringer(${file})"></div>
+        <div th:replace="ipobjects/marklike/acp/persons/agents :: agents(${file})"></div>
+        <div th:replace="ipobjects/marklike/acp/persons/correspondence_address :: correspondence-address(${file})"></div>
+    </th:block>
+</div>
+
+</body>
+</html>

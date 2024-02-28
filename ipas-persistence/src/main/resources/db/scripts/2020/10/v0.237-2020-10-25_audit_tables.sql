@@ -1,0 +1,74 @@
+--liquibase formatted sql
+
+--changeset ggeorgiev:237.1
+create schema AUDIT;
+
+
+--changeset ggeorgiev:237.2
+CREATE TABLE AUDIT.revinfo
+(
+    REV int identity(1, 1),
+    timestamp datetime,
+    user_id integer,
+    PRIMARY KEY ( REV )
+);
+
+--changeset ggeorgiev:237.3
+create table AUDIT.IP_PERSON
+(
+    ROW_VERSION numeric(9) not null,
+    PERSON_NBR numeric(8) not null,
+    PERSON_NAME nvarchar(700) not null,
+    PERSON_WCODE varchar(1),
+    NATIONALITY_COUNTRY_CODE varchar(2) not null,
+    AGENT_CODE numeric(5),
+    LEGAL_NATURE varchar(254),
+    TELEPHONE varchar(200),
+    EMAIL varchar(200),
+    PERSON_GROUP_NBR varchar(4),
+    GRAL_PERSON_ID_TYP varchar(4),
+    GRAL_PERSON_ID_NBR numeric(15),
+    INDI_PERSON_ID_TYP varchar(4),
+    INDI_PERSON_ID_NBR numeric(15),
+    COMPANY_REGISTER_DATE datetime,
+    COMPANY_REGISTER_NBR varchar(20),
+    GRAL_PERSON_ID_TXT varchar(25),
+    INDI_PERSON_ID_TXT varchar(25),
+    PERSON_NAME_LANG2 varchar(700),
+    LEGAL_NATURE_LANG2 varchar(254),
+    REV integer not null,
+    REVTYPE tinyint,
+    primary key (PERSON_NBR, REV)
+);
+
+
+--changeset ggeorgiev:237.4
+create table AUDIT.IP_PERSON_ADDRESSES
+(
+    ROW_VERSION numeric(9) not null,
+    PERSON_NBR numeric(8) not null,
+    ADDR_NBR numeric(4) not null,
+    ADDR_STREET nvarchar(2000),
+    ADDR_ZONE nvarchar(254),
+    CITY_NAME nvarchar(254),
+    CITY_CODE varchar(6),
+    RESIDENCE_COUNTRY_CODE varchar(2),
+    STATE_CODE varchar(6),
+    STATE_NAME varchar(254),
+    ZIPCODE varchar(16),
+    ADDR_STREET_LANG2 varchar(2000),
+    REV integer not null,
+    REVTYPE tinyint,
+    primary key (PERSON_NBR, ADDR_NBR, REV)
+)
+
+--changeset ggeorgiev:237.5
+INSERT INTO audit.revinfo (timestamp, user_id) VALUES ('2020-10-27', 4);
+
+INSERT INTO audit.IP_PERSON(ROW_VERSION, PERSON_NBR, PERSON_NAME, PERSON_WCODE, NATIONALITY_COUNTRY_CODE, AGENT_CODE, LEGAL_NATURE, TELEPHONE, EMAIL, PERSON_GROUP_NBR, GRAL_PERSON_ID_TYP, GRAL_PERSON_ID_NBR, INDI_PERSON_ID_TYP, INDI_PERSON_ID_NBR, COMPANY_REGISTER_DATE, COMPANY_REGISTER_NBR, GRAL_PERSON_ID_TXT, INDI_PERSON_ID_TXT, PERSON_NAME_LANG2, LEGAL_NATURE_LANG2, REV, REVTYPE)
+SELECT ROW_VERSION, PERSON_NBR, PERSON_NAME, PERSON_WCODE, NATIONALITY_COUNTRY_CODE, AGENT_CODE, LEGAL_NATURE, TELEPHONE, EMAIL, PERSON_GROUP_NBR, GRAL_PERSON_ID_TYP, GRAL_PERSON_ID_NBR, INDI_PERSON_ID_TYP, INDI_PERSON_ID_NBR, COMPANY_REGISTER_DATE, COMPANY_REGISTER_NBR, GRAL_PERSON_ID_TXT, INDI_PERSON_ID_TXT, PERSON_NAME_LANG2, LEGAL_NATURE_LANG2, (select rev from audit.revinfo), 0
+FROM IP_PERSON;
+
+INSERT INTO audit.IP_PERSON_ADDRESSES (ROW_VERSION, PERSON_NBR, ADDR_NBR, ADDR_STREET, ADDR_ZONE, CITY_NAME, CITY_CODE, RESIDENCE_COUNTRY_CODE, STATE_CODE, STATE_NAME, ZIPCODE, ADDR_STREET_LANG2, REV, REVTYPE)
+SELECT ROW_VERSION, PERSON_NBR, ADDR_NBR, ADDR_STREET, ADDR_ZONE, CITY_NAME, CITY_CODE, RESIDENCE_COUNTRY_CODE, STATE_CODE, STATE_NAME, ZIPCODE, ADDR_STREET_LANG2,  (select rev from audit.revinfo), 0
+FROM IP_PERSON_ADDRESSES;

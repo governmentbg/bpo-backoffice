@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="panel(newlyAllocatedUserdocs, total)"
+     th:with="collectionUtils = ${T(org.springframework.util.CollectionUtils)},
+              coreUtils=${T(com.duosoft.ipas.util.CoreUtils)}">
+
+    <div class="panel m_H260 br_20px z-depth-1">
+        <div class="pies">
+            <div class="pie-title">
+                <h3 th:text="#{newly.allocated.userdocs.title}"></h3>
+                <span  class="m_L10 sign bg__dark-blue h17-i" th:text="#{home.panel.max.results}"></span>
+            </div>
+            <div class="pie-count blue">
+                <svg class="icon">
+                    <use xlink:href="#icon-ring"></use>
+                </svg>
+                <span th:text="${total}"></span>
+            </div>
+        </div>
+        <div th:remove="tag" th:switch="${collectionUtils.isEmpty(newlyAllocatedUserdocs)}">
+            <div th:remove="tag" th:case="false">
+                <div class="h130">
+                    <ul class="m_T0">
+                        <li class="home-panel-list" th:each="newlyAllocatedUserdoc : ${newlyAllocatedUserdocs}" th:with="filingNumber=${newlyAllocatedUserdoc.externalSystemId}">
+                            <div th:remove="tag" th:with="name=${filingNumber + ', '+#dates.format(newlyAllocatedUserdoc.filingDate,T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT) + '  -  '+newlyAllocatedUserdoc.userdocTypeName}">
+                                <a class="b0 tooltip" th:classappend="${#strings.length(name) > coreUtils.HOME_PANEL_MAX_TEXT_LENGTH} ? 'tooltip'" th:attr="title=${#strings.length(name) > coreUtils.HOME_PANEL_MAX_TEXT_LENGTH} ? ${name} : ''"
+                                   th:href="@{/ipobject/view(filingNumber=${newlyAllocatedUserdoc.documentId.createFilingNumber()})}" th:text="${name}" th:data-blockui="true"></a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <span class="txtRight">
+                    <a class="button bg__dark-blue btn-sm" th:href="@{/newly-allocated-userdocs/list}" th:text="#{btn.view.all.small}" th:data-blockui="true"></a>
+                </span>
+            </div>
+            <div th:case="true" class="m_T10">
+                <div th:replace="base/message :: info(#{empty.list})"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

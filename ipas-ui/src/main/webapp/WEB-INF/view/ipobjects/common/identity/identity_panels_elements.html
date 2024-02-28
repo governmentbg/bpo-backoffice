@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:remove="tag" th:fragment="applicationType">
+    <div th:class="${classes}" th:classappend="${#strings.isEmpty(applicationType)}?none"
+         th:with="applicationType = ${file.filingData.applicationType}">
+        <div th:replace="~{base/form/select :: map(id = 'object-file-filingData-applicationType', label = 'Тип', map = ${applicationTypesMap}, selected = ${applicationType}, url = @{/identity/update-application-subtype})}"></div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="applicationSubType">
+    <div th:class="${classes}" th:classappend="${#strings.isEmpty(file.filingData.applicationSubtype)}?none"
+         th:id="applicationSubtype-select-wrapper">
+        <div th:replace="~{ :: subtype-select(${applicationSubTypes},${file})}"></div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="publicationTyp">
+    <div th:class="${classes}" th:classappend="${objectUtils.isNull(publicationTyp)}?none"
+         th:with="publicationTyp = ${file.filingData.publicationTyp}">
+        <div class="input-field">
+            <select th:id="object-file-filingData-publicationTyp">
+                <option th:text="'Няма'" th:value="''"></option>
+                <option th:each="publicationTypeEnum : ${T(bg.duosoft.ipas.enums.FilePublicationTyp).values()}"
+                        th:value="${publicationTypeEnum.code()}"
+                        th:text="${publicationTypeEnum.description()}"
+                        th:selected="${#strings.equalsIgnoreCase(publicationTyp,publicationTypeEnum.code())}">
+            </select>
+            <label th:for="object-file-filingData-publicationTyp" th:text="'Вид досие'"></label>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="receptionDate">
+    <div th:class="${classes}" th:classappend="${#strings.isEmpty(receptionDate)}?none"
+         th:with="receptionDate=${file.filingData.receptionDate}">
+        <div th:replace="~{base/form/input :: readonly(label = 'Въвеждане в системата', value = ${#dates.format(receptionDate,dateTimeFormatDot)})}"></div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="filingDate">
+    <div th:class="${classes}" th:classappend="${#strings.isEmpty(filingDate)}?none"
+         th:with="filingDate=${file.filingData.filingDate}">
+        <div th:replace="~{base/form/input :: datepicker(id = 'object-file-filingData-filingDate', label = ${label}, value = ${#dates.format(filingDate,dateFormatDot)})}"></div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="registrationNbr">
+    <div th:class="${classes}" th:classappend="${objectUtils.isNull(registrationNbr)}?none"
+         th:with="registrationNbr=${file.registrationData.registrationId.registrationNbr}">
+        <div th:replace="~{base/form/input :: text(id = 'object-file-registrationData-registrationId-registrationNbr', label = 'Регистров номер', value = ${registrationNbr}, regex='^\d*$')}"></div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="registrationDup">
+    <div th:class="${classes}" th:classappend="${objectUtils.isNull(registrationDup)}?none"
+         th:with="registrationDup=${file.registrationData.registrationId.registrationDup}, id = 'object-file-registrationData-registrationId-registrationDup'">
+        <div th:replace="~{base/form/input :: text(id = ${id}, label = 'Рег. суфикс', value = ${registrationDup})}"></div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="notInForceDate">
+    <div th:class="${classes}" th:classappend="${#strings.isEmpty(notInForceDate)}?none">
+        <div th:replace="~{base/form/input :: datepicker(id = 'object-notInForceDate', label = ${label}, value = ${#dates.format(notInForceDate,dateFormatDot)})}"></div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="receptionRequest">
+    <div th:class="${classes}" th:if="${objectUtils.nonNull(receptionRequest)}">
+        <div th:replace="~{base/form/input :: readonly(label = 'Начин на заявяване', value = ${receptionRequest.submissionType.name})}"></div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="identityGeneratedDocument">
+    <div th:class="${classes}">
+        <div th:replace="~{base/form/input :: link(label = #{identity.generated.document.title}, text = #{process.tree.open.in.abdocs}, dataUrl = @{/process/document/open-object-document},
+                         dataAction = 'abdocs-object-redirect', dataNumber = ${file.fileId.createFilingNumber()} )}"></div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="publicRegisterDocument">
+    <div th:class="${classes}">
+        <div th:replace="~{base/form/input :: link(label = #{public.register.title}, text = #{btn.public.register.full}, dataUrl = @{/public-register/open-public-register},
+                         dataAction = 'public-register-object-redirect', dataNumber = ${file.fileId.createFilingNumber()} )}"></div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="dividedObjects">
+    <div class="row" th:if="${fileRelationshipUtils.isContainsDividedObjects(file.relationshipList)}"
+         th:each="type : ${fileRelationshipUtils.findDividedObjectsUniqueTypes(file.relationshipList)}">
+        <div class="col-12">
+            <div class="row m_B5">
+                <div th:replace="~{base/form/label :: active(title = ${relationshipTypeMap?.get(type).relationshipDirectName})}"></div>
+            </div>
+            <div class="row">
+                <div th:replace="~{:: relationship-links(relationshipList = ${fileRelationshipUtils.findDividedObjects(file.relationshipList,type)})}"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="relationshipExtendedObjects(relationshipExtended)">
+    <div class="row" th:if="${fileRelationshipUtils.isContainsRelationshipExtendedObjects(relationshipExtended)}">
+        <div class="col-12">
+            <div class="row m_B5">
+                <div th:replace="~{base/form/label :: active(title = ${relationshipTypeMap?.get(relationshipExtended.relationshipType).relationshipInverseName} +' '+ ${fileRelationshipUtils.getRelationshipExtendedApplicationTypeTranslation(@messageSource,relationshipExtended)})}"></div>
+            </div>
+            <div class="row">
+                <span th:text="${relationshipExtended.filingNumber} +'/'+${#dates.format(relationshipExtended.filingDate,dateFormatDot)}"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="superObjects">
+    <div class="row m_T10" th:if="${fileRelationshipUtils.isContainsSuperObjects(file.relationshipList)}"
+         th:each="type : ${fileRelationshipUtils.findSuperObjectsUniqueTypes(file.relationshipList)}">
+        <div class="col-12">
+            <div class="row m_B5">
+                <div th:replace="~{base/form/label :: active(title = ${relationshipTypeMap.get(type).relationshipInverseName})}"></div>
+            </div>
+            <div class="row">
+                <div th:replace="~{:: relationship-links(relationshipList = ${fileRelationshipUtils.findSuperObjects(file.relationshipList,type)})}"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="indFaxReception">
+    <div th:if="${objectUtils.nonNull(file.filingData.receptionDocument.indFaxReception)}">
+        <hr>
+        <div class="row">
+            <div th:class="${classes}">
+                <div th:replace="~{base/form/checkbox :: basic(id = 'object-file-filingData-indFaxReception', label = 'Получен оригинал', isChecked = ${!(file.filingData.receptionDocument.indFaxReception)}, additionalArgs='data-revert=true')}"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="entitlementDate">
+    <div th:class="${classes}" th:classappend="${objectUtils.isNull(entitlementDate)}?none"
+         th:with="entitlementDate=${file.registrationData.entitlementDate}, id = 'object-file-registrationData-entitlementDate'">
+        <div th:remove="tag" th:if="${objectUtils.isNull(entitlementDate)}">
+            <div th:replace="~{base/form/input :: datepicker(id = ${id}, label = ${label}, value = ${defaultValues.entitlementDate == null} ? '' : ${#dates.format(defaultValues.entitlementDate,dateFormatDot)})}"></div>
+        </div>
+        <div th:remove="tag" th:if="${objectUtils.nonNull(entitlementDate)}">
+            <div th:replace="~{base/form/input :: datepicker(id = ${id}, label = ${label}, value = ${#dates.format(entitlementDate,dateFormatDot)})}"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="registrationDate">
+    <div th:class="${classes}" th:classappend="${objectUtils.isNull(registrationDate)}?none"
+         th:with="registrationDate=${file.registrationData.registrationDate}">
+        <div th:replace="~{base/form/input :: datepicker(id = 'object-file-registrationData-registrationDate', label = ${label}, value = ${#dates.format(registrationDate,dateFormatDot)})}"></div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="expirationDate">
+    <div class="col-4" th:classappend="${objectUtils.isNull(expirationDate)}?none"
+         th:with="expirationDate=${file.registrationData.expirationDate}, id = 'object-file-registrationData-expirationDate'">
+        <div th:remove="tag" th:if="${objectUtils.isNull(expirationDate)}">
+            <div th:replace="~{base/form/input :: datepicker(id = ${id}, label = ${label}, value = ${defaultValues.expirationDate == null} ? '' : ${#dates.format(defaultValues.expirationDate,dateFormatDot)})}"></div>
+        </div>
+        <div th:remove="tag" th:if="${objectUtils.nonNull(expirationDate)}">
+            <div th:replace="~{base/form/input :: datepicker(id = ${id}, label = ${label}, value = ${#dates.format(expirationDate,dateFormatDot)})}"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="notes">
+    <div th:class="${classes}" th:classappend="${objectUtils.isNull(notes)}?none" th:with="notes=${file.notes}">
+        <div th:replace="~{base/form/textarea :: basic(id = 'object-file-notes', label = 'Бележки', value = ${notes})}"></div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="bg"
+      th:with="title=${#messages.msg('nice.class.administration.title')}">
+
+<head th:replace="base/template :: head(title=${title})"></head>
+
+<body class="dark left-sidebar-show">
+
+<header class="app-header" th:replace="base/header"></header>
+
+<div class="app-body">
+    <div class="left-sidebar">
+        <div id="psb" class="ps--active-y">
+            <nav class="sidebar-nav">
+                <ul class="nav DropDownMenu">
+                    <li th:each="url : ${T(com.duosoft.ipas.util.UrlMap).ADMIN_PANEL_URLS}">
+                        <a th:href="@{${url.url}}" th:title="${#messages.msgOrNull(url.text)}"
+                           th:text="${#messages.msgOrNull(url.shortText)}"></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <main class="main">
+        <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+        <div class="inner continer">
+            <div class="row">
+                <div class="col-12">
+                    <div class="panel" th:id="nice-class-list-page-wrapper">
+                        <div class="center">
+                            <h1 class="section-header" th:text="${title}"></h1>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12" th:id="nice-class-table-wrapper">
+                                <div class="m_T10">
+                                    <table class="simple bpo">
+                                        <thead>
+                                        <tr>
+                                            <th th:text="#{mark.nice.class}"></th>
+                                            <th style="width: 55px" th:text="#{options.label}"></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="niceClass : ${niceClasses}">
+                                            <td>
+                                                <span th:text="${niceClass}"></span>
+                                            </td>
+                                            <td class="p_0 center">
+                                                <a th:replace="~{base/form/button :: material-table-btn(title = #{btn.edit},dataAction='edit-nice-class',  href = @{/admin/nice-class/edit/{id}(id=${niceClass})} , icon = 'edit')}"></a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<footer class="page-footer" th:replace="base/footer"></footer>
+<div th:replace="base/template :: js-footer" th:remove="tag"></div>
+</body>

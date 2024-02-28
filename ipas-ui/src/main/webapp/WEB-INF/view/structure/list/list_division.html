@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="division" type="com.duosoft.ipas.webmodel.structure.DivisionWebModel"*/-->
+
+<div class="row" th:fragment="list-division(division)" th:remove="tag" th:with="d=${division.division},index=${division.division.officeStructureId.officeDivisionCode}">
+
+    <li th:attr="data-li=${index},data-division=${d.officeStructureId.officeDivisionCode},data-url=@{/structure/list/division-node},data-load=${division.loaded}" class="has-children">
+
+        <div th:replace="structure/list/list_structure_template :: formFields(isActive=${d.active},name=${d.name},
+                                                editHref=@{/structure/division/edit/{divUrl}(divUrl=${d.officeStructureId.officeDivisionCode})},viewHref=@{/structure/division/view/{divUrl}(divUrl=${d.officeStructureId.officeDivisionCode})},deleteHref=@{/structure/division/delete/{divUrl}(divUrl=${d.officeStructureId.officeDivisionCode})},activateHref=@{/structure/division/activate/{divUrl}(divUrl=${d.officeStructureId.officeDivisionCode})}, id=${d.officeStructureId.officeDivisionCode},nav=${index})">
+        </div>
+        <ul th:id="'LinkedList' + ${index}" class="Linked-List" th:if="${division.loaded}">
+            <li class="has-children"><div th:replace="structure/list/list_employees :: list-employees(employees=${division.employees},index=${index} + '-1')"></div></li>
+            <li class="has-children"><div th:replace="structure/list/list_departments :: list-departments(departments=${division.departments},index=${index} + '-2')"></div></li>
+        </ul>
+    </li>
+
+
+</div>
+
+
+</body>
+</html>

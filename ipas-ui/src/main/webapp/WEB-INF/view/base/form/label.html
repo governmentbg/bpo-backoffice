@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:remove="tag" th:fragment="active(title)">
+    <div class="input-field readonly" th:classappend="${wrapperClasses != null} ? ${wrapperClasses}">
+        <label class="active" th:text="${title}" th:classappend="${classes != null} ? ${classes}"></label>
+    </div>
+</div>
+
+</body>
+</html>

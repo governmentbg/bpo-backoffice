@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="table(userdocWaitingTermsList, userdocWaitingTermsCount, userdocWaitingTermsFilter)"
+     th:with="sorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.SorterUtils)},userdocWaitingTermsSorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.MyUserdocsSorterUtils)},
+     coreUtils=${T(com.duosoft.ipas.util.CoreUtils)},securityUtils=${T(bg.duosoft.ipas.util.security.SecurityUtils)}, securityRoles=${T( bg.duosoft.ipas.enums.security.SecurityRole)}">
+
+    <div th:remove="tag" th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(userdocWaitingTermsList)}">
+        <div th:remove="tag" th:case="true">
+            <div class="bg__light-blue p_10 m_B10 m_T10 center">
+                <span th:text="#{empty.list}"></span>
+            </div>
+        </div>
+        <div th:remove="tag" th:case="false">
+            <div class="row">
+                <div>
+                    <span th:text="#{total}"></span>
+                    <span th:text="${userdocWaitingTermsCount}"></span>
+                </div>
+            </div>
+            <div class="m_T5">
+                <table class="simple bpo">
+                    <thead>
+                    <tr>
+                        <th style="width: 50px" th:text="'Номер'"></th>
+                        <th style="width: 200px" th:with="isSelected=${#strings.equalsIgnoreCase(userdocWaitingTermsFilter.sortColumn,userdocWaitingTermsSorterUtils.REGISTRATION_NUMBER)},dataSort=${userdocWaitingTermsSorterUtils.REGISTRATION_NUMBER}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,userdocWaitingTermsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Входящ номер',${userdocWaitingTermsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th style="width: 200px" th:with="isSelected=${#strings.equalsIgnoreCase(userdocWaitingTermsFilter.sortColumn,userdocWaitingTermsSorterUtils.USERDOC_TYPE)},dataSort=${userdocWaitingTermsSorterUtils.USERDOC_TYPE}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,userdocWaitingTermsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Вида на документа',${userdocWaitingTermsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th style="width: 150px" th:with="isSelected=${#strings.equalsIgnoreCase(userdocWaitingTermsFilter.sortColumn,userdocWaitingTermsSorterUtils.EXPIRATION_DATE)},dataSort=${userdocWaitingTermsSorterUtils.EXPIRATION_DATE}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,userdocWaitingTermsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Дата на изтичане',${userdocWaitingTermsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th style="width: 400px" th:text="'Обект'"></th>
+                        <th th:if="${securityUtils.hasRights(securityRoles.IpObjectsSearchForeignObjectsData)}" style="width: 150px" th:text="#{tableHeader.responsibleUser.label}"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="userdoc,myUserdocStat : ${userdocWaitingTermsList}">
+                        <td>
+                            <span th:text="${myUserdocStat.count + ((userdocWaitingTermsFilter.page - 1)*userdocWaitingTermsFilter.pageSize)}"></span>
+                        </td>
+                        <td>
+                            <a th:text="${!T(java.util.Objects).isNull(userdoc.externalSystemId)}?${userdoc.externalSystemId}:${userdoc.documentId.createFilingNumber()}" th:href="@{/ipobject/view(userdocFilingNumber=${userdoc.documentId.createFilingNumber()})}"></a>
+                        </td>
+                        <td>
+                            <span th:text="${userdoc.userdocTypeName}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${#dates.format(userdoc.expirationDate,T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}"></span>
+                        </td>
+                        <td th:with="regNumLabel=#{my.userdocs.reg.nbr.title},objectFilingNumber=${userdoc.userdocIpObject.cFileId.createFilingNumber()},regNumText=${!T(java.util.Objects).isNull(userdoc.userdocIpObject.registrationNbr)}?${#strings.concat('; ',regNumLabel,userdoc.userdocIpObject.registrationNbr)}
+                                     ,titleText=${!T(java.util.Objects).isNull(userdoc.userdocIpObject.title) && #strings.length(userdoc.userdocIpObject.title) > coreUtils.HOME_PANEL_MAX_TEXT_LENGTH_50}?${'; '.concat(#strings.substring(userdoc.userdocIpObject.title,0,coreUtils.HOME_PANEL_MAX_TEXT_LENGTH_50).concat('...'))}:(${!T(java.util.Objects).isNull(userdoc.userdocIpObject.title)}?${#strings.concat('; ',userdoc.userdocIpObject.title)})">
+                            <a th:text="${#strings.concat(objectFilingNumber,regNumText,titleText)}" th:href="@{/ipobject/view(filingNumber=${objectFilingNumber})}"></a>
+                        </td>
+                        <td th:if="${securityUtils.hasRights(securityRoles.IpObjectsSearchForeignObjectsData)}">
+                            <span th:text="${userdoc.responsibleUserName}"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div th:replace="base/paginator :: paginator(page=${userdocWaitingTermsFilter.page},pageSize=${userdocWaitingTermsFilter.pageSize},total=${userdocWaitingTermsCount},baseUrl=@{userdoc-waiting-terms/update-table},
+                        tableContainerDiv='userdoc-waiting-terms-table-wrapper',
+                        additionalParams='&tableCount='+${userdocWaitingTermsCount}+${userdocWaitingTermsFilter.userdocType != null ? '&userdocType='+userdocWaitingTermsFilter.userdocType : '' }+
+                        ${userdocWaitingTermsFilter.userdocGroupName != null ? '&userdocGroupName='+userdocWaitingTermsFilter.userdocGroupName : '' }+
+                        '&sortOrder='+${userdocWaitingTermsFilter.sortOrder}+ ${userdocWaitingTermsFilter.sortColumn!=null ? '&sortColumn='+ userdocWaitingTermsFilter.sortColumn:''}+
+                        ${userdocWaitingTermsFilter.responsibleUser != null ? '&responsibleUser='+userdocWaitingTermsFilter.responsibleUser : '' })">
+                </div>
+            </div>
+            <div>
+                <input th:type="hidden" class="form-ignore" th:id="userdoc-waiting-terms-page" th:value="${userdocWaitingTermsFilter.page}">
+                <input th:type="hidden" class="form-ignore" th:id="table-count" th:value="'?tableCount='+${userdocWaitingTermsCount}">
+                <input th:type="hidden" class="form-ignore" th:id="userdoc-waiting-terms-pageSize" th:value="${userdocWaitingTermsFilter.pageSize}">
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

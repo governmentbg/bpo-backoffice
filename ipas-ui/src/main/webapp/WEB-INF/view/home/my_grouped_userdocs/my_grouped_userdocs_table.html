@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="table(myUserdocsList, myUserdocsCount, myUserdocsFilter)"
+     th:with="sorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.SorterUtils)},myUserdocsSorterUtils=${T(bg.duosoft.ipas.util.filter.sorter.MyUserdocsSorterUtils)},
+     coreUtils=${T(com.duosoft.ipas.util.CoreUtils)},securityUtils=${T(bg.duosoft.ipas.util.security.SecurityUtils)}, securityRoles=${T( bg.duosoft.ipas.enums.security.SecurityRole)}">
+
+    <div th:remove="tag" th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(myUserdocsList)}">
+        <div th:remove="tag" th:case="true">
+            <div class="bg__light-blue p_10 m_B10 m_T10 center">
+                <span th:text="#{empty.list}"></span>
+            </div>
+            <input th:type="hidden" class="form-ignore" th:id="my-userdocs-group-name" th:value="${myUserdocsFilter.userdocGroupName}">
+        </div>
+        <div th:remove="tag" th:case="false">
+            <div class="row">
+                <div>
+                    <span th:text="#{total}"></span>
+                    <span th:text="${myUserdocsCount}"></span>
+                </div>
+            </div>
+            <div class="m_T5">
+                <table class="simple bpo">
+                    <thead>
+                    <tr>
+                        <th  th:text="'Номер'"></th>
+                        <th  th:with="isSelected=${#strings.equalsIgnoreCase(myUserdocsFilter.sortColumn,myUserdocsSorterUtils.REGISTRATION_NUMBER)},dataSort=${myUserdocsSorterUtils.REGISTRATION_NUMBER}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,myUserdocsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Входящ номер',${myUserdocsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+
+                        <th th:with="isSelected=${#strings.equalsIgnoreCase(myUserdocsFilter.sortColumn,myUserdocsSorterUtils.FILING_DATE)},dataSort=${myUserdocsSorterUtils.FILING_DATE}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,myUserdocsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Дата на подаване',${myUserdocsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+
+                        <th th:with="isSelected=${#strings.equalsIgnoreCase(myUserdocsFilter.sortColumn,myUserdocsSorterUtils.USERDOC_TYPE)},dataSort=${myUserdocsSorterUtils.USERDOC_TYPE}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,myUserdocsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Вида на документа',${myUserdocsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th th:with="isSelected=${#strings.equalsIgnoreCase(myUserdocsFilter.sortColumn,myUserdocsSorterUtils.STATUS)},dataSort=${myUserdocsSorterUtils.STATUS}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,myUserdocsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter('Статус',${myUserdocsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+                        <th th:text="'Обект'"></th>
+
+                        <th th:with="isSelected=${#strings.equalsIgnoreCase(myUserdocsFilter.sortColumn,myUserdocsSorterUtils.USER_NAME)},dataSort=${myUserdocsSorterUtils.USER_NAME}"
+                            th:attr="data-action='table-sort',data-sort=${dataSort},data-order=${sorterUtils.getNextSortOrder(isSelected,myUserdocsFilter.sortOrder)}">
+                            <div th:replace="base/table_sorter :: sorter(#{tableHeader.responsibleUser.label},${myUserdocsFilter.sortOrder},${isSelected})"></div>
+                        </th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="userdoc,myUserdocStat : ${myUserdocsList}" th:classappend="${T(java.util.Objects).nonNull(userdoc.newlyAllocated)} ? 'newly-allocated-process-status'">
+                        <td>
+                            <span th:text="${myUserdocStat.count + ((myUserdocsFilter.page - 1)*myUserdocsFilter.pageSize)}"></span>
+                        </td>
+                        <td>
+                            <a th:text="${!T(java.util.Objects).isNull(userdoc.externalSystemId)}?${userdoc.externalSystemId}:${userdoc.documentId.createFilingNumber()}" th:href="@{/ipobject/view(userdocFilingNumber=${userdoc.documentId.createFilingNumber()})}"></a>
+                        </td>
+                        <td>
+                            <span th:text="${#dates.format(userdoc.filingDate,T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${userdoc.userdocTypeName}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${userdoc.statusName}"></span>
+                        </td>
+                        <td th:with="regNumLabel=#{my.userdocs.reg.nbr.title},objectFilingNumber=${userdoc.userdocIpObject.cFileId.createFilingNumber()},regNumText=${!T(java.util.Objects).isNull(userdoc.userdocIpObject.registrationNbr)}?${#strings.concat('; ',regNumLabel,userdoc.userdocIpObject.registrationNbr)}
+                                   , objectStatusName= ${#strings.concat('; ',userdoc.userdocIpObject.objectStatusName)} ,titleText=${!T(java.util.Objects).isNull(userdoc.userdocIpObject.title) && #strings.length(userdoc.userdocIpObject.title) > coreUtils.HOME_PANEL_MAX_TEXT_LENGTH_50}?${'; '.concat(#strings.substring(userdoc.userdocIpObject.title,0,coreUtils.HOME_PANEL_MAX_TEXT_LENGTH_50).concat('...'))}:(${!T(java.util.Objects).isNull(userdoc.userdocIpObject.title)}?${#strings.concat('; ',userdoc.userdocIpObject.title)})">
+                            <a th:text="${#strings.concat(objectFilingNumber,regNumText,titleText,objectStatusName)}" th:href="@{/ipobject/view(filingNumber=${objectFilingNumber})}"></a>
+                        </td>
+                        <td>
+                            <span th:text="${userdoc.responsibleUserName}"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="home-panel-paginator">
+                    <div th:replace="base/paginator :: paginator(page=${myUserdocsFilter.page},pageSize=${myUserdocsFilter.pageSize},total=${myUserdocsCount},baseUrl=@{my-grouped-userdocs/update-table},
+                        tableContainerDiv='my-userdocs-table-wrapper',
+                        additionalParams='&tableCount='+${myUserdocsCount}+${myUserdocsFilter.userdocType != null ? '&userdocType='+myUserdocsFilter.userdocType : '' }+
+                        ${myUserdocsFilter.userdocGroupName != null ? '&userdocGroupName='+myUserdocsFilter.userdocGroupName : '' }+
+                        ${myUserdocsFilter.objectFileNbr != null ? '&objectFileNbr='+myUserdocsFilter.objectFileNbr : '' }+
+                        ${myUserdocsFilter.userdocFilingDateFrom != null ? '&userdocFilingDateFrom='+myUserdocsFilter.userdocFilingDateFrom : '' }+
+                        ${myUserdocsFilter.userdocFilingDateTo != null ? '&userdocFilingDateTo='+myUserdocsFilter.userdocFilingDateTo : '' }+
+                        '&inProduction='+${myUserdocsFilter.inProduction}+
+                        '&finished='+${myUserdocsFilter.finished}+
+                        '&newlyAllocated='+${myUserdocsFilter.newlyAllocated}+
+                        ${myUserdocsFilter.userdocFilingNumber != null ? '&userdocFilingNumber='+myUserdocsFilter.userdocFilingNumber : '' }+
+                        ${myUserdocsFilter.statusCode != null ? '&statusCode='+myUserdocsFilter.statusCode : '' }+
+                        ${myUserdocsFilter.objectFileTyp != null ? '&objectFileTyp='+myUserdocsFilter.objectFileTyp : '' }+
+                        '&sortOrder='+${myUserdocsFilter.sortOrder}+ ${myUserdocsFilter.sortColumn!=null ? '&sortColumn='+ myUserdocsFilter.sortColumn:''} +
+                         ${myUserdocsFilter.responsibleUser != null ? '&responsibleUser='+myUserdocsFilter.responsibleUser : '' })">
+                    </div>
+                </div>
+            </div>
+            <div>
+                <input th:type="hidden" class="form-ignore" th:id="my-userdocs-group-name" th:value="${myUserdocsFilter.userdocGroupName}">
+                <input th:type="hidden" class="form-ignore" th:id="table-count" th:value="'?tableCount='+${myUserdocsCount}">
+                <input th:type="hidden" class="form-ignore" th:id="my-userdocs-page" th:value="${myUserdocsFilter.page}">
+                <input th:type="hidden" class="form-ignore" th:id="my-userdocs-pageSize" th:value="${myUserdocsFilter.pageSize}">
+            </div>
+        </div>
+        <div class="position-relative m_T20" style="padding-bottom: 10px">
+            <div class="position-absolute left">
+                <span style="border: 1px solid #ffffff; padding-left:30px;background: lightgray" class="m_R10"></span>
+                <span style="font-size: 12px" th:text="'Новоразпределени заявки'"></span>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="base/template :: head(title=#{structure.title})"></head>
+<body class="dark">
+
+<header class="app-header" th:replace="base/header"></header>
+
+
+<div class="app-body">
+
+    <div class="left-sidebar">
+        <div id="psb" class="ps--active-y">
+        </div><!-- #psb -->
+    </div><!-- .left-sidebar -->
+
+    <!-- ********************************************************** Main body -->
+    <main class="main">
+        <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+        <div class="inner">
+            <div class="panel" th:with="securityRole=${T( bg.duosoft.ipas.enums.security.SecurityRole)}">
+
+                <div class="row" th:if="${#securityUtil.hasRights(securityRole.StructureEdit)}">
+                    <div class="col-3">
+                        <a th:href="@{/structure/user/new}" class="button sm-icn-add" th:text="#{employee.add}"></a>
+                    </div>
+                    <div class="col-3">
+                        <a th:href="@{/structure/division/new}" class="button sm-icn-add" th:text="#{division.add}"></a>
+                    </div>
+                    <div class="col-3">
+                        <a th:href="@{/structure/department/new/}" class="button sm-icn-add" th:text="#{department.add}"></a>
+                    </div>
+                    <div class="col-3">
+                        <a th:href="@{/structure/section/new/}" class="button sm-icn-add" th:text="#{section.add}"></a>
+                    </div>
+                </div>
+                <div class="center m_T40">
+                    <h2 class="inline-block" th:text="#{structure.title}"></h2>
+                </div>
+                <div class="m_T10">&nbsp;</div>
+
+                <form th:action="@{/structure/find}" method="get" id="searchForm">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="input-field">
+                                <input th:placeholder="#{search.structure.user.text}" id="partOfName" type="text" class="" name="partOfName" th:value="${param.partOfName}">
+                                <label for="partOfName" th:text="#{search.label}"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <button type="button" id="search_structure" class="button sm-icn-reload" th:text="#{btn.search}"></button>
+                        </div>
+                        <div class="col-6 right-align">
+                            <a th:href="@{/structure/list}" class="button sm-icn-reload" th:text="#{btn.clear}" id="clear_search_structure"></a>
+                        </div>
+                    </div>
+                </form>
+                <div class="m_T20">&nbsp;</div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div th:replace="structure/list/list_divisions :: list-divisions(divisions=${divisions},index='')"></div>
+                    </div>
+                </div>
+
+                <div id="collapse-div" th:hidden="hidden" th:attr="data-collapse=${collapse}" ></div>
+                <div id="data-nav-url" th:hidden="hidden" th:attr="data-nav-url=@{/structure/list/updateNav}"></div>
+                <div id="nav" th:hidden="hidden" th:attr="data-nav=${nav}"></div>
+
+            </div><!-- .inner -->
+        </div>
+        <div id="modify_structure_status"></div>
+    </main>
+</div>
+
+<!-- JQuery files -->
+<footer class="page-footer" th:replace="base/footer"></footer>
+<div th:replace="base/template :: js-footer" th:remove="tag"></div>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        addStructureEvents();
+        if ($("[data-collapse='true']").length > 0) {
+            collapseStructureNode();
+        }
+        resetStructureNav();
+    });
+</script>
+</body>
+</html>

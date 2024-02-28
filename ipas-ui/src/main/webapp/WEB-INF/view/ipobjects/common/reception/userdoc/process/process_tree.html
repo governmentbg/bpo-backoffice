@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="process" type="bg.duosoft.ipas.core.model.process.CProcess"*/-->
+<!--/*@thymesVar id="eventUserdoc" type="bg.duosoft.ipas.core.model.process.CUserdocProcessEvent"*/-->
+<!--/*@thymesVar id="processEvent" type="bg.duosoft.ipas.core.model.process.CProcessEvent"*/-->
+<div th:fragment="main-object(filingNumber, process, childrenIds)"
+     th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)},dateTimeFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT},objectUtil=${T(java.util.Objects)}">
+    <ul th:id="userdoc-related-object-process" class="Linked-List" style="padding-top: 8px;" th:attr="data-action='userdoc-reception-process-tree',data-tree='userdoc-reception-tree',data-url=@{/reception/create/load-userdoc-process-tree},data-process=|${process.processId.processType}-${process.processId.processNbr}|,data-visible=${isVisible}">
+        <li style="border: 0 !important;">
+            <div class="row">
+                <div class="col-11">
+                    <div th:title="#{reception.udoc.tree.number}"
+                         th:text="${filingNumber}"></div>
+                </div>
+                <div class="col-1 txtRight">
+                    <div>
+                        <label>
+                            <input class="with-gap" th:value="${filingNumber}" th:name="selected-userdoc-related-object" th:type="radio" th:checked="${true}"/>
+                            <span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div th:replace=" :: tree(process = ${process}, isFullyLoad = false, childrenIds = ${childrenIds})"></div>
+        </li>
+    </ul>
+</div>
+
+<div th:fragment="tree(process, isFullyLoad, childrenIds)"
+     th:with="collectionUtils=${T(org.springframework.util.CollectionUtils)},dateTimeFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT},objectUtil=${T(java.util.Objects)}">
+    <div th:if="${!collectionUtils.isEmpty(process.processEventList)}" th:remove="tag">
+        <ul style="border: 0 !important;" th:if="${T(com.duosoft.ipas.util.ProcessUtils).isContainUserdoc(process.processEventList)}">
+            <div th:remove="tag" th:each="processEvent : ${process.processEventList}">
+                <div th:replace=" :: node(processEvent = ${processEvent}, isFullyLoad = ${isFullyLoad}, childrenIds = ${childrenIds})"></div>
+            </div>
+        </ul>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="node(processEvent, isFullyLoad, childrenIds)" th:with="
+    collectionUtils=${T(org.springframework.util.CollectionUtils)},
+    dateTimeFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT},
+    objectUtil=${T(java.util.Objects)},
+    userdocUtils=${T(bg.duosoft.ipas.util.userdoc.UserdocUtils)},
+    dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT}">
+
+    <div th:remove="tag" th:with="isUserdoc=${processEvent.eventType == 'USERDOC'}, processIdentifier=${T(com.duosoft.ipas.util.ProcessUtils).getProcessEventIdentifier(processEvent)}">
+        <li th:classappend="${isUserdoc && childrenIds.contains(processIdentifier)} ? 'has-children'" th:attrappend="aria-hidden=${!isFullyLoad}?'true'"
+            th:attr="data-load=${isFullyLoad},data-type=${processEvent.eventType},data-process=${processIdentifier}">
+            <div th:remove="tag" th:if="${isUserdoc}" th:with="eventUserdoc=${processEvent.eventUserdoc}">
+                <div class="row" th:classappend="${userdocUtils.isFilingDateThirtyDaysEarlier(eventUserdoc.filingDate)} ? 'm-green lighten-4'">
+                    <div class="col-1">
+                        <i class="dth-sm-doc-in " th:title="#{reception.udoc.tree.userdoc}"></i>
+                    </div>
+                    <div class="col-3" th:with="number=(${#strings.isEmpty(eventUserdoc.externalSystemId)} ? #{not.registered} : ${eventUserdoc.externalSystemId})">
+                        <span th:title="#{process.tree.filing.number}" th:text="|${number} / ${#dates.format(eventUserdoc.filingDate, dateFormatDot)}|"></span>
+                    </div>
+                    <div class="col-4">
+                        <a class="b0 p_0"
+                           th:title="#{reception.udoc.tree.userdoc.type}" th:target="_blank"
+                           th:href="@{/ipobject/view(userdocFilingNumber=${eventUserdoc.documentId.createFilingNumber()})}"
+                           th:text="${processEvent.eventDescription}"></a>
+                    </div>
+                    <div  class="col-3">
+                        <div th:switch="${objectUtil.nonNull(eventUserdoc.applicantName)}">
+                            <div th:case="true" th:title="#{reception.udoc.tree.applicant}" th:text="${eventUserdoc.applicantName}"></div>
+                            <div th:case="*" th:title="#{reception.udoc.tree.notes}" th:text="${eventUserdoc.notes}"></div>
+                        </div>
+                    </div>
+                    <div class="col-1 txtRight">
+                        <div>
+                            <label>
+                                <input class="with-gap" th:value="|${eventUserdoc.documentId.docOrigin}/${eventUserdoc.documentId.docLog}/${eventUserdoc.documentId.docSeries}/${eventUserdoc.documentId.docNbr}|" th:name="selected-userdoc-related-object" th:type="radio" />
+                                <span></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div th:if="${isFullyLoad}" th:remove="tag"
+                     th:with="userdocProcess=${@processServiceImpl.selectProcess(eventUserdoc.userdocProcessId, true)},
+                              childrenIds = ${@processServiceImpl.selectProcessIdsOfUserdocAndOffidocChildren(eventUserdoc.userdocProcessId)} ">
+                    <div th:if="${objectUtil.nonNull(userdocProcess)}">
+                        <div th:replace=" :: tree(${userdocProcess},${false}, ${childrenIds})"></div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </div>
+</div>
+
+
+</body>
+</html>

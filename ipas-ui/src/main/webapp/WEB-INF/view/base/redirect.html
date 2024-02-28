@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="errors" type="java.util.List<bg.duosoft.ipas.validator.config.ValidationError>"*/-->
+<div th:fragment="redirect(url)" th:remove="tag"  th:with="stringUtils=${T(org.springframework.util.StringUtils)}">
+    <form style="display: none" th:id="redirect-form" method="get" th:action="${url}"></form>
+
+    <script type="text/javascript" charset="utf-8" th:src="@{/js/lib/jquery-3.3.1.min.js}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#redirect-form').submit();
+        });
+    </script>
+</body>
+</div>
+
+
+</body>
+</html>

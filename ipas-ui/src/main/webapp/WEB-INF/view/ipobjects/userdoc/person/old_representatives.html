@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--/*@thymesVar id="userdoc" type="bg.duosoft.ipas.core.model.userdoc.CUserdoc"*/-->
+<!--/*@thymesVar id="userdocPersonData" type="bg.duosoft.ipas.core.model.userdoc.CUserdocPersonData"*/-->
+<!--/*@thymesVar id="userdocPerson" type="bg.duosoft.ipas.core.model.userdoc.CUserdocPerson"*/-->
+<!--/*@thymesVar id="userdocPersonUtils" type="bg.duosoft.ipas.util.userdoc.UserdocPersonUtils"*/-->
+<div th:fragment="old-representatives(userdoc)" th:with="objectUtils=${T(java.util.Objects)},
+                                                personKind = ${T(com.duosoft.ipas.enums.PersonKind).OldRepresentative.code()},
+                                                representativeTypeEnum = ${T(bg.duosoft.ipas.enums.RepresentativeType)},
+                                                userdocPersonUtils=${T(bg.duosoft.ipas.util.userdoc.UserdocPersonUtils)}">
+    <div th:with="userdocPersonData=${userdoc.userdocPersonData}">
+        <div class="col-12" th:classappend="${#lists.isEmpty(userdocPersonUtils.selectOldRepresentatives(userdocPersonData))}?'hidden-element'">
+            <div th:replace=" :: old-representatives-header"></div>
+            <div th:replace=" :: old-representatives-body"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="old-representatives-header">
+    <div>
+        <div class="inline-block">
+            <h4 th:text="#{person.old.representatives.title}"></h4>
+        </div>
+    </div>
+    <div th:if="${!#lists.isEmpty(validationErrors)}" th:id="userdoc-userdocPersonData-oldRepresentativesList">
+        <div th:replace="base/validation :: validation-message(${validationErrors},'userdoc-userdocPersonData-oldRepresentativesList')"></div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="old-representatives-body">
+    <div th:if="${!#lists.isEmpty(userdocPersonUtils.selectOldRepresentatives(userdocPersonData))}" th:with="servicePerson=${userdoc.servicePerson}">
+        <div class="list-elements-wrapper">
+            <div th:remove="tag" th:each="userdocPerson : ${userdocPersonUtils.selectOldRepresentatives(userdocPersonData)}">
+                <div class="row list-element" th:with="person=${userdocPerson.person},representativeType=${representativeTypeEnum.selectByCode(userdocPerson.representativeType)}">
+                    <div class="col-11">
+                        <div th:replace="ipobjects/common/person/elements :: label-other-representative(${representativeType})"></div>
+                        <div th:replace="ipobjects/common/person/elements :: label-representative(${person})"></div>
+                        <div th:replace="ipobjects/common/person/elements :: label-main-person(${userdocPerson.indMain})"></div>
+                        <div th:replace="ipobjects/common/person/elements :: label-ca(${servicePerson},${person})"></div>
+                        <div th:replace="ipobjects/common/person/elements :: label-power-of-attorney(representative=${userdocPerson})"></div>
+                        <div th:replace="ipobjects/common/person/elements :: person-info(${person})"></div>
+                    </div>
+                    <div th:replace=" :: old-representatives-menu"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="old-representatives-menu" th:with="isServicePerson = ${userdocPersonUtils.isCurrentPersonCA(person.personNbr, person.addressNbr, userdoc)}">
+    <div class="col-1 hidden-element right-align action-menu-list-fs" th:with="menuId=|old-representative-menu-${person.personNbr}-${person.addressNbr}|">
+        <i th:title="#{menu}" th:attr="data-action='toggle-menu',data-id=${menuId}" class="zmdi zmdi-menu"></i>
+        <div th:id="${menuId}" class="action-menu none">
+            <div th:replace="ipobjects/common/person/elements :: menu-option-view-person(person = ${person})"></div>
+            <div th:replace="ipobjects/common/person/elements :: menu-option-edit-power-of-attorney(${person},${personKind})"></div>
+            <div th:remove="tag" th:if="${!isServicePerson}">
+                <div th:replace="ipobjects/common/person/elements :: menu-option-change-ca(${personKind}, ${person.personNbr}, ${person.addressNbr},  null, ${false})"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

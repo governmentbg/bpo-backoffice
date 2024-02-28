@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="errors(validationErrors)">
+    <div th:id="validation-errors-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="'Списък с грешки'"></h4>
+            </div>
+            <div>
+                <div class="col-12">
+                    <table class="simple">
+                        <thead>
+                        <tr>
+                            <th style="width: 30%" th:text="'Поле'"></th>
+                            <th th:text="'Съобщение'"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="error : ${validationErrors}" th:with="pointer = ${error.pointerMessageCode == null ? error.pointer : error.pointerMessageCode}">
+                            <td th:text="#{${pointer}}"></td>
+                            <td>
+                                <div th:switch="${#strings.isEmpty(error.messageCode)}" th:remove="tag">
+                                    <div th:case="false" th:remove="tag">
+                                        <span style="color: #d21010" th:if="${error.invalidValue == null}" th:text="#{${error.messageCode}}"></span>
+                                        <span style="color: #d21010" th:if="${error.invalidValue != null}" th:text="#{${error.messageCode}(${error.invalidValue})}"></span>
+                                    </div>
+
+                                    <span style="color: #d21010" th:case="*" th:text="${error.message}"></span>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

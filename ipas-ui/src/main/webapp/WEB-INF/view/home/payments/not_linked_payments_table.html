@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="notLinkedPaymentsList" type="java.util.List<bg.duosoft.ipas.core.model.payments.CNotLinkedPayment>"*/-->
+<!--/*@thymesVar id="notLinkedPaymentsCount" type="java.lang.Integer"*/-->
+<!--/*@thymesVar id="notLinkedPaymentsFilter" type="bg.duosoft.ipas.util.filter.NotLinkedPaymentsFilter"*/-->
+<div th:fragment="table(notLinkedPaymentsList,notLinkedPaymentsCount, notLinkedPaymentsFilter)">
+
+    <div th:remove="tag" th:switch="${T(org.springframework.util.CollectionUtils).isEmpty(notLinkedPaymentsList)}">
+        <div th:remove="tag" th:case="true">
+            <div th:replace="base/message :: info(#{empty.list})"></div>
+        </div>
+        <div th:remove="tag" th:case="false">
+            <div class="row">
+                <div>
+                    <span th:text="#{total}"></span>
+                    <span th:text="${notLinkedPaymentsCount}"></span>
+
+                </div>
+            </div>
+            <div class="m_T5">
+                <table class="simple bpo">
+                    <thead>
+                    <tr>
+                        <th style="width: 40px" th:text="#{number}"></th>
+
+                        <th style="width: 160px;" th:text="#{filing.number}"></th>
+
+                        <th style="width: 50px;" th:text="#{object.registrationNumber}"></th>
+
+                        <th style="width: 190px;" th:text="#{not.linked.payments.userdoc.numbers}"></th>
+
+                        <th  th:text="#{not.linked.payments.date.payment}"></th>
+
+                        <th  th:text="#{not.linked.payments.payment.type.name}"></th>
+
+                        <th  th:text="#{not.linked.payments.payer.name}"></th>
+
+                        <th  th:text="#{not.linked.payments.amount.outstanding}"></th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="payment,paymentStat : ${notLinkedPaymentsList}">
+                        <td>
+                            <span th:text="${paymentStat.count}">
+                            </span>
+                        </td>
+                        <td>
+                           <a class="b0"
+                              th:href="@{/ipobject/view(filingNumber=${payment.createFilingNumber()})}"
+                              th:text="${payment.createFilingNumber()}"></a>
+                        </td>
+
+                        <td>
+                            <span th:text="${payment.registrationNbr}"></span>
+                        </td>
+
+                        <td>
+
+                            <div th:each="ud : ${payment.userdocs}">
+                                <a class="b0"
+                                   th:href="@{/ipobject/view(filingNumber=${ud.documentId.createFilingNumber()})}"
+                                   th:text="${ud.externalSystemId == null ? ud.documentId.createFilingNumber() : ud.externalSystemId}"></a>
+                            </div>
+                        </td>
+
+                        <td>
+                            <span th:text="${#dates.format(payment.datePayment,T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT)}"></span>
+                        </td>
+
+                        <td>
+                            <span th:text="${payment.paymentTypeName}"></span>
+                        </td>
+
+                        <td>
+                            <span th:text="${payment.payerName}"></span>
+                        </td>
+
+                        <td>
+                            <span th:text="${#numbers.formatDecimal(payment.amountOutstanding, 1, 'NONE', 2, 'POINT')}"></span>
+                        </td>
+
+
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

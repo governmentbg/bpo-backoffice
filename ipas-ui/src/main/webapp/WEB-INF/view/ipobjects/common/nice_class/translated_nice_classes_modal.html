@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="translated_nice_classes_list">
+    <div th:id="translated-nice-classes-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h3 th:text="#{mark.nice.translated}"></h3>
+            </div>
+            <div>
+                <div style="color:red; text-align: center" th:if="${tmClassError}" th:text="#{mark.tmclass.error}"/>
+                <div class="row m_T20"   th:if="${tmClassError == null || !tmClassError}"
+                     th:each="translated: ${translatedClasses}">
+                    <div class="col-12">
+                        <h5 th:text="${translated.niceClassNbr}"/>
+                        <div style="text-align: justify;">
+                            <span th:each="term: ${translated.terms}" th:text="|${term.termText};|" th:style="${term.termStatus == 'notfound'? 'font-weight: bold;text-decoration: underline;': ''}"></span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer row">
+            <div class="col-12">
+                <button th:text="#{btn.cancel}" type="button" class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

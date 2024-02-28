@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"></head>
+<body>
+
+<div th:remove="tag" th:fragment="template(document,serviceData)">
+	<style>
+		* {
+			margin: 0px;
+			padding: 0px;
+			/* height: 71px; */
+			/* width: 212px; */
+			/* font-size: 23px; */
+			font-family: "Arial Narrow", Arial, sans-serif;
+			line-height: 0.9em;
+			letter-spacing: -1px;
+		}
+
+		td>* {
+			vertical-align: middle;
+		}
+	</style>
+
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet"
+			  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	</head>
+
+	<div style="width:248mm;height:132mm;font-size:68px;">
+		<table style="background-color: white;padding-bottom: 10px">
+			<tr>
+				<td style="width: 5%; overflow: hidden;"
+					colspan="2">
+					<b th:text="${serviceData.serviceProviderName}"></b>
+				</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td style="width: 5%; overflow: hidden"
+					colspan="2" th:text="${serviceData.serviceProviderStreet}"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td colspan="2" th:text="${serviceData.serviceProviderPhone}"></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td style="width: 5%; overflow: hidden;margin-right:10px">№</td>
+				<td>
+					<b th:text="${document.regUri}"></b>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 5%; overflow: hidden;">
+					<i style="margin-right:10px"
+					   class="fa fa-calendar"></i>
+				</td>
+				<td>
+					<b th:text="${#dates.format(document.regDate, 'dd.MM.yyyy г.')}"></b>
+				</td>
+			</tr>
+		</table>
+		<div style="margin-top:-5px">
+			<img style='margin-left: 0;height:100%;width:100%' th:src="'data: image/png; base64,'+${document.barcodeBase64}"/>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

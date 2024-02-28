@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="base/template :: head(title = (#{acp.breadcrumb.prefix} + ' ' + ${mark.file.fileId.createFilingNumber()}))"></head>
+
+<body class="dark left-sidebar-show" th:with="panelEnum=${T(com.duosoft.ipas.enums.MarkPanel)}">
+
+<th:block th:with="panelsList=(${{panelEnum.IdentityData.code(),
+                                  panelEnum.AcpAffectedObjectsData.code(),
+                                  panelEnum.AcpTakenItemsData.code(),
+                                  panelEnum.AcpViolationPlacesData.code(),
+                                  panelEnum.AcpCheckData.code(),
+                                  panelEnum.AcpAdministrativePenaltyData.code(),
+                                  panelEnum.Persons.code(),
+                                  panelEnum.Process.code()}
+                                 })">
+
+    <div th:replace="ipobjects/marklike/common/viewpage/mark_view_page :: content(${panelsList},'acp')"></div>
+</th:block>
+
+</body>
+</html>

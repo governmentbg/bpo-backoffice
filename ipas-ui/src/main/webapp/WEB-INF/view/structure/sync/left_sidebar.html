@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div class="left-sidebar" th:fragment="sidebar">
+    <div id="psb" class="ps--active-y">
+        <nav class="sidebar-nav">
+            <ul class="nav DropDownMenu">
+                <li>
+                    <a th:href="@{/structure/group/list}" th:title="'Групови права'" th:text="'Групови права'"></a>
+                </li>
+                <li>
+                    <a th:href="@{/structure/list}" th:title="'Структура и потребители'" th:text="'Структура и потребители'"></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+</body>
+</html>

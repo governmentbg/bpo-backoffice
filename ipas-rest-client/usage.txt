@@ -1,0 +1,18 @@
+1. Трябва дас е сканира package-a bg.duosoft.ipas.rest 
+2. трябва да е дефинирано property-то ipas.rest.service.url - то е от вида на http://localhost:8084/rest (т.е. /rest е включено в него!)
+3. По подразбиране се създават следните 2 interceptors
+ - IpasAuthenticationInterceptor - използва се за аутентикиране. За да работи трява да са сложени тези 2 properties
+	- ipas.rest.service.username
+	- ipas.rest.service.password
+ - CheckResponseForErrorsInterceptor - проверява дали response-a има различен  статус от succes. Ако да, се хвърля IpasRestResponseException
+4. Може да се създаде bean от тип IpasRestClientInterceptorsConfiguration, в който да се дефинират допълнителни interceptors. Примерно dbreplication-a добавя OutInterceptor, който подава username = ipas.rest.service.default.execution.username, app-management-a добавя OutInterceptor, който слага за потребител, изпълняващ действието  SecurityContextHolder.getContext().getAuthentication().getName()
+5. IpasRestClientInterceptorsConfiguration има метод getDefaultInterceptors(), който връща списък от default-ните interceptors (горните 2). Метода може да се предефинира за да skip-ва някой от default-ните interceptors
+
+
+Създаване на нов client
+1. създава се proxy обект по подобие на TrademarkRestProxy
+2. в RestServiceConfiguration трябва да се направи bean от този proxy обект (по подобие на TrademarkRestProxy)
+3. създава се client по подобие на TrademarkRestClient. Той в общия случай има същите методи като proxy-то, но обекта, който му се подава е това, което отива като data на RestApiRequest и обекта, който се връща е това което идва от getData() на RestApiResponse. Пример - в TrademarkRestProxy има метод RestApiResponse<RMark> getMark(RestApiRequest<RGetIpObjectRequest> request); докато в TrademarkRestClient метода е RMark getMark(RGetIpObjectRequest request)
+4. създава се имплементация на клиента (пример TrademarkRestClientImpl - в нея за всеки един от методите се вика кореспондиращия метод на proxy-то)
+
+Идеята е във всички ползватели на rest-service-client ( app-management / dbreplication ), да не се работи с обектите RestApiRequest / RestApiResponse, а с истинските данни...

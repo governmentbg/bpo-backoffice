@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="patent-citation-form-modal(citation,isNew)">
+    <div th:id="patent-citation-form-modal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h4 th:text="${isNew} ? #{patent.citation.create.title} : #{patent.citation.edit.title}"></h4>
+            </div>
+            <input th:id="old-refNumber" type="hidden" th:value="${oldRefNumber}">
+            <div class="row">
+                <div class="col-4">
+                    <div th:replace="~{base/form/input :: text(id = 'patent-citation-ref-number', label = #{patent.citation.refNumber}, value = ${citation.refNumber}, classes = 'number')}"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div th:replace="~{base/form/textarea :: basic(id = 'patent-citation-ref-description', label = #{patent.citation.description}, value = ${citation.refDescription}, unescaped = true)}"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div th:replace="~{base/form/textarea :: basic(id = 'patent-citation-ref-claims', label = #{patent.citation.claims}, value = ${citation.refClaims}, unescaped = true)}"></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer row">
+            <div class="col-12">
+                <button th:attr="data-action='edit-citations-list',data-url=@{/patent-like/citations/edit-list}, data-validation-block='#patent-citation-form-modal'"
+                        th:text="#{btn.save}" class="button sm-icn-save wmin_130">
+                </button>
+                <button th:text="#{btn.cancel}" th:type="button" class="button sm-icn-cross modal-close wmin_130"></button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

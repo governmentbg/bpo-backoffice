@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="divisional-application(divisionalData,fileId)">
+    <div th:with="hasDivisional=${divisionalData != null}" id="divisional-application-subpanel">
+        <hr  th:classappend="${!hasDivisional ? 'hidden-element':''}">
+        <div>
+            <div class="row m_B10">
+                <div class="col-6" th:classappend="${!hasDivisional ? 'hidden-element':''}">
+                    <div th:replace="~{base/form/checkbox :: basic(id = 'divisional-app-hasDivisionalData', label = #{divisional.application}, isChecked = ${hasDivisional}, classes = 'rights-checkbox form-ignore', target = 'divisional-app-container', additionalArgs='data-disables=\'pct-hasPctData,patent-transformation-hasTransformationData,patent-parallel-data-hasParallelData,mark-transformation-hasTransformationData\'')}"></div>
+                </div>
+            </div>
+            <div id="divisional-app-container" th:style="${hasDivisional ? '': 'display:none'}">
+                <div th:replace="ipobjects/common/relationship/relationship :: relationship-row(id='object-divisional-app', relationshipData=${divisionalData},relationshipFileType=${fileId.fileType})"></div>
+                <div class="row hidden-element">
+                    <div class="p_10">
+                    <span class="orange"
+                          th:text="#{divisional.application.data.replace.warning}"></span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

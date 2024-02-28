@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="spc-identity(file,applicationTypesMap,applicationSubTypes,lawMap, efilingData, notInForceDate)"
+     th:with="dateFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_FORMAT_DOT},objectUtils=${T(java.util.Objects)},
+              collectionUtils=${T(org.springframework.util.CollectionUtils)},
+              patentUtils=${T(bg.duosoft.ipas.util.patent.PatentUtils)},
+              hasDetailDataAccessFlag=${patentUtils.hasDetailDataAccess(file,@statusServiceImpl)},
+              dateTimeFormatDot=${T(bg.duosoft.ipas.util.date.DateUtils).DATE_TIME_FORMAT_DOT},patentSpcUtils = ${T(com.duosoft.ipas.util.PatentSpcUtils)}">
+
+    <div th:with="mainPatent = ${file.relationshipList != null} ? ${file.relationshipList.get(0).fileId.createFilingNumber()} : '',
+                  mainPatentFullName = ${file.relationshipList != null} ? ${patentSpcUtils.generateSpcMainPatentFullName(file.relationshipList.get(0).fileId,spcMainPatentStatus)} : '',
+                  selectedFileTyp = ${file.relationshipList != null} ? ${file.relationshipList.get(0).fileId.fileType}: '',
+                  isPageForReload = ${file.relationshipList == null || collectionUtils.isEmpty(file.relationshipList)}">
+
+        <div class="row">
+            <div th:replace="~{ipobjects/common/identity/identity_panels_elements ::applicationType(classes = 'col-4')}"></div>
+            <div th:replace="~{ipobjects/common/identity/identity_panels_elements ::applicationSubType(classes = 'col-4')}"></div>
+            <div th:replace="~{ipobjects/common/identity/identity_panels_elements ::receptionDate(classes = 'col-4')}"></div>
+        </div>
+
+        <div class="row">
+            <div th:replace="~{ipobjects/common/identity/identity_panels_elements ::filingDate(classes = 'col-4', label=#{object.filingDate})}"></div>
+            <div th:replace="~{ipobjects/common/identity/identity_panels_elements ::registrationDate(classes = 'col-4',label =#{spc.certificate.date.label})}"></div>
+        </div>
+
+        <div class="row">
+            <div th:replace="~{ipobjects/common/identity/identity_panels_elements ::entitlementDate(classes = 'col-4',label =#{spc.activation.date.label})}"></div>
+            <div th:replace="~{ipobjects/common/identity/identity_panels_elements ::expirationDate(classes = 'col-4',label =#{spc.expiration.date.label})}"></div>
+            <div th:replace="~{ipobjects/common/identity/identity_panels_elements ::notInForceDate(classes = 'col-4',label ='Прекратяване на действие на обект')}"></div>
+        </div>
+
+        <div class="row">
+            <div th:replace="~{ipobjects/common/identity/identity_panels_elements ::publicationTyp(classes = 'col-4')}"></div>
+        </div>
+
+
+        <div class="row" th:if="${file.relationshipList != null}" id="spc-main-patent-href">
+            <div class="col-12">
+                <div class="row m_B5">
+                    <div th:replace="~{base/form/label :: active(title = #{spc.main.patent.label})}"></div>
+                </div>
+                <div class="row">
+                    <a class="b0 p_0"
+                       th:text="${mainPatentFullName}"
+                       th:href="@{/ipobject/view(filingNumber=${file.relationshipList.get(0).fileId.createFilingNumber()})}">
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+        <input type="text" th:id="spc-mainPatent" th:type="hidden" th:value="${mainPatent}">
+        <input type="text" th:id="spc-isPageForReload" th:type="hidden" th:value="${isPageForReload}">
+
+        <div class="row hidden-element">
+            <div class="col-8">
+                <div class="input-field">
+                <input th:id="'spc-main-patent-autocomplete'" type="text"
+                       th:value="${mainPatentFullName}"
+                       class="autocomplete form-ignore"
+                       th:attr="data-url=@{/spc/identity/autocomplete-main-spc-patent}">
+                    <label th:id="'spc-main-patent-autocomplete-label'" th:for="'spc-main-patent-autocomplete'" th:text="#{spc.main.patent.label}"></label>
+                    <div th:replace="base/validation :: validation-message(${validationErrors}, 'spc-main-patent-autocomplete')"></div>
+                 </div>
+            </div>
+
+            <div class="col-4 hidden-element" >
+                <div th:replace="~{base/form/select :: map(id = 'spc-main-patent-type', label = #{spc.main.patent.type.label},
+                                map = ${patentSpcUtils.generateMainPatentOptionsForSpc(@messageSource)},
+                                selected = ${selectedFileTyp})}">
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row hidden-element">
+            <div class="p_10">
+                    <span class="orange"
+                          th:text="#{spc.main.patent.selection.warning.message}"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div th:replace="~{ipobjects/common/identity/identity_panels_elements ::notes(classes = 'col-12')}"></div>
+        </div>
+        <div class="row">
+            <div th:replace="~{ipobjects/common/identity/identity_panels_elements ::identityGeneratedDocument(classes = 'col-10')}"></div>
+        </div>
+
+         <div class="row">
+            <div th:replace="~{ipobjects/common/identity/identity_panels_elements ::publicRegisterDocument(classes = 'col-10')}"></div>
+         </div>
+
+
+        <div class="row">
+            <div th:replace="~{ipobjects/common/efiling/efiling_data_panel ::efiling-data(${efilingData})}"></div>
+        </div>
+
+        <th:block th:if="${hasDetailDataAccessFlag}">
+             <div  th:replace="~{ipobjects/common/report/generate_report_button ::generate-report-button}"></div>
+        </th:block>
+
+
+
+
+    </div>
+
+</div>
+
+<div th:fragment="subtype-select(applicationSubTypes,file)" th:remove="tag" >
+    <div th:remove="tag" th:with="applicationType = ${file.filingData.applicationType}, applicationSubtype = ${file.filingData.applicationSubtype}">
+        <div th:replace="~{base/form/select :: object(
+            id = 'object-file-filingData-applicationSubtype',
+            label = 'Подтип',
+            objects = ${applicationSubTypes},
+            valuePointer = 'applicationSubType',
+            textPointer = 'applicationSubTypeName',
+            selectedExpression = ('#strings.equalsIgnoreCase(object.applicationType,\'' + ${applicationType} + '\') && #strings.equalsIgnoreCase(object.applicationSubType,\'' + ${applicationSubtype} + '\')')
+         )}">
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

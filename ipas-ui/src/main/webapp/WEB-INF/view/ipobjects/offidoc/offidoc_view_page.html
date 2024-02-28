@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="offidoc" type="bg.duosoft.ipas.core.model.offidoc.COffidoc"*/-->
+<!--/*@thymesVar id="panelEnum" type="com.duosoft.ipas.enums.OffidocPanel"*/-->
+<div th:fragment="content(panelsList,panelPrefix)" th:with="securityUtils=${T(bg.duosoft.ipas.util.security.SecurityUtils)},
+                                                            collectionUtils=${T(org.springframework.util.CollectionUtils)},
+                                                            editEnabled=${securityUtils.isOffidocObjectEditEnabled(offidoc,@processServiceImpl,@userServiceImpl)},
+                                                            securityRoles=${T( bg.duosoft.ipas.enums.security.SecurityRole)}"
+>
+
+    <div class="app-body">
+        <header class="app-header" th:replace="base/header"></header>
+        <div th:replace="ipobjects/offidoc/offidoc_view_left_sidebar :: sidebar(${panelsList},${panelPrefix},${offidoc.offidocType.hasPublication})"></div>
+
+        <main class="main">
+            <div th:replace="base/breadcrumbs :: breadcrumbs"></div>
+            <div class="inner" th:with="objectUtils=${T(java.util.Objects)}, stringUtils=${T(org.springframework.util.StringUtils)}">
+                <div class="row">
+                    <div th:replace="base/toast/message :: error(message = ${errorMessage},unescaped = true)"></div>
+                    <div th:replace="base/toast/message :: success(message = ${successMessage},unescaped = true)"></div>
+                    <div th:replace="base/toast/message :: validation-errors(validationErrors = ${validationErrors})"></div>
+                </div>
+
+                <div th:id="panel-container-offidoc" class="row panel-container-padding">
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.MainData.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.OffidocMainData)}">
+                            <div th:replace="ipobjects/offidoc/offidoc_view_panels :: main-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.GenerateFiles.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.OffidocGenerateFiles)}">
+                            <div th:replace="ipobjects/offidoc/offidoc_view_panels :: generate-files-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${(offidoc.offidocType.hasPublication!=null && offidoc.offidocType.hasPublication==true) && #lists.contains(panelsList,panelEnum.PublishedDecision.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.OffidocPublishedDecision)}">
+                            <div th:replace="ipobjects/offidoc/offidoc_view_panels :: published-decision-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Decisions.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.OffidocGenerateFiles)}">
+                            <div th:replace="ipobjects/offidoc/offidoc_view_panels :: decisions-data"></div>
+                        </div>
+                    </div>
+
+                    <div th:remove="tag" th:if="${#lists.contains(panelsList,panelEnum.Process.code())}">
+                        <div th:remove="tag" th:if="${securityUtils.hasRights(securityRoles.OffidocProcess)}">
+                            <div th:replace="ipobjects/offidoc/offidoc_view_panels :: process-data"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div th:replace=":: modals" th:remove="tag"></div>
+    <div th:replace=":: hidden-fields" th:remove="tag"></div>
+    <footer class="page-footer" th:replace="base/footer"></footer>
+    <div th:replace="base/template :: js-footer" th:remove="tag"></div>
+</div>
+
+<div th:remove="tag" th:fragment="modals">
+
+</div>
+
+<div th:remove="tag" th:fragment="hidden-fields">
+    <input th:id="session-object-identifier" th:type="hidden" class="form-ignore" th:value="${sessionObjectIdentifier}">
+    <input th:if="${!#lists.isEmpty(validationErrors)}" type="hidden" th:id="offidoc-validation-errors" th:attr="data-size=${#lists.size(validationErrors)}">
+    <input th:if="${errorMessage != null}" type="hidden" th:id="open-generated-file-panel">
+    <div th:if="${null != scrollToPanel}" class="none">
+        <input th:id="scroll-to-panel" th:type="hidden" class="form-ignore" th:value="${scrollToPanel}">
+    </div>
+
+</div>
+
+</body>
+</html>

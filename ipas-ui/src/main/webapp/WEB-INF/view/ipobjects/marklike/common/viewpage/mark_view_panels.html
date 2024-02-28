@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--/*@thymesVar id="mark" type="bg.duosoft.ipas.core.model.mark.CMark"*/-->
+<div th:remove="tag" th:fragment="identity-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}"
+         th:with="panelName=${T(com.duosoft.ipas.enums.MarkPanel).IdentityData.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.identity},panel=${panelName},actionURL=@{/identity/edit-panel-identity},initURL=null,editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/common/identity/identity_panel :: identity-data(${mark.file},${applicationTypesMap},${applicationSubTypes},${lawMap},${relationshipTypeMap},${receptionRequest},${mark.relationshipExtended},${mark.markEFilingData},${mark.enotifMarks},null)"></div>
+        </div>
+    </div>
+</div>
+
+
+<div th:remove="tag" th:fragment="acp-affected-objects-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}"
+         th:with="panelName=${T(com.duosoft.ipas.enums.MarkPanel).AcpAffectedObjectsData.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.affected_objects},panel=${panelName},actionURL=@{/acp/affected-objects/edit},initURL=@{/{type}/init-panel-session-objects(type=${panelPrefix})},editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/marklike/acp/acp-affected-objects/affected_objects_main_panel :: main_panel(${mark.acpAffectedObjects},${fileTypesMap},${mark?.acpDetails?.affectedObjectOthers})"></div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div th:remove="tag" th:fragment="acp-taken-items-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}"
+         th:with="panelName=${T(com.duosoft.ipas.enums.MarkPanel).AcpTakenItemsData.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.acp_taken_items},panel=${panelName},actionURL=@{/acp/taken-items/edit},initURL=@{/{type}/init-panel-session-objects(type=${panelPrefix})},editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/marklike/acp/acp-taken-items/taken_items_main_panel :: main_panel(${mark.acpTakenItems})"></div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div th:remove="tag" th:fragment="acp-check-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}"
+         th:with="panelName=${T(com.duosoft.ipas.enums.MarkPanel).AcpCheckData.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.acp_check_data},panel=${panelName},actionURL=@{/acp/check-data/edit},initURL=@{/{type}/init-panel-session-objects(type=${panelPrefix})},editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/marklike/acp/acp-check-data/check_data_main_panel :: main_panel(${mark.acpCheckReasons},${mark.acpCheckData})"></div>
+        </div>
+    </div>
+</div>
+
+
+
+<div th:remove="tag" th:fragment="acp-administrative-penalty-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}"
+         th:with="panelName=${T(com.duosoft.ipas.enums.MarkPanel).AcpAdministrativePenaltyData.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.acp_administrative_penalty},panel=${panelName},actionURL=@{/acp/administrative-penalty/edit},initURL=null,editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/marklike/acp/acp-administrative-penalty/penalty_main_panel :: main_panel(${mark.acpAdministrativePenalty})"></div>
+        </div>
+    </div>
+</div>
+
+
+<div th:remove="tag" th:fragment="acp-violation-places-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}"
+         th:with="panelName=${T(com.duosoft.ipas.enums.MarkPanel).AcpViolationPlacesData.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.violation.places},panel=${panelName},actionURL=@{/acp/violation-places/edit},initURL=@{/{type}/init-panel-session-objects(type=${panelPrefix})},editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/marklike/acp/acp-violation-places/acp_violation_places_main_panel :: main_panel(${mark.acpViolationPlaces})"></div>
+        </div>
+    </div>
+</div>
+
+
+<div th:remove="tag" th:fragment="mark-main-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}"
+         th:with="panelName=${T(com.duosoft.ipas.enums.MarkPanel).MainData.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{'panel.title.details.'+${panelPrefix}},panel=${panelName},actionURL=@{/mark/edit-panel-detail},initURL=@{/{type}/init-panel-session-objects(type=${panelPrefix})},editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/marklike/mark/details/mark_details_panel :: mark-details(${mark},${signTypesMap},${sessionObjectIdentifier})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="mark-international-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}"
+         th:with="panelName=${T(com.duosoft.ipas.enums.MarkPanel).InternationalData.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.mark.international.details},panel=${panelName},actionURL=@{/mark/edit-panel-international-detail},initURL=@{/{type}/init-panel-session-objects(type=${panelPrefix})}, editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/marklike/mark/details/international/mark_international_details_panel :: mark-international-details(${mark},${internationalRegistrations},${internationalReplacementMarkDetails},${sessionObjectIdentifier})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="nice-classes-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}"
+         th:with="panelName=${T(com.duosoft.ipas.enums.MarkPanel).NiceClasses.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.nice.classes},panel=${panelName},actionURL=@{/mark-like/nice-class/edit-panel-nice},initURL=@{/{type}/init-panel-session-objects(type=${panelPrefix})},editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/marklike/common/niceclasses/nice_classes_panel :: nice-classes(${mark})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="international-nice-classes-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}"
+         th:with="panelName=${T(com.duosoft.ipas.enums.MarkPanel).InternationalNiceClassesRestrictions.code()},
+    niceListType=${T(com.duosoft.ipas.webmodel.NiceListType).OBJECT_LIST}">
+        <div th:replace="ipobjects/common/base/panel_header_without_buttons :: panel-header(title=#{panel.title.international.nice.classes.restrictions})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/common/nice_class/international_nice_classes_panel :: international-nice-classes(internationalNiceClasses=${mark.internationalNiceClasses}, niceListType=${niceListType})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="person-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}"
+         th:with="panelName=${T(com.duosoft.ipas.enums.MarkPanel).Persons.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.person},panel=${panelName},actionURL=@{/person/update-person-data},initURL=@{/{type}/init-panel-session-objects(type=${panelPrefix})},editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/marklike/common/person/person_panel :: persons(${mark.file})"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="claims-data">
+    <div th:id="|panel-${panelName}|" class="panel"
+         th:attr="data-group=${panelName},data-url=@{/mark/seniority/load-data}"
+         th:with="panelName=${T(com.duosoft.ipas.enums.MarkPanel).Claims.code()}">
+        <div th:replace="ipobjects/common/base/panel_header :: panel-header(title=#{panel.title.claims},panel=${panelName},actionURL=@{/mark/edit-panel-claims},initURL=@{/{type}/init-panel-session-objects(type=${panelPrefix})},editEnabled=${editEnabled})"></div>
+        <div th:id="|panel-body-${panelName}|">
+            <div th:replace="ipobjects/marklike/common/claims/claims_panel :: claims(${mark},${divisionalData})"></div>
+        </div>
+        <div th:id="mark-seniority-wrapper">
+            <div th:replace="ipobjects/marklike/common/seniority/seniority_panel :: seniority-loader"></div>
+        </div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="publications-data">
+    <div th:id="|panel-${panelName}|" class="panel"
+         th:attr="data-group=${panelName},data-url=@{/publications/load-panel}"
+         th:with="panelName=${T(com.duosoft.ipas.enums.MarkPanel).Publication.code()}">
+        <div th:replace="ipobjects/common/publication/publication_panel :: publications-loader"></div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="recordals-data">
+    <div th:remove="tag" th:if="${!#lists.isEmpty(mark.file.fileRecordals)}">
+        <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName}"
+             th:with="panelName=${T(com.duosoft.ipas.enums.MarkPanel).Recordals.code()}">
+            <div class="row m_B10">
+                <div class="col-10">
+                    <h3 class="inline-block" th:text="#{panel.title.recordals}"></h3>
+                </div>
+            </div>
+            <div th:id="|panel-body-${panelName}|">
+                <div th:replace="ipobjects/common/recordal/recordals_panel :: recordals(${mark.file.fileRecordals})"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div th:remove="tag" th:fragment="payments-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName},data-url=@{/payments/load-panel}"
+         th:with="panelName=${T(com.duosoft.ipas.enums.MarkPanel).Payments.code()}">
+        <div th:replace="ipobjects/common/payments/payments_panel :: payments-loader"></div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="process-data"
+     th:with="panelName=${T(com.duosoft.ipas.enums.MarkPanel).Process.code()}">
+    <div th:id="|panel-${panelName}|" class="panel"
+         th:attr="data-group=${panelName},data-url=@{/process/load-panel},data-process=|${mark.file.processId.processType}-${mark.file.processId.processNbr}|">
+        <div th:replace="ipobjects/common/process/process_panel :: loader"></div>
+    </div>
+</div>
+
+<div th:remove="tag" th:fragment="history-data">
+    <div th:id="|panel-${panelName}|" class="panel" th:attr="data-group=${panelName},data-url=@{/file-history/load-panel}" th:with="panelName=${T(com.duosoft.ipas.enums.MarkPanel).History.code()}">
+        <div th:replace="ipobjects/common/history/history_panel :: history-loader"></div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="main_panel(violationPlaces)">
+
+    <div id="violation-places-table-area">
+        <div th:replace="ipobjects/marklike/acp/acp-violation-places/acp_violation_places_table :: table(${violationPlaces})"></div>
+    </div>
+
+</div>
+</div>
+</body>
+</html>

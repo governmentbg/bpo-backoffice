@@ -1,0 +1,26 @@
+package bg.duosoft.ipas.core.model.mark;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class CViennaClass
+        implements Serializable {
+    private static final long serialVersionUID = 1746185971152494873L;
+    private String viennaVersion;
+    private Long viennaCategory;
+    private Long viennaDivision;
+    private Long viennaSection;
+    private String viennaDescription;
+    private String vclWpublishValidated;
+    private String viennaVersionCalculated;
+
+}
+
+
